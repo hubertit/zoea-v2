@@ -349,14 +349,14 @@ The bookings feature has been fully implemented for both **Dining (Restaurant)**
 ## 8. Files Modified/Created
 
 ### Created:
-- `mobile/lib/core/services/bookings_service.dart` ✅
+- `apps/public-mobile/lib/core/services/bookings_service.dart` ✅
 - `docs/BOOKINGS_READINESS_ANALYSIS.md` ✅
 - `docs/BOOKINGS_IMPLEMENTATION_SUMMARY.md` ✅
 
 ### Modified:
-- `mobile/lib/core/models/booking.dart` ✅
-- `mobile/lib/features/explore/screens/dining_booking_screen.dart` ✅
-- `mobile/lib/features/explore/screens/accommodation_booking_screen.dart` ✅
+- `apps/public-mobile/lib/core/models/booking.dart` ✅
+- `apps/public-mobile/lib/features/explore/screens/dining_booking_screen.dart` ✅
+- `apps/public-mobile/lib/features/explore/screens/accommodation_booking_screen.dart` ✅
 
 ---
 

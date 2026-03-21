@@ -158,33 +158,33 @@ Create a new listing for a merchant
 ## Admin Pages
 
 ### Main Merchants Page
-**Path**: `/admin/merchants`
+**Path**: `/apps/admin-apps/public-web/merchants`
 - Lists all merchants with stats
 - Filtering by type and status
 - Sorting capabilities
 - Quick actions: View, Edit, Delete
 
 ### Create Merchant
-**Path**: `/admin/merchants/create`
+**Path**: `/apps/admin-apps/public-web/merchants/create`
 - Form to add new merchant
 - All required and optional fields
 - Validation
 
 ### Merchant Detail
-**Path**: `/admin/merchants/[id]`
+**Path**: `/apps/admin-apps/public-web/merchants/[id]`
 - View complete merchant information
 - Display all listings for the merchant
 - Quick link to add new listings
 - Edit merchant button
 
 ### Edit Merchant
-**Path**: `/admin/merchants/[id]/edit`
+**Path**: `/apps/admin-apps/public-web/merchants/[id]/edit`
 - Form to update merchant information
 - Pre-filled with current data
 - Validation
 
 ### Create Listing
-**Path**: `/admin/merchants/[id]/listings/create`
+**Path**: `/apps/admin-apps/public-web/merchants/[id]/listings/create`
 - Form to add new listing for a merchant
 - Support for all listing types
 - Helpful examples and guidance
@@ -264,7 +264,7 @@ Potential features to add:
 ```
 src/
 ├── app/
-│   ├── admin/
+│   ├── apps/admin-apps/public-web/
 │   │   └── merchants/
 │   │       ├── page.tsx                      # List all merchants
 │   │       ├── create/

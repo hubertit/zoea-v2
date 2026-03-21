@@ -6,7 +6,7 @@ December 28, 2024
 ## Deployment Script Verification
 
 ### Script Location
-- **Path**: `backend/sync-all-environments.sh`
+- **Path**: `apps/backend/sync-all-environments.sh`
 - **Status**: ✅ Valid syntax
 
 ### Script Configuration
@@ -50,7 +50,7 @@ All paths in deployment script use relative references:
 ## Deployment Process
 
 ### Expected Flow
-1. Script runs from `backend/` directory
+1. Script runs from `apps/backend/` directory
 2. Uses relative paths to sync files
 3. Excludes build artifacts and dependencies
 4. Syncs to remote servers
@@ -75,7 +75,7 @@ All paths in deployment script use relative references:
 ### Before Deploying
 1. **Test locally first**:
    ```bash
-   cd backend
+   cd apps/backend
    docker-compose up --build -d
    ```
 

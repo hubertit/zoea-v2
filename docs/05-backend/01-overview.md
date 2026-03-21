@@ -53,7 +53,7 @@ The Zoea Backend API is a NestJS-based RESTful API that serves all Zoea applicat
 ## Quick Start
 
 ```bash
-cd backend
+cd apps/backend
 npm install
 cp env.example .env
 # Edit .env with your database credentials

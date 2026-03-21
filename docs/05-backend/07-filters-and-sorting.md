@@ -277,4 +277,4 @@ orderBy: [{ isFeatured: 'desc' }, { rating: 'desc' }]
 - ⚠️ Featured only (`isFeatured`)
 
 **Low Priority:**
-- Status filters (mainly for admin/merchant use)
+- Status filters (mainly for apps/admin-apps/public-web/merchant use)

@@ -8,7 +8,7 @@ IntelliJ IDEA is configured with run configurations for all applications in the 
 
 #### 1. **Zoea Consumer Mobile**
 - **Configuration**: `Zoea Consumer Mobile`
-- **Location**: `mobile/lib/main.dart`
+- **Location**: `apps/public-mobile/lib/main.dart`
 - **How to Run**:
   1. Select "Zoea Consumer Mobile" from the run dropdown (top toolbar)
   2. Click the green play button ▶️
@@ -16,7 +16,7 @@ IntelliJ IDEA is configured with run configurations for all applications in the 
 
 #### 2. **Zoea Merchant Mobile**
 - **Configuration**: `Zoea Merchant Mobile`
-- **Location**: `merchant-mobile/lib/main.dart`
+- **Location**: `merchant-apps/public-mobile/lib/main.dart`
 - **How to Run**:
   1. Select "Zoea Merchant Mobile" from the run dropdown
   2. Click the green play button ▶️
@@ -26,7 +26,7 @@ IntelliJ IDEA is configured with run configurations for all applications in the 
 
 #### 3. **Backend API**
 - **Configuration**: `Backend API`
-- **Location**: `backend/`
+- **Location**: `apps/backend/`
 - **Command**: `npm run start:dev`
 - **How to Run**:
   1. Select "Backend API" from the run dropdown
@@ -35,7 +35,7 @@ IntelliJ IDEA is configured with run configurations for all applications in the 
 
 #### 4. **Admin Dashboard**
 - **Configuration**: `Admin Dashboard`
-- **Location**: `admin/`
+- **Location**: `apps/admin-apps/public-web/`
 - **Command**: `npm run dev`
 - **How to Run**:
   1. Select "Admin Dashboard" from the run dropdown

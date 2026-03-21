@@ -17,7 +17,7 @@ Modified the "Near Me" section in the mobile app to display **only restaurant li
 ### Backend Changes
 
 #### 1. Updated Service Method
-**File:** `backend/src/modules/listings/listings.service.ts`
+**File:** `apps/backend/src/modules/listings/listings.service.ts`
 
 **Before:**
 ```typescript
@@ -45,7 +45,7 @@ const listings = await this.prisma.$queryRaw<Array<{ id: string }>>`
 ```
 
 #### 2. Updated API Documentation
-**File:** `backend/src/modules/listings/listings.controller.ts`
+**File:** `apps/backend/src/modules/listings/listings.controller.ts`
 
 Updated the endpoint description to reflect that it returns only restaurants:
 - Summary: "Get random **restaurant** listings"
@@ -106,7 +106,7 @@ curl "https://zoea-africa.qtsoftwareltd.com/api/listings/random?limit=5"
 ## Mobile App Impact
 
 ### Current Behavior
-The mobile app's "Near Me" section (`mobile/lib/features/explore/screens/explore_screen.dart`) already uses `randomListingsProvider(5)` which calls this endpoint.
+The mobile app's "Near Me" section (`apps/public-mobile/lib/features/explore/screens/explore_screen.dart`) already uses `randomListingsProvider(5)` which calls this endpoint.
 
 **No mobile app changes needed!** The mobile app will automatically start showing only restaurants.
 
@@ -135,7 +135,7 @@ This is still a **temporary solution** until proper geolocation is implemented. 
 ### Build & Deploy Steps:
 1. ✅ Modified backend service and controller
 2. ✅ Built backend: `npm run build`
-3. ✅ Synced to server: `rsync -avz ./src/ qt@172.16.40.61:~/zoea-backend/src/`
+3. ✅ Synced to server: `rsync -avz ./src/ qt@172.16.40.61:~/zoea-apps/backend/src/`
 4. ✅ Rebuilt Docker container: `docker-compose down && docker-compose up --build -d`
 5. ✅ Tested API endpoint
 6. ✅ Updated documentation
@@ -148,8 +148,8 @@ This is still a **temporary solution** until proper geolocation is implemented. 
 ## Files Modified
 
 ### Backend
-- `backend/src/modules/listings/listings.service.ts` - Added restaurant type filter
-- `backend/src/modules/listings/listings.controller.ts` - Updated API documentation
+- `apps/backend/src/modules/listings/listings.service.ts` - Added restaurant type filter
+- `apps/backend/src/modules/listings/listings.controller.ts` - Updated API documentation
 
 ### Documentation
 - `docs/14-troubleshooting/02-temporary-changes.md` - Updated to reflect restaurant-only change

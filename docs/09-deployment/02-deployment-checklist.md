@@ -10,9 +10,9 @@
 ### 1. Backend Code Changes ✅
 
 **Files Modified**:
-- ✅ `backend/src/modules/auth/guards/optional-jwt-auth.guard.ts` (NEW)
-- ✅ `backend/src/modules/search/search.controller.ts` (UPDATED)
-- ✅ `backend/src/modules/search/search.service.ts` (UPDATED)
+- ✅ `apps/backend/src/modules/auth/guards/optional-jwt-auth.guard.ts` (NEW)
+- ✅ `apps/backend/src/modules/search/search.controller.ts` (UPDATED)
+- ✅ `apps/backend/src/modules/search/search.service.ts` (UPDATED)
 
 **Changes**:
 - Created `OptionalJwtAuthGuard` for optional authentication
@@ -22,8 +22,8 @@
 ### 2. Database Schema Changes ✅
 
 **Files Modified**:
-- ✅ `backend/prisma/schema.prisma` (UPDATED - indexes added)
-- ✅ `backend/prisma/migrations/20241228120000_add_search_history_indexes/migration.sql` (NEW)
+- ✅ `apps/backend/prisma/schema.prisma` (UPDATED - indexes added)
+- ✅ `apps/backend/prisma/migrations/20241228120000_add_search_history_indexes/migration.sql` (NEW)
 
 **Changes**:
 - Added 3 indexes to `search_history` table:

@@ -130,11 +130,11 @@ All events have been configured with:
 ## Database Details
 
 ### Script Location
-`backend/src/scripts/insert-mice-events.ts`
+`apps/backend/src/scripts/insert-mice-events.ts`
 
 ### Execution
 ```bash
-cd backend
+cd apps/backend
 npm run build
 node dist/scripts/insert-mice-events.js
 ```
@@ -151,7 +151,7 @@ node dist/scripts/insert-mice-events.js
 ### Adding More Events
 To add more MICE events from RCB:
 
-1. **Update the script** (`backend/src/scripts/insert-mice-events.ts`)
+1. **Update the script** (`apps/backend/src/scripts/insert-mice-events.ts`)
 2. **Add events to `MICE_EVENTS` array** with:
    - `name`: Event name
    - `description`: Event description

@@ -118,7 +118,7 @@ The DTO supports both hotel and restaurant bookings via `bookingType` discrimina
 
 ### 3.1 Current Booking Model
 
-**Location**: `mobile/lib/core/models/booking.dart`
+**Location**: `apps/public-mobile/lib/core/models/booking.dart`
 
 **Issues:**
 1. ❌ Only supports hotel bookings (has `checkInDate`, `checkOutDate`)

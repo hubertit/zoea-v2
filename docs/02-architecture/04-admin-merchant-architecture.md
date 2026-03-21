@@ -12,8 +12,8 @@ I recommend **separating Admin and Merchant applications** into distinct web app
 
 **Current Structure:**
 ```
-admin/                    # Combined admin + merchant management
-├── src/app/admin/        # Admin dashboard pages
+apps/admin-apps/public-web/                    # Combined admin + merchant management
+├── src/app/apps/admin-apps/public-web/        # Admin dashboard pages
 │   ├── merchants/        # Admin managing merchants
 │   ├── users/           # Admin managing users
 │   └── ...
@@ -133,9 +133,9 @@ These are fundamentally different use cases!
 
 ```
 zoea2/
-├── mobile/              # Consumer mobile app
-├── backend/            # Shared API
-├── admin/              # Admin dashboard (platform management)
+├── apps/public-mobile/              # Consumer mobile app
+├── apps/backend/            # Shared API
+├── apps/admin-apps/public-web/              # Admin dashboard (platform management)
 │   └── For: Platform administrators
 │   └── Domain: admin.zoea.africa
 │   └── Features:
@@ -156,7 +156,7 @@ zoea2/
 │       - My reviews
 │       - My availability
 │
-└── web/                # Public website
+└── apps/public-web/                # Public website
     └── For: General public
     └── Domain: zoea.africa
 ```
@@ -165,7 +165,7 @@ zoea2/
 
 ```
 zoea2/
-├── admin/              # Admin app
+├── apps/admin-apps/public-web/              # Admin app
 ├── merchant/           # Merchant app
 └── shared/             # Shared components (optional)
     ├── ui/             # Shared UI components
@@ -179,11 +179,11 @@ zoea2/
 
 ### Phase 1: Extract Merchant Features
 1. Create new `merchant/` directory
-2. Copy merchant-specific features from `admin/`
+2. Copy merchant-specific features from `apps/admin-apps/public-web/`
 3. Refactor to merchant perspective (not admin managing merchants)
 
 ### Phase 2: Update Admin
-1. Remove merchant self-service features from `admin/`
+1. Remove merchant self-service features from `apps/admin-apps/public-web/`
 2. Keep merchant management (admin viewing/managing merchants)
 3. Focus admin on platform management
 
@@ -204,7 +204,7 @@ zoea2/
 ### Shared Backend API
 - ✅ Same backend serves both apps
 - ✅ Role-based endpoints:
-  - `/admin/*` - Admin-only endpoints
+  - `/apps/admin-apps/public-web/*` - Admin-only endpoints
   - `/merchant/*` - Merchant-only endpoints
   - `/api/*` - Public/shared endpoints
 
@@ -212,10 +212,10 @@ zoea2/
 
 **Admin Endpoints:**
 ```
-GET  /admin/merchants          # List all merchants
-GET  /admin/merchants/:id      # View merchant details
-PUT  /admin/merchants/:id     # Update merchant (admin)
-POST /admin/merchants/:id/verify  # Verify merchant
+GET  /apps/admin-apps/public-web/merchants          # List all merchants
+GET  /apps/admin-apps/public-web/merchants/:id      # View merchant details
+PUT  /apps/admin-apps/public-web/merchants/:id     # Update merchant (admin)
+POST /apps/admin-apps/public-web/merchants/:id/verify  # Verify merchant
 ```
 
 **Merchant Endpoints:**
@@ -259,7 +259,7 @@ GET  /merchant/revenue         # My revenue
 
 **Next Steps:**
 1. Create `merchant/` directory
-2. Extract merchant features from `admin/`
+2. Extract merchant features from `apps/admin-apps/public-web/`
 3. Refactor to merchant perspective
 4. Set up separate deployment
 5. Update documentation

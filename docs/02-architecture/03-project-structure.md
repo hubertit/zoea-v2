@@ -23,22 +23,22 @@ Based on your requirements:
 
 ```
 zoea2/
-├── mobile/              # Main consumer app (Flutter)
+├── apps/public-mobile/              # Main consumer app (Flutter)
 │   └── For: End users (travelers, tourists)
 │
-├── web/                 # Main consumer web app
+├── apps/public-web/                 # Main consumer web app
 │   └── For: End users (public website)
 │
-├── merchant-mobile/     # Merchant mobile app (Flutter)
+├── merchant-apps/public-mobile/     # Merchant mobile app (Flutter)
 │   └── For: Merchants managing business on mobile
 │
-├── merchant-web/        # Merchant web portal
+├── merchant-apps/public-web/        # Merchant web portal
 │   └── For: Merchants managing business on web
 │
-├── admin/              # Admin & Partners dashboard (Web)
+├── apps/admin-apps/public-web/              # Admin & Partners dashboard (Web)
 │   └── For: Platform admins & partners
 │
-├── backend/            # Shared API (NestJS)
+├── apps/backend/            # Shared API (NestJS)
 │   └── Serves all apps
 │
 ├── docs/               # Documentation
@@ -52,17 +52,17 @@ zoea2/
 ```
 zoea2/
 ├── consumer/           # Main consumer apps
-│   ├── mobile/        # Flutter mobile app
-│   └── web/           # Public web app
+│   ├── apps/public-mobile/        # Flutter mobile app
+│   └── apps/public-web/           # Public web app
 │
 ├── merchant/            # Merchant apps
-│   ├── mobile/        # Merchant mobile app
-│   └── web/           # Merchant web portal
+│   ├── apps/public-mobile/        # Merchant mobile app
+│   └── apps/public-web/           # Merchant web portal
 │
-├── admin/              # Admin & Partners
-│   └── web/           # Admin dashboard (web only)
+├── apps/admin-apps/public-web/              # Admin & Partners
+│   └── apps/public-web/           # Admin dashboard (web only)
 │
-├── backend/            # Shared API
+├── apps/backend/            # Shared API
 ├── docs/
 ├── scripts/
 ├── migration/
@@ -87,9 +87,9 @@ zoea2/
 
 ### 1. Main Consumer Apps
 
-#### `mobile/` - Consumer Mobile App (Flutter)
+#### `apps/public-mobile/` - Consumer Mobile App (Flutter)
 ```
-mobile/
+apps/public-mobile/
 ├── lib/
 │   ├── core/           # Shared core
 │   └── features/       # Consumer features
@@ -103,9 +103,9 @@ mobile/
 **Users**: Travelers, tourists, locals
 **Platform**: iOS, Android
 
-#### `web/` - Consumer Web App
+#### `apps/public-web/` - Consumer Web App
 ```
-web/
+apps/public-web/
 ├── src/
 │   ├── app/            # Next.js app directory
 │   ├── components/     # UI components
@@ -121,9 +121,9 @@ web/
 
 ### 2. Merchant Apps
 
-#### `merchant-mobile/` - Merchant Mobile App (Flutter)
+#### `merchant-apps/public-mobile/` - Merchant Mobile App (Flutter)
 ```
-merchant-mobile/
+merchant-apps/public-mobile/
 ├── lib/
 │   ├── core/           # Shared core (different from consumer)
 │   └── features/       # Merchant features
@@ -139,9 +139,9 @@ merchant-mobile/
 **Platform**: iOS, Android
 **Domain**: `merchant.zoea.africa` (deep linking)
 
-#### `merchant-web/` - Merchant Web Portal
+#### `merchant-apps/public-web/` - Merchant Web Portal
 ```
-merchant-web/
+merchant-apps/public-web/
 ├── src/
 │   ├── app/            # Next.js app directory
 │   ├── components/     # Merchant UI components
@@ -157,12 +157,12 @@ merchant-web/
 
 ### 3. Admin & Partners
 
-#### `admin/` - Admin & Partners Dashboard (Web)
+#### `apps/admin-apps/public-web/` - Admin & Partners Dashboard (Web)
 ```
-admin/
+apps/admin-apps/public-web/
 ├── src/
 │   ├── app/
-│   │   ├── admin/      # Admin features
+│   │   ├── apps/admin-apps/public-web/      # Admin features
 │   │   └── partners/   # Partner features
 │   ├── components/
 │   └── lib/
@@ -188,14 +188,14 @@ admin/
 ### Backend Endpoints
 
 ```
-backend/
+apps/backend/
 └── src/modules/
     ├── auth/           # Shared authentication
     ├── listings/       # Shared listings
     ├── bookings/       # Shared bookings
-    ├── admin/          # Admin-only endpoints
-    │   └── GET /admin/merchants
-    │   └── GET /admin/analytics
+    ├── apps/admin-apps/public-web/          # Admin-only endpoints
+    │   └── GET /apps/admin-apps/public-web/merchants
+    │   └── GET /apps/admin-apps/public-web/analytics
     ├── merchant/        # Merchant-only endpoints
     │   └── GET /merchant/listings (own)
     │   └── GET /merchant/bookings (own)
@@ -213,12 +213,12 @@ Each app maintains its own repository:
 
 ```
 zoea2/
-├── mobile/            # git: zoea.mobile.2.git
-├── web/               # git: (to be configured)
-├── merchant-mobile/   # git: (to be configured)
-├── merchant-web/      # git: (to be configured)
-├── admin/             # git: (to be configured)
-└── backend/           # git: zoea2-apis.git
+├── apps/public-mobile/            # git: zoea.mobile.2.git
+├── apps/public-web/               # git: (to be configured)
+├── merchant-apps/public-mobile/   # git: (to be configured)
+├── merchant-apps/public-web/      # git: (to be configured)
+├── apps/admin-apps/public-web/             # git: (to be configured)
+└── apps/backend/           # git: zoea2-apis.git
 ```
 
 ---
@@ -257,23 +257,23 @@ api.zoea.africa          # Backend API (or zoea-africa.qtsoftwareltd.com/api)
 
 ### Phase 1: Current State
 ```
-✅ mobile/          # Consumer mobile (exists)
-✅ backend/         # API (exists)
-✅ admin/           # Admin dashboard (exists)
-✅ web/             # Consumer web (exists, needs setup)
+✅ apps/public-mobile/          # Consumer mobile (exists)
+✅ apps/backend/         # API (exists)
+✅ apps/admin-apps/public-web/           # Admin dashboard (exists)
+✅ apps/public-web/             # Consumer web (exists, needs setup)
 ```
 
 ### Phase 2: Add Merchant Apps
 ```
-1. Create merchant-mobile/ directory
-2. Create merchant-web/ directory
-3. Extract merchant features from admin/ (if any)
+1. Create merchant-apps/public-mobile/ directory
+2. Create merchant-apps/public-web/ directory
+3. Extract merchant features from apps/admin-apps/public-web/ (if any)
 4. Build merchant-specific features
 ```
 
 ### Phase 3: Refine Admin
 ```
-1. Focus admin/ on platform management
+1. Focus apps/admin-apps/public-web/ on platform management
 2. Remove merchant self-service (moved to merchant apps)
 3. Add partner-specific features
 ```
@@ -284,12 +284,12 @@ api.zoea.africa          # Backend API (or zoea-africa.qtsoftwareltd.com/api)
 
 | App | Framework | Platform | Users |
 |-----|-----------|----------|-------|
-| **mobile/** | Flutter | iOS, Android | Consumers |
-| **web/** | Next.js | Web | Consumers |
-| **merchant-mobile/** | Flutter | iOS, Android | Merchants |
-| **merchant-web/** | Next.js | Web | Merchants |
-| **admin/** | Next.js | Web | Admins, Partners |
-| **backend/** | NestJS | API | All apps |
+| **apps/public-mobile/** | Flutter | iOS, Android | Consumers |
+| **apps/public-web/** | Next.js | Web | Consumers |
+| **merchant-apps/public-mobile/** | Flutter | iOS, Android | Merchants |
+| **merchant-apps/public-web/** | Next.js | Web | Merchants |
+| **apps/admin-apps/public-web/** | Next.js | Web | Admins, Partners |
+| **apps/backend/** | NestJS | API | All apps |
 
 ---
 
@@ -327,34 +327,34 @@ api.zoea.africa          # Backend API (or zoea-africa.qtsoftwareltd.com/api)
 
 ```
 zoea2/
-├── mobile/                    # Consumer mobile app
+├── apps/public-mobile/                    # Consumer mobile app
 │   ├── lib/
 │   ├── android/
 │   ├── ios/
 │   └── pubspec.yaml
 │
-├── web/                       # Consumer web app
+├── apps/public-web/                       # Consumer web app
 │   ├── src/
 │   ├── public/
 │   └── package.json
 │
-├── merchant-mobile/            # Merchant mobile app
+├── merchant-apps/public-mobile/            # Merchant mobile app
 │   ├── lib/
 │   ├── android/
 │   ├── ios/
 │   └── pubspec.yaml
 │
-├── merchant-web/               # Merchant web portal
+├── merchant-apps/public-web/               # Merchant web portal
 │   ├── src/
 │   ├── public/
 │   └── package.json
 │
-├── admin/                     # Admin & Partners dashboard
+├── apps/admin-apps/public-web/                     # Admin & Partners dashboard
 │   ├── src/
 │   ├── public/
 │   └── package.json
 │
-├── backend/                   # Shared API
+├── apps/backend/                   # Shared API
 │   ├── src/
 │   ├── prisma/
 │   └── package.json
@@ -369,19 +369,19 @@ zoea2/
 
 ## Next Steps
 
-1. ✅ **Create `merchant-mobile/` directory**
+1. ✅ **Create `merchant-apps/public-mobile/` directory**
    - Initialize Flutter project
    - Set up merchant-specific features
 
-2. ✅ **Create `merchant-web/` directory**
+2. ✅ **Create `merchant-apps/public-web/` directory**
    - Initialize Next.js project
    - Set up merchant portal
 
-3. ✅ **Update `admin/`**
+3. ✅ **Update `apps/admin-apps/public-web/`**
    - Focus on platform management
    - Add partner features
 
-4. ✅ **Update `web/`**
+4. ✅ **Update `apps/public-web/`**
    - Set up consumer web app
    - Public-facing features
 
@@ -400,13 +400,13 @@ zoea2/
 
 **✅ Use Flat Structure with 5 Apps:**
 
-1. `mobile/` - Consumer mobile
-2. `web/` - Consumer web
-3. `merchant-mobile/` - Merchant mobile
-4. `merchant-web/` - Merchant web
-5. `admin/` - Admin & Partners (web)
+1. `apps/public-mobile/` - Consumer mobile
+2. `apps/public-web/` - Consumer web
+3. `merchant-apps/public-mobile/` - Merchant mobile
+4. `merchant-apps/public-web/` - Merchant web
+5. `apps/admin-apps/public-web/` - Admin & Partners (web)
 
-**All sharing the same `backend/` API.**
+**All sharing the same `apps/backend/` API.**
 
 This structure:
 - ✅ Matches your requirements

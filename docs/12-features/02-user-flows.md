@@ -257,7 +257,7 @@ Navigate to Dashboard
 ```
 Admin navigates to Listings
     ↓
-API: GET /admin/listings
+API: GET /apps/admin-apps/public-web/listings
     ↓
 Display all listings with filters
     ↓
@@ -267,7 +267,7 @@ Admin can:
   - Approve/reject listing
   - Delete listing
     ↓
-API: PUT /admin/listings/{id} or DELETE
+API: PUT /apps/admin-apps/public-web/listings/{id} or DELETE
     ↓
 Refresh listings list
 ```
@@ -283,7 +283,7 @@ Refresh listings list
 ```
 Admin navigates to Bookings
     ↓
-API: GET /admin/bookings
+API: GET /apps/admin-apps/public-web/bookings
     ↓
 Display all bookings with filters
     ↓
@@ -293,7 +293,7 @@ Admin can:
   - Cancel booking
   - Generate invoice
     ↓
-API: PUT /admin/bookings/{id} or POST /cancel
+API: PUT /apps/admin-apps/public-web/bookings/{id} or POST /cancel
     ↓
 Update booking status
 ```
@@ -309,7 +309,7 @@ Update booking status
 ```
 Admin opens Dashboard
     ↓
-API: GET /admin/analytics
+API: GET /apps/admin-apps/public-web/analytics
     ↓
 Display:
   - Total bookings
@@ -320,7 +320,7 @@ Display:
     ↓
 Admin can filter by date range
     ↓
-API: GET /admin/analytics?startDate=...&endDate=...
+API: GET /apps/admin-apps/public-web/analytics?startDate=...&endDate=...
     ↓
 Update charts
 ```

@@ -37,7 +37,7 @@ The Zoea Admin codebase is a **Next.js 16** admin panel application for managing
 zoea-2/
 ├── src/
 │   ├── app/                    # Next.js App Router
-│   │   ├── admin/              # Admin dashboard pages
+│   │   ├── apps/admin-apps/public-web/              # Admin dashboard pages
 │   │   │   ├── dashboard/      # ✅ Main dashboard (basic stats)
 │   │   │   ├── users/          # ✅ User management (CRUD)
 │   │   │   ├── venues/         # ✅ Venue management (CRUD)
@@ -49,7 +49,7 @@ zoea-2/
 │   │   │   ├── settings/       # ⚠️ Settings (placeholder)
 │   │   │   └── login/          # ✅ Login page (mock auth)
 │   │   ├── api/                # API Routes
-│   │   │   ├── admin/stats/    # ✅ Dashboard statistics
+│   │   │   ├── apps/admin-apps/public-web/stats/    # ✅ Dashboard statistics
 │   │   │   ├── events/         # ✅ Events API
 │   │   │   ├── venues/         # ✅ Venues API
 │   │   │   ├── properties/    # ✅ Properties API
@@ -116,7 +116,7 @@ zoea-2/
 - ✅ Application viewing
 
 ### 5. **API Routes**
-- ✅ `/api/admin/stats` - Dashboard statistics
+- ✅ `/api/apps/admin-apps/public-web/stats` - Dashboard statistics
 - ✅ `/api/events` - Events data
 - ✅ `/api/venues` - Venues data
 - ✅ `/api/properties` - Properties data
@@ -139,21 +139,21 @@ zoea-2/
 - ❌ No password hashing/verification
 - ❌ No JWT or secure session management
 - ❌ No role-based access control (RBAC) implementation
-- **Location:** `src/app/admin/login/page.tsx:20`
+- **Location:** `src/app/apps/admin-apps/public-web/login/page.tsx:20`
 
 ### 2. **CRUD Operations**
 - ❌ Delete functionality not implemented (marked with TODO)
 - **Locations:**
-  - `src/app/admin/events/page.tsx:127`
-  - `src/app/admin/users/page.tsx:117`
-  - `src/app/admin/venues/page.tsx:119`
-  - `src/app/admin/real-estate/page.tsx:146`
+  - `src/app/apps/admin-apps/public-web/events/page.tsx:127`
+  - `src/app/apps/admin-apps/public-web/users/page.tsx:117`
+  - `src/app/apps/admin-apps/public-web/venues/page.tsx:119`
+  - `src/app/apps/admin-apps/public-web/real-estate/page.tsx:146`
 
 ### 3. **Dashboard Features**
 - ⚠️ Dashboard stats not fetching from API (hardcoded values)
 - ❌ No charts/visualizations implemented
 - ❌ No real-time data updates
-- **Location:** `src/app/admin/dashboard/page.tsx:17-26`
+- **Location:** `src/app/apps/admin-apps/public-web/dashboard/page.tsx:17-26`
 
 ### 4. **Analytics & Reporting**
 - ❌ No chart components implemented (Recharts installed but unused)
@@ -185,7 +185,7 @@ zoea-2/
 
 #### 1. **Security Issues**
 ```typescript
-// src/app/admin/login/page.tsx:20
+// src/app/apps/admin-apps/public-web/login/page.tsx:20
 // TODO: Replace with actual API call
 // For now, simple mock authentication
 ```
@@ -307,7 +307,7 @@ zoea-2/
    - Add success/error notifications
 
 3. **Fix Dashboard Data Fetching**
-   - Connect dashboard to `/api/admin/stats`
+   - Connect dashboard to `/api/apps/admin-apps/public-web/stats`
    - Add loading states
    - Add error handling
 

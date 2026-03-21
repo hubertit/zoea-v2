@@ -15,7 +15,7 @@ The search feature has been fully implemented with search history tracking, rece
 
 ### 1.1 Optional JWT Auth Guard
 
-**File**: `backend/src/modules/auth/guards/optional-jwt-auth.guard.ts` (NEW)
+**File**: `apps/backend/src/modules/auth/guards/optional-jwt-auth.guard.ts` (NEW)
 
 **Purpose**: Allows endpoints to optionally extract userId from JWT token without requiring authentication
 
@@ -26,7 +26,7 @@ The search feature has been fully implemented with search history tracking, rece
 
 ### 1.2 Search Controller Update
 
-**File**: `backend/src/modules/search/search.controller.ts`
+**File**: `apps/backend/src/modules/search/search.controller.ts`
 
 **Changes**:
 - ✅ Added `@UseGuards(OptionalJwtAuthGuard)` to search endpoint
@@ -41,7 +41,7 @@ The search feature has been fully implemented with search history tracking, rece
 
 ### 2.1 SearchService Updates
 
-**File**: `mobile/lib/core/services/search_service.dart`
+**File**: `apps/public-mobile/lib/core/services/search_service.dart`
 
 **Changes**:
 - ✅ Changed from `AppConfig.dioInstance()` to `AppConfig.authenticatedDioInstance()`
@@ -58,7 +58,7 @@ Future<void> clearSearchHistory()
 
 ### 2.2 SearchProvider Updates
 
-**File**: `mobile/lib/core/providers/search_provider.dart`
+**File**: `apps/public-mobile/lib/core/providers/search_provider.dart`
 
 **Changes**:
 - ✅ Added `searchHistoryProvider` (FutureProvider)
@@ -72,7 +72,7 @@ final trendingSearchesProvider = FutureProvider<Map<String, dynamic>>
 
 ### 2.3 SearchScreen Updates
 
-**File**: `mobile/lib/features/search/screens/search_screen.dart`
+**File**: `apps/public-mobile/lib/features/search/screens/search_screen.dart`
 
 **Changes**:
 - ✅ Replaced mock `_getRecentSearches()` with `searchHistoryProvider`
@@ -194,13 +194,13 @@ final trendingSearchesProvider = FutureProvider<Map<String, dynamic>>
 ## 7. Files Modified/Created
 
 ### Backend:
-- ✅ Created: `backend/src/modules/auth/guards/optional-jwt-auth.guard.ts`
-- ✅ Modified: `backend/src/modules/search/search.controller.ts`
+- ✅ Created: `apps/backend/src/modules/auth/guards/optional-jwt-auth.guard.ts`
+- ✅ Modified: `apps/backend/src/modules/search/search.controller.ts`
 
 ### Mobile:
-- ✅ Modified: `mobile/lib/core/services/search_service.dart`
-- ✅ Modified: `mobile/lib/core/providers/search_provider.dart`
-- ✅ Modified: `mobile/lib/features/search/screens/search_screen.dart`
+- ✅ Modified: `apps/public-mobile/lib/core/services/search_service.dart`
+- ✅ Modified: `apps/public-mobile/lib/core/providers/search_provider.dart`
+- ✅ Modified: `apps/public-mobile/lib/features/search/screens/search_screen.dart`
 
 ### Documentation:
 - ✅ Created: `docs/SEARCH_FEATURE_ANALYSIS.md`

@@ -20,7 +20,7 @@ This guide covers testing strategies, best practices, and examples for all Zoea 
 #### 1. Unit Tests
 Test individual functions, methods, and classes in isolation.
 
-**Location**: `mobile/test/unit/`
+**Location**: `apps/public-mobile/test/unit/`
 
 **Example**:
 ```dart
@@ -65,7 +65,7 @@ void main() {
 #### 2. Widget Tests
 Test individual widgets and their interactions.
 
-**Location**: `mobile/test/widget/`
+**Location**: `apps/public-mobile/test/widget/`
 
 **Example**:
 ```dart
@@ -123,7 +123,7 @@ void main() {
 #### 3. Integration Tests
 Test complete user flows across multiple screens.
 
-**Location**: `mobile/integration_test/`
+**Location**: `apps/public-mobile/integration_test/`
 
 **Example**:
 ```dart
@@ -178,7 +178,7 @@ void main() {
 ### Running Tests
 
 ```bash
-cd mobile
+cd apps/public-mobile
 
 # Run all tests
 flutter test
@@ -229,7 +229,7 @@ void main() {
 #### 1. Unit Tests
 Test individual services, controllers, and utilities.
 
-**Location**: `backend/src/**/*.spec.ts`
+**Location**: `apps/backend/src/**/*.spec.ts`
 
 **Example**:
 ```typescript
@@ -288,7 +288,7 @@ describe('ListingsService', () => {
 #### 2. E2E Tests
 Test complete API endpoints and request/response flows.
 
-**Location**: `backend/test/`
+**Location**: `apps/backend/test/`
 
 **Example**:
 ```typescript
@@ -373,7 +373,7 @@ describe('ListingsController (e2e)', () => {
 ### Running Tests
 
 ```bash
-cd backend
+cd apps/backend
 
 # Run all tests
 npm test
@@ -465,7 +465,7 @@ describe('/api/listings', () => {
 ### Running Tests
 
 ```bash
-cd admin
+cd apps/admin-web
 
 # Run tests
 npm test
@@ -486,7 +486,7 @@ npm run test:watch
 Create reusable test data:
 
 ```dart
-// mobile/test/fixtures/listings_fixture.dart
+// apps/public-mobile/test/fixtures/listings_fixture.dart
 class ListingsFixture {
   static Map<String, dynamic> hotelListing() => {
     'id': 'hotel-123',
@@ -499,7 +499,7 @@ class ListingsFixture {
 ```
 
 ```typescript
-// backend/test/fixtures/listings.fixture.ts
+// apps/backend/test/fixtures/listings.fixture.ts
 export const mockListing = {
   id: 'listing-123',
   name: 'Test Hotel',
@@ -512,7 +512,7 @@ export const mockListing = {
 ### Test Database Seeding
 
 ```typescript
-// backend/test/seed.ts
+// apps/backend/test/seed.ts
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -556,8 +556,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
-      - run: cd mobile && flutter test
-      - run: cd mobile && flutter test --coverage
+      - run: cd apps/public-mobile && flutter test
+      - run: cd apps/public-mobile && flutter test --coverage
 
   backend:
     runs-on: ubuntu-latest
@@ -566,9 +566,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: cd backend && npm ci
-      - run: cd backend && npm test
-      - run: cd backend && npm run test:cov
+      - run: cd apps/backend && npm ci
+      - run: cd apps/backend && npm test
+      - run: cd apps/backend && npm run test:cov
 ```
 
 ---

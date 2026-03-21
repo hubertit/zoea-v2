@@ -21,7 +21,7 @@ The login system currently uses mock authentication for development/testing purp
 
 - Currently, the login page accepts **any email and password combination** as long as both fields are filled
 - The authentication is stored in `sessionStorage` with key `zoeaAdminAuth`
-- After login, you'll be redirected to `/admin/dashboard`
+- After login, you'll be redirected to `/apps/admin-apps/public-web/dashboard`
 - To logout, click the user menu in the header and select "Logout"
 
 ### Development Mode

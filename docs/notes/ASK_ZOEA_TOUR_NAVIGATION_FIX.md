@@ -11,7 +11,7 @@ When users tapped on tour recommendation cards in the Ask Zoea chat interface, t
 ### Problem 1: Wrong Provider Used
 The `TourDetailScreen` was using `tourBySlugProvider` to load tour data, but the route parameter `:id` contains a UUID (not a slug). The backend sends tour cards with UUID IDs in the `params.id` field.
 
-**File**: `mobile/lib/features/explore/screens/tour_detail_screen.dart`
+**File**: `apps/public-mobile/lib/features/explore/screens/tour_detail_screen.dart`
 ```dart
 // BEFORE (WRONG):
 final tourAsync = ref.watch(tourBySlugProvider(widget.tourId));
@@ -65,11 +65,11 @@ This handles:
 
 ## Files Modified
 
-1. ✅ `mobile/lib/features/explore/screens/tour_detail_screen.dart`
+1. ✅ `apps/public-mobile/lib/features/explore/screens/tour_detail_screen.dart`
    - Changed from `tourBySlugProvider` to `tourByIdProvider`
    - Added comment explaining the change
 
-2. ✅ `mobile/lib/features/assistant/screens/ask_zoea_screen.dart`
+2. ✅ `apps/public-mobile/lib/features/assistant/screens/ask_zoea_screen.dart`
    - Enhanced navigation logic in `_buildCard()` method
    - Now handles all route parameters dynamically
    - Added fallback for `:id` parameter

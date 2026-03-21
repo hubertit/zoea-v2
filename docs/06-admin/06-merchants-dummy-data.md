@@ -49,7 +49,7 @@ src/
 │   │       ├── route.ts          # ✅ All using dummy data
 │   │       ├── [id]/route.ts     # ✅ All using dummy data
 │   │       └── [id]/listings/route.ts  # ✅ All using dummy data
-│   ├── admin/
+│   ├── apps/admin-apps/public-web/
 │   │   └── merchants/
 │   │       ├── page.tsx          # ✅ Updated: multiple categories
 │   │       ├── create/page.tsx   # ✅ Updated: checkbox selection
@@ -66,7 +66,7 @@ src/
 ## Usage
 
 ### Accessing the Module
-1. Go to admin panel: `/admin/merchants`
+1. Go to admin panel: `/apps/admin-apps/public-web/merchants`
 2. View 12 pre-loaded merchants
 3. Filter by category (hotel, restaurant, venue, etc.)
 4. Filter by status (active, pending, inactive)
@@ -178,7 +178,7 @@ When you're ready to connect to the database:
 
 ## Testing
 
-1. Visit `/admin/merchants`
+1. Visit `/apps/admin-apps/public-web/merchants`
 2. Browse the 12 sample merchants
 3. Filter by hotel - see 4 merchants
 4. Filter by restaurant - see 5 merchants

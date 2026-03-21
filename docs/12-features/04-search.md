@@ -30,7 +30,7 @@ The backend **already supports** search history with automatic saving and endpoi
   - Query length > 2 characters
 - Returns: `{listings: [...], events: [...], tours: [...]}`
 
-**Implementation**: `backend/src/modules/search/search.service.ts:8-108`
+**Implementation**: `apps/backend/src/modules/search/search.service.ts:8-108`
 
 ### 1.2 Search History Endpoints
 
@@ -40,13 +40,13 @@ The backend **already supports** search history with automatic saving and endpoi
 - **Endpoint**: `GET /api/search/history?limit=10`
 - **Auth**: ✅ Required (JwtAuthGuard)
 - **Returns**: Array of search history items with `query`, `createdAt`, `filters`
-- **Implementation**: `backend/src/modules/search/search.controller.ts:45-52`
+- **Implementation**: `apps/backend/src/modules/search/search.controller.ts:45-52`
 
 #### Clear Search History
 - **Endpoint**: `DELETE /api/search/history`
 - **Auth**: ✅ Required (JwtAuthGuard)
 - **Returns**: `{success: true}`
-- **Implementation**: `backend/src/modules/search/search.controller.ts:54-60`
+- **Implementation**: `apps/backend/src/modules/search/search.controller.ts:54-60`
 
 ### 1.3 Trending Searches Endpoint
 
@@ -64,13 +64,13 @@ The backend **already supports** search history with automatic saving and endpoi
   }
   ```
 - **Logic**: Groups searches from last 7 days, orders by count
-- **Implementation**: `backend/src/modules/search/search.controller.ts:37-43`
+- **Implementation**: `apps/backend/src/modules/search/search.controller.ts:37-43`
 
 ### 1.4 Database Schema
 
 **Status**: ✅ **READY**
 
-**Model**: `SearchHistory` in `backend/prisma/schema.prisma:1164-1176`
+**Model**: `SearchHistory` in `apps/backend/prisma/schema.prisma:1164-1176`
 
 ```prisma
 model SearchHistory {
@@ -99,7 +99,7 @@ model SearchHistory {
 
 ### 2.1 Current Implementation
 
-**SearchService** (`mobile/lib/core/services/search_service.dart`):
+**SearchService** (`apps/public-mobile/lib/core/services/search_service.dart`):
 - ✅ Basic search functionality implemented
 - ❌ Uses unauthenticated Dio instance
 - ❌ Doesn't pass `userId` (so search history not saved for logged-in users)
@@ -108,13 +108,13 @@ model SearchHistory {
   - `getTrendingSearches()`
   - `clearSearchHistory()`
 
-**SearchScreen** (`mobile/lib/features/search/screens/search_screen.dart`):
+**SearchScreen** (`apps/public-mobile/lib/features/search/screens/search_screen.dart`):
 - ✅ UI for recent/popular searches exists
 - ❌ Uses mock data (`_getRecentSearches()`, `_getPopularSearches()`)
 - ❌ Doesn't fetch real data from API
 - ✅ Search functionality works (but doesn't save history for logged-in users)
 
-**SearchProvider** (`mobile/lib/core/providers/search_provider.dart`):
+**SearchProvider** (`apps/public-mobile/lib/core/providers/search_provider.dart`):
 - ✅ Basic search provider exists
 - ❌ Missing providers for:
   - Search history

@@ -39,7 +39,7 @@ Verified that both mobile app and admin portal are consistent with the database 
 - **Provider:** `activeCountriesProvider` - Uses API data dynamically
 
 ### Hardcoded Lists (Updated)
-**File:** `mobile/lib/features/profile/screens/profile_screen.dart`
+**File:** `apps/public-mobile/lib/features/profile/screens/profile_screen.dart`
 
 **Before:**
 ```dart
@@ -87,19 +87,19 @@ String _getCountryCode(String name) {
 - **No hardcoded lists** - All country data comes from API
 
 ### Usage Locations
-1. **Events Page** (`admin/app/dashboard/events/page.tsx`)
+1. **Events Page** (`apps/admin-apps/public-web/app/dashboard/events/page.tsx`)
    - Uses `LocationsAPI.getCountries()` for country filter
    - Fetches cities dynamically when country is selected
 
-2. **Merchants Page** (`admin/app/dashboard/merchants/page.tsx`)
+2. **Merchants Page** (`apps/admin-apps/public-web/app/dashboard/merchants/page.tsx`)
    - Uses `LocationsAPI.getCountries()` for country selection
    - Fetches cities dynamically when country is selected
 
-3. **Listings Page** (`admin/app/dashboard/listings/page.tsx`)
+3. **Listings Page** (`apps/admin-apps/public-web/app/dashboard/listings/page.tsx`)
    - Uses `LocationsAPI.getCountries()` for country filter
    - Fetches cities dynamically when country is selected
 
-4. **Create Listing Page** (`admin/app/dashboard/my-listings/create/page.tsx`)
+4. **Create Listing Page** (`apps/admin-apps/public-web/app/dashboard/my-listings/create/page.tsx`)
    - Uses `LocationsAPI.getCountries()` for country selection
    - Fetches cities dynamically when country is selected
 
@@ -130,7 +130,7 @@ String _getCountryCode(String name) {
    - ✅ Works for all 5 countries
 
 ### Service Implementation
-**File:** `backend/src/modules/countries/countries.service.ts`
+**File:** `apps/backend/src/modules/countries/countries.service.ts`
 
 ```typescript
 async findActive() {

@@ -11,21 +11,21 @@ Complete reorganization and update of documentation across the entire Zoea platf
 ### 1. Created Comprehensive Changelogs
 Created detailed version history for all projects:
 - ✅ **[CHANGELOG.md](CHANGELOG.md)** - Platform-wide changelog
-- ✅ **[mobile/CHANGELOG.md](mobile/CHANGELOG.md)** - Mobile app changelog (v1.0.0 to v2.0.0)
-- ✅ **[backend/CHANGELOG.md](backend/CHANGELOG.md)** - Backend API changelog (v1.0.0 to v2.0.0)
-- ✅ **[merchant-mobile/CHANGELOG.md](merchant-mobile/CHANGELOG.md)** - Merchant app changelog
-- ✅ **[admin/CHANGELOG.md](admin/CHANGELOG.md)** - Admin dashboard changelog
+- ✅ **[apps/public-mobile/CHANGELOG.md](apps/public-mobile/CHANGELOG.md)** - Mobile app changelog (v1.0.0 to v2.0.0)
+- ✅ **[apps/backend/CHANGELOG.md](apps/backend/CHANGELOG.md)** - Backend API changelog (v1.0.0 to v2.0.0)
+- ✅ **[merchant-apps/public-mobile/CHANGELOG.md](merchant-apps/public-mobile/CHANGELOG.md)** - Merchant app changelog
+- ✅ **[apps/admin-apps/public-web/CHANGELOG.md](apps/admin-apps/public-web/CHANGELOG.md)** - Admin dashboard changelog
 
 ### 2. Created Quick Start Guides
 Made onboarding faster with step-by-step guides:
-- ✅ **[mobile/QUICKSTART.md](mobile/QUICKSTART.md)** - Mobile app quick start (5 minutes)
-- ✅ **[backend/QUICKSTART.md](backend/QUICKSTART.md)** - Backend API quick start (10 minutes)
+- ✅ **[apps/public-mobile/QUICKSTART.md](apps/public-mobile/QUICKSTART.md)** - Mobile app quick start (5 minutes)
+- ✅ **[apps/backend/QUICKSTART.md](apps/backend/QUICKSTART.md)** - Backend API quick start (10 minutes)
 
 ### 3. Updated Main Documentation
 Refreshed core documentation with latest information:
 - ✅ **[README.md](README.md)** - Updated with January 2025 features and better structure
-- ✅ **[mobile/README.md](mobile/README.md)** - Added dark mode features and quick start link
-- ✅ **[backend/README.md](backend/README.md)** - Added changelog and quick start references
+- ✅ **[apps/public-mobile/README.md](apps/public-mobile/README.md)** - Added dark mode features and quick start link
+- ✅ **[apps/backend/README.md](apps/backend/README.md)** - Added changelog and quick start references
 - ✅ **[docs/README.md](docs/README.md)** - Enhanced navigation with links to new resources
 
 ### 4. Created Documentation Index
@@ -37,9 +37,9 @@ Refreshed core documentation with latest information:
 
 ### 5. Cleaned Up Mobile Documentation
 Organized outdated analysis documents:
-- ✅ Created **[mobile/docs/archive/](mobile/docs/archive/)** folder
+- ✅ Created **[apps/public-mobile/docs/archive/](apps/public-mobile/docs/archive/)** folder
 - ✅ Moved 25+ analysis and report files to archive
-- ✅ Created **[mobile/docs/archive/README.md](mobile/docs/archive/README.md)** explaining archived content
+- ✅ Created **[apps/public-mobile/docs/archive/README.md](apps/public-mobile/docs/archive/README.md)** explaining archived content
 - ✅ Kept only essential docs in mobile root:
   - `README.md`
   - `CHANGELOG.md`
@@ -53,11 +53,11 @@ Organized outdated analysis documents:
 ```
 zoea2/
 ├── README.md
-├── mobile/
+├── apps/public-mobile/
 │   ├── README.md
 │   ├── 26+ analysis/report .md files (cluttered)
 │   └── ...
-├── backend/
+├── apps/backend/
 │   ├── README.md
 │   └── ...
 ├── docs/
@@ -73,30 +73,30 @@ zoea2/
 ├── CHANGELOG.md                 # ⭐ NEW - Platform changelog
 ├── DOCUMENTATION_INDEX.md       # ⭐ NEW - Complete navigation
 ├── TEST_ACCOUNTS.md
-├── mobile/
+├── apps/public-mobile/
 │   ├── README.md               # Updated
 │   ├── CHANGELOG.md            # ⭐ NEW
 │   ├── QUICKSTART.md           # ⭐ NEW
 │   └── docs/
 │       └── archive/            # ⭐ NEW - Archived 25+ files
 │           └── README.md
-├── backend/
+├── apps/backend/
 │   ├── README.md               # Updated
 │   ├── CHANGELOG.md            # ⭐ NEW
 │   └── QUICKSTART.md           # ⭐ NEW
-├── merchant-mobile/
+├── merchant-apps/public-mobile/
 │   └── CHANGELOG.md            # ⭐ NEW
-├── admin/
+├── apps/admin-apps/public-web/
 │   └── CHANGELOG.md            # ⭐ NEW
 ├── docs/
 │   ├── README.md               # Updated with better navigation
 │   ├── 01-project-overview/
 │   ├── 02-architecture/
-│   ├── 03-mobile/
-│   ├── 04-merchant-mobile/
-│   ├── 05-backend/
-│   ├── 06-admin/
-│   ├── 07-web/
+│   ├── 03-apps/public-mobile/
+│   ├── 04-merchant-apps/public-mobile/
+│   ├── 05-apps/backend/
+│   ├── 06-apps/admin-apps/public-web/
+│   ├── 07-apps/public-web/
 │   ├── 08-database/
 │   ├── 09-deployment/
 │   ├── 10-development/
@@ -189,12 +189,12 @@ For anyone starting with the project:
 1. **[README.md](README.md)** - Project overview
 2. **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete navigation
 3. **Quick Start Guides**:
-   - [Mobile Quick Start](mobile/QUICKSTART.md)
-   - [Backend Quick Start](backend/QUICKSTART.md)
+   - [Mobile Quick Start](apps/public-mobile/QUICKSTART.md)
+   - [Backend Quick Start](apps/backend/QUICKSTART.md)
 4. **Changelogs**:
    - [Platform Changelog](CHANGELOG.md)
-   - [Mobile Changelog](mobile/CHANGELOG.md)
-   - [Backend Changelog](backend/CHANGELOG.md)
+   - [Mobile Changelog](apps/public-mobile/CHANGELOG.md)
+   - [Backend Changelog](apps/backend/CHANGELOG.md)
 
 ---
 

@@ -60,7 +60,7 @@ The UX-First User Data Collection module has been successfully implemented in th
 ## 📁 File Structure
 
 ```
-mobile/lib/
+apps/public-mobile/lib/
 ├── core/
 │   ├── models/
 │   │   └── user.dart (extended with new fields)

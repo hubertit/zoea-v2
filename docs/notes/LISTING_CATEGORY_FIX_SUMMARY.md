@@ -28,7 +28,7 @@ The migration script likely had issues with category ID mapping between V1 and V
 
 ## Solution Implemented
 
-Created and executed SQL script: `/backend/scripts/fix-listing-categories.sql`
+Created and executed SQL script: `/apps/backend/scripts/fix-listing-categories.sql`
 
 ### What the Fix Does:
 
@@ -90,7 +90,7 @@ Now properly aligned:
 
 ## Files Created
 
-1. `/backend/scripts/fix-listing-categories.sql` - SQL script to fix categories
+1. `/apps/backend/scripts/fix-listing-categories.sql` - SQL script to fix categories
    - Includes verification queries
    - Safe to re-run (idempotent)
    - Logs progress with NOTICE statements

@@ -19,15 +19,15 @@
 cd /Users/macbookpro/projects/flutter/zoea2
 
 # Each app has its own git repo
-cd mobile && git pull
+cd apps/public-mobile && git pull
 cd ../backend && git pull
-cd ../admin && git pull
+cd ../admin-web && git pull
 ```
 
 #### 2. Consumer Mobile Setup
 
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter pub get
 flutter doctor  # Check for issues
 ```
@@ -35,7 +35,7 @@ flutter doctor  # Check for issues
 #### 3. Merchant Mobile Setup
 
 ```bash
-cd merchant-mobile
+cd apps/merchant-mobile
 flutter pub get
 flutter doctor  # Check for issues
 ```
@@ -43,7 +43,7 @@ flutter doctor  # Check for issues
 #### 4. Backend Setup
 
 ```bash
-cd backend
+cd apps/backend
 npm install
 cp env.example .env
 # Edit .env with database credentials
@@ -55,7 +55,7 @@ npm run start:dev
 #### 5. Admin Setup
 
 ```bash
-cd admin
+cd apps/admin-web
 npm install
 # Configure environment variables if needed
 npm run dev
@@ -204,7 +204,7 @@ npm run lint
 ### Consumer Mobile Structure
 
 ```
-mobile/
+apps/public-mobile/
 ├── lib/
 │   ├── core/
 │   │   ├── config/       # App configuration
@@ -227,7 +227,7 @@ mobile/
 ### Merchant Mobile Structure
 
 ```
-merchant-mobile/
+merchant-apps/public-mobile/
 ├── lib/
 │   ├── core/
 │   │   ├── config/       # App configuration
@@ -251,7 +251,7 @@ merchant-mobile/
 ### Backend Structure
 
 ```
-backend/
+apps/backend/
 ├── src/
 │   ├── modules/          # Feature modules
 │   │   ├── auth/
@@ -381,10 +381,10 @@ npm test -- feature.spec.ts
 
 ### Backend Deployment
 
-**Script**: `backend/sync-all-environments.sh`
+**Script**: `apps/backend/sync-all-environments.sh`
 
 ```bash
-cd backend
+cd apps/backend
 ./sync-all-environments.sh
 ```
 
@@ -449,7 +449,7 @@ static const String apiBaseUrl = 'https://zoea-africa.qtsoftwareltd.com/api';
 ### Database Migration
 
 ```bash
-cd backend
+cd apps/backend
 # Edit prisma/schema.prisma
 npx prisma migrate dev --name migration_name
 npx prisma generate
@@ -459,19 +459,19 @@ npx prisma generate
 
 **Mobile**:
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter pub upgrade
 ```
 
 **Backend**:
 ```bash
-cd backend
+cd apps/backend
 npm update
 ```
 
 **Admin**:
 ```bash
-cd admin
+cd apps/admin-web
 npm update
 ```
 

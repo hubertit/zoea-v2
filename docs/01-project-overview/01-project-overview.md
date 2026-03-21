@@ -6,36 +6,36 @@ Zoea is a comprehensive travel and tourism platform for Rwanda, providing users 
 
 ## Applications
 
-### 1. Consumer Mobile App (`mobile/`)
+### 1. Consumer Mobile App (`apps/public-mobile/`)
 - **Technology**: Flutter (Dart)
 - **Platform**: iOS, Android
 - **Purpose**: Consumer-facing mobile application
 - **Users**: End users (travelers, tourists, locals)
 
-### 2. Merchant Mobile App (`merchant-mobile/`)
+### 2. Merchant Mobile App (`merchant-apps/public-mobile/`)
 - **Technology**: Flutter (Dart)
 - **Platform**: iOS, Android
 - **Purpose**: Merchant business management mobile app
 - **Users**: Merchants (hotel owners, restaurant owners, tour operators)
 
-### 3. Backend API (`backend/`)
+### 3. Backend API (`apps/backend/`)
 - **Technology**: NestJS (TypeScript)
 - **Database**: PostgreSQL + PostGIS
 - **ORM**: Prisma
 - **Purpose**: RESTful API serving all applications
 - **Users**: All applications (mobile, merchant-mobile, admin, web)
 
-### 4. Admin Dashboard (`admin/`)
+### 4. Admin Dashboard (`apps/admin-apps/public-web/`)
 - **Technology**: Next.js (React, TypeScript)
 - **Purpose**: Admin and partners management dashboard
 - **Users**: Platform administrators, partners, operators
 
-### 5. Consumer Web App (`web/`)
+### 5. Consumer Web App (`apps/public-web/`)
 - **Technology**: To be determined (Next.js recommended)
 - **Purpose**: Public-facing website for consumers
 - **Users**: General public, potential customers
 
-### 6. Merchant Web Portal (`merchant-web/`)
+### 6. Merchant Web Portal (`merchant-apps/public-web/`)
 - **Technology**: To be determined (Next.js recommended)
 - **Purpose**: Merchant business management web portal
 - **Users**: Merchants (web-based management)
@@ -44,12 +44,12 @@ Zoea is a comprehensive travel and tourism platform for Rwanda, providing users 
 
 ```
 zoea2/
-├── mobile/          # Consumer mobile app (Flutter)
-├── merchant-mobile/ # Merchant mobile app (Flutter)
-├── backend/         # NestJS API
-├── admin/           # Admin & Partners dashboard (Next.js)
-├── web/             # Consumer web app (Next.js - future)
-├── merchant-web/    # Merchant web portal (Next.js - future)
+├── apps/public-mobile/          # Consumer mobile app (Flutter)
+├── merchant-apps/public-mobile/ # Merchant mobile app (Flutter)
+├── apps/backend/         # NestJS API
+├── apps/admin-apps/public-web/           # Admin & Partners dashboard (Next.js)
+├── apps/public-web/             # Consumer web app (Next.js - future)
+├── merchant-apps/public-web/    # Merchant web portal (Next.js - future)
 ├── docs/            # Project documentation
 ├── database/        # Database schemas and dumps
 ├── migration/       # Database migration scripts
@@ -59,12 +59,12 @@ zoea2/
 ## Git Repositories
 
 Each application maintains its own git repository:
-- **mobile/**: `https://github.com/hubertit/zoea.mobile.2.git`
-- **merchant-mobile/**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
-- **backend/**: `https://github.com/zoea-africa/zoea2-apis.git`
-- **admin/**: (to be configured)
-- **web/**: (to be configured)
-- **merchant-web/**: (to be configured)
+- **apps/public-mobile/**: `https://github.com/hubertit/zoea.mobile.2.git`
+- **merchant-apps/public-mobile/**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
+- **apps/backend/**: `https://github.com/zoea-africa/zoea2-apis.git`
+- **apps/admin-apps/public-web/**: (to be configured)
+- **apps/public-web/**: (to be configured)
+- **merchant-apps/public-web/**: (to be configured)
 
 ## Technology Stack Summary
 

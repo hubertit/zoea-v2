@@ -6,9 +6,9 @@ Zoea uses **PostgreSQL** as the primary database with **Prisma** as the ORM.
 
 ## Database Location
 
-- **Schema File**: `backend/prisma/schema.prisma`
-- **Migrations**: `backend/prisma/migrations/`
-- **Connection**: Configured in `backend/.env` as `DATABASE_URL`
+- **Schema File**: `apps/backend/prisma/schema.prisma`
+- **Migrations**: `apps/backend/prisma/migrations/`
+- **Connection**: Configured in `apps/backend/.env` as `DATABASE_URL`
 
 ## Key Models
 
@@ -48,7 +48,7 @@ Zoea uses **PostgreSQL** as the primary database with **Prisma** as the ORM.
 ### Prisma Studio (GUI)
 
 ```bash
-cd backend
+cd apps/backend
 npx prisma studio
 ```
 
@@ -115,6 +115,6 @@ psql -U postgres zoea_v2 < backup.sql
 
 ## See Also
 
-- `backend/prisma/schema.prisma` - Complete schema definition
-- `backend/docs/` - Backend-specific documentation
+- `apps/backend/prisma/schema.prisma` - Complete schema definition
+- `apps/backend/docs/` - Backend-specific documentation
 

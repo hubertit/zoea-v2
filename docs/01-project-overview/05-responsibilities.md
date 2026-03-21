@@ -2,7 +2,7 @@
 
 ## Application Responsibilities
 
-### Consumer Mobile App (`mobile/`) Responsibilities
+### Consumer Mobile App (`apps/public-mobile/`) Responsibilities
 
 **Primary Role**: Consumer-facing mobile application
 
@@ -39,7 +39,7 @@
 
 ---
 
-### Merchant Mobile App (`merchant-mobile/`) Responsibilities
+### Merchant Mobile App (`merchant-apps/public-mobile/`) Responsibilities
 
 **Primary Role**: Merchant business management mobile application
 
@@ -73,7 +73,7 @@
 
 ---
 
-### Backend API (`backend/`) Responsibilities
+### Backend API (`apps/backend/`) Responsibilities
 
 **Primary Role**: Business logic, data management, API provider
 
@@ -124,7 +124,7 @@
 
 ---
 
-### Admin Dashboard (`admin/`) Responsibilities
+### Admin Dashboard (`apps/admin-apps/public-web/`) Responsibilities
 
 **Primary Role**: Administrative interface for platform management
 
@@ -161,7 +161,7 @@
 
 ---
 
-### Public Web App (`web/`) Responsibilities
+### Public Web App (`apps/public-web/`) Responsibilities
 
 **Primary Role**: Public-facing website (Future)
 
@@ -249,11 +249,11 @@
 - ✅ `/reviews/*` - Create and view reviews
 - ✅ `/favorites/*` - Manage favorites
 - ✅ `/search/*` - Search functionality
-- ❌ `/admin/*` - No access (admin only)
+- ❌ `/apps/admin-apps/public-web/*` - No access (admin only)
 
 #### Admin Dashboard API Calls
 - ✅ `/auth/*` - Admin authentication
-- ✅ `/admin/*` - All admin endpoints
+- ✅ `/apps/admin-apps/public-web/*` - All admin endpoints
 - ✅ `/users/*` - User management
 - ✅ `/listings/*` - Listing management
 - ✅ `/bookings/*` - Booking management
@@ -307,7 +307,7 @@
 - **Web**: Web team (with design team)
 
 #### API Design Decisions
-- **Backend**: Backend team (with input from mobile/admin teams)
+- **Backend**: Backend team (with input from apps/public-mobile/admin teams)
 - **Approval**: Technical lead
 
 #### Database Schema Decisions

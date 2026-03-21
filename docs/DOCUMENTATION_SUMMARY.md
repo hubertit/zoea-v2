@@ -95,10 +95,10 @@ This project now has comprehensive documentation covering all aspects of the Zoe
 
 ## Application READMEs
 
-- **mobile/README.md** - Mobile app documentation
-- **backend/README.md** - Backend API documentation
-- **admin/README.md** - Admin dashboard documentation
-- **web/README.md** - Web app documentation (future)
+- **apps/public-mobile/README.md** - Mobile app documentation
+- **apps/backend/README.md** - Backend API documentation
+- **apps/admin-apps/public-web/README.md** - Admin dashboard documentation
+- **apps/public-web/README.md** - Web app documentation (future)
 - **database/README.md** - Database documentation
 
 ## Documentation Coverage

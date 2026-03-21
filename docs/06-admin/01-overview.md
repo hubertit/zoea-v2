@@ -46,7 +46,7 @@ The Zoea Admin Dashboard is a Next.js-based web application for platform adminis
 ## Quick Start
 
 ```bash
-cd admin
+cd apps/admin-web
 npm install
 npm run dev
 ```

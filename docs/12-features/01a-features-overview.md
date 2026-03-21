@@ -2,7 +2,7 @@
 
 ## Feature Ownership by Application
 
-### Consumer Mobile App Features (`mobile/`)
+### Consumer Mobile App Features (`apps/public-mobile/`)
 
 **Primary User**: End users (travelers, tourists, locals)
 
@@ -65,7 +65,7 @@
 
 ---
 
-### Merchant Mobile App Features (`merchant-mobile/`)
+### Merchant Mobile App Features (`merchant-apps/public-mobile/`)
 
 **Primary User**: Merchants (hotel owners, restaurant owners, tour operators)
 
@@ -108,7 +108,7 @@
 
 ---
 
-### Backend API Features (`backend/`)
+### Backend API Features (`apps/backend/`)
 
 **Primary User**: All applications (mobile, admin, web)
 
@@ -204,7 +204,7 @@
   - Refund management
 
 #### Admin-Only Modules
-- ✅ **Admin Module** (`/admin/*`)
+- ✅ **Admin Module** (`/apps/admin-apps/public-web/*`)
   - User management
   - Listing management
   - Booking management
@@ -214,7 +214,7 @@
 
 ---
 
-### Admin Dashboard Features (`admin/`)
+### Admin Dashboard Features (`apps/admin-apps/public-web/`)
 
 **Primary User**: Platform administrators, merchants, operators
 
@@ -268,7 +268,7 @@
 
 ---
 
-### Public Web App Features (`web/`)
+### Public Web App Features (`apps/public-web/`)
 
 **Primary User**: General public, potential customers
 

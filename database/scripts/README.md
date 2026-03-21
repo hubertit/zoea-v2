@@ -28,7 +28,7 @@ psql -U your_user -d your_database -f add-african-cities.sql
 Scripts are organized by purpose:
 - **Cities/Countries**: Scripts for managing geographic data
 - **Listings**: Scripts for managing listing data
-- **Migrations**: Use Prisma migrations in `backend/prisma/migrations/` instead
+- **Migrations**: Use Prisma migrations in `apps/backend/prisma/migrations/` instead
 
 ## Notes
 

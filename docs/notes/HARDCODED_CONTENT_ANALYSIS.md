@@ -5,7 +5,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ## 🔴 Critical - High Priority
 
 ### 1. Emergency Numbers (Quick Actions)
-**Location**: `mobile/lib/features/explore/screens/explore_screen.dart` (lines 700-734)
+**Location**: `apps/public-mobile/lib/features/explore/screens/explore_screen.dart` (lines 700-734)
 
 **Hardcoded Data**:
 - Emergency: 112
@@ -23,7 +23,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 2. Taxi Phone Number
-**Location**: `mobile/lib/features/explore/screens/explore_screen.dart` (line 562)
+**Location**: `apps/public-mobile/lib/features/explore/screens/explore_screen.dart` (line 562)
 
 **Hardcoded Data**: `'1010'`
 
@@ -34,7 +34,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 3. MICE Events (Mock Data)
-**Location**: `mobile/lib/features/events/screens/events_screen.dart` (lines 1007-1136)
+**Location**: `apps/public-mobile/lib/features/events/screens/events_screen.dart` (lines 1007-1136)
 
 **Hardcoded Data**: 12+ hardcoded MICE events with:
 - Event names, dates, locations
@@ -52,8 +52,8 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 4. Specials/Deals (Mock Data)
-**Location**: `mobile/lib/features/explore/screens/specials_screen.dart` (lines 192-249)
-**Also used in**: `mobile/lib/features/explore/screens/explore_screen.dart` (line 3342)
+**Location**: `apps/public-mobile/lib/features/explore/screens/specials_screen.dart` (lines 192-249)
+**Also used in**: `apps/public-mobile/lib/features/explore/screens/explore_screen.dart` (line 3342)
 
 **Hardcoded Data**: 6+ special offers including:
 - Gorilla Trekking
@@ -75,7 +75,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ## 🟡 Medium Priority
 
 ### 5. Subcategories (Fallback Data)
-**Location**: `mobile/lib/features/explore/screens/category_search_screen.dart` (lines 196-220)
+**Location**: `apps/public-mobile/lib/features/explore/screens/category_search_screen.dart` (lines 196-220)
 
 **Hardcoded Data**: Fallback subcategories for:
 - Dining: Restaurants, Cafes, Fast Food
@@ -91,7 +91,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 6. Category Definitions (Expected Categories)
-**Location**: `mobile/lib/core/services/categories_service.dart` (lines 246-260)
+**Location**: `apps/public-mobile/lib/core/services/categories_service.dart` (lines 246-260)
 
 **Hardcoded Data**: Expected parent categories list:
 - Events, Dining, Experiences, Nightlife, Accommodation, Shopping, Attractions, Sports, National Parks, Museums, Transport, Hiking, Services
@@ -103,7 +103,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 7. Nightlife Places (Mock Data)
-**Location**: `mobile/lib/features/explore/screens/nightlife_screen.dart` (lines 423-520)
+**Location**: `apps/public-mobile/lib/features/explore/screens/nightlife_screen.dart` (lines 423-520)
 
 **Hardcoded Data**: 8+ mock nightlife venues with:
 - Names, locations, ratings, reviews
@@ -118,7 +118,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 8. Shopping Places (Mock Data)
-**Location**: `mobile/lib/features/explore/screens/shopping_screen.dart` (lines 246-343)
+**Location**: `apps/public-mobile/lib/features/explore/screens/shopping_screen.dart` (lines 246-343)
 
 **Hardcoded Data**: 8+ mock shopping places (malls, markets, boutiques) with full details.
 
@@ -129,7 +129,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 9. Accommodation Mock Data
-**Location**: `mobile/lib/features/explore/screens/accommodation_screen.dart` (lines 1999-2060+)
+**Location**: `apps/public-mobile/lib/features/explore/screens/accommodation_screen.dart` (lines 1999-2060+)
 
 **Hardcoded Data**: Multiple mock hotels with:
 - Names, locations, ratings
@@ -144,7 +144,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 10. Place Detail Mock Data
-**Location**: `mobile/lib/features/explore/screens/place_detail_screen.dart` (lines 841+)
+**Location**: `apps/public-mobile/lib/features/explore/screens/place_detail_screen.dart` (lines 841+)
 
 **Hardcoded Data**: Mock place data and reviews.
 
@@ -158,8 +158,8 @@ This document identifies all hardcoded content in the mobile app that should be 
 
 ### 11. Reviews Mock Data
 **Location**: 
-- `mobile/lib/features/profile/screens/reviews_ratings_screen.dart` (line 510+)
-- `mobile/lib/features/explore/screens/place_detail_screen.dart` (line 841+)
+- `apps/public-mobile/lib/features/profile/screens/reviews_ratings_screen.dart` (line 510+)
+- `apps/public-mobile/lib/features/explore/screens/place_detail_screen.dart` (line 841+)
 
 **Hardcoded Data**: Mock review data.
 
@@ -170,7 +170,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 12. Events Attended Mock Data
-**Location**: `mobile/lib/features/profile/screens/events_attended_screen.dart` (lines 379+)
+**Location**: `apps/public-mobile/lib/features/profile/screens/events_attended_screen.dart` (lines 379+)
 
 **Hardcoded Data**: Mock events data.
 
@@ -181,7 +181,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 13. Favorites Mock Data
-**Location**: `mobile/lib/features/profile/screens/favorites_screen.dart` (lines 1206+)
+**Location**: `apps/public-mobile/lib/features/profile/screens/favorites_screen.dart` (lines 1206+)
 
 **Hardcoded Data**: Mock events and places.
 
@@ -195,9 +195,9 @@ This document identifies all hardcoded content in the mobile app that should be 
 
 ### 14. Support Contact Information
 **Location**: 
-- `mobile/lib/features/profile/screens/help_center_screen.dart` (lines 349-357)
-- `mobile/lib/core/config/app_config.dart` (line 133)
-- `mobile/lib/features/profile/screens/about_screen.dart` (lines 593-594)
+- `apps/public-mobile/lib/features/profile/screens/help_center_screen.dart` (lines 349-357)
+- `apps/public-mobile/lib/core/config/app_config.dart` (line 133)
+- `apps/public-mobile/lib/features/profile/screens/about_screen.dart` (lines 593-594)
 
 **Hardcoded Data**:
 - Email: `support@zoea.rw`, `support@zoea.africa`, `contact@zoea.rw`
@@ -214,7 +214,7 @@ This document identifies all hardcoded content in the mobile app that should be 
 ---
 
 ### 15. External URLs (Quick Actions)
-**Location**: `mobile/lib/features/explore/screens/explore_screen.dart` (lines 591, 618, 630, 642)
+**Location**: `apps/public-mobile/lib/features/explore/screens/explore_screen.dart` (lines 591, 618, 630, 642)
 
 **Hardcoded URLs**:
 - eSim: `https://amadeus-api.optionizr.com/api/esim/deeplink?site=P02XP02X`
@@ -233,8 +233,8 @@ This document identifies all hardcoded content in the mobile app that should be 
 
 ### 16. Mock Calculations
 **Location**: 
-- `mobile/lib/features/explore/screens/accommodation_booking_screen.dart` (lines 846, 883)
-- `mobile/lib/features/explore/screens/dining_booking_screen.dart` (lines 853, 874, 911)
+- `apps/public-mobile/lib/features/explore/screens/accommodation_booking_screen.dart` (lines 846, 883)
+- `apps/public-mobile/lib/features/explore/screens/dining_booking_screen.dart` (lines 853, 874, 911)
 
 **Hardcoded Logic**:
 - Mock coupon validation

@@ -17,14 +17,14 @@ The "Near Me" section on the explore screen currently displays **random restaura
 #### Backend Changes
 
 1. **New Endpoint:** `GET /listings/random`
-   - **File:** `backend/src/modules/listings/listings.controller.ts`
+   - **File:** `apps/backend/src/modules/listings/listings.controller.ts`
    - **Method:** `getRandom(@Query('limit') limit?: string)`
    - Returns random active **restaurant** listings using PostgreSQL's `RANDOM()` function
    - Default limit: 10 listings
    - **Filter:** Only returns listings where `type = 'restaurant'`
 
 2. **New Service Method:** `getRandom(limit = 10)`
-   - **File:** `backend/src/modules/listings/listings.service.ts`
+   - **File:** `apps/backend/src/modules/listings/listings.service.ts`
    - Uses `ORDER BY RANDOM()` in PostgreSQL to fetch random restaurant listings
    - Filters by `status: 'active'`, `deletedAt: null`, and `type: 'restaurant'`
    - Includes full relations (category, city, images)
@@ -32,17 +32,17 @@ The "Near Me" section on the explore screen currently displays **random restaura
 #### Flutter Changes
 
 1. **New Service Method:** `getRandomListings({int limit = 10})`
-   - **File:** `mobile/lib/core/services/listings_service.dart`
+   - **File:** `apps/public-mobile/lib/core/services/listings_service.dart`
    - Calls `GET /listings/random` endpoint
    - Includes error handling
 
 2. **New Provider:** `randomListingsProvider`
-   - **File:** `mobile/lib/core/providers/listings_provider.dart`
+   - **File:** `apps/public-mobile/lib/core/providers/listings_provider.dart`
    - FutureProvider that accepts a limit parameter
    - Fetches random listings from the API
 
 3. **Updated Explore Screen:**
-   - **File:** `mobile/lib/features/explore/screens/explore_screen.dart`
+   - **File:** `apps/public-mobile/lib/features/explore/screens/explore_screen.dart`
    - Changed `_buildNearMeSection()` to use `randomListingsProvider(10)` instead of `nearbyListingsProvider`
    - Removed dependency on `NearbyListingsParams` and coordinates
 
@@ -60,7 +60,7 @@ When geolocation is implemented, follow these steps:
 
 1. **Update Explore Screen:**
    ```dart
-   // In mobile/lib/features/explore/screens/explore_screen.dart
+   // In apps/public-mobile/lib/features/explore/screens/explore_screen.dart
    // Change from:
    final nearbyAsync = ref.watch(randomListingsProvider(10));
    
@@ -96,11 +96,11 @@ When geolocation is implemented, follow these steps:
 
 ### Related Files
 
-- `backend/src/modules/listings/listings.controller.ts` - Random endpoint
-- `backend/src/modules/listings/listings.service.ts` - Random service method
-- `mobile/lib/core/services/listings_service.dart` - Random service method
-- `mobile/lib/core/providers/listings_provider.dart` - Random provider
-- `mobile/lib/features/explore/screens/explore_screen.dart` - UI implementation
+- `apps/backend/src/modules/listings/listings.controller.ts` - Random endpoint
+- `apps/backend/src/modules/listings/listings.service.ts` - Random service method
+- `apps/public-mobile/lib/core/services/listings_service.dart` - Random service method
+- `apps/public-mobile/lib/core/providers/listings_provider.dart` - Random provider
+- `apps/public-mobile/lib/features/explore/screens/explore_screen.dart` - UI implementation
 
 ### Notes
 

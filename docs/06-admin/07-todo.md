@@ -31,7 +31,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
   zoea-2/
   ├── src/
   │   ├── app/
-  │   │   ├── admin/          # Admin dashboards
+  │   │   ├── apps/admin-apps/public-web/          # Admin dashboards
   │   │   ├── venues/          # Venue dashboards
   │   │   ├── events/          # Event dashboards
   │   │   ├── real-estate/     # Property dashboards
@@ -66,7 +66,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
   - [ ] Metadata configuration
   - [ ] Font loading
   - [ ] Global styles
-- [ ] Create admin dashboard layout (`src/app/admin/layout.tsx`)
+- [ ] Create admin dashboard layout (`src/app/apps/admin-apps/public-web/layout.tsx`)
   - [ ] Header + Sidebar + Main content structure
   - [ ] Responsive breakpoints
   - [ ] Authentication check
@@ -81,7 +81,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
   - [ ] Language selector (optional)
 - [ ] Implement notification system
 - [ ] Add user profile dropdown
-- [ ] Responsive behavior (mobile/tablet/desktop)
+- [ ] Responsive behavior (apps/public-mobile/tablet/desktop)
 
 ### 2.3 Sidebar Component (Reference Cork Accordion Menu)
 - [ ] Create `AdminSidebar` component
@@ -125,7 +125,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 
 ### 3.2 Routing Structure
 - [ ] Set up route groups:
-  - [ ] `/admin/*` - Admin dashboards
+  - [ ] `/apps/admin-apps/public-web/*` - Admin dashboards
   - [ ] `/venues/*` - Venue-specific dashboards
   - [ ] `/events/*` - Event management
   - [ ] `/real-estate/*` - Property dashboards
@@ -147,7 +147,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 ### 4.2 API Layer
 - [ ] Create API route handlers (`src/app/api/`)
 - [ ] Dashboard data endpoints:
-  - [ ] `/api/admin/stats` - Admin dashboard stats
+  - [ ] `/api/apps/admin-apps/public-web/stats` - Admin dashboard stats
   - [ ] `/api/events/applications` - Event applications
   - [ ] `/api/venues/analytics` - Venue analytics
   - [ ] `/api/properties/analytics` - Property analytics
@@ -197,7 +197,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 
 ## 🎯 Phase 6: Admin Dashboard Implementation
 
-### 6.1 Main Admin Dashboard (`/admin/dashboard`)
+### 6.1 Main Admin Dashboard (`/apps/admin-apps/public-web/dashboard`)
 - [ ] Overview stats cards:
   - [ ] Total Users (active/inactive)
   - [ ] Total Venues (active/pending)
@@ -214,7 +214,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 - [ ] Quick actions section
 - [ ] Pending approvals alert
 
-### 6.2 Event Management Dashboard (`/admin/events`)
+### 6.2 Event Management Dashboard (`/apps/admin-apps/public-web/events`)
 - [ ] Application overview
   - [ ] Status breakdown (pending/approved/rejected)
   - [ ] Applications by event
@@ -226,7 +226,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 - [ ] Applications table with filters
 - [ ] QR code usage analytics
 
-### 6.3 Venue Dashboard (`/admin/venues`)
+### 6.3 Venue Dashboard (`/apps/admin-apps/public-web/venues`)
 - [ ] Venue statistics
 - [ ] Booking analytics
 - [ ] Revenue metrics
@@ -234,7 +234,7 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 - [ ] Top performing venues
 - [ ] Venue status management
 
-### 6.4 Real Estate Dashboard (`/admin/real-estate`)
+### 6.4 Real Estate Dashboard (`/apps/admin-apps/public-web/real-estate`)
 - [ ] Property portfolio overview
 - [ ] Market analytics
 - [ ] Price trends
@@ -242,14 +242,14 @@ Building a Next.js analytics dashboard application for Zoea platform, combining:
 - [ ] Agent performance
 - [ ] Conversion rates
 
-### 6.5 E-commerce Dashboard (`/admin/ecommerce`)
+### 6.5 E-commerce Dashboard (`/apps/admin-apps/public-web/ecommerce`)
 - [ ] Sales overview
 - [ ] Order analytics
 - [ ] Payment metrics
 - [ ] Product performance
 - [ ] Customer analytics
 
-### 6.6 User Analytics Dashboard (`/admin/users`)
+### 6.6 User Analytics Dashboard (`/apps/admin-apps/public-web/users`)
 - [ ] User growth metrics
 - [ ] Activity analytics
 - [ ] User segmentation

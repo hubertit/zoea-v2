@@ -22,5 +22,5 @@ See [Features](../01-project-overview/03-features.md) for complete feature break
 ## Related Documentation
 
 - [Project Status](../01-project-overview/02-project-status.md)
-- [Mobile Features](../03-mobile/03-features.md)
+- [Mobile Features](../03-apps/public-mobile/03-features.md)
 

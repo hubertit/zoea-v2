@@ -14,7 +14,7 @@ Enhanced the admin portal with a searchable category dropdown component that all
 ## New Component: SearchableSelect
 
 ### Location
-`/admin/app/components/SearchableSelect.tsx`
+`/apps/admin-apps/public-web/app/components/SearchableSelect.tsx`
 
 ### Features
 - **Real-time search filtering** - Type to instantly filter options
@@ -48,24 +48,24 @@ interface SearchableSelectProps {
 ## Files Modified
 
 ### New Files (1)
-1. `admin/app/components/SearchableSelect.tsx` - New searchable dropdown component
+1. `apps/admin-apps/public-web/app/components/SearchableSelect.tsx` - New searchable dropdown component
 
 ### Updated Files (9)
 
 #### Component Exports
-1. `admin/app/components/index.ts` - Added SearchableSelect export
+1. `apps/admin-apps/public-web/app/components/index.ts` - Added SearchableSelect export
 
 #### Listings Management
-2. `admin/app/dashboard/listings/page.tsx` - Main listings page (add new listing)
-3. `admin/app/dashboard/listings/[id]/page.tsx` - Listing detail/edit page
+2. `apps/admin-apps/public-web/app/dashboard/listings/page.tsx` - Main listings page (add new listing)
+3. `apps/admin-apps/public-web/app/dashboard/listings/[id]/page.tsx` - Listing detail/edit page
 
 #### Merchant Portal - Listings
-4. `admin/app/dashboard/my-listings/create/page.tsx` - Merchant create listing
-5. `admin/app/dashboard/my-listings/[id]/page.tsx` - Merchant edit listing
+4. `apps/admin-apps/public-web/app/dashboard/my-listings/create/page.tsx` - Merchant create listing
+5. `apps/admin-apps/public-web/app/dashboard/my-listings/[id]/page.tsx` - Merchant edit listing
 
 #### Merchant Portal - Tours
-6. `admin/app/dashboard/my-tours/create/page.tsx` - Create tour page
-7. `admin/app/dashboard/my-tours/[id]/page.tsx` - Edit tour page
+6. `apps/admin-apps/public-web/app/dashboard/my-tours/create/page.tsx` - Create tour page
+7. `apps/admin-apps/public-web/app/dashboard/my-tours/[id]/page.tsx` - Edit tour page
 
 ## Changes in Each Page
 

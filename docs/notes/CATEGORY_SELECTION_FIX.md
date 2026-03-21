@@ -13,7 +13,7 @@ Added a new query parameter `flat=true` to the categories API that returns ALL c
 
 ### 1. Backend Changes
 
-#### `/backend/src/modules/categories/categories.controller.ts`
+#### `/apps/backend/src/modules/categories/categories.controller.ts`
 - Added new query parameter `@Query('flat')` to the `findAll()` endpoint
 - Updated API documentation to describe the new `flat` parameter
 - Pass the `flat` parameter to the service layer
@@ -24,7 +24,7 @@ async findAll(@Query('parentId') parentId?: string, @Query('flat') flat?: string
 }
 ```
 
-#### `/backend/src/modules/categories/categories.service.ts`
+#### `/apps/backend/src/modules/categories/categories.service.ts`
 - Modified `findAll()` method to accept a `flat` boolean parameter
 - When `flat=true`, return all active categories regardless of `parentId`
 - Includes parent information for context
@@ -51,7 +51,7 @@ async findAll(parentId?: string, flat?: boolean) {
 
 ### 2. Admin Frontend Changes
 
-#### `/admin/src/lib/api/categories.ts`
+#### `/apps/admin-apps/public-web/src/lib/api/categories.ts`
 - Updated `ListCategoriesParams` interface to include optional `flat` parameter
 
 ```typescript
@@ -64,13 +64,13 @@ export interface ListCategoriesParams {
 #### Updated Admin Portal Pages to Use `flat=true`
 The following pages were updated to fetch all categories in flat mode:
 
-1. `/admin/app/dashboard/listings/page.tsx` - Main listings page (create listing)
-2. `/admin/app/dashboard/listings/[id]/page.tsx` - Listing detail/edit page
-3. `/admin/app/dashboard/my-listings/create/page.tsx` - Merchant create listing
-4. `/admin/app/dashboard/my-listings/[id]/page.tsx` - Merchant edit listing
-5. `/admin/app/dashboard/my-tours/create/page.tsx` - Create tour page
-6. `/admin/app/dashboard/my-tours/[id]/page.tsx` - Edit tour page
-7. `/admin/app/dashboard/categories/[id]/page.tsx` - Category edit (for parent selection)
+1. `/apps/admin-apps/public-web/app/dashboard/listings/page.tsx` - Main listings page (create listing)
+2. `/apps/admin-apps/public-web/app/dashboard/listings/[id]/page.tsx` - Listing detail/edit page
+3. `/apps/admin-apps/public-web/app/dashboard/my-listings/create/page.tsx` - Merchant create listing
+4. `/apps/admin-apps/public-web/app/dashboard/my-listings/[id]/page.tsx` - Merchant edit listing
+5. `/apps/admin-apps/public-web/app/dashboard/my-tours/create/page.tsx` - Create tour page
+6. `/apps/admin-apps/public-web/app/dashboard/my-tours/[id]/page.tsx` - Edit tour page
+7. `/apps/admin-apps/public-web/app/dashboard/categories/[id]/page.tsx` - Category edit (for parent selection)
 
 All changed from:
 ```typescript
@@ -156,19 +156,19 @@ curl 'https://zoea-africa.qtsoftwareltd.com/api/categories?parentId=<parent-id>'
 
 ## Files Modified
 ### Backend (3 files)
-1. `backend/src/modules/categories/categories.controller.ts`
-2. `backend/src/modules/categories/categories.service.ts`
-3. Built artifacts in `backend/dist/`
+1. `apps/backend/src/modules/categories/categories.controller.ts`
+2. `apps/backend/src/modules/categories/categories.service.ts`
+3. Built artifacts in `apps/backend/dist/`
 
 ### Admin Frontend (8 files)
-1. `admin/src/lib/api/categories.ts`
-2. `admin/app/dashboard/listings/page.tsx`
-3. `admin/app/dashboard/listings/[id]/page.tsx`
-4. `admin/app/dashboard/my-listings/create/page.tsx`
-5. `admin/app/dashboard/my-listings/[id]/page.tsx`
-6. `admin/app/dashboard/my-tours/create/page.tsx`
-7. `admin/app/dashboard/my-tours/[id]/page.tsx`
-8. `admin/app/dashboard/categories/[id]/page.tsx`
+1. `apps/admin-apps/public-web/src/lib/api/categories.ts`
+2. `apps/admin-apps/public-web/app/dashboard/listings/page.tsx`
+3. `apps/admin-apps/public-web/app/dashboard/listings/[id]/page.tsx`
+4. `apps/admin-apps/public-web/app/dashboard/my-listings/create/page.tsx`
+5. `apps/admin-apps/public-web/app/dashboard/my-listings/[id]/page.tsx`
+6. `apps/admin-apps/public-web/app/dashboard/my-tours/create/page.tsx`
+7. `apps/admin-apps/public-web/app/dashboard/my-tours/[id]/page.tsx`
+8. `apps/admin-apps/public-web/app/dashboard/categories/[id]/page.tsx`
 
 ## Status
 - ✅ Code changes completed

@@ -7,10 +7,10 @@ This guide helps you set up IntelliJ IDEA (or Android Studio) to work with the Z
 ## Project Structure
 
 The Zoea project is a monorepo containing:
-- **mobile/** - Flutter mobile app
-- **backend/** - NestJS backend API
-- **admin/** - Next.js admin dashboard
-- **web/** - Public web app (future)
+- **apps/public-mobile/** - Flutter mobile app
+- **apps/backend/** - NestJS backend API
+- **apps/admin-apps/public-web/** - Next.js admin dashboard
+- **apps/public-web/** - Public web app (future)
 
 ## Initial Setup
 
@@ -82,32 +82,32 @@ The following folders are excluded from indexing (but visible in Project view):
 ### Mobile App (Flutter)
 
 1. Open terminal in IntelliJ: **View → Tool Windows → Terminal**
-2. Navigate to mobile: `cd mobile`
+2. Navigate to mobile: `cd apps/public-mobile`
 3. Run: `flutter run`
 
 Or use the Flutter run configuration:
 1. **Run → Edit Configurations**
 2. Click **+** → **Flutter**
 3. Set Dart entry point: `lib/main.dart`
-4. Set working directory: `mobile/`
+4. Set working directory: `apps/public-mobile/`
 
 ### Backend API (NestJS)
 
 1. Open terminal
-2. Navigate to backend: `cd backend`
+2. Navigate to backend: `cd apps/backend`
 3. Run: `npm run start:dev`
 
 Or create a Node.js run configuration:
 1. **Run → Edit Configurations**
 2. Click **+** → **Node.js**
-3. Set JavaScript file: `backend/src/main.ts`
-4. Set working directory: `backend/`
+3. Set JavaScript file: `apps/backend/src/main.ts`
+4. Set working directory: `apps/backend/`
 5. Set Node interpreter: Your Node.js path
 
 ### Admin Dashboard (Next.js)
 
 1. Open terminal
-2. Navigate to admin: `cd admin`
+2. Navigate to admin: `cd apps/admin-web`
 3. Run: `npm run dev`
 
 ## Code Style
@@ -133,10 +133,10 @@ Configure in: **File → Settings → Editor → Code Style → TypeScript**
 ### Multiple Git Repositories
 
 Each sub-project has its own git repository:
-- `mobile/.git`
-- `backend/.git`
-- `admin/.git`
-- `web/.git`
+- `apps/public-mobile/.git`
+- `apps/backend/.git`
+- `apps/admin-apps/public-web/.git`
+- `apps/public-web/.git`
 
 IntelliJ is configured to recognize all repositories.
 
@@ -174,7 +174,7 @@ IntelliJ should auto-complete Flutter packages after:
 ### Node.js Packages
 
 IntelliJ should auto-complete Node.js packages after:
-1. Running `npm install` in backend/admin directories
+1. Running `npm install` in apps/backend/admin directories
 2. Waiting for indexing to complete
 
 ## Troubleshooting
@@ -230,7 +230,7 @@ IntelliJ should auto-complete Node.js packages after:
 - **File → Settings → Editor → Inspections**
   - Enable Dart inspections
   - Enable TypeScript/JavaScript inspections
-  - Enable ESLint (for backend/admin)
+  - Enable ESLint (for apps/backend/admin)
 
 ## Keyboard Shortcuts
 

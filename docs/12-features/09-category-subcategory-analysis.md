@@ -6,7 +6,7 @@ This document analyzes how categories and nested subcategories are handled in ta
 ## Key Features
 
 ### 1. Dynamic Tab Generation
-- **Location**: `mobile/lib/features/explore/screens/category_places_screen.dart`
+- **Location**: `apps/public-mobile/lib/features/explore/screens/category_places_screen.dart`
 - **Function**: `_initializeTabs(List<Map<String, dynamic>>? children)`
 - **Behavior**: 
   - Dynamically creates tabs based on category children (subcategories)
@@ -100,24 +100,24 @@ model Category {
 ## Key Files
 
 ### Mobile (Flutter)
-1. **`mobile/lib/features/explore/screens/category_places_screen.dart`**
+1. **`apps/public-mobile/lib/features/explore/screens/category_places_screen.dart`**
    - Main implementation of nested subcategory navigation
    - Handles tab creation, tab changes, and dynamic tab updates
 
-2. **`mobile/lib/core/services/categories_service.dart`**
+2. **`apps/public-mobile/lib/core/services/categories_service.dart`**
    - Service for fetching categories from API
    - Methods: `getCategories()`, `getCategoryBySlug()`, `getSubcategories()`
 
-3. **`mobile/lib/core/providers/categories_provider.dart`**
+3. **`apps/public-mobile/lib/core/providers/categories_provider.dart`**
    - Riverpod providers for category data
    - `categoryBySlugProvider` - Fetches category by slug with children
 
 ### Backend (NestJS)
-1. **`backend/src/modules/categories/categories.service.ts`**
+1. **`apps/backend/src/modules/categories/categories.service.ts`**
    - Service that queries Prisma for categories with nested children
    - Includes `children` relation in queries
 
-2. **`backend/prisma/schema.prisma`**
+2. **`apps/backend/prisma/schema.prisma`**
    - Category model with self-referential relationship
 
 ## Important Considerations for Restoration

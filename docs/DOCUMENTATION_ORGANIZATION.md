@@ -13,11 +13,11 @@ docs/
 ├── README.md                    # Main documentation index
 ├── 01-project-overview/         # Project overview and status
 ├── 02-architecture/             # System architecture
-├── 03-mobile/                   # Consumer mobile app
-├── 04-merchant-mobile/          # Merchant mobile app
-├── 05-backend/                  # Backend API
-├── 06-admin/                    # Admin dashboard
-├── 07-web/                      # Web applications (planned)
+├── 03-apps/public-mobile/                   # Consumer mobile app
+├── 04-merchant-apps/public-mobile/          # Merchant mobile app
+├── 05-apps/backend/                  # Backend API
+├── 06-apps/admin-apps/public-web/                    # Admin dashboard
+├── 07-apps/public-web/                      # Web applications (planned)
 ├── 08-database/                 # Database documentation
 ├── 09-deployment/               # Deployment guides
 ├── 10-development/              # Development guides
@@ -51,7 +51,7 @@ docs/
 - Project structure recommendations
 - Admin/merchant architecture
 
-### Mobile App (03-mobile/)
+### Mobile App (03-apps/public-mobile/)
 - Mobile app overview
 - Codebase analysis
 - Features documentation
@@ -61,12 +61,12 @@ docs/
 - Bookings
 - Search
 
-### Merchant Mobile (04-merchant-mobile/)
+### Merchant Mobile (04-merchant-apps/public-mobile/)
 - Merchant app overview
 - Codebase analysis
 - Features documentation
 
-### Backend (05-backend/)
+### Backend (05-apps/backend/)
 - Backend overview
 - Codebase analysis
 - API reference
@@ -75,14 +75,14 @@ docs/
 - Deployment
 - Filters and sorting
 
-### Admin (06-admin/)
+### Admin (06-apps/admin-apps/public-web/)
 - Admin overview
 - Codebase analysis
 - Merchants module
 - Database analysis
 - Dashboard analytics
 
-### Web (07-web/)
+### Web (07-apps/public-web/)
 - Consumer web (planned)
 - Merchant web (planned)
 

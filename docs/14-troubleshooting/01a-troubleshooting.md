@@ -37,7 +37,7 @@
 
 **Solutions**:
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter clean
 flutter pub get
 flutter run

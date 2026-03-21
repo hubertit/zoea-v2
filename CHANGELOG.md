@@ -179,10 +179,10 @@ All notable changes to the Zoea platform will be documented in this file.
 
 Each component has its own detailed changelog:
 
-- **Mobile App**: [mobile/CHANGELOG.md](mobile/CHANGELOG.md)
-- **Backend API**: [backend/CHANGELOG.md](backend/CHANGELOG.md)
-- **Admin Dashboard**: [admin/CHANGELOG.md](admin/CHANGELOG.md)
-- **Merchant Mobile**: [merchant-mobile/CHANGELOG.md](merchant-mobile/CHANGELOG.md)
+- **Backend API**: [apps/backend/CHANGELOG.md](apps/backend/CHANGELOG.md)
+- **Public Mobile App**: [apps/public-mobile/CHANGELOG.md](apps/public-mobile/CHANGELOG.md)
+- **Merchant Mobile App**: [apps/merchant-mobile/CHANGELOG.md](apps/merchant-mobile/CHANGELOG.md)
+- **Admin Dashboard**: [apps/admin-web/CHANGELOG.md](apps/admin-web/CHANGELOG.md)
 
 ---
 

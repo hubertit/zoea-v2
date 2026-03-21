@@ -36,7 +36,7 @@
 
 ### 1. Created Comprehensive Data Cleaning Utility
 
-**File:** `/Applications/AMPPS/www/zoea-2/backend/src/migration/utils/user-data-cleaner.ts`
+**File:** `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/utils/user-data-cleaner.ts`
 
 **Features:**
 - Detects and fixes email in phone field corruption
@@ -132,8 +132,8 @@ function sanitizeString(str) {
 
 ## Files Modified
 
-1. `/Applications/AMPPS/www/zoea-2/backend/src/migration/utils/user-data-cleaner.ts` (NEW)
-2. `/Applications/AMPPS/www/zoea-2/backend/src/migration/migration.service.ts` (UPDATED)
+1. `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/utils/user-data-cleaner.ts` (NEW)
+2. `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/migration.service.ts` (UPDATED)
 
 ---
 

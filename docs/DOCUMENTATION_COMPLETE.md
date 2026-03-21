@@ -31,7 +31,7 @@ docs/
 │   ├── 03-project-structure.md
 │   └── 04-admin-merchant-architecture.md
 │
-├── 03-mobile/                  # 13 files
+├── 03-apps/public-mobile/                  # 13 files
 │   ├── 01-overview.md
 │   ├── 02-codebase-analysis.md
 │   ├── 03-features.md
@@ -41,12 +41,12 @@ docs/
 │   ├── 07-bookings.md
 │   └── 08-search.md
 │
-├── 04-merchant-mobile/         # 3 files
+├── 04-merchant-apps/public-mobile/         # 3 files
 │   ├── 01-overview.md
 │   ├── 02-codebase-analysis.md
 │   └── 03-features.md
 │
-├── 05-backend/                 # 7+ files
+├── 05-apps/backend/                 # 7+ files
 │   ├── 01-overview.md
 │   ├── 02-codebase-analysis.md
 │   ├── 03-api-reference.md
@@ -56,14 +56,14 @@ docs/
 │   ├── 07-filters-and-sorting.md
 │   └── migration/              # Migration documentation
 │
-├── 06-admin/                   # 5 files
+├── 06-apps/admin-apps/public-web/                   # 5 files
 │   ├── 01-overview.md
 │   ├── 02-codebase-analysis.md
 │   ├── 03-merchants-module.md
 │   ├── 04-database-analysis.md
 │   └── 05-dashboard-analytics.md
 │
-├── 07-web/                     # 2 files
+├── 07-apps/public-web/                     # 2 files
 │   ├── 01-consumer-web.md
 │   └── 02-merchant-web.md
 │
@@ -140,14 +140,14 @@ docs/
 - [Features](./01-project-overview/03-features.md)
 
 ### Mobile App
-- [Mobile Overview](./03-mobile/01-overview.md)
-- [User Data Collection](./03-mobile/04-user-data-collection.md)
-- [Codebase Analysis](./03-mobile/02-codebase-analysis.md)
+- [Mobile Overview](./03-apps/public-mobile/01-overview.md)
+- [User Data Collection](./03-apps/public-mobile/04-user-data-collection.md)
+- [Codebase Analysis](./03-apps/public-mobile/02-codebase-analysis.md)
 
 ### Backend
-- [Backend Overview](./05-backend/01-overview.md)
-- [API Reference](./05-backend/03-api-reference.md)
-- [Migration Guide](./05-backend/05-migration-guide.md)
+- [Backend Overview](./05-apps/backend/01-overview.md)
+- [API Reference](./05-apps/backend/03-api-reference.md)
+- [Migration Guide](./05-apps/backend/05-migration-guide.md)
 
 ### Development
 - [Development Guide](./10-development/01-development-guide.md)

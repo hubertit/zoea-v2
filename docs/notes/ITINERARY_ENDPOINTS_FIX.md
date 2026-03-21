@@ -70,7 +70,7 @@ async getItinerary(@Param('id') id: string) { ... }
 ```
 
 ## Solution - Mobile App
-Moved the specific routes BEFORE the parameterized `:id` route in `mobile/lib/core/router/app_router.dart`:
+Moved the specific routes BEFORE the parameterized `:id` route in `apps/public-mobile/lib/core/router/app_router.dart`:
 
 ```dart
 // CORRECT ORDER:

@@ -28,7 +28,7 @@ The Zoea Consumer Mobile App is a Flutter-based application that enables users t
 ## Project Structure
 
 ```
-mobile/
+apps/public-mobile/
 ├── lib/
 │   ├── core/                    # Shared utilities and configs
 │   │   ├── config/             # App configuration
@@ -160,7 +160,7 @@ mobile/
 ## Quick Start
 
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter pub get
 flutter run
 ```

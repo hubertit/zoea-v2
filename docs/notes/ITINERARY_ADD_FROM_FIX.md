@@ -137,7 +137,7 @@ Or use the admin panel to manually mark listings as "Featured".
 
 ## Files Modified
 
-1. ✅ `mobile/lib/features/itineraries/screens/add_from_favorites_screen.dart`
+1. ✅ `apps/public-mobile/lib/features/itineraries/screens/add_from_favorites_screen.dart`
    - Added `_extractItem()` method
    - Updated `_buildFavoriteCard()` to extract item first
    - Updated `_getImageUrl()` to handle events and listings

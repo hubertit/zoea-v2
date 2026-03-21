@@ -995,5 +995,5 @@ model Booking {
 
 - Current Booking System: `/docs/12-features/03-bookings.md`
 - Tours Brainstorm: `/docs/12-features/09-tours-packages-brainstorm.md`
-- Database Schema: `/backend/prisma/schema.prisma`
+- Database Schema: `/apps/backend/prisma/schema.prisma`
 

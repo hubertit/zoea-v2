@@ -16,24 +16,24 @@
 ### Application-Specific Docs
 
 #### 🎯 Mobile App (Consumer)
-- **[Mobile README](mobile/README.md)** - Complete mobile app documentation
-- **[Quick Start Guide](mobile/QUICKSTART.md)** - Get started in 5 minutes ⚡
-- **[Changelog](mobile/CHANGELOG.md)** - Mobile app version history
-- **[Archived Docs](mobile/docs/archive/)** - Historical development documents
+- **[Mobile README](apps/public-mobile/README.md)** - Complete mobile app documentation
+- **[Quick Start Guide](apps/public-mobile/QUICKSTART.md)** - Get started in 5 minutes ⚡
+- **[Changelog](apps/public-mobile/CHANGELOG.md)** - Mobile app version history
+- **[Archived Docs](apps/public-mobile/docs/archive/)** - Historical development documents
 
 #### 🔧 Backend API
-- **[Backend README](backend/README.md)** - API documentation
-- **[Quick Start Guide](backend/QUICKSTART.md)** - Get started in 10 minutes ⚡
-- **[Changelog](backend/CHANGELOG.md)** - API version history
+- **[Backend README](apps/backend/README.md)** - API documentation
+- **[Quick Start Guide](apps/backend/QUICKSTART.md)** - Get started in 10 minutes ⚡
+- **[Changelog](apps/backend/CHANGELOG.md)** - API version history
 - **[Swagger Docs](https://zoea-africa.qtsoftwareltd.com/api/docs)** - Interactive API documentation 🌐
 
 #### 🏪 Merchant Mobile App
-- **[Merchant Mobile README](merchant-mobile/README.md)** - Merchant app documentation
-- **[Changelog](merchant-mobile/CHANGELOG.md)** - Merchant app version history
+- **[Merchant Mobile README](merchant-apps/public-mobile/README.md)** - Merchant app documentation
+- **[Changelog](merchant-apps/public-mobile/CHANGELOG.md)** - Merchant app version history
 
 #### 👨‍💼 Admin Dashboard
-- **[Admin README](admin/README.md)** - Admin dashboard documentation
-- **[Changelog](admin/CHANGELOG.md)** - Admin dashboard version history
+- **[Admin README](apps/admin-apps/public-web/README.md)** - Admin dashboard documentation
+- **[Changelog](apps/admin-apps/public-web/CHANGELOG.md)** - Admin dashboard version history
 
 ---
 
@@ -52,7 +52,7 @@ The `docs/` folder contains detailed documentation organized by topic:
 - Project structure guidelines
 - Admin & merchant architecture
 
-### [03. Mobile App (Consumer)](docs/03-mobile/)
+### [03. Mobile App (Consumer)](docs/03-apps/public-mobile/)
 - Complete mobile app documentation
 - Codebase analysis
 - Feature implementation details
@@ -61,12 +61,12 @@ The `docs/` folder contains detailed documentation organized by topic:
 - Search functionality
 - User data collection module
 
-### [04. Merchant Mobile App](docs/04-merchant-mobile/)
+### [04. Merchant Mobile App](docs/04-merchant-apps/public-mobile/)
 - Merchant app overview
 - Codebase analysis
 - Feature documentation
 
-### [05. Backend API](docs/05-backend/)
+### [05. Backend API](docs/05-apps/backend/)
 - Backend overview and architecture
 - Complete API reference
 - Database schema
@@ -74,14 +74,14 @@ The `docs/` folder contains detailed documentation organized by topic:
 - Deployment instructions
 - Filters and sorting implementation
 
-### [06. Admin Dashboard](docs/06-admin/)
+### [06. Admin Dashboard](docs/06-apps/admin-apps/public-web/)
 - Admin dashboard overview
 - Codebase analysis
 - Merchants module
 - Database analysis
 - Dashboard analytics
 
-### [07. Web Applications](docs/07-web/)
+### [07. Web Applications](docs/07-apps/public-web/)
 - Consumer web (planned)
 - Merchant web portal (planned)
 
@@ -141,32 +141,32 @@ The `docs/` folder contains detailed documentation organized by topic:
 
 ### I'm a New Developer
 1. Read [Main README](README.md)
-2. Follow [Mobile Quick Start](mobile/QUICKSTART.md) or [Backend Quick Start](backend/QUICKSTART.md)
+2. Follow [Mobile Quick Start](apps/public-mobile/QUICKSTART.md) or [Backend Quick Start](apps/backend/QUICKSTART.md)
 3. Check [Development Guide](docs/10-development/01-development-guide.md)
 4. Review [Code Style](docs/10-development/06-code-style.md)
 
 ### I'm Working on Mobile App
-- [Mobile README](mobile/README.md)
-- [Mobile Features](docs/03-mobile/03-features.md)
-- [Mobile API Integration](docs/03-mobile/05-api-integration.md)
-- [Mobile Changelog](mobile/CHANGELOG.md)
+- [Mobile README](apps/public-mobile/README.md)
+- [Mobile Features](docs/03-apps/public-mobile/03-features.md)
+- [Mobile API Integration](docs/03-apps/public-mobile/05-api-integration.md)
+- [Mobile Changelog](apps/public-mobile/CHANGELOG.md)
 
 ### I'm Working on Backend
-- [Backend README](backend/README.md)
-- [API Reference](docs/05-backend/03-api-reference.md)
-- [Database Schema](docs/05-backend/04-database-schema.md)
-- [Backend Changelog](backend/CHANGELOG.md)
+- [Backend README](apps/backend/README.md)
+- [API Reference](docs/05-apps/backend/03-api-reference.md)
+- [Database Schema](docs/05-apps/backend/04-database-schema.md)
+- [Backend Changelog](apps/backend/CHANGELOG.md)
 
 ### I'm Working on Admin Dashboard
-- [Admin README](admin/README.md)
-- [Admin Codebase Analysis](docs/06-admin/02-codebase-analysis.md)
-- [Merchants Module](docs/06-admin/03-merchants-module.md)
-- [Admin Changelog](admin/CHANGELOG.md)
+- [Admin README](apps/admin-apps/public-web/README.md)
+- [Admin Codebase Analysis](docs/06-apps/admin-apps/public-web/02-codebase-analysis.md)
+- [Merchants Module](docs/06-apps/admin-apps/public-web/03-merchants-module.md)
+- [Admin Changelog](apps/admin-apps/public-web/CHANGELOG.md)
 
 ### I'm Working on Merchant Mobile
-- [Merchant Mobile README](merchant-mobile/README.md)
-- [Merchant Features](docs/04-merchant-mobile/03-features.md)
-- [Merchant Changelog](merchant-mobile/CHANGELOG.md)
+- [Merchant Mobile README](merchant-apps/public-mobile/README.md)
+- [Merchant Features](docs/04-merchant-apps/public-mobile/03-features.md)
+- [Merchant Changelog](merchant-apps/public-mobile/CHANGELOG.md)
 
 ### I'm Deploying
 - [Deployment Guide](docs/09-deployment/01-deployment-guide.md)
@@ -178,32 +178,32 @@ The `docs/` folder contains detailed documentation organized by topic:
 ## 🔍 By Topic
 
 ### Authentication & Authorization
-- [Mobile Authentication](docs/03-mobile/06-authentication.md)
-- [Backend Auth Module](docs/05-backend/02-codebase-analysis.md)
+- [Mobile Authentication](docs/03-apps/public-mobile/06-authentication.md)
+- [Backend Auth Module](docs/05-apps/backend/02-codebase-analysis.md)
 - [API Authentication](docs/11-api-reference/01-api-overview.md)
 
 ### Bookings
-- [Mobile Bookings](docs/03-mobile/07-bookings.md)
+- [Mobile Bookings](docs/03-apps/public-mobile/07-bookings.md)
 - [Bookings Feature Analysis](docs/12-features/03-bookings.md)
-- [Backend Bookings](docs/05-backend/03-api-reference.md)
+- [Backend Bookings](docs/05-apps/backend/03-api-reference.md)
 
 ### Search
-- [Mobile Search](docs/03-mobile/08-search.md)
+- [Mobile Search](docs/03-apps/public-mobile/08-search.md)
 - [Search Feature](docs/12-features/04-search.md)
-- [Backend Search](docs/05-backend/07-filters-and-sorting.md)
+- [Backend Search](docs/05-apps/backend/07-filters-and-sorting.md)
 
 ### User Data & Preferences
-- [User Data Collection](docs/03-mobile/04-user-data-collection.md)
-- [User Data API Analysis](docs/05-backend/08-user-data-collection-api-analysis.md)
+- [User Data Collection](docs/03-apps/public-mobile/04-user-data-collection.md)
+- [User Data API Analysis](docs/05-apps/backend/08-user-data-collection-api-analysis.md)
 
 ### Categories
 - [Category Analysis](docs/12-features/08-category-analysis.md)
 - [Category Reorganization 2024](docs/12-features/08a-category-reorganization-2024.md)
 
 ### Dark Mode & Theming
-- [Mobile App Theme System](mobile/README.md#features)
-- [Dark Mode Implementation](mobile/CHANGELOG.md#200---2025-01-02)
-- [Archived Analysis](mobile/docs/archive/README.md)
+- [Mobile App Theme System](apps/public-mobile/README.md#features)
+- [Dark Mode Implementation](apps/public-mobile/CHANGELOG.md#200---2025-01-02)
+- [Archived Analysis](apps/public-mobile/docs/archive/README.md)
 
 ---
 

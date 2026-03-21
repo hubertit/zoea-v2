@@ -14,7 +14,7 @@
 
 ## Schema Documentation
 
-See [Database Schema](../05-backend/04-database-schema.md) for complete schema documentation.
+See [Database Schema](../05-apps/backend/04-database-schema.md) for complete schema documentation.
 
 ---
 
@@ -23,5 +23,5 @@ See [Database Schema](../05-backend/04-database-schema.md) for complete schema d
 - [Schema Analysis](./02-schema-analysis.md)
 - [Migration History](./03-migration-history.md)
 - [Optimization](./04-optimization.md)
-- [Backend Database Schema](../05-backend/04-database-schema.md)
+- [Backend Database Schema](../05-apps/backend/04-database-schema.md)
 

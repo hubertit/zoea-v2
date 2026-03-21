@@ -29,9 +29,9 @@ This guide walks you through setting up the entire Zoea development environment.
 cd /Users/macbookpro/projects/flutter/zoea2
 
 # Each app has its own git repo - pull latest
-cd mobile && git pull && cd ..
-cd backend && git pull && cd ..
-cd admin && git pull && cd ..
+cd apps/public-mobile && git pull && cd ..
+cd apps/backend && git pull && cd ..
+cd apps/admin-web && git pull && cd ..
 ```
 
 ### 2. Backend Setup
@@ -39,7 +39,7 @@ cd admin && git pull && cd ..
 #### 2.1 Install Dependencies
 
 ```bash
-cd backend
+cd apps/backend
 npm install
 ```
 
@@ -57,7 +57,7 @@ CREATE DATABASE zoea_v2;
 
 2. **Configure Environment**:
 ```bash
-cd backend
+cd apps/backend
 cp env.example .env
 ```
 
@@ -97,7 +97,7 @@ API docs at `http://localhost:3000/api/docs`
 #### 3.1 Install Dependencies
 
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter pub get
 ```
 
@@ -130,7 +130,7 @@ flutter run -d <device-id>
 #### 4.1 Install Dependencies
 
 ```bash
-cd admin
+cd apps/admin-web
 npm install
 # or
 pnpm install
@@ -252,25 +252,25 @@ npm install
 
 1. **Start Backend**:
    ```bash
-   cd backend
+   cd apps/backend
    npm run start:dev
    ```
 
 2. **Start Mobile** (in new terminal):
    ```bash
-   cd mobile
+   cd apps/public-mobile
    flutter run
    ```
 
 3. **Start Admin** (in new terminal, if needed):
    ```bash
-   cd admin
+   cd apps/admin-web
    npm run dev
    ```
 
 ### Database Changes
 
-1. Edit `backend/prisma/schema.prisma`
+1. Edit `apps/backend/prisma/schema.prisma`
 2. Create migration: `npx prisma migrate dev --name migration_name`
 3. Generate client: `npx prisma generate`
 

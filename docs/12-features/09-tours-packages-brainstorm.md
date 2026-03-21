@@ -706,7 +706,7 @@
 
 1. **Tours Feature Module**
    ```
-   mobile/lib/features/tours/
+   apps/public-mobile/lib/features/tours/
    ├── screens/
    │   ├── tours_screen.dart              # Main tours browsing
    │   ├── tour_detail_screen.dart        # Tour details
@@ -940,11 +940,11 @@ enum TourStatus {
 
 ## References
 
-- Backend Tours API: `backend/src/modules/tours/`
-- Database Schema: `backend/prisma/schema.prisma` (Tour model)
-- Booking Model: `mobile/lib/core/models/booking.dart`
+- Backend Tours API: `apps/backend/src/modules/tours/`
+- Database Schema: `apps/backend/prisma/schema.prisma` (Tour model)
+- Booking Model: `apps/public-mobile/lib/core/models/booking.dart`
 - Category Analysis: `CATEGORY_ANALYSIS.md`
-- Existing Booking Flow: `mobile/lib/features/explore/screens/accommodation_booking_screen.dart`
+- Existing Booking Flow: `apps/public-mobile/lib/features/explore/screens/accommodation_booking_screen.dart`
 
 
 

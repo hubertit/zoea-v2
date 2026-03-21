@@ -22,15 +22,15 @@ Each app has its own git repository:
 
 ```bash
 # Mobile
-cd mobile
+cd apps/public-mobile
 git checkout -b feature/your-feature-name
 
 # Backend
-cd backend
+cd apps/backend
 git checkout -b feature/your-feature-name
 
 # Admin
-cd admin
+cd apps/admin-web
 git checkout -b feature/your-feature-name
 ```
 
@@ -102,19 +102,19 @@ Then create a pull request on GitHub.
 
 **Mobile**:
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter test
 ```
 
 **Backend**:
 ```bash
-cd backend
+cd apps/backend
 npm test
 ```
 
 **Admin**:
 ```bash
-cd admin
+cd apps/admin-web
 npm test  # If configured
 ```
 

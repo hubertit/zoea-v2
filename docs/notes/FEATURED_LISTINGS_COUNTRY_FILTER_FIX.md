@@ -45,7 +45,7 @@ This ensures that listings are found regardless of whether their `countryId` fie
 
 ## Files Modified
 
-### 1. `backend/src/modules/listings/listings.service.ts`
+### 1. `apps/backend/src/modules/listings/listings.service.ts`
 
 #### Updated `getFeatured()` method:
 - ✅ Changed country filter to use OR condition

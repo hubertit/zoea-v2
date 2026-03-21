@@ -9,7 +9,7 @@ This directory contains merchant mobile app-specific documentation.
 
 ## Source
 
-These documents were originally in the `merchant-mobile/` directory and have been copied here for centralized documentation management.
+These documents were originally in the `merchant-apps/public-mobile/` directory and have been copied here for centralized documentation management.
 
 ## Related Documentation
 

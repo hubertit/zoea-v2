@@ -1,7 +1,7 @@
 # Management Portal Analysis
 
 ## Overview
-This document analyzes what mobile features we implemented and what management interfaces exist or need to be created in the admin/merchant portal.
+This document analyzes what mobile features we implemented and what management interfaces exist or need to be created in the apps/admin-apps/public-web/merchant portal.
 
 ---
 
@@ -24,7 +24,7 @@ This document analyzes what mobile features we implemented and what management i
 
 ## Current Portal Status
 
-### Admin Portal (`/admin/dashboard`)
+### Admin Portal (`/apps/admin-apps/public-web/dashboard`)
 
 #### ✅ What Exists:
 1. **Tours Page** (`/dashboard/tours`)
@@ -64,7 +64,7 @@ This document analyzes what mobile features we implemented and what management i
 
 ---
 
-### Merchant Portal (`/admin/dashboard/my-*`)
+### Merchant Portal (`/apps/admin-apps/public-web/dashboard/my-*`)
 
 #### ✅ What Exists:
 1. **My Businesses** (`/dashboard/my-businesses`)

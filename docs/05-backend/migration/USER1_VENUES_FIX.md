@@ -22,7 +22,7 @@
 
 ### 1. Created Targeted Migration Script
 
-**File:** `/Applications/AMPPS/www/zoea-2/backend/src/migration/migrate-user1-venues.ts`
+**File:** `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/migrate-user1-venues.ts`
 
 **Features:**
 - Specifically targets user_id = 1 venues

@@ -47,8 +47,8 @@ git pull origin main
 
 # Or sync files manually using rsync from local machine:
 # rsync -avz --exclude 'node_modules' --exclude 'dist' --exclude '.git' \
-#   /Users/macbookpro/projects/flutter/zoea2/backend/ \
-#   qt@172.16.40.61:~/zoea-backend/
+#   /Users/macbookpro/projects/flutter/zoea2/apps/backend/ \
+#   qt@172.16.40.61:~/zoea-apps/backend/
 
 # Rebuild and restart Docker container
 docker-compose down

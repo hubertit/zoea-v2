@@ -8,36 +8,36 @@
 
 | App | Location | Tech | Git Repo |
 |-----|----------|------|----------|
-| Consumer Mobile | `mobile/` | Flutter | `zoea.mobile.2.git` |
-| Merchant Mobile | `merchant-mobile/` | Flutter | `zoea-partner-mobile.git` |
-| Backend | `backend/` | NestJS | `zoea2-apis.git` |
-| Admin | `admin/` | Next.js | (to be configured) |
-| Consumer Web | `web/` | Next.js | (to be configured) |
-| Merchant Web | `merchant-web/` | Next.js | (to be configured) |
+| Consumer Mobile | `apps/public-mobile/` | Flutter | `zoea.mobile.2.git` |
+| Merchant Mobile | `merchant-apps/public-mobile/` | Flutter | `zoea-partner-mobile.git` |
+| Backend | `apps/backend/` | NestJS | `zoea2-apis.git` |
+| Admin | `apps/admin-apps/public-web/` | Next.js | (to be configured) |
+| Consumer Web | `apps/public-web/` | Next.js | (to be configured) |
+| Merchant Web | `merchant-apps/public-web/` | Next.js | (to be configured) |
 
 ## Quick Commands
 
 ### Consumer Mobile
 ```bash
-cd mobile
+cd apps/public-mobile
 flutter pub get && flutter run
 ```
 
 ### Merchant Mobile
 ```bash
-cd merchant-mobile
+cd apps/merchant-mobile
 flutter pub get && flutter run
 ```
 
 ### Backend
 ```bash
-cd backend
+cd apps/backend
 npm install && npm run start:dev
 ```
 
 ### Admin
 ```bash
-cd admin
+cd apps/admin-web
 npm install && npm run dev
 ```
 

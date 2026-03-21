@@ -34,7 +34,7 @@ postgres_postgres_1   - PostgreSQL 16 + PostGIS (Port 5432)
 - Main API process running: `node dist/src/main.js` (PID 1455)
 
 ### 1.3 Codebase Location
-- **Path:** `/home/qt/zoea-backend/`
+- **Path:** `/home/qt/zoea-apps/backend/`
 - **Structure:** NestJS monolith (not microservices as originally planned)
 - **Deployment:** Docker containerized
 - **Last Updated:** November 30, 2025
@@ -230,7 +230,7 @@ PORT=3000
     - Digital wallet management
     - Transaction history
 
-11. **Admin Module** (`/api/admin/*`)
+11. **Admin Module** (`/api/apps/admin-apps/public-web/*`)
     - Admin endpoints for managing users, listings, events, bookings, merchants, payments, notifications
 
 12. **Other Modules:**

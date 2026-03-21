@@ -152,19 +152,19 @@ V1_DB_NAME=zoea
 ## Files Created/Modified
 
 ### Migration Scripts
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/migrate.ts` - Main migration entry point
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/migrate-user1-venues.ts` - Targeted user 1 migration
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/migration.service.ts` - Core migration service
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/migration.module.ts` - NestJS module
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/migrate.ts` - Main migration entry point
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/migrate-user1-venues.ts` - Targeted user 1 migration
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/migration.service.ts` - Core migration service
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/migration.module.ts` - NestJS module
 
 ### Utilities
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/utils/user-data-cleaner.ts` - Comprehensive data cleaning
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/utils/image-verifier.ts` - Image verification
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/utils/location-mapper.ts` - Location mapping
-- `/Applications/AMPPS/www/zoea-2/backend/src/migration/utils/merchant-profile-mapper.ts` - Merchant profile creation
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/utils/user-data-cleaner.ts` - Comprehensive data cleaning
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/utils/image-verifier.ts` - Image verification
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/utils/location-mapper.ts` - Location mapping
+- `/Applications/AMPPS/www/zoea-2/apps/backend/src/migration/utils/merchant-profile-mapper.ts` - Merchant profile creation
 
 ### Database Migrations
-- `/Applications/AMPPS/www/zoea-2/backend/prisma/migrations/20241227000000_add_legacy_id_fields/migration.sql` - Legacy ID fields
+- `/Applications/AMPPS/www/zoea-2/apps/backend/prisma/migrations/20241227000000_add_legacy_id_fields/migration.sql` - Legacy ID fields
 
 ## Documentation
 
