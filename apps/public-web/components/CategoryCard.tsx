@@ -77,13 +77,13 @@ const getIconForCategory = (iconName?: string) => {
 
 export function CategoryCard({ name, slug, icon, count }: CategoryCardProps) {
   return (
-    <Link href={`/category/${slug}`} className="group block">
-      <div className="bg-white border border-gray-200 rounded-xl hover:border-primary hover:shadow-md transition-all duration-200">
-        <div className="flex flex-col items-center justify-center py-5 sm:py-6 px-3">
-          <div className="text-primary mb-2 group-hover:scale-110 transition-transform duration-200">
+    <Link href={`/category/${slug}`} className="group block flex-shrink-0">
+      <div className="bg-white border border-gray-200 rounded-xl hover:border-primary hover:shadow-md transition-all duration-200 w-[90px] h-[90px] sm:w-[100px] sm:h-[100px]">
+        <div className="flex flex-col items-center justify-center h-full px-2">
+          <div className="text-primary mb-1.5 group-hover:scale-110 transition-transform duration-200">
             {getIconForCategory(icon)}
           </div>
-          <h3 className="text-gray-900 text-[12px] sm:text-[13px] font-medium text-center">
+          <h3 className="text-gray-900 text-[11px] sm:text-[12px] font-medium text-center line-clamp-2">
             {name}
           </h3>
         </div>

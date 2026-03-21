@@ -59,7 +59,7 @@ export default function ExplorePage() {
                 <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6 sm:mb-8">
                   Browse by Category
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+                <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide">
                   {categories.map((category) => (
                     <CategoryCard
                       key={category.slug}

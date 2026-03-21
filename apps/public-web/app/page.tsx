@@ -78,7 +78,7 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide justify-center">
               {categories.map((category) => (
                 <CategoryCard
                   key={category.slug}
