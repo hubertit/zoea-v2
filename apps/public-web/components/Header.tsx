@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 export function Header() {
@@ -30,11 +31,15 @@ export function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-primary rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
-              <span className="text-white font-semibold text-xl">Z</span>
-            </div>
-            <span className="text-xl font-semibold text-gray-900 tracking-tight">zoea</span>
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/logo-dark.png"
+              alt="Zoea"
+              width={120}
+              height={40}
+              className="h-8 w-auto transition-transform group-hover:scale-105"
+              priority
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-10">

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
   return (
@@ -6,11 +7,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center">
-                <span className="text-primary font-semibold text-xl">Z</span>
-              </div>
-              <span className="text-xl font-semibold tracking-tight">zoea</span>
+            <Link href="/" className="inline-block mb-6">
+              <Image
+                src="/logo-white.png"
+                alt="Zoea"
+                width={120}
+                height={40}
+                className="h-10 w-auto"
+              />
             </Link>
             <p className="text-[15px] text-gray-400 leading-relaxed max-w-sm">
               Discover the best places to stay, dine, and explore in Rwanda. 
