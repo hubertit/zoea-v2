@@ -108,11 +108,12 @@ export function Hero() {
             { name: 'Nightlife', icon: '🌙' },
           ].map((category) => (
             <button
+              type="button"
               key={category.name}
               className="px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 bg-white/10 backdrop-blur-sm text-white text-[12px] sm:text-[13px] lg:text-[14px] font-medium rounded-full hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-1.5 sm:gap-2"
             >
-              <span>{category.icon}</span>
-              <span className="hidden xs:inline">{category.name}</span>
+              <span aria-hidden>{category.icon}</span>
+              <span className="whitespace-nowrap">{category.name}</span>
             </button>
           ))}
         </div>
