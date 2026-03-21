@@ -67,7 +67,7 @@ export default function Home() {
       <Header />
       <Hero />
       <main>
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20 bg-gray-50">
+        <section className="py-12 sm:py-14 lg:py-16 xl:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-10 lg:mb-12">
               <p className="text-[12px] sm:text-[13px] font-semibold text-gray-500 tracking-wider uppercase mb-2 sm:mb-3">
