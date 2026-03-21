@@ -29,20 +29,20 @@ export function Header() {
           : 'bg-white'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center group">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
+          <Link href="/" className="flex items-center group flex-shrink-0">
             <Image
               src="/logo-dark.png"
               alt="Zoea"
               width={120}
               height={40}
-              className="h-8 w-auto transition-transform group-hover:scale-105"
+              className="h-6 sm:h-7 lg:h-8 w-auto transition-transform group-hover:scale-105"
               priority
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
             <Link
               href="/explore"
               className="text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
@@ -69,11 +69,11 @@ export function Header() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
             {isLoggedIn ? (
               <Link
                 href="/profile"
-                className="flex items-center gap-2 px-4 py-2 text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-[14px] sm:text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -84,13 +84,13 @@ export function Header() {
               <>
                 <Link
                   href="/login"
-                  className="hidden lg:block text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
+                  className="hidden sm:block text-[14px] lg:text-[15px] font-medium text-gray-700 hover:text-primary transition-colors px-2 lg:px-0"
                 >
                   Sign in
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-5 py-2.5 bg-primary text-white text-[15px] font-medium rounded-xl hover:bg-primary/90 transition-all"
+                  className="px-3 sm:px-4 lg:px-5 py-2 lg:py-2.5 bg-primary text-white text-[13px] sm:text-[14px] lg:text-[15px] font-medium rounded-lg lg:rounded-xl hover:bg-primary/90 transition-all whitespace-nowrap"
                 >
                   Sign up
                 </Link>
@@ -129,7 +129,7 @@ export function Header() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-gray-100 py-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden border-t border-gray-100 py-3 animate-in fade-in slide-in-from-top-2 duration-200">
             <nav className="flex flex-col gap-1">
               <Link
                 href="/explore"
@@ -159,14 +159,18 @@ export function Header() {
               >
                 Events
               </Link>
-              <div className="h-px bg-gray-100 my-2" />
-              <Link
-                href="/login"
-                className="px-4 py-3 text-[15px] font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Sign in
-              </Link>
+              {!isLoggedIn && (
+                <>
+                  <div className="h-px bg-gray-100 my-2" />
+                  <Link
+                    href="/login"
+                    className="sm:hidden px-4 py-3 text-[15px] font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         )}

@@ -49,19 +49,19 @@ function SearchContent() {
   return (
     <>
       <Header />
-      <main className="pt-20">
+      <main className="pt-16 sm:pt-18 lg:pt-20">
         <div className="bg-gray-50 border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <form onSubmit={handleSearch} className="max-w-4xl">
-              <div className="bg-white rounded-2xl p-2 shadow-sm border border-gray-200">
-                <div className="flex flex-col lg:flex-row gap-2">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-sm border border-gray-200">
+                <div className="flex flex-col lg:flex-row gap-1.5 sm:gap-2">
                   <div className="flex-1">
                     <input
                       type="text"
                       placeholder="What are you looking for?"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full h-12 px-5 text-[15px] text-gray-900 placeholder-gray-400 bg-transparent focus:outline-none rounded-xl"
+                      className="w-full h-11 sm:h-12 px-4 sm:px-5 text-[14px] sm:text-[15px] text-gray-900 placeholder-gray-400 bg-transparent focus:outline-none rounded-lg sm:rounded-xl"
                     />
                   </div>
 
@@ -73,13 +73,13 @@ function SearchContent() {
                       placeholder="Where?"
                       value={searchLocation}
                       onChange={(e) => setSearchLocation(e.target.value)}
-                      className="w-full h-12 px-5 text-[15px] text-gray-900 placeholder-gray-400 bg-transparent focus:outline-none rounded-xl"
+                      className="w-full h-11 sm:h-12 px-4 sm:px-5 text-[14px] sm:text-[15px] text-gray-900 placeholder-gray-400 bg-transparent focus:outline-none rounded-lg sm:rounded-xl"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="h-12 px-8 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-all"
+                    className="h-11 sm:h-12 px-6 sm:px-8 bg-primary text-white text-[14px] sm:text-[15px] font-semibold rounded-lg sm:rounded-xl hover:bg-primary/90 transition-all"
                   >
                     Search
                   </button>
@@ -89,18 +89,18 @@ function SearchContent() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
           {loading ? (
-            <div className="text-center py-20">
+            <div className="text-center py-16 sm:py-20">
               <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
-              <div className="mb-8">
-                <h1 className="text-2xl lg:text-3xl font-semibold text-gray-900 mb-2">
+              <div className="mb-6 sm:mb-8">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-2">
                   Search Results
                 </h1>
-                <p className="text-[15px] text-gray-600">
+                <p className="text-[14px] sm:text-[15px] text-gray-600">
                   {listings.length > 0 
                     ? `Found ${listings.length} ${listings.length === 1 ? 'place' : 'places'}`
                     : 'No results found'
@@ -111,7 +111,7 @@ function SearchContent() {
               </div>
 
               {listings.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
                   {listings
                     .filter((listing) => listing.city?.name)
                     .map((listing) => (
@@ -130,17 +130,17 @@ function SearchContent() {
                     ))}
                 </div>
               ) : (
-                <div className="text-center py-20">
-                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center py-16 sm:py-20 bg-gray-50 rounded-xl sm:rounded-2xl">
+                  <svg className="w-14 h-14 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">No results found</h2>
-                  <p className="text-[15px] text-gray-600 mb-6">
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No results found</h2>
+                  <p className="text-[14px] sm:text-[15px] text-gray-600 mb-5 sm:mb-6 px-4">
                     Try adjusting your search or browse our categories
                   </p>
                   <Link
                     href="/"
-                    className="inline-block px-6 py-3 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-colors"
+                    className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 bg-primary text-white text-[14px] sm:text-[15px] font-semibold rounded-lg sm:rounded-xl hover:bg-primary/90 transition-colors"
                   >
                     Back to home
                   </Link>
@@ -160,7 +160,7 @@ export default function SearchPage() {
     <Suspense fallback={
       <>
         <Header />
-        <main className="pt-20 min-h-screen flex items-center justify-center">
+        <main className="pt-16 sm:pt-18 lg:pt-20 min-h-screen flex items-center justify-center">
           <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </main>
         <Footer />

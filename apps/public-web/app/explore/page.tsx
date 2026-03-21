@@ -36,30 +36,30 @@ export default function ExplorePage() {
   return (
     <>
       <Header />
-      <main className="pt-20">
+      <main className="pt-16 sm:pt-18 lg:pt-20">
         <div className="bg-gradient-to-br from-primary via-gray-900 to-gray-800 text-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
-            <h1 className="text-4xl lg:text-5xl font-semibold mb-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold mb-3 sm:mb-4">
               Explore Rwanda
             </h1>
-            <p className="text-lg text-white/90">
+            <p className="text-base sm:text-lg text-white/90">
               Discover amazing places, experiences, and adventures
             </p>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
           {loading ? (
-            <div className="text-center py-20">
+            <div className="text-center py-16 sm:py-20">
               <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
-              <section className="mb-16">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-8">
+              <section className="mb-12 sm:mb-14 lg:mb-16">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6 sm:mb-8">
                   Browse by Category
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                   {categories.map((category) => (
                     <CategoryCard
                       key={category.slug}
@@ -73,15 +73,15 @@ export default function ExplorePage() {
               </section>
 
               <section>
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900">
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
+                  <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
                     Featured Places
                   </h2>
-                  <Link href="/" className="text-[15px] font-semibold text-primary hover:underline">
+                  <Link href="/" className="text-[14px] sm:text-[15px] font-semibold text-primary hover:underline">
                     See all
                   </Link>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
                   {listings
                     .filter((listing) => listing.city?.name)
                     .map((listing) => (
