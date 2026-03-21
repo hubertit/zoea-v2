@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +14,10 @@ export function Header() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('access_token'));
   }, []);
 
   return (
@@ -60,18 +65,32 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="hidden lg:block text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/signup"
-              className="px-5 py-2.5 bg-primary text-white text-[15px] font-medium rounded-xl hover:bg-primary/90 transition-all"
-            >
-              Sign up
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/profile"
+                className="flex items-center gap-2 px-4 py-2 text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span className="hidden lg:inline">Profile</span>
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="hidden lg:block text-[15px] font-medium text-gray-700 hover:text-primary transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-5 py-2.5 bg-primary text-white text-[15px] font-medium rounded-xl hover:bg-primary/90 transition-all"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
