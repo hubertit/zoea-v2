@@ -18,7 +18,21 @@ export function Hero() {
 
   return (
     <section className="relative bg-gradient-to-br from-primary via-gray-900 to-gray-800 text-white overflow-hidden">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0djItMnptMC0ydjItMnptLTItMnYyLTJ6bTAtMnYyLTJ6bS0yLTJ2Mi0yem0wLTJ2Mi0yem0tMi0ydjItMnptMC0ydjItMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
+      {/* YouTube Video Background */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
+        <iframe
+          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
+          src="https://www.youtube.com/embed/-kerFdxWG-w?autoplay=1&mute=1&loop=1&playlist=-kerFdxWG-w&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+          title="Background video"
+          allow="autoplay; encrypted-media"
+          style={{
+            pointerEvents: 'none',
+          }}
+        />
+      </div>
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/50" />
       
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-24 lg:py-32">
         <div className="max-w-3xl mx-auto text-center mb-12">
