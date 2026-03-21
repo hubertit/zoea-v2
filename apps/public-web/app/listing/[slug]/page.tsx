@@ -183,9 +183,12 @@ export default function ListingPage() {
                     <p className="text-2xl font-semibold text-gray-900">{listing.priceRange}</p>
                   </div>
 
-                  <button className="w-full py-3.5 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-colors mb-3">
+                  <Link
+                    href={`/booking/${listing.id}`}
+                    className="block w-full py-3.5 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-colors mb-3 text-center"
+                  >
                     Book Now
-                  </button>
+                  </Link>
 
                   <button className="w-full py-3.5 border-2 border-gray-200 text-gray-900 text-[15px] font-semibold rounded-xl hover:bg-gray-50 transition-colors">
                     Contact
