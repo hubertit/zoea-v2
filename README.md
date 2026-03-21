@@ -27,7 +27,9 @@ zoea2/
 │   │   ├── ios/             # iOS platform files
 │   │   ├── pubspec.yaml     # Flutter dependencies
 │   │   └── .git/            # Git repository
-│   └── merchant-web/        # Merchant & admin web portal (Next.js)
+│   ├── merchant-web/        # Merchant business portal (Next.js)
+│   │   └── README.md        # Planned for future development
+│   └── admin-web/           # Platform admin dashboard (Next.js)
 │       ├── src/             # Source code
 │       └── .git/            # Git repository
 ├── docs/                    # Documentation
@@ -73,7 +75,12 @@ zoea2/
 
 ### 5. Merchant Web Portal (`apps/merchant-web/`)
 - **Technology**: Next.js (React, TypeScript)
-- **Purpose**: Merchant & admin management dashboard
+- **Purpose**: Merchant business management portal
+- **Status**: ⏳ Planned
+
+### 6. Admin Dashboard (`apps/admin-web/`)
+- **Technology**: Next.js (React, TypeScript)
+- **Purpose**: Platform administration and system management
 - **Status**: ✅ Active Development
 
 ## Quick Start
@@ -117,6 +124,13 @@ npm install
 npm run dev
 ```
 
+### Admin Dashboard (Next.js)
+```bash
+cd apps/admin-web
+npm install
+npm run dev
+```
+
 ## Technology Stack Summary
 
 | Application | Framework | Language | Database | Key Libraries |
@@ -142,6 +156,7 @@ Each application maintains its own git repository:
 - **apps/public-web/**: (to be configured)
 - **apps/merchant-mobile/**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
 - **apps/merchant-web/**: (to be configured)
+- **apps/admin-web/**: (to be configured)
 
 ## Deployment
 
@@ -189,6 +204,7 @@ Comprehensive documentation is available in the `/docs/` directory:
 - **Public Web**: [apps/public-web/README.md](apps/public-web/README.md)
 - **Merchant Mobile**: [apps/merchant-mobile/README.md](apps/merchant-mobile/README.md)
 - **Merchant Web**: [apps/merchant-web/README.md](apps/merchant-web/README.md)
+- **Admin Dashboard**: [apps/admin-web/README.md](apps/admin-web/README.md)
 
 ## Recent Updates
 
@@ -214,7 +230,7 @@ Detailed version history is available in the following files:
 - **[Backend Changelog](apps/backend/CHANGELOG.md)** - API and backend changes
 - **[Public Mobile Changelog](apps/public-mobile/CHANGELOG.md)** - Public mobile app changes
 - **[Merchant Mobile Changelog](apps/merchant-mobile/CHANGELOG.md)** - Merchant mobile app changes
-- **[Merchant Web Changelog](apps/merchant-web/CHANGELOG.md)** - Merchant & admin web changes
+- **[Admin Web Changelog](apps/admin-web/CHANGELOG.md)** - Admin dashboard changes
 
 ## Project Location
 

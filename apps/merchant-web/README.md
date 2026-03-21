@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zoea Merchant Web Portal
+
+**Business Management Portal for Merchants**
+
+## Overview
+
+The Merchant Web Portal is a dedicated web application for business owners and merchants to manage their presence on the Zoea platform. This is separate from the Admin dashboard to provide a tailored experience for merchant operations.
+
+## Purpose
+
+- Manage business listings (accommodations, restaurants, tours, activities)
+- Handle bookings and reservations
+- Track revenue and analytics
+- Manage inventory and availability
+- Respond to reviews and customer inquiries
+- Update business information and media
+
+## Technology Stack
+
+- **Framework**: Next.js (React, TypeScript) - *To be implemented*
+- **Styling**: Tailwind CSS
+- **State Management**: React Context / Zustand
+- **API Client**: Axios
+- **Authentication**: JWT tokens via backend API
+
+## Status
+
+⏳ **Planned** - This application is planned for future development.
+
+## Difference from Admin App
+
+| Feature | Merchant Web | Admin Web |
+|---------|-------------|-----------|
+| **Users** | Business owners, merchants | Platform administrators |
+| **Access** | Own business data only | All platform data |
+| **Features** | Bookings, inventory, revenue | User management, system config, analytics |
+| **Permissions** | Limited to merchant role | Full platform access |
+| **Deployment** | Separate (can update independently) | Separate |
 
 ## Getting Started
 
-First, run the development server:
+*To be implemented*
 
 ```bash
+cd apps/merchant-web
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Integration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Connects to: `https://zoea-africa.qtsoftwareltd.com/api`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Uses merchant-specific endpoints:
+- `/merchants/profile`
+- `/merchants/listings`
+- `/merchants/bookings`
+- `/merchants/analytics`
+- `/merchants/reviews`
 
-## Learn More
+## Future Features
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Dashboard with key metrics (bookings, revenue, reviews)
+- Listing management (create, edit, delete)
+- Booking calendar and management
+- Revenue reports and analytics
+- Review management and responses
+- Media gallery management
+- Availability and pricing management
+- Notification center
+- Multi-location support

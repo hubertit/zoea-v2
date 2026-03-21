@@ -72,15 +72,15 @@ fi
 cd ../..
 echo ""
 
-# Merchant Web setup
-echo -e "${YELLOW}🖥️  Setting up Merchant Web...${NC}"
-cd apps/merchant-web
+# Admin Web setup
+echo -e "${YELLOW}🖥️  Setting up Admin Web...${NC}"
+cd apps/admin-web
 
 if [ ! -d "node_modules" ]; then
-    echo "Installing merchant web dependencies..."
+    echo "Installing admin web dependencies..."
     npm install || pnpm install
 else
-    echo "✅ Merchant web dependencies installed"
+    echo "✅ Admin web dependencies installed"
 fi
 
 cd ../..
@@ -93,5 +93,5 @@ echo "1. Configure apps/backend/.env with database credentials"
 echo "2. Run database migrations: cd apps/backend && npx prisma migrate dev"
 echo "3. Start backend: cd apps/backend && npm run start:dev"
 echo "4. Start public mobile: cd apps/public-mobile && flutter run"
-echo "5. Start merchant web: cd apps/merchant-web && npm run dev"
+echo "5. Start admin web: cd apps/admin-web && npm run dev"
 
