@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { CategoryCard } from '@/components/CategoryCard';
 import { ListingCard } from '@/components/ListingCard';
+import { Footer } from '@/components/Footer';
 
 const categories = [
   { name: 'Hotels', slug: 'hotels', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800', count: 124 },
@@ -67,6 +68,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
