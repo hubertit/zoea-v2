@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zoea Public Web Application
+
+A modern, clean web application for discovering the best places to stay, dine, and explore in Rwanda.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Font**: Inter (matching mobile app)
+- **HTTP Client**: Axios
+- **API**: https://zoea-africa.qtsoftwareltd.com/api
+
+## Features
+
+### Core Pages
+- **Home** (`/`) - Hero section, categories, featured listings
+- **Explore** (`/explore`) - All categories and listings
+- **Stay** (`/stay`) - Accommodation listings
+- **Dine** (`/dine`) - Restaurant listings
+- **Events** (`/events`) - SINC events integration
+- **Search** (`/search`) - Search results with filters
+
+### Listing Features
+- **Category Pages** (`/category/[slug]`) - Filtered listings with sort/filter
+- **Listing Detail** (`/listing/[slug]`) - Full details, images, reviews, map
+- **Favorites** - Save/unsave listings (requires auth)
+- **Reviews** - Display user reviews with ratings
+
+### User Features
+- **Login** (`/login`) - JWT authentication
+- **Signup** (`/signup`) - User registration
+- **Profile** (`/profile`) - User dashboard with favorites and bookings tabs
+- **Bookings** - View booking history and status
+
+### Booking Flow
+- **Booking Page** (`/booking/[listingId]`) - Date selection, guest count
+- **Confirmation** (`/booking/confirmation/[id]`) - Booking success page
+
+### UI Components
+- **Header** - Sticky header with scroll effect, mobile menu
+- **Hero** - Gradient background with search form
+- **Footer** - Multi-column with social links
+- **BottomNav** - Mobile-only bottom navigation
+- **Cards** - Listing, Category, Event, Review cards
+- **Loading** - Reusable loading spinner
+
+## Design System
+
+- **Primary Color**: #181E29 (Zoea brand)
+- **Font**: Inter (300, 400, 500, 600, 700)
+- **Spacing**: Consistent 4px-based scale
+- **Border Radius**: xl (12px) for most elements
+- **Shadows**: Minimal, subtle shadows
+- **Responsive**: Mobile-first with breakpoints
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API Integration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All pages fetch real data from the backend:
+- Categories and listings from Zoea API
+- Events from SINC API
+- Authentication with JWT tokens
+- Automatic token refresh on 401 errors
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ready for deployment to Vercel or any Node.js hosting platform.
