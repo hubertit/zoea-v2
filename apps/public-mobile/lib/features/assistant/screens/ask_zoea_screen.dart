@@ -8,7 +8,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/assistant_provider.dart';
 import '../../../core/providers/country_provider.dart';
-import '../../../core/providers/auth_provider.dart';
+import '../../../core/providers/auth_provider.dart' show isLoggedInProvider;
 import '../../../core/widgets/auth_prompt_dialog.dart';
 
 class AskZoeaScreen extends ConsumerStatefulWidget {
@@ -751,19 +751,14 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
   }
 
   void _handleHistoryTap() {
-    final authState = ref.read(authProvider);
+    final isLoggedIn = ref.read(isLoggedInProvider);
     
-    if (authState.token == null) {
-      showDialog(
+    if (!isLoggedIn) {
+      AuthPromptDialog.show(
         context: context,
-        builder: (context) => AuthPromptDialog(
-          title: 'Login Required',
-          message: 'Please login to view your conversation history',
-          onLoginSuccess: () {
-            Navigator.of(context).pop();
-            _showConversationsHistory();
-          },
-        ),
+        title: 'Sign In to View History',
+        message: 'Create an account or sign in to view your conversation history with Zoea.',
+        icon: Icons.history,
       );
       return;
     }
