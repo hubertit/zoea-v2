@@ -263,8 +263,8 @@ export default function ListingPage() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16 xl:gap-20">
-            <div className="lg:col-span-2 space-y-8 sm:space-y-10 lg:space-y-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+            <div className="lg:col-span-2 space-y-4">
               {/* Host/Category Info */}
               <div className="pb-8 border-b border-gray-200">
                 <div className="flex items-start justify-between gap-6">
