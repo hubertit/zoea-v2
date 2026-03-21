@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
+import { userApi } from '@/lib/api/user';
 
 interface ListingCardProps {
   id: string;
@@ -24,6 +26,33 @@ export function ListingCard({
   priceRange,
   isVerified,
 }: ListingCardProps) {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleFavoriteToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (isFavorite) {
+        await userApi.removeFavorite(id);
+        setIsFavorite(false);
+      } else {
+        await userApi.addFavorite(id);
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Link href={`/listing/${slug}`} className="group block">
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4">
@@ -36,15 +65,12 @@ export function ListingCard({
         />
         
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            console.log('Toggle favorite:', id);
-          }}
-          className="absolute top-4 right-4 w-10 h-10 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+          onClick={handleFavoriteToggle}
+          disabled={loading}
+          className="absolute top-4 right-4 w-10 h-10 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg disabled:opacity-50"
         >
           <svg
-            className="w-5 h-5 text-gray-700"
-            fill="none"
+            className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'fill-none text-gray-700'}`}
             stroke="currentColor"
             strokeWidth={2}
             viewBox="0 0 24 24"
