@@ -31,7 +31,7 @@ export default function Home() {
           listingsApi.getFeatured(8),
           listingsApi.getRandom(9),
           toursApi.getAll({ limit: 6 }),
-          eventsApi.getAll({ limit: 5 }),
+          eventsApi.getAll({ limit: 6 }),
         ]);
         setCategories(categoriesData.slice(0, 4));
         setFeaturedListings(listingsData);
