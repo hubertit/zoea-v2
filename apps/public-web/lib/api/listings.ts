@@ -58,7 +58,7 @@ export const listingsApi = {
     return response.data;
   },
 
-  async getByCategory(categorySlug: string, params?: {
+  async getByCategory(categoryId: string, params?: {
     page?: number;
     limit?: number;
     sortBy?: string;
@@ -66,7 +66,7 @@ export const listingsApi = {
   }): Promise<ListingsResponse> {
     const response = await apiClient.get<ListingsResponse>(`/listings`, {
       params: {
-        category: categorySlug,
+        categoryId,
         ...params,
       },
     });

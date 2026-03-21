@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer';
 import { ListingCard } from '@/components/ListingCard';
 import { useState, useEffect } from 'react';
 import { listingsApi, type Listing } from '@/lib/api/listings';
+import { categoriesApi } from '@/lib/api/categories';
 
 export default function StayPage() {
   const [listings, setListings] = useState<Listing[]>([]);
@@ -13,8 +14,15 @@ export default function StayPage() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await listingsApi.getByCategory('accommodation', { limit: 20 });
-        setListings(response.data);
+        const categories = await categoriesApi.getAll();
+        const accommodationCategory = categories.find(
+          (cat) => cat.slug === 'accommodation' || cat.name.toLowerCase() === 'accommodation'
+        );
+        
+        if (accommodationCategory) {
+          const response = await listingsApi.getByCategory(accommodationCategory.id, { limit: 20 });
+          setListings(response.data);
+        }
       } catch (error) {
         console.error('Failed to fetch accommodations:', error);
       } finally {

@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer';
 import { ListingCard } from '@/components/ListingCard';
 import { useState, useEffect } from 'react';
 import { listingsApi, type Listing } from '@/lib/api/listings';
+import { categoriesApi } from '@/lib/api/categories';
 
 export default function DinePage() {
   const [listings, setListings] = useState<Listing[]>([]);
@@ -13,8 +14,15 @@ export default function DinePage() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await listingsApi.getByCategory('restaurants', { limit: 20 });
-        setListings(response.data);
+        const categories = await categoriesApi.getAll();
+        const restaurantCategory = categories.find(
+          (cat) => cat.slug === 'restaurants' || cat.name.toLowerCase().includes('restaurant')
+        );
+        
+        if (restaurantCategory) {
+          const response = await listingsApi.getByCategory(restaurantCategory.id, { limit: 20 });
+          setListings(response.data);
+        }
       } catch (error) {
         console.error('Failed to fetch restaurants:', error);
       } finally {

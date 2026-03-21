@@ -22,11 +22,10 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [categoryData, listingsData] = await Promise.all([
-          categoriesApi.getBySlug(slug),
-          listingsApi.getByCategory(slug, { limit: 20 }),
-        ]);
+        const categoryData = await categoriesApi.getBySlug(slug);
         setCategory(categoryData);
+        
+        const listingsData = await listingsApi.getByCategory(categoryData.id, { limit: 20 });
         setListings(listingsData.data);
       } catch (error) {
         console.error('Failed to fetch category data:', error);
