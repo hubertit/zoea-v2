@@ -136,11 +136,11 @@ export default function EventsPage() {
               <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : events.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-              {events.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
           ) : (
             <div className="text-center py-20">
               <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
