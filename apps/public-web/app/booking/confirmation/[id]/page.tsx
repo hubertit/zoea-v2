@@ -87,7 +87,7 @@ export default function BookingConfirmationPage() {
             <div className="flex gap-4 mb-6 pb-6 border-b border-gray-200">
               <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
                 <Image
-                  src={booking.listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                  src={booking.listing.images?.[0]?.media?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
                   alt={booking.listing.name}
                   fill
                   className="object-cover"
@@ -99,7 +99,7 @@ export default function BookingConfirmationPage() {
                   {booking.listing.name}
                 </h3>
                 <p className="text-[14px] text-gray-600">
-                  {booking.listing.location.city}
+                  {booking.listing.city?.name || booking.listing.address}
                 </p>
               </div>
             </div>

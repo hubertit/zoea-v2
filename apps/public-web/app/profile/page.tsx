@@ -133,11 +133,11 @@ export default function ProfilePage() {
                           id={favorite.listing.id}
                           name={favorite.listing.name}
                           slug={favorite.listing.slug}
-                          image={favorite.listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
-                          city={favorite.listing.location.city}
-                          rating={favorite.listing.rating}
+                          image={favorite.listing.images?.[0]?.media?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                          city={favorite.listing.city?.name || ''}
+                          rating={typeof favorite.listing.rating === 'number' ? favorite.listing.rating : parseFloat(favorite.listing.rating || '0')}
                           reviewCount={favorite.listing.reviewCount}
-                          priceRange={favorite.listing.priceRange}
+                          priceRange={favorite.listing.priceRange || `${favorite.listing.minPrice}-${favorite.listing.maxPrice} ${favorite.listing.currency}`}
                           isVerified={favorite.listing.isVerified}
                         />
                       ))}
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                           <div className="flex gap-4">
                             <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
                               <Image
-                                src={booking.listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                                src={booking.listing.images?.[0]?.media?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
                                 alt={booking.listing.name}
                                 fill
                                 className="object-cover"
@@ -187,7 +187,7 @@ export default function ProfilePage() {
                                 {booking.listing.name}
                               </h3>
                               <p className="text-[14px] text-gray-600 mb-3">
-                                {booking.listing.location.city}
+                                {booking.listing.city?.name || booking.listing.address}
                               </p>
                               <div className="flex items-center gap-4 text-[13px] text-gray-600">
                                 <span>

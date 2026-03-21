@@ -68,7 +68,7 @@ export default function ListingPage() {
   }
 
   const images = listing.images?.length > 0 
-    ? listing.images.map(img => img.url)
+    ? listing.images.map(img => img.media?.url)
     : ['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'];
 
   return (
@@ -140,13 +140,13 @@ export default function ListingPage() {
                           <svg className="w-5 h-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
-                          <span className="font-semibold text-gray-900">{listing.rating.toFixed(1)}</span>
+                          <span className="font-semibold text-gray-900">{typeof listing.rating === 'number' ? listing.rating.toFixed(1) : parseFloat(listing.rating).toFixed(1)}</span>
                           <span>({listing.reviewCount} reviews)</span>
                         </div>
                         <span>•</span>
                       </>
                     )}
-                    <span>{listing.location.city}</span>
+                    <span>{listing.city?.name || listing.address}</span>
                   </div>
 
                   <p className="text-[15px] text-gray-600 leading-relaxed">
@@ -173,7 +173,7 @@ export default function ListingPage() {
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-4">Location</h2>
                   <p className="text-[15px] text-gray-600 mb-4">
-                    {listing.location.address || listing.location.city}
+                    {listing.address || listing.city?.name}
                   </p>
                   <div className="aspect-[16/9] bg-gray-100 rounded-2xl flex items-center justify-center">
                     <p className="text-gray-400">Map will be integrated here</p>
@@ -191,7 +191,7 @@ export default function ListingPage() {
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                         <span className="text-lg font-semibold text-gray-900">
-                          {listing.rating.toFixed(1)}
+                          {typeof listing.rating === 'number' ? listing.rating.toFixed(1) : parseFloat(listing.rating).toFixed(1)}
                         </span>
                       </div>
                     )}
@@ -222,7 +222,9 @@ export default function ListingPage() {
                 <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                   <div className="mb-6">
                     <p className="text-[13px] text-gray-600 mb-1">Price Range</p>
-                    <p className="text-2xl font-semibold text-gray-900">{listing.priceRange}</p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {listing.priceRange || `${listing.minPrice}-${listing.maxPrice} ${listing.currency}`}
+                    </p>
                   </div>
 
                   <Link
@@ -237,7 +239,7 @@ export default function ListingPage() {
                   </button>
 
                   <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
-                    {listing.businessHours && listing.businessHours.length > 0 && (
+                    {listing.operatingHours && (
                       <div className="flex items-start gap-3">
                         <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -245,32 +247,32 @@ export default function ListingPage() {
                         <div>
                           <p className="text-[13px] text-gray-600">Hours</p>
                           <p className="text-[14px] font-medium text-gray-900">
-                            {listing.businessHours[0].isClosed ? 'Closed' : `${listing.businessHours[0].openTime} - ${listing.businessHours[0].closeTime}`}
+                            {listing.operatingHours.monday?.closed ? 'Closed' : `${listing.operatingHours.monday?.open} - ${listing.operatingHours.monday?.close}`}
                           </p>
                         </div>
                       </div>
                     )}
 
-                    {listing.contactInfo?.phone && (
+                    {listing.contactPhone && (
                       <div className="flex items-start gap-3">
                         <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                         <div>
                           <p className="text-[13px] text-gray-600">Phone</p>
-                          <p className="text-[14px] font-medium text-gray-900">{listing.contactInfo.phone}</p>
+                          <p className="text-[14px] font-medium text-gray-900">{listing.contactPhone}</p>
                         </div>
                       </div>
                     )}
 
-                    {listing.contactInfo?.email && (
+                    {listing.contactEmail && (
                       <div className="flex items-start gap-3">
                         <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                         <div>
                           <p className="text-[13px] text-gray-600">Email</p>
-                          <p className="text-[14px] font-medium text-gray-900">{listing.contactInfo.email}</p>
+                          <p className="text-[14px] font-medium text-gray-900">{listing.contactEmail}</p>
                         </div>
                       </div>
                     )}

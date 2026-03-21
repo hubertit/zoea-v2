@@ -125,18 +125,18 @@ export default function CategoryPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {listings
-              .filter((listing) => listing.location?.city)
+              .filter((listing) => listing.city?.name)
               .map((listing) => (
                 <ListingCard
                   key={listing.id}
                   id={listing.id}
                   name={listing.name}
                   slug={listing.slug}
-                  image={listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
-                  city={listing.location.city}
-                  rating={listing.rating}
+                  image={listing.images?.[0]?.media?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                  city={listing.city?.name || ''}
+                  rating={typeof listing.rating === 'number' ? listing.rating : parseFloat(listing.rating || '0')}
                   reviewCount={listing.reviewCount}
-                  priceRange={listing.priceRange}
+                  priceRange={listing.priceRange || `${listing.minPrice}-${listing.maxPrice} ${listing.currency}`}
                   isVerified={listing.isVerified}
                 />
               ))}

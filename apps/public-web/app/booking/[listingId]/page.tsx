@@ -186,21 +186,21 @@ export default function BookingPage() {
                   Booking Summary
                 </h2>
 
-                <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4">
-                  <Image
-                    src={listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
-                    alt={listing.name}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4">
+                <Image
+                  src={listing.images?.[0]?.media?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                  alt={listing.name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
                 </div>
 
                 <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
                   {listing.name}
                 </h3>
                 <p className="text-[14px] text-gray-600 mb-4">
-                  {listing.location.city}
+                  {listing.city?.name || listing.address}
                 </p>
 
                 {listing.rating && (
@@ -209,7 +209,7 @@ export default function BookingPage() {
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                     <span className="text-[14px] font-semibold text-gray-900">
-                      {listing.rating.toFixed(1)}
+                      {typeof listing.rating === 'number' ? listing.rating.toFixed(1) : parseFloat(listing.rating || '0').toFixed(1)}
                     </span>
                     <span className="text-[13px] text-gray-500">
                       ({listing.reviewCount})
