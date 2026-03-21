@@ -652,7 +652,7 @@ export default function ListingPage() {
             {/* Sticky Booking Card */}
             <div className="lg:col-span-1">
               <div className="lg:sticky lg:top-24">
-                <div className="bg-white border border-gray-200 rounded-xl sm:rounded-2xl p-5 sm:p-6 shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-black/10 transition-all">
+                <div className="bg-white border border-gray-200 rounded-xl sm:rounded-2xl p-5 sm:p-6 shadow-lg">
                   {/* Price */}
                   <div className="mb-6 pb-6 border-b border-gray-100">
                     <div className="flex items-baseline gap-2 mb-2">
