@@ -34,9 +34,9 @@ export function EventCard({ event }: EventCardProps) {
   };
 
   return (
-    <Link href={`/event/${event.id}`} className="group block">
-      <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 overflow-hidden hover:border-gray-300 transition-all">
-        <div className="relative aspect-[16/9] overflow-hidden">
+    <Link href={`/event/${event.id}`} className="group block h-full">
+      <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 overflow-hidden hover:border-gray-300 transition-all h-full flex flex-col">
+        <div className="relative aspect-[16/9] overflow-hidden flex-shrink-0">
           {eventDetails.flyer ? (
             <Image
               src={eventDetails.flyer}
@@ -67,12 +67,12 @@ export function EventCard({ event }: EventCardProps) {
           )}
         </div>
 
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-3 flex-1 flex flex-col">
           <h3 className="text-[15px] sm:text-[16px] font-semibold text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
             {eventDetails.name}
           </h3>
 
-          <div className="space-y-2 text-[13px] sm:text-[14px] text-gray-600">
+          <div className="space-y-2 text-[13px] sm:text-[14px] text-gray-600 flex-1">
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
