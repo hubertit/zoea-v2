@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { BottomNav } from "@/components/BottomNav";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,8 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} min-h-full antialiased`}>
+      <body className={`${inter.className} min-h-full antialiased pb-16 lg:pb-0`}>
         {children}
+        <BottomNav />
       </body>
     </html>
   );
