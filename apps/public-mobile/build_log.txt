@@ -1,0 +1,47 @@
+Running Gradle task 'assembleRelease'...                        
+Warning: Flutter support for your project's Android Gradle Plugin version (Android Gradle Plugin version 8.3.0) will soon be dropped. Please upgrade your Android Gradle Plugin version to a version of at least Android Gradle Plugin version 8.6.0 soon.
+Alternatively, use the flag "--android-skip-build-dependency-validation" to bypass this check.
+
+Potential fix: Your project's AGP version is typically defined in the plugins block of the `settings.gradle` file (/Users/macbookpro/projects/flutter/zoea2/mobile/android/settings.gradle), by a plugin with the id of com.android.application. 
+If you don't see a plugins block, your project was likely created with an older template version. In this case it is most likely defined in the top-level build.gradle file (/Users/macbookpro/projects/flutter/zoea2/mobile/android/build.gradle) by the following line in the dependencies block of the buildscript: "classpath 'com.android.tools.build:gradle:<version>'".
+
+Warning: Flutter support for your project's Kotlin version (1.9.22) will soon be dropped. Please upgrade your Kotlin version to a version of at least 2.1.0 soon.
+Alternatively, use the flag "--android-skip-build-dependency-validation" to bypass this check.
+
+Potential fix: Your project's KGP version is typically defined in the plugins block of the `settings.gradle` file (/Users/macbookpro/projects/flutter/zoea2/mobile/android/settings.gradle), by a plugin with the id of org.jetbrains.kotlin.android. 
+If you don't see a plugins block, your project was likely created with an older template version, in which case it is most likely defined in the top-level build.gradle file (/Users/macbookpro/projects/flutter/zoea2/mobile/android/build.gradle) by the ext.kotlin_version property.
+
+Checking the license for package Android SDK Platform 36 in /Users/macbookpro/Library/Android/sdk/licenses
+License for package Android SDK Platform 36 accepted.
+Preparing "Install Android SDK Platform 36 (revision 2)".
+"Install Android SDK Platform 36 (revision 2)" ready.
+Installing Android SDK Platform 36 in /Users/macbookpro/Library/Android/sdk/platforms/android-36
+"Install Android SDK Platform 36 (revision 2)" complete.
+"Install Android SDK Platform 36 (revision 2)" finished.
+Font asset "CupertinoIcons.ttf" was tree-shaken, reducing it from 257628 to 848 bytes (99.7% reduction). Tree-shaking can be disabled by providing the --no-tree-shake-icons flag when building your app.
+Font asset "MaterialIcons-Regular.otf" was tree-shaken, reducing it from 1645184 to 27928 bytes (98.3% reduction). Tree-shaking can be disabled by providing the --no-tree-shake-icons flag when building your app.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:checkReleaseAarMetadata'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.CheckAarMetadataWorkAction
+   > 2 issues were found when checking AAR metadata:
+
+       1.  Dependency 'androidx.core:core:1.16.0' requires Android Gradle plugin 8.6.0 or higher.
+
+           This build currently uses Android Gradle plugin 8.3.0.
+
+       2.  Dependency 'androidx.core:core-ktx:1.16.0' requires Android Gradle plugin 8.6.0 or higher.
+
+           This build currently uses Android Gradle plugin 8.3.0.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 4m 20s
+Running Gradle task 'assembleRelease'...                          261.2s
+Gradle task assembleRelease failed with exit code 1

@@ -8,56 +8,41 @@ This is the main Zoea project directory containing all related applications and 
 
 ```
 zoea2/
-├── mobile/          # Consumer mobile app (Flutter)
-│   ├── lib/         # Flutter source code
-│   ├── android/     # Android platform files
-│   ├── ios/         # iOS platform files
-│   ├── pubspec.yaml # Flutter dependencies
-│   └── .git/        # Git repository
-├── merchant-mobile/  # Merchant mobile app (Flutter)
-│   ├── lib/         # Flutter source code
-│   ├── android/     # Android platform files
-│   ├── ios/         # iOS platform files
-│   ├── pubspec.yaml # Flutter dependencies
-│   └── .git/        # Git repository
-├── backend/         # NestJS backend API
-│   ├── src/         # Source code
-│   ├── prisma/      # Database schema
-│   └── .git/        # Git repository
-├── admin/           # Admin and partners dashboard (Next.js)
-│   ├── src/         # Source code
-│   └── .git/        # Git repository
-├── web/             # Consumer web app (Next.js)
-│   └── .git/        # Git repository (ready for remote)
-├── merchant-web/    # Merchant web portal (Next.js) - Future
-│   └── .git/        # Git repository (ready for remote)
-├── docs/            # Documentation
-│   ├── notes/       # Development notes and fix summaries
-│   └── ...          # Organized documentation by topic
-├── scripts/         # Shared scripts
-├── database/        # Database schemas and scripts
-│   ├── scripts/     # SQL scripts for data operations
-│   └── ...          # Database schemas and dumps
-└── logs/            # Deployment and execution logs
+├── apps/                    # All applications
+│   ├── backend/             # NestJS backend API
+│   │   ├── src/             # Source code
+│   │   ├── prisma/          # Database schema
+│   │   └── .git/            # Git repository
+│   ├── public-mobile/       # Consumer mobile app (Flutter)
+│   │   ├── lib/             # Flutter source code
+│   │   ├── android/         # Android platform files
+│   │   ├── ios/             # iOS platform files
+│   │   ├── pubspec.yaml     # Flutter dependencies
+│   │   └── .git/            # Git repository
+│   ├── public-web/          # Consumer web app (Next.js)
+│   │   └── .git/            # Git repository (ready for remote)
+│   ├── merchant-mobile/     # Merchant mobile app (Flutter)
+│   │   ├── lib/             # Flutter source code
+│   │   ├── android/         # Android platform files
+│   │   ├── ios/             # iOS platform files
+│   │   ├── pubspec.yaml     # Flutter dependencies
+│   │   └── .git/            # Git repository
+│   └── merchant-web/        # Merchant & admin web portal (Next.js)
+│       ├── src/             # Source code
+│       └── .git/            # Git repository
+├── docs/                    # Documentation
+│   ├── notes/               # Development notes and fix summaries
+│   └── ...                  # Organized documentation by topic
+├── scripts/                 # Shared scripts
+├── database/                # Database schemas and scripts
+│   ├── scripts/             # SQL scripts for data operations
+│   └── ...                  # Database schemas and dumps
+└── logs/                    # Deployment and execution logs
 ```
 
 ## Applications
 
-### 1. Consumer Mobile App (`mobile/`)
-- **Technology**: Flutter (Dart)
-- **Platform**: iOS, Android
-- **Purpose**: Consumer-facing mobile application
-- **Status**: ✅ Active Development
-- **Repository**: `https://github.com/hubertit/zoea.mobile.2.git`
-
-### 2. Merchant Mobile App (`merchant-mobile/`)
-- **Technology**: Flutter (Dart)
-- **Platform**: iOS, Android
-- **Purpose**: Merchant business management mobile app
-- **Status**: ✅ Active Development
-- **Repository**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
-
-### 3. Backend API (`backend/`)
+### 1. Backend API (`apps/backend/`)
 - **Technology**: NestJS (TypeScript)
 - **Database**: PostgreSQL 16 + PostGIS
 - **ORM**: Prisma
@@ -67,40 +52,35 @@ zoea2/
 - **API Base URL**: `https://zoea-africa.qtsoftwareltd.com/api`
 - **Swagger Docs**: `https://zoea-africa.qtsoftwareltd.com/api/docs`
 
-### 4. Admin Dashboard (`admin/`)
-- **Technology**: Next.js (React, TypeScript)
-- **Purpose**: Admin and partners management dashboard
+### 2. Public Mobile App (`apps/public-mobile/`)
+- **Technology**: Flutter (Dart)
+- **Platform**: iOS, Android
+- **Purpose**: Consumer-facing mobile application
 - **Status**: ✅ Active Development
+- **Repository**: `https://github.com/hubertit/zoea.mobile.2.git`
 
-### 5. Consumer Web App (`web/`)
+### 3. Public Web App (`apps/public-web/`)
 - **Technology**: Next.js (planned)
 - **Purpose**: Public-facing website for consumers
 - **Status**: ⏳ Planned
 
-### 6. Merchant Web Portal (`merchant-web/`)
-- **Technology**: Next.js (planned)
-- **Purpose**: Merchant business management web portal
-- **Status**: ⏳ Planned
+### 4. Merchant Mobile App (`apps/merchant-mobile/`)
+- **Technology**: Flutter (Dart)
+- **Platform**: iOS, Android
+- **Purpose**: Merchant business management mobile app
+- **Status**: ✅ Active Development
+- **Repository**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
+
+### 5. Merchant Web Portal (`apps/merchant-web/`)
+- **Technology**: Next.js (React, TypeScript)
+- **Purpose**: Merchant & admin management dashboard
+- **Status**: ✅ Active Development
 
 ## Quick Start
 
-### Consumer Mobile (Flutter)
+### Backend API (NestJS)
 ```bash
-cd mobile
-flutter pub get
-flutter run
-```
-
-### Merchant Mobile (Flutter)
-```bash
-cd merchant-mobile
-flutter pub get
-flutter run
-```
-
-### Backend (NestJS)
-```bash
-cd backend
+cd apps/backend
 npm install
 cp env.example .env
 # Edit .env with your database credentials
@@ -109,9 +89,30 @@ npx prisma migrate dev
 npm run start:dev
 ```
 
-### Admin (Next.js)
+### Public Mobile (Flutter)
 ```bash
-cd admin
+cd apps/public-mobile
+flutter pub get
+flutter run
+```
+
+### Public Web (Next.js)
+```bash
+cd apps/public-web
+npm install
+npm run dev
+```
+
+### Merchant Mobile (Flutter)
+```bash
+cd apps/merchant-mobile
+flutter pub get
+flutter run
+```
+
+### Merchant Web (Next.js)
+```bash
+cd apps/merchant-web
 npm install
 npm run dev
 ```
@@ -136,18 +137,17 @@ npm run dev
 ## Git Repositories
 
 Each application maintains its own git repository:
-- **mobile/**: `https://github.com/hubertit/zoea.mobile.2.git`
-- **merchant-mobile/**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
-- **backend/**: `https://github.com/zoea-africa/zoea2-apis.git`
-- **admin/**: (to be configured)
-- **web/**: (to be configured)
-- **merchant-web/**: (to be configured)
+- **apps/backend/**: `https://github.com/zoea-africa/zoea2-apis.git`
+- **apps/public-mobile/**: `https://github.com/hubertit/zoea.mobile.2.git`
+- **apps/public-web/**: (to be configured)
+- **apps/merchant-mobile/**: `https://github.com/zoea-africa/zoea-partner-mobile.git`
+- **apps/merchant-web/**: (to be configured)
 
 ## Deployment
 
 ### Backend Deployment
 ```bash
-cd backend
+cd apps/backend
 ./sync-all-environments.sh
 # Then SSH into servers and run:
 # docker-compose down && docker-compose up --build -d
@@ -180,14 +180,15 @@ Comprehensive documentation is available in the `/docs/` directory:
 - **[Database Schema](docs/08-database/01-database-schema.md)** - Database schema documentation
 
 ### Quick Start Guides
-- **[Mobile App Quick Start](mobile/QUICKSTART.md)** - Get mobile app running in 5 minutes ⚡
-- **[Backend API Quick Start](backend/QUICKSTART.md)** - Set up backend in 10 minutes ⚡
+- **[Backend API Quick Start](apps/backend/QUICKSTART.md)** - Set up backend in 10 minutes ⚡
+- **[Public Mobile Quick Start](apps/public-mobile/QUICKSTART.md)** - Get mobile app running in 5 minutes ⚡
 
 ### Application-Specific Documentation
-- **Mobile App**: [mobile/README.md](mobile/README.md)
-- **Backend API**: [backend/README.md](backend/README.md)
-- **Admin Dashboard**: [admin/README.md](admin/README.md)
-- **Merchant Mobile**: [merchant-mobile/README.md](merchant-mobile/README.md)
+- **Backend API**: [apps/backend/README.md](apps/backend/README.md)
+- **Public Mobile**: [apps/public-mobile/README.md](apps/public-mobile/README.md)
+- **Public Web**: [apps/public-web/README.md](apps/public-web/README.md)
+- **Merchant Mobile**: [apps/merchant-mobile/README.md](apps/merchant-mobile/README.md)
+- **Merchant Web**: [apps/merchant-web/README.md](apps/merchant-web/README.md)
 
 ## Recent Updates
 
@@ -210,10 +211,10 @@ Comprehensive documentation is available in the `/docs/` directory:
 
 Detailed version history is available in the following files:
 - **[Platform Changelog](CHANGELOG.md)** - Overall platform changes
-- **[Mobile App Changelog](mobile/CHANGELOG.md)** - Mobile app specific changes
-- **[Backend Changelog](backend/CHANGELOG.md)** - API and backend changes
-- **[Merchant Mobile Changelog](merchant-mobile/CHANGELOG.md)** - Merchant app changes
-- **[Admin Dashboard Changelog](admin/CHANGELOG.md)** - Admin dashboard changes
+- **[Backend Changelog](apps/backend/CHANGELOG.md)** - API and backend changes
+- **[Public Mobile Changelog](apps/public-mobile/CHANGELOG.md)** - Public mobile app changes
+- **[Merchant Mobile Changelog](apps/merchant-mobile/CHANGELOG.md)** - Merchant mobile app changes
+- **[Merchant Web Changelog](apps/merchant-web/CHANGELOG.md)** - Merchant & admin web changes
 
 ## Project Location
 

@@ -35,12 +35,12 @@ echo ""
 
 # Backend setup
 echo -e "${YELLOW}📦 Setting up Backend...${NC}"
-cd backend
+cd apps/backend
 
 if [ ! -f ".env" ]; then
     echo "Creating .env file from env.example..."
     cp env.example .env
-    echo -e "${YELLOW}⚠️  Please edit backend/.env with your database credentials${NC}"
+    echo -e "${YELLOW}⚠️  Please edit apps/backend/.env with your database credentials${NC}"
 else
     echo "✅ .env file exists"
 fi
@@ -55,43 +55,43 @@ fi
 echo "Generating Prisma client..."
 npx prisma generate || echo "⚠️  Prisma generate failed - check database connection"
 
-cd ..
+cd ../..
 echo ""
 
-# Mobile setup
-echo -e "${YELLOW}📱 Setting up Mobile...${NC}"
-cd mobile
+# Public Mobile setup
+echo -e "${YELLOW}📱 Setting up Public Mobile...${NC}"
+cd apps/public-mobile
 
 if [ ! -d ".dart_tool" ]; then
     echo "Installing Flutter dependencies..."
     flutter pub get
 else
-    echo "✅ Mobile dependencies installed"
+    echo "✅ Public mobile dependencies installed"
 fi
 
-cd ..
+cd ../..
 echo ""
 
-# Admin setup
-echo -e "${YELLOW}🖥️  Setting up Admin...${NC}"
-cd admin
+# Merchant Web setup
+echo -e "${YELLOW}🖥️  Setting up Merchant Web...${NC}"
+cd apps/merchant-web
 
 if [ ! -d "node_modules" ]; then
-    echo "Installing admin dependencies..."
+    echo "Installing merchant web dependencies..."
     npm install || pnpm install
 else
-    echo "✅ Admin dependencies installed"
+    echo "✅ Merchant web dependencies installed"
 fi
 
-cd ..
+cd ../..
 echo ""
 
 echo -e "${GREEN}✅ Setup complete!${NC}"
 echo ""
 echo "Next steps:"
-echo "1. Configure backend/.env with database credentials"
-echo "2. Run database migrations: cd backend && npx prisma migrate dev"
-echo "3. Start backend: cd backend && npm run start:dev"
-echo "4. Start mobile: cd mobile && flutter run"
-echo "5. Start admin: cd admin && npm run dev"
+echo "1. Configure apps/backend/.env with database credentials"
+echo "2. Run database migrations: cd apps/backend && npx prisma migrate dev"
+echo "3. Start backend: cd apps/backend && npm run start:dev"
+echo "4. Start public mobile: cd apps/public-mobile && flutter run"
+echo "5. Start merchant web: cd apps/merchant-web && npm run dev"
 
