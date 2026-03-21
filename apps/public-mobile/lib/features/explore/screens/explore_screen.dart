@@ -538,7 +538,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               // Exchange rate
               Flexible(
                 child: Text(
-                  '1,444.33',
+                  '1,458.50',
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w700,
                     color: context.primaryTextColor,

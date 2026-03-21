@@ -64,6 +64,8 @@ export class AssistantController {
   }
 
   @Get('conversations')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Get user conversations',
     description: 'Retrieve all conversation history for the authenticated user. Returns conversations from the last 90 days, sorted by most recent first. Each conversation includes metadata like creation date and message count.'
@@ -90,6 +92,8 @@ export class AssistantController {
   }
 
   @Get('conversations/:id/messages')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Get conversation messages',
     description: 'Retrieve all messages for a specific conversation. Returns both user messages and assistant responses in chronological order. Useful for displaying conversation history or resuming a previous chat.'
@@ -119,6 +123,8 @@ export class AssistantController {
   }
 
   @Delete('conversations/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ 
     summary: 'Delete a conversation',

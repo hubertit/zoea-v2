@@ -8,6 +8,8 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/assistant_provider.dart';
 import '../../../core/providers/country_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 
 class AskZoeaScreen extends ConsumerStatefulWidget {
   const AskZoeaScreen({super.key});
@@ -197,8 +199,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
-              // TODO: Show conversations history
-              _showConversationsHistory();
+              _handleHistoryTap();
             },
             tooltip: 'History',
           ),
@@ -747,6 +748,27 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
       default:
         return Icons.info;
     }
+  }
+
+  void _handleHistoryTap() {
+    final authState = ref.read(authProvider);
+    
+    if (authState.token == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AuthPromptDialog(
+          title: 'Login Required',
+          message: 'Please login to view your conversation history',
+          onLoginSuccess: () {
+            Navigator.of(context).pop();
+            _showConversationsHistory();
+          },
+        ),
+      );
+      return;
+    }
+    
+    _showConversationsHistory();
   }
 
   Future<void> _showConversationsHistory() async {
