@@ -112,6 +112,14 @@ const eventsClient = axios.create({
   },
 });
 
+// Transform API response to match our interface
+function transformEvent(apiEvent: any): Event {
+  return {
+    ...apiEvent,
+    event: apiEvent.Event || apiEvent.event,
+  };
+}
+
 export const eventsApi = {
   async getAll(params?: {
     page?: number;
@@ -119,18 +127,18 @@ export const eventsApi = {
     category?: string;
   }): Promise<Event[]> {
     const response = await eventsClient.get<EventsResponse>('/explore-events', { params });
-    return response.data.data.events;
+    return response.data.data.events.map(transformEvent);
   },
 
   async getById(id: string): Promise<Event> {
-    const response = await eventsClient.get<Event>(`/explore-events/${id}`);
-    return response.data;
+    const response = await eventsClient.get<any>(`/explore-events/${id}`);
+    return transformEvent(response.data);
   },
 
   async search(query: string): Promise<Event[]> {
     const response = await eventsClient.get<EventsResponse>('/explore-events', {
       params: { search: query },
     });
-    return response.data.data.events;
+    return response.data.data.events.map(transformEvent);
   },
 };
