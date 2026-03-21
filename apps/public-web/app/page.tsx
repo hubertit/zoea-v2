@@ -84,7 +84,7 @@ export default function Home() {
                   key={category.slug}
                   name={category.name}
                   slug={category.slug}
-                  image={category.image || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                  icon={category.icon}
                   count={category.listingCount}
                 />
               ))}
