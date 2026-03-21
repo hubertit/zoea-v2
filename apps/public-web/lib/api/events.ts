@@ -86,23 +86,25 @@ export interface EventOwner {
   isUserSubscribedToCaller: boolean;
 }
 
+export interface EventsData {
+  events: Event[];
+  count: number;
+  pagination: {
+    current: number;
+    limit: number;
+    total: number;
+    next?: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  };
+}
+
 export interface EventsResponse {
   statusCode: string;
   message: string;
-  data: {
-    events: Event[];
-    count: number;
-    pagination: {
-      current: number;
-      limit: number;
-      total: number;
-      next?: {
-        page: number;
-        limit: number;
-        total: number;
-      };
-    };
-  };
+  data: EventsData;
 }
 
 const eventsClient = axios.create({
@@ -125,9 +127,12 @@ export const eventsApi = {
     page?: number;
     limit?: number;
     category?: string;
-  }): Promise<Event[]> {
+  }): Promise<EventsData> {
     const response = await eventsClient.get<EventsResponse>('/explore-events', { params });
-    return response.data.data.events.map(transformEvent);
+    return {
+      ...response.data.data,
+      events: response.data.data.events.map(transformEvent),
+    };
   },
 
   async getById(id: string): Promise<Event> {
@@ -135,10 +140,13 @@ export const eventsApi = {
     return transformEvent(response.data);
   },
 
-  async search(query: string): Promise<Event[]> {
+  async search(query: string): Promise<EventsData> {
     const response = await eventsClient.get<EventsResponse>('/explore-events', {
       params: { search: query },
     });
-    return response.data.data.events.map(transformEvent);
+    return {
+      ...response.data.data,
+      events: response.data.data.events.map(transformEvent),
+    };
   },
 };

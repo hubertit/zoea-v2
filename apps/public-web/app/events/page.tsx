@@ -4,23 +4,28 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { EventCard } from '@/components/EventCard';
 import { useState, useEffect } from 'react';
-import { eventsApi, type Event } from '@/lib/api/events';
+import { eventsApi, type Event, type EventsData } from '@/lib/api/events';
 
 type TabType = 'all' | 'trending' | 'this-week';
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [eventsData, setEventsData] = useState<EventsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const data = await eventsApi.getAll({ limit: 20 });
-        setEvents(data);
+        const data = await eventsApi.getAll({ 
+          page: currentPage,
+          limit: itemsPerPage 
+        });
+        setEventsData(data);
       } catch (error) {
         console.error('Failed to fetch events:', error);
       } finally {
@@ -29,7 +34,7 @@ export default function EventsPage() {
     };
 
     fetchEvents();
-  }, [activeTab]);
+  }, [activeTab, currentPage]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,13 +43,22 @@ export default function EventsPage() {
     setLoading(true);
     try {
       const data = await eventsApi.search(searchQuery);
-      setEvents(data);
+      setEventsData(data);
+      setCurrentPage(1);
     } catch (error) {
       console.error('Failed to search events:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const totalPages = eventsData?.pagination ? Math.ceil(eventsData.pagination.total / itemsPerPage) : 1;
+  const events = eventsData?.events || [];
 
   return (
     <>
@@ -136,11 +150,75 @@ export default function EventsPage() {
               <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : events.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+                {events.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-10 flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-2 rounded-lg text-[14px] font-medium transition-colors ${
+                      currentPage === 1
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      let pageNum: number;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
+
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`min-w-[40px] h-10 px-3 rounded-lg text-[14px] font-medium transition-colors ${
+                            currentPage === pageNum
+                              ? 'bg-primary text-white'
+                              : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-2 rounded-lg text-[14px] font-medium transition-colors ${
+                      currentPage === totalPages
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-20">
               <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
