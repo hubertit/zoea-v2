@@ -154,46 +154,65 @@ export default function ListingPage() {
 
           {/* Image Gallery */}
           <div className="mb-8 sm:mb-10 lg:mb-12">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 rounded-xl sm:rounded-2xl overflow-hidden">
-              <div className="lg:col-span-2 lg:row-span-2 relative aspect-[4/3] lg:aspect-auto lg:h-[500px] cursor-pointer group" onClick={() => setShowAllPhotos(true)}>
+            {images.length === 1 ? (
+              // Single image layout
+              <div className="relative aspect-[16/9] lg:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden">
                 <Image
                   src={images[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'}
                   alt={listing.name}
                   fill
-                  className="object-cover group-hover:brightness-95 transition-all"
+                  className="object-cover"
                   unoptimized
+                  priority
                 />
               </div>
-              {images.slice(1, 5).map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className="hidden lg:block relative aspect-[4/3] lg:h-[245px] cursor-pointer group"
-                  onClick={() => setShowAllPhotos(true)}
-                >
-                  <Image
-                    src={img || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
-                    alt={`${listing.name} - ${idx + 2}`}
-                    fill
-                    className="object-cover group-hover:brightness-95 transition-all"
-                    unoptimized
-                  />
-                  {idx === 3 && images.length > 5 && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                      <span className="text-white font-semibold text-lg">+{images.length - 5} photos</span>
+            ) : (
+              // Multiple images grid layout
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 rounded-xl sm:rounded-2xl overflow-hidden">
+                  <div className="lg:col-span-2 lg:row-span-2 relative aspect-[4/3] lg:aspect-auto lg:h-[500px] cursor-pointer group" onClick={() => setShowAllPhotos(true)}>
+                    <Image
+                      src={images[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'}
+                      alt={listing.name}
+                      fill
+                      className="object-cover group-hover:brightness-95 transition-all"
+                      unoptimized
+                    />
+                  </div>
+                  {images.slice(1, 5).map((img, idx) => (
+                    <div 
+                      key={idx} 
+                      className="hidden lg:block relative aspect-[4/3] lg:h-[245px] cursor-pointer group"
+                      onClick={() => setShowAllPhotos(true)}
+                    >
+                      <Image
+                        src={img || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                        alt={`${listing.name} - ${idx + 2}`}
+                        fill
+                        className="object-cover group-hover:brightness-95 transition-all"
+                        unoptimized
+                      />
+                      {idx === 3 && images.length > 5 && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                          <span className="text-white font-semibold text-lg">+{images.length - 5} photos</span>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowAllPhotos(true)}
-              className="hidden lg:flex items-center gap-2 mt-4 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-[14px] font-medium"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Show all {images.length} photos
-            </button>
+                {images.length > 1 && (
+                  <button
+                    onClick={() => setShowAllPhotos(true)}
+                    className="hidden lg:flex items-center gap-2 mt-4 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-[14px] font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Show all {images.length} photos
+                  </button>
+                )}
+              </>
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16 xl:gap-20">
