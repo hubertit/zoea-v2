@@ -54,8 +54,13 @@ export interface ListingsResponse {
 
 export const listingsApi = {
   async getFeatured(limit = 10): Promise<Listing[]> {
-    const response = await apiClient.get<Listing[]>(`/listings/featured?limit=${limit}`);
-    return response.data;
+    const response = await apiClient.get<ListingsResponse>(`/listings`, {
+      params: {
+        isFeatured: true,
+        limit,
+      },
+    });
+    return response.data.data;
   },
 
   async getByCategory(categoryId: string, params?: {
