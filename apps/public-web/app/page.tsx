@@ -67,7 +67,7 @@ export default function Home() {
       <Header />
       <Hero />
       <main>
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20">
+        <section className="py-10 sm:py-12 lg:py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-10 lg:mb-12">
               <p className="text-[12px] sm:text-[13px] font-semibold text-gray-500 tracking-wider uppercase mb-2 sm:mb-3">
@@ -93,7 +93,7 @@ export default function Home() {
         </section>
 
         {/* Happening Section */}
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20 bg-gray-50">
+        <section className="py-10 sm:py-12 lg:py-14 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8 sm:mb-10">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
@@ -124,7 +124,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20">
+        <section className="py-10 sm:py-12 lg:py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8 sm:mb-10">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
@@ -159,7 +159,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20 bg-gray-50">
+        <section className="py-10 sm:py-12 lg:py-14 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8 sm:mb-10">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
@@ -185,7 +185,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20">
+        <section className="py-10 sm:py-12 lg:py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8 sm:mb-10">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
