@@ -105,33 +105,80 @@ export default function BookingConfirmationPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="flex justify-between text-[15px]">
-                <span className="text-gray-600">Check-in</span>
-                <span className="font-medium text-gray-900">
-                  {new Date(booking.startDate).toLocaleDateString('en-US', { 
-                    weekday: 'short', 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                  })}
-                </span>
-              </div>
+              {booking.bookingType === 'hotel' && (
+                <>
+                  {booking.checkInDate && (
+                    <div className="flex justify-between text-[15px]">
+                      <span className="text-gray-600">Check-in</span>
+                      <span className="font-medium text-gray-900">
+                        {new Date(booking.checkInDate).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </span>
+                    </div>
+                  )}
 
-              <div className="flex justify-between text-[15px]">
-                <span className="text-gray-600">Check-out</span>
-                <span className="font-medium text-gray-900">
-                  {new Date(booking.endDate).toLocaleDateString('en-US', { 
-                    weekday: 'short', 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                  })}
-                </span>
-              </div>
+                  {booking.checkOutDate && (
+                    <div className="flex justify-between text-[15px]">
+                      <span className="text-gray-600">Check-out</span>
+                      <span className="font-medium text-gray-900">
+                        {new Date(booking.checkOutDate).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </span>
+                    </div>
+                  )}
+
+                  {booking.roomCount && (
+                    <div className="flex justify-between text-[15px]">
+                      <span className="text-gray-600">Rooms</span>
+                      <span className="font-medium text-gray-900">{booking.roomCount} {booking.roomCount === 1 ? 'room' : 'rooms'}</span>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {booking.bookingType === 'restaurant' && (
+                <>
+                  {booking.bookingDate && (
+                    <div className="flex justify-between text-[15px]">
+                      <span className="text-gray-600">Date</span>
+                      <span className="font-medium text-gray-900">
+                        {new Date(booking.bookingDate).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </span>
+                    </div>
+                  )}
+
+                  {booking.bookingTime && (
+                    <div className="flex justify-between text-[15px]">
+                      <span className="text-gray-600">Time</span>
+                      <span className="font-medium text-gray-900">{booking.bookingTime}</span>
+                    </div>
+                  )}
+
+                  {booking.partySize && (
+                    <div className="flex justify-between text-[15px]">
+                      <span className="text-gray-600">Party size</span>
+                      <span className="font-medium text-gray-900">{booking.partySize} {booking.partySize === 1 ? 'guest' : 'guests'}</span>
+                    </div>
+                  )}
+                </>
+              )}
 
               <div className="flex justify-between text-[15px]">
                 <span className="text-gray-600">Guests</span>
-                <span className="font-medium text-gray-900">{booking.guests}</span>
+                <span className="font-medium text-gray-900">{booking.guestCount}</span>
               </div>
 
               <div className="flex justify-between text-[15px] pt-4 border-t border-gray-200">

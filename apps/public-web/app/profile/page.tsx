@@ -189,12 +189,24 @@ export default function ProfilePage() {
                               <p className="text-[14px] text-gray-600 mb-3">
                                 {booking.listing.city?.name || booking.listing.address}
                               </p>
-                              <div className="flex items-center gap-4 text-[13px] text-gray-600">
-                                <span>
-                                  {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}
-                                </span>
-                                <span>•</span>
-                                <span>{booking.guests} guests</span>
+                              <div className="flex items-center gap-4 text-[13px] text-gray-600 flex-wrap">
+                                {booking.bookingType === 'hotel' && booking.checkInDate && booking.checkOutDate && (
+                                  <>
+                                    <span>
+                                      {new Date(booking.checkInDate).toLocaleDateString()} - {new Date(booking.checkOutDate).toLocaleDateString()}
+                                    </span>
+                                    <span>•</span>
+                                  </>
+                                )}
+                                {booking.bookingType === 'restaurant' && booking.bookingDate && booking.bookingTime && (
+                                  <>
+                                    <span>
+                                      {new Date(booking.bookingDate).toLocaleDateString()} at {booking.bookingTime}
+                                    </span>
+                                    <span>•</span>
+                                  </>
+                                )}
+                                <span>{booking.guestCount} guests</span>
                                 <span>•</span>
                                 <span className={`font-semibold ${
                                   booking.status === 'confirmed' ? 'text-green-600' :
@@ -202,7 +214,7 @@ export default function ProfilePage() {
                                   booking.status === 'cancelled' ? 'text-red-600' :
                                   'text-gray-900'
                                 }`}>
-                                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1).replace('_', ' ')}
                                 </span>
                               </div>
                             </div>

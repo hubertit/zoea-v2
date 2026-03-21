@@ -3,23 +3,56 @@ import type { Listing } from './listings';
 
 export interface Booking {
   id: string;
+  bookingNumber?: string;
   listing: Listing;
   userId: string;
-  startDate: string;
-  endDate: string;
-  guests: number;
+  bookingType: 'hotel' | 'restaurant' | 'tour' | 'event';
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'checked_in' | 'no_show' | 'refunded';
+  
+  // Hotel-specific fields
+  checkInDate?: string;
+  checkOutDate?: string;
+  roomCount?: number;
+  
+  // Restaurant-specific fields
+  bookingDate?: string;
+  bookingTime?: string;
+  partySize?: number;
+  
+  // Common fields
+  guestCount: number;
   totalAmount: number;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  subtotal?: number;
+  taxAmount?: number;
+  discountAmount?: number;
+  currency: string;
   specialRequests?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateBookingRequest {
   listingId: string;
-  startDate: string;
-  endDate: string;
-  guests: number;
+  bookingType: 'hotel' | 'restaurant' | 'tour' | 'event';
+  
+  // Hotel-specific fields
+  checkInDate?: string;
+  checkOutDate?: string;
+  roomCount?: number;
+  
+  // Restaurant-specific fields
+  bookingDate?: string;
+  bookingTime?: string;
+  
+  // Common fields
+  guestCount: number;
   specialRequests?: string;
+  fullName: string;
+  email: string;
+  phone: string;
 }
 
 export const bookingsApi = {
