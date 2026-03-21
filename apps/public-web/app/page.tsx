@@ -7,32 +7,37 @@ import { CategoryCard } from '@/components/CategoryCard';
 import { ListingCard } from '@/components/ListingCard';
 import { NearMeCard } from '@/components/NearMeCard';
 import { TourCard } from '@/components/TourCard';
+import { HappeningEventCard } from '@/components/HappeningEventCard';
 import { Footer } from '@/components/Footer';
 import { useEffect, useState } from 'react';
 import { categoriesApi, type Category } from '@/lib/api/categories';
 import { listingsApi, type Listing } from '@/lib/api/listings';
 import { toursApi, type Tour } from '@/lib/api/tours';
+import { eventsApi, type Event } from '@/lib/api/events';
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [featuredListings, setFeaturedListings] = useState<Listing[]>([]);
   const [nearMeListings, setNearMeListings] = useState<Listing[]>([]);
   const [tours, setTours] = useState<Tour[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [categoriesData, listingsData, nearMeData, toursData] = await Promise.all([
+        const [categoriesData, listingsData, nearMeData, toursData, eventsData] = await Promise.all([
           categoriesApi.getAll(),
           listingsApi.getFeatured(8),
           listingsApi.getRandom(9),
           toursApi.getAll({ limit: 6 }),
+          eventsApi.getAll({ limit: 5 }),
         ]);
         setCategories(categoriesData.slice(0, 4));
         setFeaturedListings(listingsData);
         setNearMeListings(nearMeData);
         setTours(toursData.data);
+        setEvents(eventsData.events);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -84,6 +89,38 @@ export default function Home() {
                 />
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Happening Section */}
+        <section className="py-12 sm:py-14 lg:py-16 xl:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8 sm:mb-10">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
+                Happening
+              </h2>
+              <Link
+                href="/events"
+                className="text-[13px] sm:text-[14px] lg:text-[15px] font-semibold text-primary hover:underline"
+              >
+                View More
+              </Link>
+            </div>
+
+            {events.length > 0 ? (
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                {events.map((event) => (
+                  <HappeningEventCard key={event.id} event={event} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p className="text-[14px] text-gray-600">No events happening today</p>
+              </div>
+            )}
           </div>
         </section>
 
