@@ -26,8 +26,8 @@ export default function Home() {
         const [categoriesData, listingsData, nearMeData, toursData] = await Promise.all([
           categoriesApi.getAll(),
           listingsApi.getFeatured(8),
-          listingsApi.getRandom(5),
-          toursApi.getAll({ limit: 5 }),
+          listingsApi.getRandom(9),
+          toursApi.getAll({ limit: 6 }),
         ]);
         setCategories(categoriesData.slice(0, 4));
         setFeaturedListings(listingsData);
