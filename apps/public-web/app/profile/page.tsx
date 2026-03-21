@@ -3,14 +3,18 @@
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ListingCard } from '@/components/ListingCard';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { userApi, type User, type Favorite } from '@/lib/api/user';
+import { bookingsApi, type Booking } from '@/lib/api/bookings';
 
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'favorites' | 'bookings'>('favorites');
 
@@ -23,12 +27,14 @@ export default function ProfilePage() {
       }
 
       try {
-        const [userData, favoritesData] = await Promise.all([
+        const [userData, favoritesData, bookingsData] = await Promise.all([
           userApi.getProfile(),
           userApi.getFavorites(),
+          bookingsApi.getMyBookings(),
         ]);
         setUser(userData);
         setFavorites(favoritesData);
+        setBookings(bookingsData);
       } catch (error) {
         console.error('Failed to fetch profile:', error);
         router.push('/login');
@@ -111,7 +117,7 @@ export default function ProfilePage() {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  Bookings (0)
+                  Bookings ({bookings.length})
                 </button>
               </div>
             </div>
@@ -157,15 +163,79 @@ export default function ProfilePage() {
               )}
 
               {activeTab === 'bookings' && (
-                <div className="text-center py-16">
-                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">No bookings yet</h2>
-                  <p className="text-[15px] text-gray-600">
-                    Your bookings will appear here
-                  </p>
-                </div>
+                <>
+                  {bookings.length > 0 ? (
+                    <div className="space-y-4">
+                      {bookings.map((booking) => (
+                        <Link
+                          key={booking.id}
+                          href={`/booking/confirmation/${booking.id}`}
+                          className="block border border-gray-200 rounded-2xl p-6 hover:border-primary transition-colors"
+                        >
+                          <div className="flex gap-4">
+                            <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                              <Image
+                                src={booking.listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                                alt={booking.listing.name}
+                                fill
+                                className="object-cover"
+                                unoptimized
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
+                                {booking.listing.name}
+                              </h3>
+                              <p className="text-[14px] text-gray-600 mb-3">
+                                {booking.listing.location.city}
+                              </p>
+                              <div className="flex items-center gap-4 text-[13px] text-gray-600">
+                                <span>
+                                  {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}
+                                </span>
+                                <span>•</span>
+                                <span>{booking.guests} guests</span>
+                                <span>•</span>
+                                <span className={`font-semibold ${
+                                  booking.status === 'confirmed' ? 'text-green-600' :
+                                  booking.status === 'pending' ? 'text-yellow-600' :
+                                  booking.status === 'cancelled' ? 'text-red-600' :
+                                  'text-gray-900'
+                                }`}>
+                                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                </span>
+                              </div>
+                            </div>
+                            {booking.totalAmount && (
+                              <div className="text-right">
+                                <p className="text-[13px] text-gray-600 mb-1">Total</p>
+                                <p className="text-lg font-semibold text-gray-900">
+                                  ${booking.totalAmount.toFixed(2)}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-16">
+                      <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <h2 className="text-xl font-semibold text-gray-900 mb-2">No bookings yet</h2>
+                      <p className="text-[15px] text-gray-600 mb-6">
+                        Start exploring and book your first experience
+                      </p>
+                      <a
+                        href="/"
+                        className="inline-block px-6 py-3 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-colors"
+                      >
+                        Explore places
+                      </a>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
