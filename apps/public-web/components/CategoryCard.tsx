@@ -79,16 +79,13 @@ export function CategoryCard({ name, slug, icon, count }: CategoryCardProps) {
   return (
     <Link href={`/category/${slug}`} className="group block">
       <div className="bg-white border border-gray-200 rounded-xl hover:border-primary hover:shadow-md transition-all duration-200">
-        <div className="flex flex-col items-center justify-center py-6 sm:py-8 px-4">
-          <div className="text-primary mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-200">
+        <div className="flex flex-col items-center justify-center py-8 sm:py-10 px-4">
+          <div className="text-primary mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-200">
             {getIconForCategory(icon)}
           </div>
-          <h3 className="text-gray-900 text-[13px] sm:text-[14px] font-medium text-center mb-1">
+          <h3 className="text-gray-900 text-[14px] sm:text-[15px] font-medium text-center">
             {name}
           </h3>
-          <p className="text-gray-500 text-[11px] sm:text-[12px]">
-            {count} places
-          </p>
         </div>
       </div>
     </Link>
