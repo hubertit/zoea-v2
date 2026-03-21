@@ -5,6 +5,7 @@ import '../services/token_storage_service.dart';
 class AppConfig {
   static const String appName = 'Zoea Africa';
   static const String appVersion = '2.0.0';
+  // Production API
   static const String apiBaseUrl = 'https://zoea-africa.qtsoftwareltd.com/api';
 
   // API Endpoints
