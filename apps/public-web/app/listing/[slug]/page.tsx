@@ -25,14 +25,18 @@ export default function ListingPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [listingData, reviewsData] = await Promise.all([
-          listingsApi.getBySlug(slug),
-          reviewsApi.getByListing(slug),
-        ]);
+        const listingData = await listingsApi.getBySlug(slug);
         setListing(listingData);
-        setReviews(reviewsData);
+        
+        try {
+          const reviewsData = await reviewsApi.getByListing(listingData.id);
+          setReviews(reviewsData);
+        } catch (reviewError) {
+          console.error('Failed to fetch reviews:', reviewError);
+          setReviews([]);
+        }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('Failed to fetch listing:', error);
       } finally {
         setLoading(false);
       }

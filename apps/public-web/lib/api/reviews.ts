@@ -17,10 +17,24 @@ export interface CreateReviewRequest {
   comment: string;
 }
 
+export interface ReviewsResponse {
+  data: Review[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 export const reviewsApi = {
   async getByListing(listingId: string): Promise<Review[]> {
-    const response = await apiClient.get<Review[]>(`/reviews/listing/${listingId}`);
-    return response.data;
+    const response = await apiClient.get<ReviewsResponse>(`/reviews`, {
+      params: {
+        listingId,
+      },
+    });
+    return response.data.data;
   },
 
   async create(data: CreateReviewRequest): Promise<Review> {
