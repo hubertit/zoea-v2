@@ -35,18 +35,18 @@ export const eventsApi = {
     limit?: number;
     category?: string;
   }): Promise<Event[]> {
-    const response = await eventsClient.get<Event[]>('/events', { params });
+    const response = await eventsClient.get<Event[]>('/explore-events', { params });
     return response.data;
   },
 
   async getById(id: string): Promise<Event> {
-    const response = await eventsClient.get<Event>(`/events/${id}`);
+    const response = await eventsClient.get<Event>(`/explore-events/${id}`);
     return response.data;
   },
 
   async search(query: string): Promise<Event[]> {
-    const response = await eventsClient.get<Event[]>('/events/search', {
-      params: { q: query },
+    const response = await eventsClient.get<Event[]>('/explore-events', {
+      params: { search: query },
     });
     return response.data;
   },
