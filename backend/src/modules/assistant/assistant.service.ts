@@ -72,10 +72,34 @@ export class AssistantService {
 
   /**
    * Send a chat message and get response
+   * Supports both authenticated users (with conversation history) and guest users (stateless)
    */
-  async chat(userId: string, chatDto: ChatDto) {
+  async chat(userId: string | null, chatDto: ChatDto) {
     const { conversationId, message, location } = chatDto;
 
+    // For guest users (no userId), provide stateless chat without saving history
+    if (!userId) {
+      const response = await this.openaiService.chat(
+        message,
+        [], // No conversation history for guests
+        location,
+        chatDto.countryCode,
+      );
+
+      return {
+        conversationId: null,
+        assistantMessage: {
+          id: null,
+          text: response.text,
+          createdAt: new Date(),
+        },
+        cards: response.cards,
+        suggestions: response.suggestions,
+        isGuest: true,
+      };
+    }
+
+    // For authenticated users, maintain conversation history
     // Get or create conversation
     let conversation;
     if (conversationId) {

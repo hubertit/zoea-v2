@@ -2,16 +2,17 @@ import { Controller, Get, Post, Delete, Query, Body, UseGuards, Request } from '
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { FavoritesService } from './favorites.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { AddFavoriteDto, FavoriteQueryDto } from './dto/favorite.dto';
 
 @ApiTags('Favorites')
 @Controller('favorites')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 export class FavoritesController {
   constructor(private favoritesService: FavoritesService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Get my favorites',
     description: 'Retrieves paginated list of items (listings, events, tours) that the authenticated user has favorited. Can be filtered by content type.'
@@ -42,6 +43,8 @@ export class FavoritesController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Add to favorites',
     description: 'Adds a listing, event, or tour to the authenticated user\'s favorites. If the item is already favorited, no error is returned.'
@@ -67,6 +70,8 @@ export class FavoritesController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Remove from favorites',
     description: 'Removes a listing, event, or tour from the authenticated user\'s favorites. At least one item ID must be provided.'
@@ -98,6 +103,8 @@ export class FavoritesController {
   }
 
   @Post('toggle')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Toggle favorite status',
     description: 'Toggles the favorite status of an item. If the item is favorited, it will be removed from favorites. If not favorited, it will be added. Convenient for heart/like buttons.'
@@ -122,9 +129,11 @@ export class FavoritesController {
   }
 
   @Get('check')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Check if item is favorited',
-    description: 'Checks whether a specific listing, event, or tour is in the authenticated user\'s favorites. Useful for displaying favorite status in UI.'
+    description: 'Checks whether a specific listing, event, or tour is in the user\'s favorites. Works for both authenticated and guest users. Guest users will always receive { isFavorite: false }. Useful for displaying favorite status in UI.'
   })
   @ApiQuery({ name: 'listingId', required: false, type: String, description: 'Listing UUID to check', example: '123e4567-e89b-12d3-a456-426614174000' })
   @ApiQuery({ name: 'eventId', required: false, type: String, description: 'Event UUID to check', example: '123e4567-e89b-12d3-a456-426614174000' })
@@ -140,13 +149,16 @@ export class FavoritesController {
     }
   })
   @ApiResponse({ status: 400, description: 'Bad request - Must specify exactly one item ID' })
-  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or missing token' })
   async check(
     @Request() req,
     @Query('listingId') listingId?: string,
     @Query('eventId') eventId?: string,
     @Query('tourId') tourId?: string,
   ) {
+    // For guest users, always return false
+    if (!req.user?.id) {
+      return { isFavorite: false };
+    }
     return this.favoritesService.isFavorite(req.user.id, { listingId, eventId, tourId });
   }
 }

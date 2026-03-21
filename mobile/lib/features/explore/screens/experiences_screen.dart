@@ -106,6 +106,8 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
   Widget _buildExperiencesList(String category) {
     // Map category to tour type for filtering
     String? typeFilter;
+    bool isAllTab = category == 'All';
+    
     if (category == 'Tours') {
       typeFilter = null; // Show all tours
     } else if (category == 'Adventures') {
@@ -120,7 +122,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           page: 1,
           limit: 100,
           status: 'active',
-          type: category == 'All' ? null : typeFilter,
+          type: isAllTab ? null : typeFilter,
           search: null,
         ),
       ),
@@ -155,7 +157,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
             itemCount: tours.length,
             itemBuilder: (context, index) {
               final tour = tours[index];
-              return _buildExperienceCard(tour);
+              return _buildExperienceCard(tour, showSubcategoryBadge: isAllTab);
             },
           ),
         );
@@ -204,7 +206,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     );
   }
 
-  Widget _buildExperienceCard(Map<String, dynamic> tour) {
+  Widget _buildExperienceCard(Map<String, dynamic> tour, {bool showSubcategoryBadge = false}) {
     final id = tour['id'] as String? ?? '';
     final name = tour['name'] as String? ?? 'Unknown';
     final startLocationName = tour['startLocationName'] as String? ?? '';
@@ -238,6 +240,13 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     final category = tour['category'] as Map<String, dynamic>?;
     final categoryName = category?['name'] as String? ?? 'Tour';
     final tourType = tour['type'] as String? ?? 'Tour';
+    
+    // For "All" tab, show the tour type as category badge
+    String displayCategory = categoryName.isNotEmpty ? categoryName : tourType;
+    if (showSubcategoryBadge && tourType.isNotEmpty) {
+      // Capitalize first letter of tour type
+      displayCategory = tourType[0].toUpperCase() + tourType.substring(1);
+    }
 
     // Check if favorite (tours use tourId, not listingId)
     final favoritesAsync = ref.watch(favoritesProvider(const FavoritesParams(page: 1, limit: 1000)));
@@ -256,7 +265,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
       rating: rating,
       reviews: reviewCount,
       priceRange: priceRange,
-      category: categoryName.isNotEmpty ? categoryName : tourType,
+      category: displayCategory,
       onTap: () {
         // Navigate to tour detail screen
         context.push('/tour/$id');

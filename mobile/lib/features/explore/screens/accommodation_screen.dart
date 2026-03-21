@@ -290,11 +290,16 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
   Widget _buildAccommodationList(String category) {
     // Get the appropriate filter based on tab
     String? typeFilter;
+    String? sortBy;
+    bool isAllTab = false;
+    
     if (category.toLowerCase() == 'hotels') {
       typeFilter = 'hotel';
     } else if (category.toLowerCase() == 'all') {
-      // For "All", filter by accommodation category
+      // For "All", filter by accommodation category and sort by rating
       typeFilter = null; // Will use categoryId instead
+      sortBy = 'rating_desc'; // Show best-rated items first for better discovery
+      isAllTab = true;
     }
     // Note: B&Bs, Apartments, Villas don't have specific types in backend
     // They would all be type='hotel' or need to be filtered differently
@@ -307,6 +312,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
           limit: 200, // Increased limit to fetch all accommodation listings
           type: typeFilter,
           category: _accommodationCategoryId, // Filter by accommodation category
+          sortBy: sortBy,
         ),
       ),
     );
@@ -345,7 +351,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             itemCount: filteredListings.length,
             itemBuilder: (context, index) {
               final listing = filteredListings[index] as Map<String, dynamic>;
-              return _buildAccommodationCard(listing);
+              return _buildAccommodationCard(listing, showSubcategoryBadge: isAllTab);
             },
           ),
         );
@@ -762,7 +768,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
     );
   }
 
-  Widget _buildAccommodationCard(Map<String, dynamic> listing) {
+  Widget _buildAccommodationCard(Map<String, dynamic> listing, {bool showSubcategoryBadge = false}) {
     // Extract data from API response structure with graceful fallbacks
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Accommodation';
@@ -860,6 +866,15 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
     // Generate default amenities if none exist
     if (amenityNames.isEmpty) {
       amenityNames = _generateDefaultAmenities(displayRating, listing['type'] as String?);
+    }
+    
+    // Extract subcategory name if showing badge
+    String? subcategoryName;
+    if (showSubcategoryBadge && listing['category'] != null) {
+      final categoryData = listing['category'];
+      if (categoryData is Map<String, dynamic>) {
+        subcategoryName = categoryData['name'] as String?;
+      }
     }
     
     return GestureDetector(
@@ -1122,6 +1137,28 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                     color: context.secondaryTextColor,
                   ),
                 ),
+                if (subcategoryName != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: context.primaryColorTheme.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: context.primaryColorTheme.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      subcategoryName,
+                      style: context.bodySmall.copyWith(
+                        color: context.primaryColorTheme,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 8),
                 // Display amenities (already extracted above with fallbacks)
                 if (amenityNames.isNotEmpty)

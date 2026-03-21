@@ -102,15 +102,15 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
 
   void _handleTabChange(int index) {
     if (!mounted || _tabController == null) return;
-    
+
     setState(() {
       _selectedTabIndex = index;
       _currentPage = 1; // Reset to first page
-      
+
       if (index == 0) {
-        // "All" tab - show listings from dining category
+        // "All" tab - show top-rated listings from dining category
         _selectedCategoryId = _diningCategoryId;
-        _sortBy = null; // Reset sort for "All"
+        _sortBy = 'rating_desc'; // Show best-rated items first for better discovery
         _isPopularTab = false;
       } else if (index == 1) {
         // "Popular" tab - show random listings from all dining
@@ -559,6 +559,15 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
         : 'Price not available';
 
+    // Extract subcategory name if in "All" tab (show subcategory badge)
+    String displayCategory = _diningCategoryName ?? 'Dining';
+    if (_selectedTabIndex == 0 && listing['category'] != null) {
+      final categoryData = listing['category'];
+      if (categoryData is Map<String, dynamic>) {
+        displayCategory = categoryData['name'] as String? ?? displayCategory;
+      }
+    }
+
     // Check if favorited
     final isFavoritedAsync = ref.watch(isListingFavoritedProvider(listingId));
 
@@ -569,7 +578,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       rating: rating,
       reviews: reviewCount,
       priceRange: priceText,
-      category: _diningCategoryName ?? 'Dining',
+      category: displayCategory,
       isFavorite: isFavoritedAsync.when(
         data: (isFavorited) => isFavorited,
         loading: () => false,

@@ -395,10 +395,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   // Get category ID and sort for a specific tab index
   Map<String, dynamic> _getTabParams(int tabIndex) {
     if (tabIndex == 0) {
-      // "All" tab
+      // "All" tab - show top-rated items from parent category
       return {
         'categoryId': _currentParentCategoryId ?? _categoryId,
-        'sortBy': null,
+        'sortBy': 'rating_desc', // Show best-rated items first for better discovery
+        'showSubcategoryBadge': true, // Flag to show subcategory badges
       };
     } else {
       // Subcategory tab
@@ -408,12 +409,14 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
         return {
           'categoryId': subcategory['id'] as String?,
           'sortBy': null,
+          'showSubcategoryBadge': false,
         };
       }
     }
     return {
       'categoryId': _categoryId,
       'sortBy': null,
+      'showSubcategoryBadge': false,
     };
   }
 
@@ -421,6 +424,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     final tabParams = _getTabParams(tabIndex);
     final categoryId = tabParams['categoryId'] as String?;
     final sortBy = tabParams['sortBy'] as String?;
+    final showSubcategoryBadge = tabParams['showSubcategoryBadge'] as bool? ?? false;
     
     if (categoryId == null) {
       return Center(child: Text('Category not found'));
@@ -501,9 +505,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             itemBuilder: (context, index) {
               final listing = listings[index] as Map<String, dynamic>;
               if (_isAccommodation) {
-                return _buildAccommodationCard(listing);
+                return _buildAccommodationCard(listing, showSubcategoryBadge: showSubcategoryBadge);
               } else {
-                return _buildRegularListingCard(listing);
+                return _buildRegularListingCard(listing, showSubcategoryBadge: showSubcategoryBadge);
               }
             },
           ),
@@ -724,7 +728,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     );
   }
 
-  Widget _buildRegularListingCard(Map<String, dynamic> listing) {
+  Widget _buildRegularListingCard(Map<String, dynamic> listing, {bool showSubcategoryBadge = false}) {
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Unknown';
     
@@ -784,6 +788,15 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
         : 'Price not available';
 
+    // Extract subcategory name if showing badge
+    String displayCategory = _categoryName ?? widget.category;
+    if (showSubcategoryBadge && listing['category'] != null) {
+      final categoryData = listing['category'];
+      if (categoryData is Map<String, dynamic>) {
+        displayCategory = categoryData['name'] as String? ?? displayCategory;
+      }
+    }
+
     // Check if favorited
     final isFavoritedAsync = ref.watch(isListingFavoritedProvider(listingId));
 
@@ -794,7 +807,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
       rating: rating,
       reviews: reviewCount,
       priceRange: priceText,
-      category: _categoryName ?? widget.category,
+      category: displayCategory,
       isFavorite: isFavoritedAsync.when(
         data: (isFavorited) => isFavorited,
         loading: () => false,
@@ -835,7 +848,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     );
   }
 
-  Widget _buildAccommodationCard(Map<String, dynamic> listing) {
+  Widget _buildAccommodationCard(Map<String, dynamic> listing, {bool showSubcategoryBadge = false}) {
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Unknown';
     
@@ -887,6 +900,15 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     
     // Extract amenities
     final amenities = listing['amenities'] as List? ?? [];
+
+    // Extract subcategory name if showing badge
+    String? subcategoryName;
+    if (showSubcategoryBadge && listing['category'] != null) {
+      final categoryData = listing['category'];
+      if (categoryData is Map<String, dynamic>) {
+        subcategoryName = categoryData['name'] as String?;
+      }
+    }
 
     // Check if favorited
     final isFavoritedAsync = ref.watch(isListingFavoritedProvider(listingId));
@@ -1092,6 +1114,28 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                       ),
                     ],
                   ),
+                  if (subcategoryName != null) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: context.primaryColorTheme.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: context.primaryColorTheme.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        subcategoryName,
+                        style: context.bodySmall.copyWith(
+                          color: context.primaryColorTheme,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
+                  ],
                   if (amenities.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     Wrap(

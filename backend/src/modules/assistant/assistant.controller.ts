@@ -20,18 +20,19 @@ import {
 import { AssistantService } from './assistant.service';
 import { ChatDto } from './dto/chat.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 
 @ApiTags('Assistant (Ask Zoea)')
 @Controller('assistant')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 export class AssistantController {
   constructor(private assistantService: AssistantService) {}
 
   @Post('chat')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Send a chat message to AI assistant',
-    description: 'Send a message to the Zoea AI assistant and receive an intelligent response. The assistant can help with travel recommendations, booking inquiries, local information, and more. Responses may include clickable cards for quick actions like viewing listings, booking tours, or exploring events. Requires authentication.'
+    description: 'Send a message to the Zoea AI assistant and receive an intelligent response. The assistant can help with travel recommendations, booking inquiries, local information, and more. Responses may include clickable cards for quick actions like viewing listings, booking tours, or exploring events. Works for both authenticated and guest users. Authenticated users get personalized responses and conversation history.'
   })
   @ApiResponse({ 
     status: 200, 
@@ -56,10 +57,10 @@ export class AssistantController {
       }
     }
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or missing token' })
   @ApiResponse({ status: 400, description: 'Bad request - Invalid message format' })
   async chat(@Request() req, @Body() chatDto: ChatDto) {
-    return this.assistantService.chat(req.user.id, chatDto);
+    const userId = req.user?.id || null;
+    return this.assistantService.chat(userId, chatDto);
   }
 
   @Get('conversations')
