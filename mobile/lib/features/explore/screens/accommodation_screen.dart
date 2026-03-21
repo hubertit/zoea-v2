@@ -8,6 +8,7 @@ import '../../../core/providers/favorites_provider.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class AccommodationScreen extends ConsumerStatefulWidget {
   const AccommodationScreen({super.key});
@@ -831,8 +832,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
     final currency = listing['currency'] as String? ?? 'RWF';
     final priceDisplay = minPrice > 0
         ? (maxPrice > minPrice 
-            ? '$currency ${minPrice.toStringAsFixed(0)} - ${maxPrice.toStringAsFixed(0)}'
-            : '$currency ${minPrice.toStringAsFixed(0)}')
+            ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
+            : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
         : 'Price not available';
     
     // Extract room types

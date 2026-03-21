@@ -11,6 +11,7 @@ import '../../../core/services/cart_service.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/models/product.dart';
 import '../../../core/models/cart.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ProductDetailScreen extends ConsumerStatefulWidget {
   final String productId;
@@ -243,7 +244,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                       Row(
                         children: [
                           Text(
-                            '${AppConfig.currencySymbol} ${currentPrice.toStringAsFixed(0)}',
+                            PriceFormatter.formatFull(currentPrice, currency: AppConfig.currencySymbol),
                             style: context.headlineMedium.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.primaryColorTheme,
@@ -252,7 +253,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                           if (compareAtPrice != null && compareAtPrice > currentPrice) ...[
                             const SizedBox(width: 12),
                             Text(
-                              '${AppConfig.currencySymbol} ${compareAtPrice.toStringAsFixed(0)}',
+                              PriceFormatter.formatFull(compareAtPrice, currency: AppConfig.currencySymbol),
                               style: context.bodyLarge.copyWith(
                                 color: context.secondaryTextColor,
                                 decoration: TextDecoration.lineThrough,

@@ -10,6 +10,7 @@ import '../../../core/providers/categories_provider.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class DiningScreen extends ConsumerStatefulWidget {
   const DiningScreen({super.key});
@@ -553,7 +554,9 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
         : 0.0;
     final currency = listing['currency'] as String? ?? 'RWF';
     final priceText = minPrice > 0 
-        ? (maxPrice > minPrice ? '$currency ${minPrice.toStringAsFixed(0)} - ${maxPrice.toStringAsFixed(0)}' : '$currency ${minPrice.toStringAsFixed(0)}')
+        ? (maxPrice > minPrice 
+            ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
+            : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
         : 'Price not available';
 
     // Check if favorited

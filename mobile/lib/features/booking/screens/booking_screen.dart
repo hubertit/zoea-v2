@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 /// BookingScreen - Routes to appropriate booking screen based on listing type
 /// This is a router screen that detects the listing type and redirects accordingly
@@ -66,8 +67,8 @@ class BookingScreen extends ConsumerWidget {
                 : null;
             if (min != null) {
               priceRange = max != null && max > min
-                  ? '$currency ${min.toStringAsFixed(0)} - ${max.toStringAsFixed(0)}'
-                  : '$currency ${min.toStringAsFixed(0)}';
+                  ? PriceFormatter.formatAbbreviatedRange(min, max, currency: currency)
+                  : PriceFormatter.formatAbbreviated(min, currency: currency);
             }
           }
           

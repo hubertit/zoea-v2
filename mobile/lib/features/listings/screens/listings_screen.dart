@@ -7,6 +7,8 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
+import '../../../core/utils/price_formatter.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ListingsScreen extends ConsumerStatefulWidget {
   final String? type;
@@ -358,7 +360,10 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
                         // Price
                         if (minPrice != null)
                           Text(
-                            '$currency ${minPrice.toString()}',
+                            PriceFormatter.formatAbbreviated(
+                              minPrice is num ? minPrice.toDouble() : double.tryParse(minPrice.toString()) ?? 0.0,
+                              currency: currency,
+                            ),
                             style: context.bodyMedium.copyWith(
                               color: context.primaryColorTheme,
                               fontWeight: FontWeight.w600,

@@ -7,6 +7,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/models/event.dart';
 import 'package:intl/intl.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class EventCalendarSheet extends StatefulWidget {
   final List<Event> events;
@@ -593,9 +594,6 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
   }
 
   String _formatPrice(int price) {
-    if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(0)}K';
-    }
-    return price.toString();
+    return PriceFormatter.formatAbbreviated(price.toDouble(), currency: '');
   }
 }

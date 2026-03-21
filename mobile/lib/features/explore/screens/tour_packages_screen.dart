@@ -7,6 +7,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/tours_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class TourPackagesScreen extends ConsumerStatefulWidget {
   const TourPackagesScreen({super.key});
@@ -204,10 +205,9 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
     }
 
     // Format price
-    final formatter = NumberFormat('#,###', 'en_US');
     String priceText = 'Price on request';
     if (priceFrom != null) {
-      priceText = 'From RWF ${formatter.format(priceFrom)}';
+      priceText = 'From ${PriceFormatter.formatAbbreviated(priceFrom, currency: 'RWF')}';
     }
 
     // Format duration

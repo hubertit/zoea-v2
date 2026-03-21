@@ -7,6 +7,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/services_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ServicesScreen extends ConsumerStatefulWidget {
   final String? listingId;
@@ -276,7 +277,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                     Row(
                       children: [
                         Text(
-                          '${AppConfig.currencySymbol} ${basePrice.toStringAsFixed(0)}',
+                          PriceFormatter.formatAbbreviated(basePrice, currency: AppConfig.currencySymbol),
                           style: context.bodyMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryColorTheme,

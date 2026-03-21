@@ -10,6 +10,7 @@ import '../../../core/services/cart_service.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/models/menu.dart';
 import '../../../core/models/cart.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class MenuDetailScreen extends ConsumerStatefulWidget {
   final String menuId;
@@ -367,7 +368,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                     Row(
                       children: [
                         Text(
-                          '${AppConfig.currencySymbol} ${item.price.toStringAsFixed(0)}',
+                          PriceFormatter.formatFull(item.price, currency: AppConfig.currencySymbol),
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryColorTheme,
@@ -376,7 +377,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                         if (item.compareAtPrice != null && item.compareAtPrice! > item.price) ...[
                           const SizedBox(width: 8),
                           Text(
-                            '${AppConfig.currencySymbol} ${item.compareAtPrice!.toStringAsFixed(0)}',
+                            PriceFormatter.formatFull(item.compareAtPrice!, currency: AppConfig.currencySymbol),
                             style: context.bodySmall.copyWith(
                               color: context.secondaryTextColor,
                               decoration: TextDecoration.lineThrough,
@@ -449,7 +450,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
             Row(
               children: [
                 Text(
-                  '${AppConfig.currencySymbol} ${item.price.toStringAsFixed(0)}',
+                  PriceFormatter.formatFull(item.price, currency: AppConfig.currencySymbol),
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.primaryColorTheme,
@@ -458,7 +459,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                 if (item.compareAtPrice != null && item.compareAtPrice! > item.price) ...[
                   const SizedBox(width: 12),
                   Text(
-                    '${AppConfig.currencySymbol} ${item.compareAtPrice!.toStringAsFixed(0)}',
+                    PriceFormatter.formatFull(item.compareAtPrice!, currency: AppConfig.currencySymbol),
                     style: context.bodyLarge.copyWith(
                       color: context.secondaryTextColor,
                       decoration: TextDecoration.lineThrough,

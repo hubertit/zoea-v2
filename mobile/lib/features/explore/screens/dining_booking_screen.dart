@@ -8,6 +8,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/services/bookings_service.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class DiningBookingScreen extends ConsumerStatefulWidget {
   final String placeId;
@@ -735,7 +736,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                           ),
                         ),
                         Text(
-                          'You saved RWF ${_discountAmount.toStringAsFixed(0)}',
+                          'You saved ${PriceFormatter.formatFull(_discountAmount, currency: 'RWF')}',
                           style: context.bodySmall.copyWith(
                             color: AppTheme.successColor,
                           ),
@@ -797,7 +798,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                     ),
                   ),
                   Text(
-                    'RWF ${_calculateTotalPrice().toStringAsFixed(0)}',
+                    PriceFormatter.formatFull(_calculateTotalPrice(), currency: 'RWF'),
                     style: context.headlineSmall.copyWith(
                       fontWeight: FontWeight.w600,
                       color: context.primaryTextColor,

@@ -10,6 +10,7 @@ import '../../../core/services/bookings_service.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class TourBookingScreen extends ConsumerStatefulWidget {
   final String listingId;
@@ -388,7 +389,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                       const SizedBox(width: 8),
                     ],
                     Text(
-                      '$currency ${pricePerPerson.toStringAsFixed(0)}/person',
+                      '${PriceFormatter.formatFull(pricePerPerson, currency: currency)}/person',
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -425,7 +426,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             return RadioListTile<String>(
               title: Text(tour['name'] ?? 'Tour'),
               subtitle: Text(
-                '${tour['currency'] ?? 'RWF'} ${(tour['pricePerPerson'] ?? 0).toStringAsFixed(0)}/person',
+                '${PriceFormatter.formatFull((tour['pricePerPerson'] ?? 0).toDouble(), currency: tour['currency'] ?? 'RWF')}/person',
               ),
               value: tour['id'] as String,
               groupValue: _selectedTourId,
@@ -740,7 +741,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                 ),
               ),
               Text(
-                '$currency ${((_selectedTour?['pricePerPerson']?.toDouble() ?? 0) * _adults).toStringAsFixed(0)}',
+                PriceFormatter.formatFull(((_selectedTour?['pricePerPerson']?.toDouble() ?? 0) * _adults), currency: currency),
                 style: context.bodyMedium.copyWith(
                   color: context.primaryTextColor,
                 ),
@@ -759,7 +760,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                   ),
                 ),
                 Text(
-                  '$currency ${((_selectedTour?['pricePerPerson']?.toDouble() ?? 0) * _children).toStringAsFixed(0)}',
+                  PriceFormatter.formatFull(((_selectedTour?['pricePerPerson']?.toDouble() ?? 0) * _children), currency: currency),
                   style: context.bodyMedium.copyWith(
                     color: context.primaryTextColor,
                   ),
@@ -799,7 +800,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                 ),
               ),
               Text(
-                '$currency ${_totalPrice.toStringAsFixed(0)}',
+                PriceFormatter.formatFull(_totalPrice, currency: currency),
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.w700,
                   color: context.primaryColorTheme,
@@ -848,7 +849,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                   ),
                 ),
                 Text(
-                  '${_selectedTour?['currency'] ?? 'RWF'} ${_totalPrice.toStringAsFixed(0)}',
+                  PriceFormatter.formatFull(_totalPrice, currency: _selectedTour?['currency'] ?? 'RWF'),
                   style: context.titleLarge.copyWith(
                     fontWeight: FontWeight.w700,
                     color: context.primaryColorTheme,

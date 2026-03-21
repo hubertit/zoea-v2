@@ -9,6 +9,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/bookings_provider.dart';
 import '../../../core/providers/orders_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class MyBookingsScreen extends ConsumerStatefulWidget {
   const MyBookingsScreen({super.key});
@@ -753,7 +754,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${totalAmount.toStringAsFixed(0)} $currency',
+                      PriceFormatter.formatFull(totalAmount, currency: currency),
                       style: context.titleMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.primaryColorTheme,
@@ -1583,7 +1584,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '$currency ${totalAmount.toStringAsFixed(0)}',
+                          PriceFormatter.formatFull(totalAmount, currency: currency),
                           style: context.titleLarge.copyWith(
                             fontWeight: FontWeight.w700,
                             color: context.primaryColorTheme,
@@ -1772,7 +1773,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Price: ${totalAmount.toStringAsFixed(0)} $currency',
+              'Price: ${PriceFormatter.formatFull(totalAmount, currency: currency)}',
               style: context.bodyMedium.copyWith(
                 color: context.primaryTextColor,
               ),

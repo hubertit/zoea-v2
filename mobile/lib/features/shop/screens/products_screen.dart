@@ -7,6 +7,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/products_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   final String? listingId;
@@ -296,7 +297,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     Row(
                       children: [
                         Text(
-                          '${AppConfig.currencySymbol} ${basePrice.toStringAsFixed(0)}',
+                          PriceFormatter.formatAbbreviated(basePrice, currency: AppConfig.currencySymbol),
                           style: context.bodyMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryColorTheme,
@@ -305,7 +306,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         if (compareAtPrice != null && compareAtPrice > basePrice) ...[
                           const SizedBox(width: 8),
                           Text(
-                            '${AppConfig.currencySymbol} ${compareAtPrice.toStringAsFixed(0)}',
+                            PriceFormatter.formatAbbreviated(compareAtPrice, currency: AppConfig.currencySymbol),
                             style: context.bodySmall.copyWith(
                               color: context.secondaryTextColor,
                               decoration: TextDecoration.lineThrough,

@@ -11,8 +11,11 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/models/event.dart';
 import '../../../core/providers/favorites_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
   final Event event;
@@ -163,6 +166,21 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                                 ),
                                 padding: EdgeInsets.zero,
                                 onPressed: () async {
+                                  // Check if user is logged in
+                                  final isLoggedIn = ref.read(isLoggedInProvider);
+                                  
+                                  if (!isLoggedIn) {
+                                    // Show login prompt for guests
+                                    AuthPromptDialog.show(
+                                      context: context,
+                                      title: 'Sign In to Save Favorites',
+                                      message: 'Create an account or sign in to save your favorite events and access them anytime.',
+                                      returnPath: '/events/${widget.event.id}',
+                                      icon: Icons.favorite,
+                                    );
+                                    return;
+                                  }
+                                  
                                   try {
                                     final favoritesService = ref.read(favoritesServiceProvider);
                                     
@@ -594,7 +612,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'From ${_formatPrice(cheapestTicket.price)} ${cheapestTicket.currency}',
+                      'From ${_formatPrice(cheapestTicket.price, abbreviated: true)} ${cheapestTicket.currency}',
                       style: context.titleMedium.copyWith(
                         color: context.primaryColorTheme,
                         fontWeight: FontWeight.w600,
@@ -640,11 +658,12 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
-  String _formatPrice(int price) {
-    if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(0)}K';
+  String _formatPrice(int price, {bool abbreviated = false}) {
+    if (abbreviated) {
+      return PriceFormatter.formatAbbreviated(price.toDouble(), currency: '');
     }
-    return price.toString();
+    final formatter = NumberFormat('#,##0', 'en_US');
+    return formatter.format(price);
   }
 
   void _trackEventView() {

@@ -15,8 +15,11 @@ import '../../../core/providers/reviews_provider.dart';
 import '../../../core/providers/products_provider.dart' show productsByListingProvider, ProductsParams;
 import '../../../core/providers/services_provider.dart' show servicesProvider, ServicesParams;
 import '../../../core/providers/menus_provider.dart' show menusByListingProvider;
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
+import '../../../core/utils/price_formatter.dart';
 
 /// Helper class to hold shop tabs data
 class _ShopTabsData {
@@ -254,6 +257,21 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                               ),
                               padding: EdgeInsets.zero,
                               onPressed: () async {
+                                // Check if user is logged in
+                                final isLoggedIn = ref.read(isLoggedInProvider);
+                                
+                                if (!isLoggedIn) {
+                                  // Show login prompt for guests
+                                  AuthPromptDialog.show(
+                                    context: context,
+                                    title: 'Sign In to Save Favorites',
+                                    message: 'Create an account or sign in to save your favorite places and access them anytime.',
+                                    returnPath: '/listings/${widget.listingId}',
+                                    icon: Icons.favorite,
+                                  );
+                                  return;
+                                }
+                                
                                 try {
                                   final favoritesService = ref.read(favoritesServiceProvider);
                                   
@@ -471,12 +489,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                                     : null;
                                 
                                 if (minPriceValue != null) {
-                                  final formattedMin = NumberFormat('#,##0').format(minPriceValue);
-                                  if (maxPriceValue != null) {
-                                    final formattedMax = NumberFormat('#,##0').format(maxPriceValue);
-                                    return '$formattedMin - $formattedMax $currency';
+                                  if (maxPriceValue != null && maxPriceValue > minPriceValue) {
+                                    return PriceFormatter.formatAbbreviatedRange(minPriceValue, maxPriceValue, currency: currency);
                                   }
-                                  return '$formattedMin $currency';
+                                  return PriceFormatter.formatAbbreviated(minPriceValue, currency: currency);
                                 }
                                 return '$currency ${minPrice.toString()}${maxPrice != null ? ' - ${maxPrice.toString()}' : ''}';
                               }(),
@@ -1043,6 +1059,21 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () {
+                      // Check if user is logged in
+                      final isLoggedIn = ref.read(isLoggedInProvider);
+                      
+                      if (!isLoggedIn) {
+                        // Show login prompt for guests
+                        AuthPromptDialog.show(
+                          context: context,
+                          title: 'Sign In to Write Review',
+                          message: 'Create an account or sign in to share your experience and help other travelers.',
+                          returnPath: '/listings/${widget.listingId}',
+                          icon: Icons.rate_review,
+                        );
+                        return;
+                      }
+                      
                       _showReviewBottomSheet();
                     },
                     icon: const Icon(Icons.edit),
@@ -1413,7 +1444,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     subtitle: Text(
                       () {
                         final price = ((product['basePrice'] ?? product['base_price'] ?? 0) as num).toDouble();
-                        return '${NumberFormat('#,##0').format(price)} ${AppConfig.currencySymbol}';
+                        return PriceFormatter.formatAbbreviated(price, currency: AppConfig.currencySymbol);
                       }(),
                       style: context.bodySmall.copyWith(
                         color: context.primaryColorTheme,
@@ -1552,7 +1583,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     subtitle: Text(
                       () {
                         final price = ((service['basePrice'] ?? service['base_price'] ?? 0) as num).toDouble();
-                        return '${NumberFormat('#,##0').format(price)} ${AppConfig.currencySymbol}';
+                        return PriceFormatter.formatAbbreviated(price, currency: AppConfig.currencySymbol);
                       }(),
                       style: context.bodySmall.copyWith(
                         color: context.primaryColorTheme,
@@ -1705,7 +1736,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   ),
                 ),
                 subtitle: Text(
-                  '${NumberFormat('#,##0').format(item.price)} ${AppConfig.currencySymbol}',
+                  PriceFormatter.formatAbbreviated(item.price, currency: AppConfig.currencySymbol),
                   style: context.bodySmall.copyWith(
                     color: context.primaryColorTheme,
                     fontWeight: FontWeight.w600,
@@ -1937,6 +1968,21 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: () {
+                  // Check if user is logged in
+                  final isLoggedIn = ref.read(isLoggedInProvider);
+                  
+                  if (!isLoggedIn) {
+                    // Show login prompt for guests
+                    AuthPromptDialog.show(
+                      context: context,
+                      title: 'Sign In to Book',
+                      message: 'Create an account or sign in to complete your booking and manage your reservations.',
+                      returnPath: '/listings/${widget.listingId}',
+                      icon: Icons.calendar_today,
+                    );
+                    return;
+                  }
+                  
                   // Navigate to booking screen which will route to appropriate booking flow
                   context.push('/booking/${widget.listingId}');
                 },

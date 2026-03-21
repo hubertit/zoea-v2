@@ -8,6 +8,8 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/reviews_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 
@@ -165,6 +167,21 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                             ),
                             padding: EdgeInsets.zero,
                             onPressed: () {
+                              // Check if user is logged in
+                              final isLoggedIn = ref.read(isLoggedInProvider);
+                              
+                              if (!isLoggedIn) {
+                                // Show login prompt for guests
+                                AuthPromptDialog.show(
+                                  context: context,
+                                  title: 'Sign In to Save Favorites',
+                                  message: 'Create an account or sign in to save your favorite places and access them anytime.',
+                                  returnPath: '/places/${widget.placeId}',
+                                  icon: Icons.favorite,
+                                );
+                                return;
+                              }
+                              
                               setState(() {
                                 _isFavorite = !_isFavorite;
                               });
@@ -188,6 +205,21 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                             ),
                             padding: EdgeInsets.zero,
                             onPressed: () {
+                              // Check if user is logged in
+                              final isLoggedIn = ref.read(isLoggedInProvider);
+                              
+                              if (!isLoggedIn) {
+                                // Show login prompt for guests
+                                AuthPromptDialog.show(
+                                  context: context,
+                                  title: 'Sign In to Write Review',
+                                  message: 'Create an account or sign in to share your experience and help other travelers.',
+                                  returnPath: '/places/${widget.placeId}',
+                                  icon: Icons.rate_review,
+                                );
+                                return;
+                              }
+                              
                               _showReviewBottomSheet();
                             },
                           ),
@@ -403,6 +435,21 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () {
+                    // Check if user is logged in
+                    final isLoggedIn = ref.read(isLoggedInProvider);
+                    
+                    if (!isLoggedIn) {
+                      // Show login prompt for guests
+                      AuthPromptDialog.show(
+                        context: context,
+                        title: 'Sign In to Reserve',
+                        message: 'Create an account or sign in to reserve a table and manage your dining reservations.',
+                        returnPath: '/places/${widget.placeId}',
+                        icon: Icons.restaurant,
+                      );
+                      return;
+                    }
+                    
                     // Navigate to dining booking
                     context.push('/dining-booking', extra: {
                       'placeId': widget.placeId,

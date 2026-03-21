@@ -7,10 +7,14 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/providers/reviews_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/price_formatter.dart';
+import 'package:intl/intl.dart';
 
 class AccommodationDetailScreen extends ConsumerStatefulWidget {
   final String accommodationId;
@@ -140,11 +144,13 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
         maxPriceValue = maxPrice.toDouble();
       }
       if (maxPriceValue > minPriceValue) {
-        return '${minPriceValue.toStringAsFixed(0)} - ${maxPriceValue.toStringAsFixed(0)}';
+        final currency = listing['currency'] as String? ?? 'RWF';
+        return PriceFormatter.formatAbbreviatedRange(minPriceValue, maxPriceValue, currency: currency);
       }
     }
     
-    return minPriceValue.toStringAsFixed(0);
+    final currency = listing['currency'] as String? ?? 'RWF';
+    return PriceFormatter.formatAbbreviated(minPriceValue, currency: currency);
   }
 
   List<String> _extractQuickAmenities(Map<String, dynamic> listing) {
@@ -423,6 +429,21 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                       ),
                       padding: EdgeInsets.zero,
                       onPressed: () async {
+                        // Check if user is logged in
+                        final isLoggedIn = ref.read(isLoggedInProvider);
+                        
+                        if (!isLoggedIn) {
+                          // Show login prompt for guests
+                          AuthPromptDialog.show(
+                            context: context,
+                            title: 'Sign In to Save Favorites',
+                            message: 'Create an account or sign in to save your favorite accommodations and access them anytime.',
+                            returnPath: '/accommodation/${widget.accommodationId}',
+                            icon: Icons.favorite,
+                          );
+                          return;
+                        }
+                        
                         try {
                           final wasFavorited = isFavoritedAsync.value ?? false;
                           final favoritesService = ref.read(favoritesServiceProvider);
@@ -836,9 +857,10 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                 final bedType = roomTypeData['bedType'] as String? ?? '';
                 final description = roomTypeData['description'] as String? ?? '';
                 
+                final formatter = NumberFormat('#,##0', 'en_US');
                 return _buildSelectableRoomTypeCard({
                   'type': name,
-                  'price': priceValue.toStringAsFixed(0),
+                  'price': formatter.format(priceValue),
                   'available': totalRooms,
                   'maxGuests': maxOccupancy,
                   'amenities': description.isNotEmpty ? description : bedType,
@@ -1072,6 +1094,21 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                         const SizedBox(height: 24),
                         ElevatedButton.icon(
                           onPressed: () {
+                            // Check if user is logged in
+                            final isLoggedIn = ref.read(isLoggedInProvider);
+                            
+                            if (!isLoggedIn) {
+                              // Show login prompt for guests
+                              AuthPromptDialog.show(
+                                context: context,
+                                title: 'Sign In to Write Review',
+                                message: 'Create an account or sign in to share your experience and help other travelers.',
+                                returnPath: '/accommodation/${widget.accommodationId}',
+                                icon: Icons.rate_review,
+                              );
+                              return;
+                            }
+                            
                             _showReviewBottomSheet(listingId);
                           },
                           icon: const Icon(Icons.edit),
@@ -1347,6 +1384,21 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
             flex: 2,
             child: ElevatedButton(
               onPressed: _selectedRooms.isNotEmpty ? () {
+                // Check if user is logged in
+                final isLoggedIn = ref.read(isLoggedInProvider);
+                
+                if (!isLoggedIn) {
+                  // Show login prompt for guests
+                  AuthPromptDialog.show(
+                    context: context,
+                    title: 'Sign In to Book',
+                    message: 'Create an account or sign in to complete your booking and manage your reservations.',
+                    returnPath: '/accommodation/${widget.accommodationId}',
+                    icon: Icons.hotel,
+                  );
+                  return;
+                }
+                
                 final bookingData = {
                   'selectedRooms': _selectedRooms,
                   'checkInDate': widget.checkInDate,

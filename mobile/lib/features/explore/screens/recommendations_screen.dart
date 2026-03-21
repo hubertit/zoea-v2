@@ -7,6 +7,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/country_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class RecommendationsScreen extends ConsumerStatefulWidget {
   const RecommendationsScreen({super.key});
@@ -303,10 +304,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
   }
   
   String _formatPrice(double price, String currency) {
-    if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(price % 1000 == 0 ? 0 : 1)}K $currency';
-    }
-    return '${price.toStringAsFixed(price % 1 == 0 ? 0 : 2)} $currency';
+    return PriceFormatter.formatAbbreviated(price, currency: currency);
   }
   
   Widget _buildSkeletonCard() {

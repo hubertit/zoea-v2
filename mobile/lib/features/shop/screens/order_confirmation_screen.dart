@@ -7,6 +7,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/orders_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class OrderConfirmationScreen extends ConsumerWidget {
   final String orderId;
@@ -136,7 +137,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                       _buildDetailRow(
                         context,
                         'Total Amount',
-                        '$currency ${totalAmount.toStringAsFixed(0)}',
+                        PriceFormatter.formatFull(totalAmount, currency: currency),
                         Icons.payments,
                         isAmount: true,
                       ),

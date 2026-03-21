@@ -9,6 +9,8 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/tours_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 
 class TourDetailScreen extends ConsumerStatefulWidget {
   final String tourId;
@@ -250,6 +252,21 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                 ),
                 onPressed: () async {
                   if (actualTourId.isEmpty) return;
+                  
+                  // Check if user is logged in
+                  final isLoggedIn = ref.read(isLoggedInProvider);
+                  
+                  if (!isLoggedIn) {
+                    // Show login prompt for guests
+                    AuthPromptDialog.show(
+                      context: context,
+                      title: 'Sign In to Save Favorites',
+                      message: 'Create an account or sign in to save your favorite tours and access them anytime.',
+                      returnPath: '/tours/${widget.tourId}',
+                      icon: Icons.favorite,
+                    );
+                    return;
+                  }
                   
                   final favoritesService = ref.read(favoritesServiceProvider);
                   if (isFavorite) {
@@ -670,6 +687,21 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
         child: SafeArea(
           child: ElevatedButton(
             onPressed: () {
+              // Check if user is logged in
+              final isLoggedIn = ref.read(isLoggedInProvider);
+              
+              if (!isLoggedIn) {
+                // Show login prompt for guests
+                AuthPromptDialog.show(
+                  context: context,
+                  title: 'Sign In to Book',
+                  message: 'Create an account or sign in to complete your tour booking and manage your reservations.',
+                  returnPath: '/tours/${widget.tourId}',
+                  icon: Icons.tour,
+                );
+                return;
+              }
+              
               context.push('/tour-booking', extra: {
                 'tourId': actualTourId,
                 'tourName': name,

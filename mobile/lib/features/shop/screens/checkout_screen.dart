@@ -10,6 +10,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../../core/services/orders_service.dart';
 import '../../../core/models/order.dart';
 import '../../../core/models/cart.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class CheckoutScreen extends ConsumerStatefulWidget {
   final String? listingId;
@@ -262,7 +263,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ),
                 ),
                 Text(
-                  '${item.currency} ${item.totalPrice.toStringAsFixed(0)}',
+                  PriceFormatter.formatFull(item.totalPrice, currency: item.currency),
                   style: context.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -308,7 +309,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
         ),
         Text(
-          '$currency ${amount.toStringAsFixed(0)}',
+          PriceFormatter.formatFull(amount, currency: currency),
           style: isTotal
               ? context.titleMedium.copyWith(
                   fontWeight: FontWeight.w700,
@@ -590,7 +591,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ),
                 ),
                 Text(
-                  '${cart.items.first.currency} ${total.toStringAsFixed(0)}',
+                  PriceFormatter.formatFull(total, currency: cart.items.first.currency),
                   style: context.titleLarge.copyWith(
                     fontWeight: FontWeight.w700,
                     color: context.primaryColorTheme,

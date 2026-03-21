@@ -20,6 +20,7 @@ import '../../../core/models/event.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/config/app_config.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -2741,8 +2742,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     }
 
     // Format price
-    final formatter = NumberFormat('#,###', 'en_US');
-    String priceText = 'From RWF ${priceFrom != null ? formatter.format(priceFrom) : '---'}';
+    String priceText = priceFrom != null 
+        ? 'From ${PriceFormatter.formatAbbreviated(priceFrom, currency: 'RWF')}'
+        : 'From RWF ---';
 
     // Format duration
     String durationText = '';

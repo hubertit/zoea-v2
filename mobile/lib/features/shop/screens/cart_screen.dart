@@ -6,9 +6,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/cart_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/services/cart_service.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/models/cart.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -192,7 +195,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     Row(
                       children: [
                         Text(
-                          '${AppConfig.currencySymbol} ${item.unitPrice.toStringAsFixed(0)}',
+                          PriceFormatter.formatFull(item.unitPrice, currency: AppConfig.currencySymbol),
                           style: context.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryColorTheme,
@@ -207,7 +210,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                         const Spacer(),
                         Text(
-                          '${AppConfig.currencySymbol} ${item.totalPrice.toStringAsFixed(0)}',
+                          PriceFormatter.formatFull(item.totalPrice, currency: AppConfig.currencySymbol),
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryTextColor,
@@ -304,7 +307,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   ),
                 ),
                 Text(
-                  '${AppConfig.currencySymbol} ${cart.totalAmount.toStringAsFixed(0)}',
+                  PriceFormatter.formatFull(cart.totalAmount, currency: AppConfig.currencySymbol),
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.primaryColorTheme,
@@ -554,6 +557,21 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   void _checkout() {
+    // Check if user is logged in
+    final isLoggedIn = ref.read(isLoggedInProvider);
+    
+    if (!isLoggedIn) {
+      // Show login prompt for guests
+      AuthPromptDialog.show(
+        context: context,
+        title: 'Sign In to Checkout',
+        message: 'Create an account or sign in to complete your purchase. Your cart will be saved.',
+        returnPath: '/cart',
+        icon: Icons.shopping_cart,
+      );
+      return;
+    }
+    
     final cart = ref.read(cartProvider).valueOrNull;
     if (cart == null || cart.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

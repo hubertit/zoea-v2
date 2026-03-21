@@ -8,6 +8,7 @@ import '../../../core/services/bookings_service.dart';
 import '../../../core/services/token_storage_service.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class AccommodationBookingScreen extends ConsumerStatefulWidget {
   final String accommodationId;
@@ -817,7 +818,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                           ),
                         ),
                         Text(
-                          'You saved RWF ${_discountAmount.toStringAsFixed(0)}',
+                          'You saved ${PriceFormatter.formatFull(_discountAmount, currency: 'RWF')}',
                           style: context.bodySmall.copyWith(
                             color: AppTheme.successColor,
                           ),

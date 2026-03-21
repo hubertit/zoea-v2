@@ -11,6 +11,7 @@ import '../../../core/providers/services_provider.dart';
 import '../../../core/services/services_service.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/models/service.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ServiceDetailScreen extends ConsumerStatefulWidget {
   final String serviceId;
@@ -401,7 +402,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
   }
 
   String _getPriceLabel(double price, ServicePriceUnit unit) {
-    final priceStr = '${AppConfig.currencySymbol} ${price.toStringAsFixed(0)}';
+    final priceStr = PriceFormatter.formatFull(price, currency: AppConfig.currencySymbol);
     switch (unit) {
       case ServicePriceUnit.perHour:
         return '$priceStr / hour';

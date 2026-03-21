@@ -9,6 +9,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/tours_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class ExperiencesScreen extends ConsumerStatefulWidget {
   const ExperiencesScreen({super.key});
@@ -231,7 +232,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     final pricePerPerson = tour['pricePerPerson'] as num?;
     final currency = tour['currency'] as String? ?? 'USD';
     final priceRange = pricePerPerson != null
-        ? '$currency ${pricePerPerson.toDouble().toStringAsFixed(0)}/person'
+        ? '${PriceFormatter.formatAbbreviated(pricePerPerson.toDouble(), currency: currency)}/person'
         : 'Price not available';
     
     final category = tour['category'] as Map<String, dynamic>?;
@@ -417,7 +418,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
       final pricePerPerson = firstTour['pricePerPerson'] as num?;
       final currency = firstTour['currency'] as String? ?? 'USD';
       if (pricePerPerson != null) {
-        priceRange = 'Starting from $currency ${pricePerPerson.toDouble().toStringAsFixed(0)}';
+        priceRange = 'Starting from ${PriceFormatter.formatAbbreviated(pricePerPerson.toDouble(), currency: currency)}';
       }
       
       final operatorData = firstTour['operator'] as Map<String, dynamic>?;

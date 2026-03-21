@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import '../widgets/event_filter_sheet.dart';
 import '../widgets/event_calendar_sheet.dart';
+import '../../../core/utils/price_formatter.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
   const EventsScreen({super.key});
@@ -796,10 +797,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
   }
 
   String _formatPrice(int price) {
-    if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(0)}K';
-    }
-    return price.toString();
+    return PriceFormatter.formatAbbreviated(price.toDouble(), currency: '');
   }
 
   void _showFilterBottomSheet(BuildContext context) {
