@@ -125,20 +125,22 @@ export default function CategoryPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-            {listings.map((listing) => (
-              <ListingCard
-                key={listing.id}
-                id={listing.id}
-                name={listing.name}
-                slug={listing.slug}
-                image={listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
-                city={listing.location.city}
-                rating={listing.rating}
-                reviewCount={listing.reviewCount}
-                priceRange={listing.priceRange}
-                isVerified={listing.isVerified}
-              />
-            ))}
+            {listings
+              .filter((listing) => listing.location?.city)
+              .map((listing) => (
+                <ListingCard
+                  key={listing.id}
+                  id={listing.id}
+                  name={listing.name}
+                  slug={listing.slug}
+                  image={listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'}
+                  city={listing.location.city}
+                  rating={listing.rating}
+                  reviewCount={listing.reviewCount}
+                  priceRange={listing.priceRange}
+                  isVerified={listing.isVerified}
+                />
+              ))}
           </div>
         </div>
       </main>
