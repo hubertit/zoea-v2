@@ -120,6 +120,11 @@ export const listingsApi = {
     return response.data;
   },
 
+  async getBySlug(slug: string): Promise<Listing> {
+    const response = await apiClient.get<Listing>(`/listings/slug/${slug}`);
+    return response.data;
+  },
+
   async search(query: string, location?: string): Promise<ListingsResponse> {
     const response = await apiClient.get<ListingsResponse>(`/listings/search`, {
       params: { query, location },

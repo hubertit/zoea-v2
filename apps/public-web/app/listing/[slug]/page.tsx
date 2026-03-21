@@ -26,7 +26,7 @@ export default function ListingPage() {
     const fetchData = async () => {
       try {
         const [listingData, reviewsData] = await Promise.all([
-          listingsApi.getById(slug),
+          listingsApi.getBySlug(slug),
           reviewsApi.getByListing(slug),
         ]);
         setListing(listingData);
