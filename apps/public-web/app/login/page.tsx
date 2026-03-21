@@ -3,15 +3,30 @@
 import { Header } from '@/components/Header';
 import Link from 'next/link';
 import { useState } from 'react';
+import { authApi } from '@/lib/api/auth';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login:', { email, password });
+    setError('');
+    setLoading(true);
+
+    try {
+      await authApi.login({ email, password });
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,6 +45,12 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {error && (
+                <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-[14px] text-red-600">{error}</p>
+                </div>
+              )}
+
               <div>
                 <label htmlFor="email" className="block text-[14px] font-medium text-gray-900 mb-2">
                   Email
@@ -93,9 +114,10 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                disabled={loading}
+                className="w-full py-3.5 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign in
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </form>
 

@@ -3,8 +3,11 @@
 import { Header } from '@/components/Header';
 import Link from 'next/link';
 import { useState } from 'react';
+import { authApi } from '@/lib/api/auth';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,10 +15,32 @@ export default function SignupPage() {
     confirmPassword: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Signup:', formData);
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await authApi.signup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Signup failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +59,12 @@ export default function SignupPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {error && (
+                <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-[14px] text-red-600">{error}</p>
+                </div>
+              )}
+
               <div>
                 <label htmlFor="name" className="block text-[14px] font-medium text-gray-900 mb-2">
                   Full Name
@@ -114,9 +145,10 @@ export default function SignupPage() {
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                disabled={loading}
+                className="w-full py-3.5 bg-primary text-white text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Create account
+                {loading ? 'Creating account...' : 'Create account'}
               </button>
             </form>
 

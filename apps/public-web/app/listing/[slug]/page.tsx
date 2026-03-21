@@ -4,31 +4,65 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { listingsApi, type Listing } from '@/lib/api/listings';
 
 export default function ListingPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  
+  const [listing, setListing] = useState<Listing | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const listing = {
-    name: 'Kigali Serena Hotel',
-    city: 'Kigali',
-    address: 'KN 3 Ave, Kigali',
-    rating: 4.8,
-    reviewCount: 245,
-    priceRange: '$$$',
-    isVerified: true,
-    description: 'Experience luxury in the heart of Kigali. Our hotel offers world-class amenities, stunning views, and exceptional service. Perfect for both business and leisure travelers.',
-    images: [
-      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200',
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
-    ],
-    amenities: ['Free WiFi', 'Pool', 'Restaurant', 'Spa', 'Gym', 'Parking'],
-    hours: 'Open 24 hours',
-    phone: '+250 788 123 456',
-    email: 'info@example.com',
-  };
+  useEffect(() => {
+    const fetchListing = async () => {
+      try {
+        const data = await listingsApi.getById(slug);
+        setListing(data);
+      } catch (error) {
+        console.error('Failed to fetch listing:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchListing();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="pt-20 min-h-screen flex items-center justify-center">
+          <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  if (!listing) {
+    return (
+      <>
+        <Header />
+        <main className="pt-20 min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Listing not found</h1>
+            <Link href="/" className="text-primary hover:underline">
+              Back to home
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  const images = listing.images?.length > 0 
+    ? listing.images.map(img => img.url)
+    : ['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'];
 
   return (
     <>
@@ -50,7 +84,7 @@ export default function ListingPage() {
               <div className="mb-6">
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-4">
                   <Image
-                    src={listing.images[selectedImage]}
+                    src={images[selectedImage]}
                     alt={listing.name}
                     fill
                     className="object-cover"
@@ -58,25 +92,27 @@ export default function ListingPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-4 gap-3">
-                  {listing.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`relative aspect-[4/3] rounded-xl overflow-hidden ${
-                        selectedImage === index ? 'ring-2 ring-primary' : ''
-                      }`}
-                    >
-                      <Image
-                        src={image}
-                        alt={`View ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    </button>
-                  ))}
-                </div>
+                {images.length > 1 && (
+                  <div className="grid grid-cols-4 gap-3">
+                    {images.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`relative aspect-[4/3] rounded-xl overflow-hidden ${
+                          selectedImage === index ? 'ring-2 ring-primary' : ''
+                        }`}
+                      >
+                        <Image
+                          src={image}
+                          alt={`View ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-8">
@@ -91,15 +127,19 @@ export default function ListingPage() {
                   </h1>
 
                   <div className="flex items-center gap-4 text-[15px] text-gray-600 mb-4">
-                    <div className="flex items-center gap-1.5">
-                      <svg className="w-5 h-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      <span className="font-semibold text-gray-900">{listing.rating}</span>
-                      <span>({listing.reviewCount} reviews)</span>
-                    </div>
-                    <span>•</span>
-                    <span>{listing.city}</span>
+                    {listing.rating && (
+                      <>
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-5 h-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="font-semibold text-gray-900">{listing.rating.toFixed(1)}</span>
+                          <span>({listing.reviewCount} reviews)</span>
+                        </div>
+                        <span>•</span>
+                      </>
+                    )}
+                    <span>{listing.location.city}</span>
                   </div>
 
                   <p className="text-[15px] text-gray-600 leading-relaxed">
@@ -107,23 +147,27 @@ export default function ListingPage() {
                   </p>
                 </div>
 
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Amenities</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {listing.amenities.map((amenity) => (
-                      <div key={amenity} className="flex items-center gap-2 text-[14px] text-gray-700">
-                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {amenity}
-                      </div>
-                    ))}
+                {listing.amenities && listing.amenities.length > 0 && (
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Amenities</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {listing.amenities.map((amenity) => (
+                        <div key={amenity} className="flex items-center gap-2 text-[14px] text-gray-700">
+                          <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {amenity}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-4">Location</h2>
-                  <p className="text-[15px] text-gray-600 mb-4">{listing.address}</p>
+                  <p className="text-[15px] text-gray-600 mb-4">
+                    {listing.location.address || listing.location.city}
+                  </p>
                   <div className="aspect-[16/9] bg-gray-100 rounded-2xl flex items-center justify-center">
                     <p className="text-gray-400">Map will be integrated here</p>
                   </div>
@@ -148,35 +192,43 @@ export default function ListingPage() {
                   </button>
 
                   <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
-                    <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <div>
-                        <p className="text-[13px] text-gray-600">Hours</p>
-                        <p className="text-[14px] font-medium text-gray-900">{listing.hours}</p>
+                    {listing.businessHours && listing.businessHours.length > 0 && (
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                          <p className="text-[13px] text-gray-600">Hours</p>
+                          <p className="text-[14px] font-medium text-gray-900">
+                            {listing.businessHours[0].isClosed ? 'Closed' : `${listing.businessHours[0].openTime} - ${listing.businessHours[0].closeTime}`}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <div>
-                        <p className="text-[13px] text-gray-600">Phone</p>
-                        <p className="text-[14px] font-medium text-gray-900">{listing.phone}</p>
+                    {listing.contactInfo?.phone && (
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <div>
+                          <p className="text-[13px] text-gray-600">Phone</p>
+                          <p className="text-[14px] font-medium text-gray-900">{listing.contactInfo.phone}</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      <div>
-                        <p className="text-[13px] text-gray-600">Email</p>
-                        <p className="text-[14px] font-medium text-gray-900">{listing.email}</p>
+                    {listing.contactInfo?.email && (
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <div>
+                          <p className="text-[13px] text-gray-600">Email</p>
+                          <p className="text-[14px] font-medium text-gray-900">{listing.contactInfo.email}</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
