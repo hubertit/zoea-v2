@@ -121,7 +121,7 @@ export default function ListingPage() {
         />
       </div>
       <Header />
-      <main className="pt-16 sm:pt-18 lg:pt-20 bg-white">
+      <main className="pt-16 sm:pt-18 lg:pt-20 bg-gray-50">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 xl:px-24 py-6 sm:py-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <Link
             href="/"
@@ -308,8 +308,8 @@ export default function ListingPage() {
               <div className="pb-8 border-b border-gray-200">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {listing.isVerified && (
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-blue-50/50 border border-blue-100">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                      <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
                         <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
                         </svg>
@@ -321,8 +321,8 @@ export default function ListingPage() {
                     </div>
                   )}
                   {hasBooking && (
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-green-50/50 border border-green-100">
-                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                      <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -334,8 +334,8 @@ export default function ListingPage() {
                     </div>
                   )}
                   {listing.rating && parseFloat(listing.rating.toString()) >= 4.5 && (
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-yellow-50/50 border border-yellow-100">
-                      <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                      <div className="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center flex-shrink-0">
                         <svg className="w-5 h-5 text-yellow-600 fill-current" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
@@ -347,8 +347,8 @@ export default function ListingPage() {
                     </div>
                   )}
                   {listing.amenities && listing.amenities.length > 5 && (
-                    <div className="flex items-start gap-3 p-4 rounded-xl bg-purple-50/50 border border-purple-100">
-                      <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                      <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
                         <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                         </svg>
@@ -364,82 +364,88 @@ export default function ListingPage() {
 
               {/* Description */}
               <div className="pb-8 border-b border-gray-200">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-5">About this place</h3>
-                <div className="relative">
-                  <p className="text-[15px] sm:text-[16px] text-gray-700 leading-relaxed whitespace-pre-line">
-                    {listing.description || listing.shortDescription || 'No description available.'}
-                  </p>
-                  {listing.shortDescription && listing.description && listing.description.length > 300 && (
-                    <div className="mt-4">
-                      <button className="text-[15px] font-semibold text-gray-900 underline hover:text-primary transition-colors">
-                        Show more
-                      </button>
-                    </div>
-                  )}
+                <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-5">About this place</h3>
+                  <div className="relative">
+                    <p className="text-[15px] sm:text-[16px] text-gray-700 leading-relaxed whitespace-pre-line">
+                      {listing.description || listing.shortDescription || 'No description available.'}
+                    </p>
+                    {listing.shortDescription && listing.description && listing.description.length > 300 && (
+                      <div className="mt-4">
+                        <button className="text-[15px] font-semibold text-gray-900 underline hover:text-primary transition-colors">
+                          Show more
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
               {/* Amenities */}
               {listing.amenities && listing.amenities.length > 0 && (
                 <div className="pb-8 border-b border-gray-200">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">What this place offers</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {(showAllAmenities ? listing.amenities : listing.amenities.slice(0, 10)).map((amenity: any, idx: number) => (
-                      <div key={idx} className="flex items-start gap-3 group">
-                        <div className="w-10 h-10 rounded-lg bg-gray-50 group-hover:bg-primary/5 flex items-center justify-center flex-shrink-0 transition-colors">
-                          <svg className="w-5 h-5 text-gray-700 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">What this place offers</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {(showAllAmenities ? listing.amenities : listing.amenities.slice(0, 10)).map((amenity: any, idx: number) => (
+                        <div key={idx} className="flex items-start gap-3 group">
+                          <div className="w-10 h-10 rounded-lg bg-gray-50 group-hover:bg-primary/5 flex items-center justify-center flex-shrink-0 transition-colors">
+                            <svg className="w-5 h-5 text-gray-700 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-[15px] text-gray-700 pt-2">
+                            {typeof amenity === 'string' ? amenity : amenity.name || amenity.title}
+                          </span>
                         </div>
-                        <span className="text-[15px] text-gray-700 pt-2">
-                          {typeof amenity === 'string' ? amenity : amenity.name || amenity.title}
-                        </span>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    {listing.amenities.length > 10 && (
+                      <button 
+                        onClick={() => setShowAllAmenities(!showAllAmenities)}
+                        className="mt-6 px-5 py-2.5 border border-gray-900 rounded-lg text-[15px] font-semibold hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
+                      >
+                        {showAllAmenities ? (
+                          <>
+                            Show less
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                            </svg>
+                          </>
+                        ) : (
+                          <>
+                            Show all {listing.amenities.length} amenities
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
-                  {listing.amenities.length > 10 && (
-                    <button 
-                      onClick={() => setShowAllAmenities(!showAllAmenities)}
-                      className="mt-6 px-5 py-2.5 border border-gray-900 rounded-lg text-[15px] font-semibold hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
-                    >
-                      {showAllAmenities ? (
-                        <>
-                          Show less
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                          </svg>
-                        </>
-                      ) : (
-                        <>
-                          Show all {listing.amenities.length} amenities
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </>
-                      )}
-                    </button>
-                  )}
                 </div>
               )}
 
               {/* Operating Hours */}
               {listing.operatingHours && Object.keys(listing.operatingHours).length > 0 && (
                 <div className="pb-8 border-b border-gray-200">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Hours</h3>
-                  <div className="space-y-2">
-                    {Object.entries(listing.operatingHours).map(([day, hours]: [string, any]) => {
-                      const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() === day.toLowerCase();
-                      return (
-                        <div key={day} className={`flex items-center justify-between text-[15px] px-4 py-3 rounded-lg transition-colors ${isToday ? 'bg-primary/5 border border-primary/20' : 'hover:bg-gray-50'}`}>
-                          <span className={`font-medium capitalize ${isToday ? 'text-primary' : 'text-gray-900'}`}>
-                            {day} {isToday && <span className="text-[12px] ml-1">(Today)</span>}
-                          </span>
-                          <span className={`font-medium ${hours.closed ? 'text-red-600' : isToday ? 'text-primary' : 'text-gray-600'}`}>
-                            {hours.closed ? 'Closed' : `${hours.open} - ${hours.close}`}
-                          </span>
-                        </div>
-                      );
-                    })}
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Hours</h3>
+                    <div className="space-y-2">
+                      {Object.entries(listing.operatingHours).map(([day, hours]: [string, any]) => {
+                        const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() === day.toLowerCase();
+                        return (
+                          <div key={day} className={`flex items-center justify-between text-[15px] px-4 py-3 rounded-lg transition-colors ${isToday ? 'bg-primary/5 border border-primary/20' : 'hover:bg-gray-50'}`}>
+                            <span className={`font-medium capitalize ${isToday ? 'text-primary' : 'text-gray-900'}`}>
+                              {day} {isToday && <span className="text-[12px] ml-1">(Today)</span>}
+                            </span>
+                            <span className={`font-medium ${hours.closed ? 'text-red-600' : isToday ? 'text-primary' : 'text-gray-600'}`}>
+                              {hours.closed ? 'Closed' : `${hours.open} - ${hours.close}`}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
@@ -447,80 +453,84 @@ export default function ListingPage() {
               {/* Reviews */}
               {reviews.length > 0 && (
                 <div className="pb-8 border-b border-gray-200">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-3">
-                      <svg className="w-6 h-6 text-gray-900 fill-current" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      <div>
-                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
-                          {typeof listing.rating === 'number' ? listing.rating.toFixed(1) : parseFloat(listing.rating || '0').toFixed(1)} out of 5
-                        </h3>
-                        <p className="text-[14px] text-gray-600">{listing.reviewCount} reviews</p>
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                    <div className="flex items-center justify-between mb-8">
+                      <div className="flex items-center gap-3">
+                        <svg className="w-6 h-6 text-gray-900 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div>
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                            {typeof listing.rating === 'number' ? listing.rating.toFixed(1) : parseFloat(listing.rating || '0').toFixed(1)} out of 5
+                          </h3>
+                          <p className="text-[14px] text-gray-600">{listing.reviewCount} reviews</p>
+                        </div>
                       </div>
                     </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {(showAllReviews ? reviews : reviews.slice(0, 6)).map((review) => (
+                        <ReviewCard key={review.id} review={review} />
+                      ))}
+                    </div>
+                    {reviews.length > 6 && (
+                      <button 
+                        onClick={() => setShowAllReviews(!showAllReviews)}
+                        className="mt-8 px-5 py-2.5 border border-gray-900 rounded-lg text-[15px] font-semibold hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
+                      >
+                        {showAllReviews ? (
+                          <>
+                            Show less
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                            </svg>
+                          </>
+                        ) : (
+                          <>
+                            Show all {reviews.length} reviews
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-                    {(showAllReviews ? reviews : reviews.slice(0, 6)).map((review) => (
-                      <ReviewCard key={review.id} review={review} />
-                    ))}
-                  </div>
-                  {reviews.length > 6 && (
-                    <button 
-                      onClick={() => setShowAllReviews(!showAllReviews)}
-                      className="mt-8 px-5 py-2.5 border border-gray-900 rounded-lg text-[15px] font-semibold hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
-                    >
-                      {showAllReviews ? (
-                        <>
-                          Show less
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                          </svg>
-                        </>
-                      ) : (
-                        <>
-                          Show all {reviews.length} reviews
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </>
-                      )}
-                    </button>
-                  )}
                 </div>
               )}
 
               {/* Location */}
               <div className="pb-8 border-b border-gray-200">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Where you'll be</h3>
-                <div className="space-y-5">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-[15px] sm:text-[16px] font-medium text-gray-900">
-                        {listing.city?.name || 'Rwanda'}
-                      </p>
-                      <p className="text-[14px] sm:text-[15px] text-gray-600 mt-0.5">
-                        {listing.address || 'Exact location provided after booking'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl sm:rounded-2xl h-[300px] sm:h-[400px] flex items-center justify-center overflow-hidden group">
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50" />
-                    <div className="text-center text-gray-500 relative z-10">
-                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Where you'll be</h3>
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
-                      <p className="text-[15px] font-medium text-gray-700">Interactive map</p>
-                      <p className="text-[13px] text-gray-500 mt-1">Coming soon</p>
+                      <div>
+                        <p className="text-[15px] sm:text-[16px] font-medium text-gray-900">
+                          {listing.city?.name || 'Rwanda'}
+                        </p>
+                        <p className="text-[14px] sm:text-[15px] text-gray-600 mt-0.5">
+                          {listing.address || 'Exact location provided after booking'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl sm:rounded-2xl h-[300px] sm:h-[400px] flex items-center justify-center overflow-hidden group">
+                      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50" />
+                      <div className="text-center text-gray-500 relative z-10">
+                        <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </div>
+                        <p className="text-[15px] font-medium text-gray-700">Interactive map</p>
+                        <p className="text-[13px] text-gray-500 mt-1">Coming soon</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -529,8 +539,9 @@ export default function ListingPage() {
               {/* Contact */}
               {(listing.contactPhone || listing.contactEmail || listing.website) && (
                 <div className="pb-8">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Get in touch</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Get in touch</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                     {listing.contactPhone && (
                       <a href={`tel:${listing.contactPhone}`} className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all group">
                         <div className="w-11 h-11 rounded-full bg-gray-50 group-hover:bg-primary/10 flex items-center justify-center flex-shrink-0 transition-colors">
@@ -573,6 +584,7 @@ export default function ListingPage() {
                         </svg>
                       </a>
                     )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -580,8 +592,9 @@ export default function ListingPage() {
               {/* Things to Know */}
               {(hasBooking || (listing.amenities && listing.amenities.length > 0)) && (
                 <div className="pb-8">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Things to know</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">Things to know</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
                     {hasBooking && (
                       <div className="space-y-3">
                         <h4 className="text-[15px] font-semibold text-gray-900 flex items-center gap-2">
@@ -629,6 +642,7 @@ export default function ListingPage() {
                         {listing.isVerified && <p>Verified by Zoea</p>}
                         <p>Secure booking guaranteed</p>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>

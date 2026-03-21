@@ -6,7 +6,7 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <div className="group p-5 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-lg hover:shadow-black/5 transition-all duration-300">
+    <div className="group p-5 rounded-xl bg-gray-50 border border-gray-200 hover:border-gray-300 hover:shadow-md hover:shadow-black/5 transition-all duration-300">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-primary/20">
           <span className="text-white font-semibold text-[15px]">
