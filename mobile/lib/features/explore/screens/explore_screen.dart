@@ -16,6 +16,7 @@ import '../../../core/providers/favorites_provider.dart';
 import '../../../core/providers/tours_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/country_provider.dart';
+import '../../../core/providers/weather_provider.dart';
 import '../../../core/models/event.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/config/app_config.dart';
@@ -271,88 +272,212 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   }
 
   Widget _buildWeatherWidget() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: context.isDarkMode 
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Location
-              Text(
-                'Kigali',
-            style: context.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600,
-              color: context.primaryTextColor,
-              fontSize: 11,
-                ),
-          ),
-          const SizedBox(height: 8),
-          
-          // Temperature and weather info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Temperature
-              Flexible(
-                child: Text(
-                  '25°',
-                  style: context.headlineMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                    color: context.primaryTextColor,
-                    fontSize: 18,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              
-              // Weather icon and details
-              Flexible(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                  // Rain probability
-                  Column(
-                    children: [
-                  Icon(
-                    Icons.water_drop,
-                    color: context.grey600,
-                    size: 16,
-              ),
-              Text(
-                        '10%',
-                style: context.bodySmall.copyWith(
-                          color: context.grey600,
-                          fontSize: 8,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 8),
-                  
-                  // Main weather icon
-                  Icon(
-                    Icons.wb_sunny,
-                    color: Colors.orange[600],
-                    size: 24,
-                  ),
-                ],
-                ),
+    final weatherAsync = ref.watch(defaultWeatherProvider);
+
+    return weatherAsync.when(
+      data: (weather) {
+        final temp = weather['temperature'] as double? ?? 0.0;
+        final cityName = weather['cityName'] as String? ?? 'Kigali';
+        final rainProb = weather['rainProbability'] as int? ?? 0;
+        final iconCode = weather['weatherIcon'] as String? ?? '01d';
+
+        // Get appropriate weather icon
+        IconData weatherIcon;
+        Color iconColor;
+        
+        if (iconCode.startsWith('01')) {
+          weatherIcon = Icons.wb_sunny;
+          iconColor = Colors.orange[600]!;
+        } else if (iconCode.startsWith('02')) {
+          weatherIcon = Icons.wb_cloudy;
+          iconColor = Colors.orange[400]!;
+        } else if (iconCode.startsWith('03') || iconCode.startsWith('04')) {
+          weatherIcon = Icons.cloud;
+          iconColor = context.grey600;
+        } else if (iconCode.startsWith('09') || iconCode.startsWith('10')) {
+          weatherIcon = Icons.water_drop;
+          iconColor = Colors.blue[600]!;
+        } else if (iconCode.startsWith('11')) {
+          weatherIcon = Icons.thunderstorm;
+          iconColor = Colors.purple[600]!;
+        } else if (iconCode.startsWith('13')) {
+          weatherIcon = Icons.ac_unit;
+          iconColor = Colors.lightBlue[300]!;
+        } else {
+          weatherIcon = Icons.wb_sunny;
+          iconColor = Colors.orange[600]!;
+        }
+
+        return Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: context.cardColor,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: context.isDarkMode 
+                    ? Colors.black.withOpacity(0.3)
+                    : Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-        ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                cityName,
+                style: context.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.primaryTextColor,
+                  fontSize: 11,
+                ),
+              ),
+              const SizedBox(height: 8),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      '${temp.round()}°',
+                      style: context.headlineMedium.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: context.primaryTextColor,
+                        fontSize: 18,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  
+                  Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.water_drop,
+                              color: context.grey600,
+                              size: 16,
+                            ),
+                            Text(
+                              '$rainProb%',
+                              style: context.bodySmall.copyWith(
+                                color: context.grey600,
+                                fontSize: 8,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 8),
+                        
+                        Icon(
+                          weatherIcon,
+                          color: iconColor,
+                          size: 24,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: context.cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: context.isDarkMode 
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Loading...',
+              style: context.bodyMedium.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.primaryTextColor,
+                fontSize: 11,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Center(
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: context.primaryColorTheme,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      error: (error, stack) => Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: context.cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: context.isDarkMode 
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Kigali',
+              style: context.bodyMedium.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.primaryTextColor,
+                fontSize: 11,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    '25°',
+                    style: context.headlineMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: context.primaryTextColor,
+                      fontSize: 18,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                
+                Icon(
+                  Icons.wb_sunny,
+                  color: Colors.orange[600],
+                  size: 24,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

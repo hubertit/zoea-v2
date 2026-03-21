@@ -105,6 +105,31 @@ async function main() {
     },
   });
 
+  // Weather Integration (Open-Meteo)
+  // Note: Open-Meteo is free and requires no API key
+  await prisma.integration.upsert({
+    where: { name: 'weather' },
+    update: {
+      config: {
+        provider: 'open-meteo',
+        baseUrl: 'https://api.open-meteo.com/v1',
+        description: 'Free weather API with no API key required',
+      },
+      isActive: true,
+    },
+    create: {
+      name: 'weather',
+      displayName: 'Weather Service (Open-Meteo)',
+      description: 'Real-time weather data using Open-Meteo API (free, no API key required)',
+      isActive: true,
+      config: {
+        provider: 'open-meteo',
+        baseUrl: 'https://api.open-meteo.com/v1',
+        description: 'Free weather API with no API key required',
+      },
+    },
+  });
+
   console.log('Integrations seeded successfully!');
 }
 

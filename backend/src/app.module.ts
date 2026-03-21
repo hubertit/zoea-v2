@@ -28,6 +28,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { AssistantModule } from './modules/assistant/assistant.module';
 import { ItinerariesModule } from './modules/itineraries/itineraries.module';
+import { WeatherModule } from './modules/weather/weather.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { ItinerariesModule } from './modules/itineraries/itineraries.module';
     IntegrationsModule,
     AssistantModule,
     ItinerariesModule,
+    WeatherModule,
   ],
 })
 export class AppModule {}

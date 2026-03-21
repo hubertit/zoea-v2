@@ -141,6 +141,10 @@ class AppConfig {
   static const int maxChatHistory = 50;
   static const int aiResponseTimeout = 30000; // 30 seconds
 
+  // Weather Configuration
+  static const String defaultWeatherCity = 'Kigali';
+  static const String defaultWeatherCountryCode = 'RW';
+
   static Dio dioInstance() {
     final dio = Dio(
       BaseOptions(
