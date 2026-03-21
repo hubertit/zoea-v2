@@ -11,6 +11,7 @@ import { HappeningEventCard } from '@/components/HappeningEventCard';
 import { Footer } from '@/components/Footer';
 import { useEffect, useState } from 'react';
 import { categoriesApi, type Category } from '@/lib/api/categories';
+import { sortCategoriesByRelevance } from '@/lib/utils/categories';
 import { listingsApi, type Listing } from '@/lib/api/listings';
 import { toursApi, type Tour } from '@/lib/api/tours';
 import { eventsApi, type Event } from '@/lib/api/events';
@@ -33,7 +34,7 @@ export default function Home() {
           toursApi.getAll({ limit: 6 }),
           eventsApi.getAll({ limit: 6 }),
         ]);
-        setCategories(categoriesData.slice(0, 4));
+        setCategories(sortCategoriesByRelevance(categoriesData));
         setFeaturedListings(listingsData);
         setNearMeListings(nearMeData);
         setTours(toursData.data);
@@ -71,14 +72,14 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-10 lg:mb-12">
               <p className="text-[12px] sm:text-[13px] font-semibold text-gray-500 tracking-wider uppercase mb-2 sm:mb-3">
-                Explore by Category
+                Browse by Category
               </p>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900">
                 What are you looking for?
               </h2>
             </div>
 
-            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide justify-center">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide justify-start">
               {categories.map((category) => (
                 <CategoryCard
                   key={category.slug}

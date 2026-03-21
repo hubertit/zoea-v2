@@ -7,6 +7,7 @@ import { ListingCard } from '@/components/ListingCard';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { categoriesApi, type Category } from '@/lib/api/categories';
+import { sortCategoriesByRelevance } from '@/lib/utils/categories';
 import { listingsApi, type Listing } from '@/lib/api/listings';
 
 export default function ExplorePage() {
@@ -21,7 +22,7 @@ export default function ExplorePage() {
           categoriesApi.getAll(),
           listingsApi.getFeatured(12),
         ]);
-        setCategories(categoriesData);
+        setCategories(sortCategoriesByRelevance(categoriesData));
         setListings(listingsData);
       } catch (error) {
         console.error('Failed to fetch data:', error);

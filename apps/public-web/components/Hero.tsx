@@ -97,26 +97,6 @@ export function Hero() {
             </div>
           </div>
         </form>
-
-        <div className="mt-6 sm:mt-8 lg:mt-10 flex flex-wrap justify-center gap-2 sm:gap-3 px-4">
-          {[
-            { name: 'Hotels', icon: '🏨' },
-            { name: 'Restaurants', icon: '🍽️' },
-            { name: 'Tours', icon: '🗺️' },
-            { name: 'Attractions', icon: '🎭' },
-            { name: 'Events', icon: '🎉' },
-            { name: 'Nightlife', icon: '🌙' },
-          ].map((category) => (
-            <button
-              type="button"
-              key={category.name}
-              className="px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 bg-white/10 backdrop-blur-sm text-white text-[12px] sm:text-[13px] lg:text-[14px] font-medium rounded-full hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-1.5 sm:gap-2"
-            >
-              <span aria-hidden>{category.icon}</span>
-              <span className="whitespace-nowrap">{category.name}</span>
-            </button>
-          ))}
-        </div>
       </div>
     </section>
   );
