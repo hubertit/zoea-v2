@@ -91,6 +91,15 @@ export const listingsApi = {
     return response.data.data;
   },
 
+  async getRandom(limit = 10): Promise<Listing[]> {
+    const response = await apiClient.get<Listing[]>(`/listings/random`, {
+      params: {
+        limit,
+      },
+    });
+    return response.data;
+  },
+
   async getByCategory(categoryId: string, params?: {
     page?: number;
     limit?: number;
