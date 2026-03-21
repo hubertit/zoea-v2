@@ -93,7 +93,7 @@ export default function Home() {
         </section>
 
         {/* Happening Section */}
-        <section className="py-12 sm:py-14 lg:py-16 xl:py-20">
+        <section className="py-12 sm:py-14 lg:py-16 xl:py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8 sm:mb-10">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
