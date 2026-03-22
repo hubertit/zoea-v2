@@ -39,8 +39,8 @@ export function Hero() {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/50" />
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 xl:py-32">
-        <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-10 lg:mb-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-28 xl:py-36 2xl:py-40">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 lg:mb-14">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold mb-4 sm:mb-5 lg:mb-6 tracking-tight px-4">
             Discover Rwanda
           </h1>
