@@ -54,7 +54,7 @@ export default function Home() {
       <>
         <Header />
         <Hero />
-        <main className="py-12 sm:py-16 lg:py-20">
+        <main className="py-10 sm:py-14 lg:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
@@ -68,9 +68,9 @@ export default function Home() {
       <Header />
       <Hero />
       <main>
-        <section className="py-10 sm:py-12 lg:py-14">
+        <section className="py-8 sm:py-10 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-10">
               <p className="text-[12px] sm:text-[13px] font-semibold text-gray-500 tracking-wider uppercase mb-2 sm:mb-3">
                 Browse by Category
               </p>
@@ -94,9 +94,9 @@ export default function Home() {
         </section>
 
         {/* Happening Section */}
-        <section className="py-10 sm:py-12 lg:py-14 bg-gray-50">
+        <section className="py-8 sm:py-10 lg:py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8 sm:mb-10">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
                 Happening
               </h2>
@@ -125,9 +125,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
+        <section className="py-8 sm:py-10 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8 sm:mb-10">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
                 Featured Places
               </h2>
@@ -160,9 +160,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14 bg-gray-50">
+        <section className="py-8 sm:py-10 lg:py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8 sm:mb-10">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
                 Near Me
               </h2>
@@ -186,9 +186,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-10 sm:py-12 lg:py-14">
+        <section className="py-8 sm:py-10 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8 sm:mb-10">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
                 Tour Packages
               </h2>
