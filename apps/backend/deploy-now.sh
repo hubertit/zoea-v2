@@ -61,10 +61,8 @@ echo ""
 echo -e "${YELLOW}🔄 Step 3: Deploying on Primary Server...${NC}"
 sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no "$PRIMARY_SERVER" << 'EOF'
 cd ~/zoea-backend
-echo "Stopping containers..."
-docker-compose down
-echo "Building and starting containers..."
-docker-compose up --build -d
+echo "Building and starting containers (keep previous working image if build fails)..."
+docker-compose up -d --build
 echo "Waiting for API to start..."
 sleep 10
 echo "Checking container status..."
@@ -87,10 +85,8 @@ else
   echo -e "${YELLOW}🔄 Step 4: Deploying on Backup Server (172.16.40.60)...${NC}"
   sshpass -p "$PASSWORD" ssh -o StrictHostKeyChecking=no "$BACKUP_SERVER" << 'EOF'
 cd ~/zoea-backend
-echo "Stopping containers..."
-docker-compose down
-echo "Building and starting containers..."
-docker-compose up --build -d
+echo "Building and starting containers (keep previous working image if build fails)..."
+docker-compose up -d --build
 echo "Waiting for API to start..."
 sleep 10
 echo "Checking container status..."

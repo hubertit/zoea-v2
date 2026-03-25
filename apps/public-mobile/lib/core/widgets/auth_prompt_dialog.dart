@@ -38,6 +38,12 @@ class AuthPromptDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Compute a readable text color for the Sign In button background.
+    final primary = context.primaryColorTheme;
+    final isPrimaryDark =
+        ThemeData.estimateBrightnessForColor(primary) == Brightness.dark;
+    final signInTextColor = isPrimaryDark ? Colors.white : Colors.black;
+
     return Dialog(
       backgroundColor: context.cardColor,
       shape: RoundedRectangleBorder(
@@ -115,15 +121,19 @@ class AuthPromptDialog extends StatelessWidget {
                       }
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: context.primaryColorTheme,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppTheme.borderRadius12),
                       ),
+                      // Ensure readable text across light/dark themes.
+                      foregroundColor: signInTextColor,
                       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing16),
                     ),
                     child: Text(
                       'Sign In',
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: signInTextColor, // Avoid inheriting a conflicting text color
                       ),
                     ),
                   ),

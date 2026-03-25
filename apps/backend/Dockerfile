@@ -5,15 +5,25 @@ WORKDIR /app
 # Install dependencies for Prisma
 RUN apk add --no-cache openssl
 
+# Ensure devDependencies are installed in builder stage.
+# We need Nest CLI (devDep) for `npm run build`.
+ENV NODE_ENV=development
+
+# Builder stage dependencies.
+# We keep this as default `npm ci` to avoid flaky npm behavior in the deploy environment.
+
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (include devDependencies for Nest CLI)
+RUN npm ci --include=dev --no-audit --no-fund
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client if the Prisma CLI is available.
+# Some deploy environments may not install devDependencies during Docker builds.
+# Skipping generation when the CLI is missing keeps the build from failing; in
+# many cases `@prisma/client` postinstall already generates the client.
+RUN if [ -x ./node_modules/.bin/prisma ]; then ./node_modules/.bin/prisma generate; else echo "prisma CLI not found; skipping prisma generate"; fi
 
 # Copy source code
 COPY . .

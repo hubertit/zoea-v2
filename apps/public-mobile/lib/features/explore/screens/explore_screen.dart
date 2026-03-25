@@ -14,6 +14,8 @@ import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
 import '../../../core/providers/tours_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/country_provider.dart';
 import '../../../core/providers/weather_provider.dart';
@@ -2338,28 +2340,60 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                           
                           return GestureDetector(
                             onTap: () async {
+                              final isLoggedIn = ref.read(isLoggedInProvider);
+                              if (!isLoggedIn) {
+                                AuthPromptDialog.show(
+                                  context: context,
+                                  title: 'Sign In to Save Favorites',
+                                  message:
+                                      'Create an account or sign in to save your favorite places and access them anytime.',
+                                  icon: Icons.favorite,
+                                );
+                                return;
+                              }
+
                               try {
-                                final favoritesService = ref.read(favoritesServiceProvider);
-                                await favoritesService.toggleFavorite(listingId: id);
-                                
+                                final favoritesService =
+                                    ref.read(favoritesServiceProvider);
+                                await favoritesService
+                                    .toggleFavorite(listingId: id);
+
                                 ref.invalidate(isListingFavoritedProvider(id));
-                                ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 20)));
-                                
+                                ref.invalidate(
+                                  favoritesProvider(
+                                    const FavoritesParams(page: 1, limit: 20),
+                                  ),
+                                );
+
                                 if (context.mounted) {
                                   final isFavorited = isFavoritedAsync.value ?? false;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     AppTheme.successSnackBar(
-                                      message: isFavorited 
-                                          ? AppConfig.favoriteRemovedMessage 
+                                      message: isFavorited
+                                          ? AppConfig.favoriteRemovedMessage
                                           : AppConfig.favoriteAddedMessage,
                                     ),
                                   );
                                 }
                               } catch (e) {
+                                final errorText = e.toString();
+                                if (context.mounted &&
+                                    errorText.contains('Unauthorized')) {
+                                  AuthPromptDialog.show(
+                                    context: context,
+                                    title: 'Sign In to Save Favorites',
+                                    message:
+                                        'Your session has expired. Please sign in again to save favorites.',
+                                    icon: Icons.favorite,
+                                  );
+                                  return;
+                                }
+
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     AppTheme.errorSnackBar(
-                                      message: 'Failed to update favorite: ${e.toString().replaceFirst('Exception: ', '')}',
+                                      message:
+                                          'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
                                     ),
                                   );
                                 }

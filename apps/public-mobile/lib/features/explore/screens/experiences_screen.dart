@@ -9,6 +9,8 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/tours_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/utils/price_formatter.dart';
 
 class ExperiencesScreen extends ConsumerStatefulWidget {
@@ -271,14 +273,48 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         context.push('/tour/$id');
       },
       onFavorite: () async {
-        // Toggle favorite for tour
-        final favoritesService = ref.read(favoritesServiceProvider);
-        if (isFavorite) {
-          await favoritesService.removeFromFavorites(tourId: id);
-        } else {
-          await favoritesService.addTourToFavorites(id);
+        final isLoggedIn = ref.read(isLoggedInProvider);
+        if (!isLoggedIn) {
+          AuthPromptDialog.show(
+            context: context,
+            title: 'Sign In to Save Favorites',
+            message: 'Create an account or sign in to save your favorite tours and access them anytime.',
+            returnPath: '/tour/$id',
+            icon: Icons.favorite,
+          );
+          return;
         }
-        ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 1000)));
+
+        try {
+          // Toggle favorite for tour
+          final favoritesService = ref.read(favoritesServiceProvider);
+          if (isFavorite) {
+            await favoritesService.removeFromFavorites(tourId: id);
+          } else {
+            await favoritesService.addTourToFavorites(id);
+          }
+          ref.invalidate(
+            favoritesProvider(const FavoritesParams(page: 1, limit: 1000)),
+          );
+        } catch (e) {
+          final errorText = e.toString();
+          if (errorText.contains('Unauthorized')) {
+            AuthPromptDialog.show(
+              context: context,
+              title: 'Sign In to Save Favorites',
+              message: 'Your session has expired. Please sign in again to save favorites.',
+              returnPath: '/tour/$id',
+              icon: Icons.favorite,
+            );
+            return;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            AppTheme.errorSnackBar(
+              message: 'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+            ),
+          );
+        }
       },
       isFavorite: isFavorite,
     );

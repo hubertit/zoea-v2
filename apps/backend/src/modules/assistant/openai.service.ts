@@ -59,7 +59,13 @@ export class OpenAIService {
     if (!this.openai) {
       await this.initializeOpenAI();
       if (!this.openai) {
-        throw new Error('OpenAI not configured');
+        // Don't crash the whole API when OpenAI isn't configured.
+        // Return a friendly fallback so conversation history can still work.
+        return {
+          text: 'AI assistant is temporarily unavailable. Please try again later.',
+          cards: [],
+          suggestions: [],
+        };
       }
     }
 

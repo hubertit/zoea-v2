@@ -469,10 +469,25 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                             }
                           }
                         } catch (e) {
+                          final errorText = e.toString();
                           if (context.mounted) {
+                            if (errorText.contains('Unauthorized')) {
+                              AuthPromptDialog.show(
+                                context: context,
+                                title: 'Sign In to Save Favorites',
+                                message:
+                                    'Your session has expired. Please sign in again to save favorites.',
+                                returnPath:
+                                    '/accommodation/${widget.accommodationId}',
+                                icon: Icons.favorite,
+                              );
+                              return;
+                            }
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               AppTheme.errorSnackBar(
-                                message: e.toString().replaceFirst('Exception: ', ''),
+                                message:
+                                    errorText.replaceFirst('Exception: ', ''),
                               ),
                             );
                           }

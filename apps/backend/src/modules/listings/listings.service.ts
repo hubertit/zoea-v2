@@ -212,13 +212,14 @@ export class ListingsService {
   async getRandom(limit = 10) {
     // Get random listing IDs using PostgreSQL's random() function
     // Only select ID to avoid geography column deserialization issues
-    // Filter by type = 'restaurant' for Near Me section
     const listings = await this.prisma.$queryRaw<Array<{ id: string }>>`
       SELECT l.id
       FROM listings l
+      LEFT JOIN categories c ON l.category_id = c.id
       WHERE l.status = 'active' 
         AND l.deleted_at IS NULL
         AND l.type = 'restaurant'
+        AND c.slug = 'restaurants'
       ORDER BY RANDOM()
       LIMIT ${limit}
     `;

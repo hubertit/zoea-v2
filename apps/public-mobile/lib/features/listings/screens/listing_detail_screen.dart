@@ -291,10 +291,25 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                                     );
                                   }
                                 } catch (e) {
+                                  final errorText = e.toString();
                                   if (mounted) {
+                                    if (errorText.contains('Unauthorized')) {
+                                      AuthPromptDialog.show(
+                                        context: context,
+                                        title: 'Sign In to Save Favorites',
+                                        message:
+                                            'Your session has expired. Please sign in again to save favorites.',
+                                        returnPath:
+                                            '/listings/${widget.listingId}',
+                                        icon: Icons.favorite,
+                                      );
+                                      return;
+                                    }
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       AppTheme.errorSnackBar(
-                                        message: 'Failed to update favorite: ${e.toString().replaceFirst('Exception: ', '')}',
+                                        message:
+                                            'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
                                       ),
                                     );
                                   }

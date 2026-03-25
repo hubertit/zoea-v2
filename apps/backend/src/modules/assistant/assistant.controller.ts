@@ -8,7 +8,8 @@ import {
   UseGuards,
   Request,
   HttpCode,
-  HttpStatus
+  HttpStatus,
+  UnauthorizedException
 } from '@nestjs/common';
 import { 
   ApiTags, 
@@ -88,7 +89,11 @@ export class AssistantController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or missing token' })
   async getConversations(@Request() req) {
-    return this.assistantService.getConversations(req.user.id);
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+    return this.assistantService.getConversations(userId);
   }
 
   @Get('conversations/:id/messages')
@@ -119,7 +124,11 @@ export class AssistantController {
   @ApiResponse({ status: 403, description: 'Forbidden - Not authorized to view this conversation' })
   @ApiResponse({ status: 404, description: 'Conversation not found' })
   async getMessages(@Request() req, @Param('id') conversationId: string) {
-    return this.assistantService.getMessages(conversationId, req.user.id);
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+    return this.assistantService.getMessages(conversationId, userId);
   }
 
   @Delete('conversations/:id')
@@ -146,7 +155,11 @@ export class AssistantController {
   @ApiResponse({ status: 403, description: 'Forbidden - Not authorized to delete this conversation' })
   @ApiResponse({ status: 404, description: 'Conversation not found' })
   async deleteConversation(@Request() req, @Param('id') conversationId: string) {
-    return this.assistantService.deleteConversation(conversationId, req.user.id);
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+    return this.assistantService.deleteConversation(conversationId, userId);
   }
 }
 

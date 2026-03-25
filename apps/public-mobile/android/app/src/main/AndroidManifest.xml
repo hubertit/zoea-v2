@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Needed for all build variants (including release) -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Zoea Africa"
         android:name="${applicationName}"
