@@ -4,6 +4,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://zoea-africa.qts
 const HEALTH_ENDPOINT = '/health';
 const TIMEOUT = 5000; // 5 seconds
 
+function healthRequestUrl(): string {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/api/health`;
+  }
+  return `${API_BASE_URL.replace(/\/$/, '')}${HEALTH_ENDPOINT}`;
+}
+
 export interface HealthStatus {
   status: 'ok' | 'error';
   timestamp?: string;
@@ -18,7 +25,7 @@ export interface HealthStatus {
 export async function checkHealth(): Promise<boolean> {
   try {
     const response = await axios.get<HealthStatus>(
-      `${API_BASE_URL}${HEALTH_ENDPOINT}`,
+      healthRequestUrl(),
       {
         timeout: TIMEOUT,
         headers: {
