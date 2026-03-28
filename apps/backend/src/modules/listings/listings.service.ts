@@ -10,6 +10,8 @@ export class ListingsService {
     page?: number;
     limit?: number;
     type?: string;
+    /** Comma-separated listing_type values (e.g. mall,market,boutique). If set, overrides single `type`. */
+    types?: string;
     status?: string;
     cityId?: string;
     countryId?: string;
@@ -23,12 +25,24 @@ export class ListingsService {
     rating?: number;
     sortBy?: string;
   }) {
-    const { page = 1, limit = 20, type, status, cityId, countryId, categoryId, merchantId, isFeatured, minPrice, maxPrice, search, amenities, rating, sortBy = 'popular' } = params;
+    const { page = 1, limit = 20, type, types, status, cityId, countryId, categoryId, merchantId, isFeatured, minPrice, maxPrice, search, amenities, rating, sortBy = 'popular' } = params;
     const skip = (page - 1) * limit;
+
+    const typeInList =
+      types
+        ?.split(',')
+        .map((t) => t.trim())
+        .filter(Boolean) ?? [];
+    const typeFilter: Prisma.ListingWhereInput['type'] =
+      typeInList.length > 0
+        ? ({ in: typeInList as any } as any)
+        : type
+          ? (type as any)
+          : undefined;
 
     const where: Prisma.ListingWhereInput = {
       deletedAt: null,
-      ...(type && { type: type as any }),
+      ...(typeFilter !== undefined && { type: typeFilter }),
       ...(status && { status: status as any }),
       ...(cityId && { cityId }),
       // Filter by country through city relation since countryId may not be populated on listings

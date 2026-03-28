@@ -12,6 +12,8 @@ async function bootstrap() {
     helmet({
       contentSecurityPolicy: false,
       crossOriginEmbedderPolicy: false,
+      // Allow cross-origin browsers (admin SPA) to read JSON responses; avoids CORP blocking with CORS.
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
     }),
   );
   // CORS configuration - support multiple origins

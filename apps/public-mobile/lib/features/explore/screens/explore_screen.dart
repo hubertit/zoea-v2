@@ -10,6 +10,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
 import '../../../core/providers/events_provider.dart';
+import '../data/home_explore_categories.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
@@ -1024,15 +1025,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     // If we have previous data, show it while silently refreshing
     if (categoriesAsync.hasValue && categoriesAsync.value != null) {
       final categories = categoriesAsync.value!;
-      // Filter only active categories and sort by sortOrder
-      final activeCategories = categories
-          .where((cat) => cat['isActive'] == true)
-          .toList()
-        ..sort((a, b) => (a['sortOrder'] as int? ?? 0).compareTo(b['sortOrder'] as int? ?? 0));
-
-      if (activeCategories.isEmpty) {
-        return const SizedBox.shrink();
-      }
+      final homeCategories = homeExploreCategoriesFromApi(categories);
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1071,9 +1064,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisSpacing: 8,
               childAspectRatio: 1.3,
             ),
-            itemCount: activeCategories.length > 6 ? 6 : activeCategories.length,
+            itemCount: homeCategories.length,
             itemBuilder: (context, index) {
-              final category = activeCategories[index];
+              final category = homeCategories[index];
               return _buildCategoryCardFromApi(category);
             },
           ),
@@ -1084,15 +1077,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     // Only show loading state if we don't have previous data
     return categoriesAsync.when(
       data: (categories) {
-        // Filter only active categories and sort by sortOrder
-        final activeCategories = categories
-            .where((cat) => cat['isActive'] == true)
-            .toList()
-          ..sort((a, b) => (a['sortOrder'] as int? ?? 0).compareTo(b['sortOrder'] as int? ?? 0));
-
-        if (activeCategories.isEmpty) {
-          return const SizedBox.shrink();
-        }
+        final homeCategories = homeExploreCategoriesFromApi(categories);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1133,9 +1118,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 mainAxisSpacing: 8,
                 childAspectRatio: 1.3,
               ),
-              itemCount: activeCategories.length > 6 ? 6 : activeCategories.length,
+              itemCount: homeCategories.length,
               itemBuilder: (context, index) {
-                final category = activeCategories[index];
+                final category = homeCategories[index];
                 return _buildCategoryCardFromApi(category);
               },
             ),
@@ -1162,7 +1147,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisSpacing: 8,
               childAspectRatio: 1.3,
             ),
-            itemCount: 6,
+            itemCount: kHomeExploreCategoryTiles.length,
             itemBuilder: (context, index) {
               return _buildSkeletonCategoryCard();
             },
@@ -1171,6 +1156,32 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
       ),
       error: (error, stack) => const SizedBox.shrink(), // Hide on error
     );
+  }
+
+  /// Home + “View more” tiles: **Stay** and **Events** use dedicated flows; everything else opens
+  /// [CategoryPlacesScreen] which loads listings by category id (resolved from slug).
+  void _navigateExploreCategoryTap(BuildContext context, Map<String, dynamic> category) {
+    final slug = category['slug'] as String? ?? '';
+    final name = category['name'] as String? ?? '';
+    final navOverride = category['_homeNav'] as String?;
+
+    if (navOverride == HomeCategoryNav.stay.name ||
+        slug == 'accommodation' ||
+        name.toLowerCase() == 'accommodation') {
+      context.go('/accommodation');
+      return;
+    }
+    if (navOverride == HomeCategoryNav.events.name ||
+        slug == 'events' ||
+        name.toLowerCase() == 'events') {
+      context.go('/events');
+      return;
+    }
+    if (slug.isNotEmpty) {
+      context.push('/category/$slug');
+      return;
+    }
+    context.push('/category/${name.toLowerCase().replaceAll(' ', '-')}');
   }
 
   IconData _getIconForCategory(String? iconName) {
@@ -1201,26 +1212,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
 
   Widget _buildCategoryCardFromApi(Map<String, dynamic> category) {
     final name = category['name'] as String? ?? 'Category';
-    final slug = category['slug'] as String? ?? '';
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 
     return GestureDetector(
-      onTap: () {
-        // Navigate to Stay tab if Accommodation category
-        if (slug == 'accommodation' || name.toLowerCase() == 'accommodation') {
-          context.go('/accommodation');
-        } 
-        // Navigate to Events screen if Events category
-        else if (slug == 'events' || name.toLowerCase() == 'events') {
-          context.go('/events');
-        } 
-        else if (slug.isNotEmpty) {
-          context.push('/category/$slug');
-        } else {
-          context.push('/category/${name.toLowerCase().replaceAll(' ', '-')}');
-        }
-      },
+      onTap: () => _navigateExploreCategoryTap(context, category),
       child: Container(
         decoration: BoxDecoration(
           color: context.cardColor,
@@ -1915,26 +1911,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
 
   Widget _buildBottomSheetCategoryCardFromApi(Map<String, dynamic> category) {
     final name = category['name'] as String? ?? 'Category';
-    final slug = category['slug'] as String? ?? '';
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
-        // Navigate to Stay tab if Accommodation category
-        if (slug == 'accommodation' || name.toLowerCase() == 'accommodation') {
-          context.go('/accommodation');
-        } 
-        // Navigate to Events screen if Events category
-        else if (slug == 'events' || name.toLowerCase() == 'events') {
-          context.go('/events');
-        } 
-        else if (slug.isNotEmpty) {
-          context.push('/category/$slug');
-        } else {
-          context.push('/category/${name.toLowerCase().replaceAll(' ', '-')}');
-        }
+        _navigateExploreCategoryTap(context, category);
       },
       child: Container(
         decoration: BoxDecoration(

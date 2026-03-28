@@ -12,6 +12,8 @@ class ListingsService {
     int? page,
     int? limit,
     String? type,
+    /// Comma-separated backend listing types (e.g. mall,market,boutique). Sent as `types` query param.
+    String? types,
     String? category,
     String? city,
     String? country,
@@ -29,6 +31,7 @@ class ListingsService {
       if (page != null) queryParams['page'] = page;
       if (limit != null) queryParams['limit'] = limit;
       if (type != null) queryParams['type'] = type;
+      if (types != null && types.isNotEmpty) queryParams['types'] = types;
       if (category != null) queryParams['categoryId'] = category; // Backend expects categoryId
       if (city != null) queryParams['cityId'] = city; // Backend expects cityId
       if (country != null) queryParams['countryId'] = country; // Backend expects countryId

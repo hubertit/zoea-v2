@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { toast } from '../../components/Toaster';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
 import Icon, { faEnvelope, faPhone, faArrowLeft, faBox } from '../../components/Icon';
 
 export default function ForgotPasswordPage() {
@@ -48,7 +47,8 @@ export default function ForgotPasswordPage() {
 
     try {
       // TODO: Replace with actual API call
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://zoea-africa.qtsoftwareltd.com/api'}/api/auth/password/reset/request`, {
+      const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://zoea-africa.qtsoftwareltd.com/api').replace(/\/$/, '');
+      const response = await fetch(`${apiBase}/auth/password/reset/request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,11 +65,11 @@ export default function ForgotPasswordPage() {
 
       setIsSubmitted(true);
       toast.success(`Reset code sent to your ${method === 'email' ? 'email' : 'phone'}`);
-    } catch (error: any) {
-      setErrors({
-        general: error.message || 'Failed to send reset code. Please try again.',
-      });
-      toast.error(error.message || 'Failed to send reset code. Please try again.');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to send reset code. Please try again.';
+      setErrors({ general: message });
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your {method === 'email' ? 'email' : 'phone'}</h2>
             <p className="text-gray-600 mb-6">
-              We've sent a reset code to {method === 'email' ? email : phone}
+              We&apos;ve sent a reset code to {method === 'email' ? email : phone}
             </p>
             <div className="space-y-4">
               <Link href="/auth/login">
@@ -101,7 +101,7 @@ export default function ForgotPasswordPage() {
                 }}
                 className="text-sm text-[#0e1a30] hover:text-[#0b1526]"
               >
-                Didn't receive the code? Try again
+                Didn&apos;t receive the code? Try again
               </button>
             </div>
           </div>

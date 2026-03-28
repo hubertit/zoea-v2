@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/events_provider.dart';
@@ -12,6 +11,9 @@ import 'package:intl/intl.dart';
 import '../widgets/event_filter_sheet.dart';
 import '../widgets/event_calendar_sheet.dart';
 import '../../../core/utils/price_formatter.dart';
+
+/// Temporary: MICE tab uses mock data. Set to `true` to show the tab again.
+const bool kShowEventsMiceTab = false;
 
 class EventsScreen extends ConsumerStatefulWidget {
   const EventsScreen({super.key});
@@ -31,7 +33,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(
+      length: kShowEventsMiceTab ? 4 : 3,
+      vsync: this,
+    );
     _tabController.addListener(_onTabChanged);
     
     // Shimmer animation controller
@@ -66,6 +71,9 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
           break;
         case 2:
           eventsNotifier.loadThisWeekEvents();
+          break;
+        default:
+          // Index 3: MICE tab (mock data only) when [kShowEventsMiceTab] is true
           break;
       }
     }
@@ -146,11 +154,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
                   labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  tabs: const [
-                    Tab(text: 'Trending'),
-                    Tab(text: 'Near Me'),
-                    Tab(text: 'This Week'),
-                    Tab(text: 'MICE'),
+                  tabs: [
+                    const Tab(text: 'Trending'),
+                    const Tab(text: 'Near Me'),
+                    const Tab(text: 'This Week'),
+                    if (kShowEventsMiceTab) const Tab(text: 'MICE'),
                   ],
                 ),
       ),
@@ -160,7 +168,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
           _buildEventsList(eventsState),
           _buildEventsList(eventsState),
           _buildEventsList(eventsState),
-          _buildMiceEventsList(),
+          if (kShowEventsMiceTab) _buildMiceEventsList(),
         ],
       ),
     );
@@ -168,12 +176,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
 
   Widget _buildMiceEventsList() {
     final miceEvents = _getMockMiceEvents();
-    
+
     return RefreshIndicator(
       color: context.primaryColorTheme,
       backgroundColor: context.cardColor,
       onRefresh: () async {
-        // MICE events are mock data, just refresh the UI
         setState(() {});
         await Future.delayed(const Duration(milliseconds: 500));
       },
@@ -205,11 +212,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Event image
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: CachedNetworkImage(
-              imageUrl: event['image'],
+              imageUrl: event['image'] as String,
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -227,7 +233,6 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
               ),
             ),
           ),
-          // Event content
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -237,7 +242,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                   children: [
                     Expanded(
                       child: Text(
-                        event['name'],
+                        event['name'] as String,
                         style: context.headlineSmall.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -253,7 +258,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        event['category'],
+                        event['category'] as String,
                         style: context.bodySmall.copyWith(
                           color: context.primaryColorTheme,
                           fontWeight: FontWeight.w500,
@@ -273,7 +278,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        event['location'],
+                        event['location'] as String,
                         style: context.bodyMedium.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -291,19 +296,18 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      event['date'],
+                      event['date'] as String,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
                     ),
                     const Spacer(),
-                    // No pricing information for MICE events
                   ],
                 ),
                 if (event['description'] != null) ...[
                   const SizedBox(height: 12),
                   Text(
-                    event['description'],
+                    event['description'] as String,
                     style: context.bodyMedium.copyWith(
                       height: 1.4,
                     ),
@@ -854,6 +858,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
       case 2:
         eventsNotifier.loadThisWeekEvents();
         break;
+      default:
+        break;
     }
   }
 
@@ -874,6 +880,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
         break;
       case 2:
         eventsNotifier.loadThisWeekEvents();
+        break;
+      default:
         break;
     }
   }
@@ -1003,12 +1011,9 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
   }
 
   List<Map<String, dynamic>> _getMockMiceEvents() {
-    // KCC (Kigali Convention Centre) image for all MICE events
-    // TODO: Replace with actual KCC image URL from desktop/uploaded media
-    const String kccImage = 'https://res.cloudinary.com/dzcvbnvh3/image/upload/v1/kcc.jpg'; // Update this URL with the actual KCC image
-    
+    const String kccImage = 'https://res.cloudinary.com/dzcvbnvh3/image/upload/v1/kcc.jpg';
+
     return [
-      // 2026 Events
       {
         'name': '2026 African Men\'s Handball Championship',
         'location': 'Kigali Arena, Kigali',
@@ -1099,7 +1104,6 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
         'isFree': null,
         'description': 'International summit focusing on sustainable agriculture, food security, and agricultural innovation in Africa. Brings together farmers, researchers, and policymakers.',
       },
-      // 2027 Events
       {
         'name': 'Rwanda Innovation Week 2027',
         'location': 'Kigali Convention Centre, Kigali',

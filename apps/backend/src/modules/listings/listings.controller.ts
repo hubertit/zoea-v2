@@ -29,6 +29,7 @@ export class ListingsController {
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1, description: 'Page number (default: 1)' })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20, description: 'Items per page (default: 20)' })
   @ApiQuery({ name: 'type', required: false, enum: ['hotel', 'restaurant', 'attraction', 'activity', 'rental', 'nightlife', 'spa'], description: 'Filter by listing type' })
+  @ApiQuery({ name: 'types', required: false, type: String, description: 'Comma-separated listing types (e.g. mall,market,boutique). Overrides `type` when both are provided.' })
   @ApiQuery({ name: 'status', required: false, enum: ['draft', 'pending_review', 'active', 'inactive'], description: 'Filter by listing status' })
   @ApiQuery({ name: 'cityId', required: false, type: String, description: 'Filter by city UUID' })
   @ApiQuery({ name: 'countryId', required: false, type: String, description: 'Filter by country UUID' })

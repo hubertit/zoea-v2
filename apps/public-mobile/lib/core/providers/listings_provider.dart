@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/listings_service.dart';
 
@@ -10,6 +11,8 @@ class ListingsParams {
   final int? page;
   final int? limit;
   final String? type;
+  /// Comma-separated listing types for GET /listings?types=
+  final String? types;
   final String? category;
   final String? city;
   final String? country;
@@ -25,6 +28,7 @@ class ListingsParams {
     this.page,
     this.limit,
     this.type,
+    this.types,
     this.category,
     this.city,
     this.country,
@@ -45,6 +49,7 @@ class ListingsParams {
           page == other.page &&
           limit == other.limit &&
           type == other.type &&
+          types == other.types &&
           category == other.category &&
           city == other.city &&
           country == other.country &&
@@ -61,6 +66,7 @@ class ListingsParams {
       page.hashCode ^
       limit.hashCode ^
       type.hashCode ^
+      types.hashCode ^
       category.hashCode ^
       city.hashCode ^
       country.hashCode ^
@@ -80,6 +86,7 @@ final listingsProvider = FutureProvider.family<Map<String, dynamic>, ListingsPar
     page: params.page,
     limit: params.limit,
     type: params.type,
+    types: params.types,
     category: params.category,
     city: params.city,
     country: params.country,
@@ -91,6 +98,115 @@ final listingsProvider = FutureProvider.family<Map<String, dynamic>, ListingsPar
     sortBy: params.sortBy,
     status: params.status,
   );
+});
+
+/// Shopping "All" tab: merge active listings from each subcategory (no backend change).
+class ShoppingMergedListingsParams {
+  final List<String> subcategoryIds;
+  final int limitPerCategory;
+  final double? minPrice;
+  final double? maxPrice;
+  final double? rating;
+  final bool? isFeatured;
+  final String? sortBy;
+
+  ShoppingMergedListingsParams({
+    required List<String> subcategoryIds,
+    this.limitPerCategory = 100,
+    this.minPrice,
+    this.maxPrice,
+    this.rating,
+    this.isFeatured,
+    this.sortBy,
+  }) : subcategoryIds = List<String>.from(subcategoryIds)..sort();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ShoppingMergedListingsParams &&
+          listEquals(subcategoryIds, other.subcategoryIds) &&
+          limitPerCategory == other.limitPerCategory &&
+          minPrice == other.minPrice &&
+          maxPrice == other.maxPrice &&
+          rating == other.rating &&
+          isFeatured == other.isFeatured &&
+          sortBy == other.sortBy;
+
+  @override
+  int get hashCode => Object.hash(
+        Object.hashAll(subcategoryIds),
+        limitPerCategory,
+        minPrice,
+        maxPrice,
+        rating,
+        isFeatured,
+        sortBy,
+      );
+}
+
+double _listingRatingSortValue(Map<String, dynamic> listing) {
+  final v = listing['rating'];
+  if (v == null) return 0;
+  if (v is num) return v.toDouble();
+  return double.tryParse(v.toString()) ?? 0;
+}
+
+int _listingFeaturedSortValue(Map<String, dynamic> listing) =>
+    listing['isFeatured'] == true ? 1 : 0;
+
+final shoppingMergedListingsProvider =
+    FutureProvider.family<Map<String, dynamic>, ShoppingMergedListingsParams>((ref, params) async {
+  if (params.subcategoryIds.isEmpty) {
+    return {
+      'data': <Map<String, dynamic>>[],
+      'meta': {'total': 0, 'page': 1, 'limit': 0, 'totalPages': 0},
+    };
+  }
+
+  final listingsService = ref.read(listingsServiceProvider);
+  final futures = params.subcategoryIds.map(
+    (id) => listingsService.getListings(
+      page: 1,
+      limit: params.limitPerCategory,
+      category: id,
+      minPrice: params.minPrice,
+      maxPrice: params.maxPrice,
+      rating: params.rating,
+      isFeatured: params.isFeatured,
+      sortBy: params.sortBy ?? 'rating_desc',
+      status: 'active',
+    ),
+  );
+  final results = await Future.wait(futures);
+
+  final byId = <String, Map<String, dynamic>>{};
+  for (final response in results) {
+    final list = response['data'] as List? ?? [];
+    for (final item in list) {
+      if (item is Map) {
+        final m = Map<String, dynamic>.from(item);
+        final id = m['id'] as String?;
+        if (id != null) byId[id] = m;
+      }
+    }
+  }
+
+  final merged = byId.values.toList();
+  merged.sort((a, b) {
+    final byRating = _listingRatingSortValue(b).compareTo(_listingRatingSortValue(a));
+    if (byRating != 0) return byRating;
+    return _listingFeaturedSortValue(b).compareTo(_listingFeaturedSortValue(a));
+  });
+
+  return {
+    'data': merged,
+    'meta': {
+      'total': merged.length,
+      'page': 1,
+      'limit': merged.length,
+      'totalPages': 1,
+    },
+  };
 });
 
 /// Provider for featured listings

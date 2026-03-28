@@ -394,6 +394,24 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   // Getter for the category ID to use for listings
   String? get _categoryIdForListings => _selectedCategoryId ?? _categoryId;
 
+  ListingsParams _listingsParamsForCategoryTab({
+    required String categoryId,
+    String? sortBy,
+    String? listingType,
+  }) {
+    return ListingsParams(
+      page: 1,
+      limit: _pageSize,
+      category: categoryId,
+      type: listingType,
+      rating: _minRating,
+      minPrice: _minPrice,
+      maxPrice: _maxPrice,
+      isFeatured: _isFeatured,
+      sortBy: sortBy,
+    );
+  }
+
   // Get category ID and sort for a specific tab index
   Map<String, dynamic> _getTabParams(int tabIndex) {
     if (tabIndex == 0) {
@@ -402,6 +420,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
         'categoryId': _currentParentCategoryId ?? _categoryId,
         'sortBy': 'rating_desc', // Show best-rated items first for better discovery
         'showSubcategoryBadge': true, // Flag to show subcategory badges
+        'listingType': null,
       };
     } else {
       // Subcategory tab
@@ -412,6 +431,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
           'categoryId': subcategory['id'] as String?,
           'sortBy': null,
           'showSubcategoryBadge': false,
+          'listingType': null,
         };
       }
     }
@@ -419,6 +439,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
       'categoryId': _categoryId,
       'sortBy': null,
       'showSubcategoryBadge': false,
+      'listingType': null,
     };
   }
 
@@ -426,23 +447,110 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     final tabParams = _getTabParams(tabIndex);
     final categoryId = tabParams['categoryId'] as String?;
     final sortBy = tabParams['sortBy'] as String?;
+    final listingType = tabParams['listingType'] as String?;
     final showSubcategoryBadge = tabParams['showSubcategoryBadge'] as bool? ?? false;
     
     if (categoryId == null) {
       return Center(child: Text('Category not found'));
     }
-    
-    final listingsAsync = ref.watch(
-      listingsProvider(
-        ListingsParams(
-          page: 1, // Start from page 1 for each tab
-          limit: _pageSize,
-          category: categoryId,
+
+    if (widget.category == 'shopping' && tabIndex == 0 && _subcategories.isNotEmpty) {
+      final subIds = _subcategories
+          .map((s) => s['id'] as String?)
+          .whereType<String>()
+          .toList();
+      if (subIds.isNotEmpty) {
+        final mergedParams = ShoppingMergedListingsParams(
+          subcategoryIds: subIds,
+          limitPerCategory: 100,
           rating: _minRating,
           minPrice: _minPrice,
           maxPrice: _maxPrice,
           isFeatured: _isFeatured,
+          sortBy: sortBy ?? 'rating_desc',
+        );
+        final mergedAsync = ref.watch(shoppingMergedListingsProvider(mergedParams));
+        return mergedAsync.when(
+          data: (response) {
+            final listings = response['data'] as List? ?? [];
+            if (listings.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.explore,
+                      size: 64,
+                      color: context.secondaryTextColor,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No ${_categoryName?.toLowerCase() ?? widget.category} found',
+                      style: context.headlineSmall.copyWith(
+                        color: context.secondaryTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Check back later for new listings',
+                      style: context.bodyMedium.copyWith(
+                        color: context.secondaryTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return RefreshIndicator(
+              color: context.primaryColorTheme,
+              backgroundColor: context.cardColor,
+              onRefresh: () async {
+                ref.invalidate(shoppingMergedListingsProvider(mergedParams));
+              },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: listings.length,
+                itemBuilder: (context, index) {
+                  final listing = listings[index] as Map<String, dynamic>;
+                  if (_isAccommodation) {
+                    return _buildAccommodationCard(listing, showSubcategoryBadge: showSubcategoryBadge);
+                  }
+                  return _buildRegularListingCard(listing, showSubcategoryBadge: showSubcategoryBadge);
+                },
+              ),
+            );
+          },
+          loading: () => _buildSkeletonLoader(),
+          error: (error, stack) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: context.errorColor),
+                const SizedBox(height: 16),
+                Text(
+                  'Failed to load listings',
+                  style: context.headlineSmall.copyWith(color: context.errorColor),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () {
+                    ref.invalidate(shoppingMergedListingsProvider(mergedParams));
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+
+    final listingsAsync = ref.watch(
+      listingsProvider(
+        _listingsParamsForCategoryTab(
+          categoryId: categoryId,
           sortBy: sortBy,
+          listingType: listingType,
         ),
       ),
     );
@@ -488,15 +596,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
           onRefresh: () async {
             ref.invalidate(
               listingsProvider(
-                ListingsParams(
-                  page: 1,
-                  limit: _pageSize,
-                  category: categoryId,
-                  rating: _minRating,
-                  minPrice: _minPrice,
-                  maxPrice: _maxPrice,
-                  isFeatured: _isFeatured,
+                _listingsParamsForCategoryTab(
+                  categoryId: categoryId,
                   sortBy: sortBy,
+                  listingType: listingType,
                 ),
               ),
             );
@@ -537,15 +640,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
               onPressed: () {
                 ref.invalidate(
                   listingsProvider(
-                    ListingsParams(
-                      page: 1,
-                      limit: _pageSize,
-                      category: categoryId,
-                      rating: _minRating,
-                      minPrice: _minPrice,
-                      maxPrice: _maxPrice,
-                      isFeatured: _isFeatured,
+                    _listingsParamsForCategoryTab(
+                      categoryId: categoryId,
                       sortBy: sortBy,
+                      listingType: listingType,
                     ),
                   ),
                 );
@@ -622,7 +720,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 ListingsParams(
                   page: _currentPage,
                   limit: _pageSize,
-                  category: _categoryId,
+                  category: _categoryIdForListings,
                   rating: _minRating,
                   minPrice: _minPrice,
                   maxPrice: _maxPrice,
@@ -712,7 +810,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     ListingsParams(
                       page: _currentPage,
                       limit: _pageSize,
-                      category: _categoryId,
+                      category: _categoryIdForListings,
                       rating: _minRating,
                       minPrice: _minPrice,
                       maxPrice: _maxPrice,

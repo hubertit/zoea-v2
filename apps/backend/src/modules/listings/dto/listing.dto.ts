@@ -288,6 +288,14 @@ export class ListingQueryDto {
   @IsString() @IsOptional()
   type?: string;
 
+  @ApiPropertyOptional({
+    description:
+      'Comma-separated listing_type values (e.g. mall,market,boutique). When set, listings must match one of these types. Overrides single `type` when both are sent.',
+    example: 'mall,market,boutique',
+  })
+  @IsString() @IsOptional()
+  types?: string;
+
   @ApiPropertyOptional({ enum: ['draft', 'pending_review', 'active', 'inactive'] })
   @IsString() @IsOptional()
   status?: string;

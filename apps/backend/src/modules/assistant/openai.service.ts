@@ -4,7 +4,10 @@ import { IntegrationsService } from '../integrations/integrations.service';
 import { ContentSearchService, SearchResult } from './content-search.service';
 
 interface OpenAIConfig {
-  apiKey: string;
+  // Some deployments store the key as `apiKey`, others as `api_key`.
+  // We support both for backward compatibility.
+  apiKey?: string;
+  api_key?: string;
   model?: string;
   maxTokens?: number;
   temperature?: number;
@@ -25,6 +28,8 @@ interface ChatResponse {
 export class OpenAIService {
   private readonly logger = new Logger(OpenAIService.name);
   private openai: OpenAI | null = null;
+  // Keep this low to avoid upstream gateway 504s when outbound network is flaky.
+  private readonly openaiRequestTimeoutMs = 8000;
 
   constructor(
     private integrationsService: IntegrationsService,
@@ -35,13 +40,30 @@ export class OpenAIService {
 
   private async initializeOpenAI() {
     try {
-      const config = await this.integrationsService.getConfig<OpenAIConfig>('openai');
-      if (config?.apiKey) {
-        this.openai = new OpenAI({ apiKey: config.apiKey });
-        this.logger.log('OpenAI initialized successfully');
-      } else {
-        this.logger.warn('OpenAI not configured - assistant will not work');
+      const integration = await this.integrationsService.findByName('openai').catch(() => null);
+      if (!integration) {
+        this.logger.warn("Integration 'openai' not found - assistant will not work");
+        return;
       }
+
+      if (!integration.isActive) {
+        this.logger.warn("Integration 'openai' is inactive - assistant will not work");
+        return;
+      }
+
+      const config = integration.config as OpenAIConfig | null;
+      const apiKeyRaw = (config as any)?.apiKey ?? (config as any)?.api_key;
+      const apiKey = typeof apiKeyRaw === 'string' ? apiKeyRaw.trim() : '';
+
+      if (apiKey) {
+        this.openai = new OpenAI({ apiKey });
+        this.logger.log('OpenAI initialized successfully');
+        return;
+      }
+
+      this.logger.warn(
+        "OpenAI not configured - integration 'openai' has an empty api key",
+      );
     } catch (error) {
       this.logger.error('Failed to initialize OpenAI', error);
     }
@@ -70,6 +92,7 @@ export class OpenAIService {
     }
 
     const config = await this.integrationsService.getConfig<OpenAIConfig>('openai');
+    // config can be null if integration is inactive or missing.
 
     // Build messages with system prompt
     const messages: ChatMessage[] = [
@@ -85,15 +108,19 @@ export class OpenAIService {
     ];
 
     try {
-      // Call OpenAI with function calling
-      const response = await this.openai.chat.completions.create({
+      // Call OpenAI with function calling.
+      // If OpenAI is unreachable, we must return fast (avoid 504 gateway timeouts).
+      const response = await this.withTimeout(
+        this.openai.chat.completions.create({
         model: config?.model || 'gpt-4-turbo-preview',
         messages: messages as any,
         functions: this.getFunctions(),
         function_call: 'auto',
         temperature: config?.temperature || 0.7,
         max_tokens: config?.maxTokens || 1000,
-      });
+        }),
+        this.openaiRequestTimeoutMs,
+      );
 
       const choice = response.choices[0];
       let cards: SearchResult[] = [];
@@ -113,47 +140,13 @@ export class OpenAIService {
             lat: location?.lat,
             lng: location?.lng,
           });
-
-          // Call OpenAI again to generate natural response with results
-          const followUpMessages = [
-            ...messages,
-            choice.message as any,
-            {
-              role: 'function' as const,
-              name: functionName,
-              content: JSON.stringify({ results: cards }),
-            },
-          ];
-
-          const followUpResponse = await this.openai.chat.completions.create({
-            model: config?.model || 'gpt-4-turbo-preview',
-            messages: followUpMessages as any,
-            temperature: 0.7,
-            max_tokens: 500,
-          });
-
-          assistantText = this.cleanResponseText(followUpResponse.choices[0].message.content || '');
+            // Important: avoid a second OpenAI call.
+            // The additional round trip frequently hits gateway timeouts (504).
+            assistantText = this.composeShortAssistantTextForSearch(userMessage, cards);
         } else if (functionName === 'getCategories') {
           const categories = await this.contentSearchService.getCategories();
-          
-          const followUpMessages = [
-            ...messages,
-            choice.message as any,
-            {
-              role: 'function' as const,
-              name: functionName,
-              content: JSON.stringify({ categories }),
-            },
-          ];
-
-          const followUpResponse = await this.openai.chat.completions.create({
-            model: config?.model || 'gpt-4-turbo-preview',
-            messages: followUpMessages as any,
-            temperature: 0.7,
-            max_tokens: 500,
-          });
-
-          assistantText = this.cleanResponseText(followUpResponse.choices[0].message.content || '');
+            // Avoid second OpenAI call for the same timeout reason.
+            assistantText = this.composeShortAssistantTextForCategories(userMessage, categories);
         }
       } else {
         // No function call - just return the text response
@@ -169,9 +162,77 @@ export class OpenAIService {
         suggestions,
       };
     } catch (error) {
+      // Connection issues / timeouts should not break the whole endpoint.
+      // Fall back to DB search + templated response.
       this.logger.error('OpenAI chat error', error);
-      throw error;
+      const cards = await this.contentSearchService.searchContent({
+        query: userMessage,
+        limit: 5,
+        lat: location?.lat,
+        lng: location?.lng,
+      });
+
+      const assistantText = this.composeShortAssistantTextForSearch(
+        userMessage,
+        cards,
+      );
+      const suggestions = this.generateSuggestions(userMessage, cards);
+
+      return {
+        text: assistantText,
+        cards,
+        suggestions,
+      };
     }
+  }
+
+  private async withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+    let timeoutHandle: NodeJS.Timeout | null = null;
+
+    const timeoutPromise = new Promise<T>((_, reject) => {
+      timeoutHandle = setTimeout(() => reject(new Error(`OpenAI timeout after ${ms}ms`)), ms);
+    });
+
+    try {
+      return await Promise.race([promise, timeoutPromise]);
+    } finally {
+      if (timeoutHandle) clearTimeout(timeoutHandle);
+    }
+  }
+
+  /**
+   * Generate a short assistant message from tool results locally.
+   * This avoids a second OpenAI call and reduces timeouts.
+   */
+  private composeShortAssistantTextForSearch(userMessage: string, cards: SearchResult[]): string {
+    if (!cards || cards.length === 0) {
+      return `I couldn't find exact matches right now. Tell me what you're looking for (restaurants, hotels, tours, or services) and which area in Rwanda you prefer.`;
+    }
+
+    const top = cards.slice(0, 3);
+    const options = top
+      .map((c, idx) => {
+        const subtitle = c.subtitle ? ` — ${c.subtitle}` : '';
+        return `${idx + 1}. ${c.title}${subtitle}`;
+      })
+      .join(' ');
+
+    // Keep it to 2 sentences max, plus one question.
+    const wantsBudget = /(cheap|budget|expensive|premium|price|under|below|over)/i.test(userMessage);
+    const followUp = wantsBudget
+      ? 'Do you want me to filter further by price or location?'
+      : 'Do you want more options like these, or should I filter by price?';
+
+    return `Here are a few options: ${options}. ${followUp}`;
+  }
+
+  private composeShortAssistantTextForCategories(
+    userMessage: string,
+    categories: Array<{ name: string; slug?: string }>,
+  ): string {
+    const top = (categories || []).slice(0, 8);
+    const names = top.map((c) => c.name).join(', ');
+    return `We have categories like: ${names}. What category would you like to explore first?`;
   }
 
   /**

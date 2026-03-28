@@ -105,31 +105,61 @@ export default function DashboardPage() {
 
         // Fetch recent activity (recent bookings, users, etc.)
         try {
-          const [recentBookings, recentUsers] = await Promise.all([
+          const [bookingsResult, usersResult] = await Promise.allSettled([
             BookingsAPI.listBookings({ limit: 5, page: 1 }),
             UsersAPI.listUsers({ limit: 5, page: 1 }),
           ]);
 
+          const bookingRows =
+            bookingsResult.status === 'fulfilled'
+              ? bookingsResult.value?.data ?? []
+              : [];
+          const userRows =
+            usersResult.status === 'fulfilled' ? usersResult.value?.data ?? [] : [];
+
+          if (bookingsResult.status === 'rejected') {
+            const e = bookingsResult.reason;
+            console.error(
+              'Recent activity: bookings request failed:',
+              e?.message ?? e?.status ?? e,
+              e?.data ?? e?.response?.data
+            );
+          }
+          if (usersResult.status === 'rejected') {
+            const e = usersResult.reason;
+            console.error(
+              'Recent activity: users request failed:',
+              e?.message ?? e?.status ?? e,
+              e?.data ?? e?.response?.data
+            );
+          }
+
           const activities = [
-            ...(recentBookings.data || []).map((b: any) => ({
-              type: 'booking',
-              message: `New booking #${b.bookingNumber} by ${b.user?.fullName || 'User'}`,
-              date: b.createdAt,
+            ...bookingRows.map((b: any) => ({
+              type: 'booking' as const,
+              message: `New booking #${b.bookingNumber ?? b.id} by ${b.user?.fullName || 'User'}`,
+              date: b.createdAt ?? b.bookingDate,
               link: `/dashboard/bookings/${b.id}`,
             })),
-            ...(recentUsers.data || []).map((u: any) => ({
-              type: 'user',
+            ...userRows.map((u: any) => ({
+              type: 'user' as const,
               message: `New user registered: ${u.fullName || u.email || u.phoneNumber}`,
               date: u.createdAt,
               link: `/dashboard/users/${u.id}`,
             })),
           ]
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .filter((a) => a.date != null && a.date !== '')
+            .sort(
+              (a, b) =>
+                new Date(b.date as string).getTime() -
+                new Date(a.date as string).getTime()
+            )
             .slice(0, 10);
 
           setRecentActivity(activities);
-        } catch (error) {
-          console.error('Failed to fetch recent activity:', error);
+        } catch (error: unknown) {
+          const e = error as { message?: string; status?: number; data?: unknown };
+          console.error('Failed to fetch recent activity:', e?.message, e?.status, e?.data);
         }
       } catch (error: any) {
         console.error('Error fetching dashboard stats:', error);

@@ -10,10 +10,6 @@ function normalizeApiBase(raw: string): string {
   return `${t}/api`;
 }
 
-function healthUrlForBase(apiBase: string): string {
-  return `${normalizeApiBase(apiBase)}/health`;
-}
-
 /**
  * Same-origin health probe for the admin UI.
  * The browser calls this route; the server fetches the real API `/health`

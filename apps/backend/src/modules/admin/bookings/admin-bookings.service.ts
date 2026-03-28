@@ -59,6 +59,7 @@ export class AdminBookingsService {
           totalAmount: true,
           currency: true,
           bookingDate: true,
+          createdAt: true,
           user: { select: { id: true, fullName: true, email: true } },
           listing: { select: { id: true, name: true } },
           merchant: { select: { id: true, businessName: true } },
