@@ -14,6 +14,7 @@ import '../../features/user_data_collection/screens/onboarding_data_screen.dart'
 import '../../features/explore/screens/explore_screen.dart';
 import '../../features/explore/screens/specials_screen.dart';
 import '../../features/explore/screens/map_screen.dart';
+import '../../features/explore/screens/near_me_list_screen.dart';
 import '../../features/explore/screens/experiences_screen.dart';
 import '../../features/explore/screens/nightlife_screen.dart';
 import '../../features/explore/screens/shopping_screen.dart';
@@ -394,6 +395,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MapScreen(),
       ),
 
+      GoRoute(
+        path: '/near-me',
+        builder: (context, state) => const NearMeListScreen(),
+      ),
 
       // Experiences Route
       GoRoute(

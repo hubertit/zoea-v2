@@ -1,5 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsUUID, IsNumber, IsObject, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsUUID,
+  IsNumber,
+  IsObject,
+  ValidateNested,
+  IsArray,
+  IsEnum,
+  MaxLength,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class LocationDto {
@@ -10,6 +20,64 @@ class LocationDto {
   @ApiProperty({ description: 'Longitude', example: 30.0644 })
   @IsNumber()
   lng: number;
+}
+
+const cardTypeEnum = ['listing', 'tour', 'product', 'service'] as const;
+
+export class ClientAssistantCardDto {
+  @ApiProperty({ enum: cardTypeEnum })
+  @IsEnum(cardTypeEnum)
+  type: (typeof cardTypeEnum)[number];
+
+  @ApiProperty({ description: 'Entity UUID' })
+  @IsUUID()
+  id: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  subtitle?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @ApiProperty()
+  @IsString()
+  route: string;
+
+  @ApiPropertyOptional({ description: 'Navigation params JSON object' })
+  @IsOptional()
+  @IsObject()
+  params?: Record<string, unknown>;
+}
+
+/**
+ * When set, the server stores this assistant reply and skips outbound OpenAI (e.g. device-side completions).
+ */
+export class ClientAssistantReplyDto {
+  @ApiProperty({ description: 'Assistant message text (already generated on the client)' })
+  @IsString()
+  @MaxLength(32000)
+  text: string;
+
+  @ApiPropertyOptional({ type: [ClientAssistantCardDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ClientAssistantCardDto)
+  cards?: ClientAssistantCardDto[];
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  suggestions?: string[];
 }
 
 export class ChatDto {
@@ -45,5 +113,15 @@ export class ChatDto {
   @IsOptional()
   @IsString()
   countryCode?: string;
+
+  @ApiPropertyOptional({
+    type: ClientAssistantReplyDto,
+    description:
+      'If provided for an authenticated user, the server saves this reply and does not call OpenAI (mobile may call OpenAI directly when the API host has no outbound internet).',
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ClientAssistantReplyDto)
+  clientAssistantReply?: ClientAssistantReplyDto;
 }
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'core/theme/app_theme.dart';
-import 'core/router/app_router.dart';
 import 'core/config/app_config.dart';
+import 'core/config/splash_session.dart';
+import 'core/router/app_router.dart';
+import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/user_data_collection_provider.dart';
 import 'core/providers/health_check_provider.dart';
@@ -13,7 +14,9 @@ void main() async {
   
   // Initialize Hive for local storage
   await Hive.initFlutter();
-  
+
+  await warmUpSplashBackground();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 

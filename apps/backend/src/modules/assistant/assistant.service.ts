@@ -2,13 +2,49 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OpenAIService } from './openai.service';
 import { ChatDto } from './dto/chat.dto';
+import { IntegrationsService } from '../integrations/integrations.service';
 
 @Injectable()
 export class AssistantService {
   constructor(
     private prisma: PrismaService,
     private openaiService: OpenAIService,
+    private integrationsService: IntegrationsService,
   ) {}
+
+  /**
+   * Exposes OpenAI integration settings to the mobile app for device-side completions
+   * when the API host cannot reach OpenAI. Same source as admin integrations DB.
+   * Any authenticated user receives the key — use only with that threat model in mind.
+   */
+  async getClientOpenAiConfig() {
+    type OpenAiIntegrationConfig = {
+      apiKey?: string;
+      api_key?: string;
+      model?: string;
+      maxTokens?: number;
+      temperature?: number;
+    };
+
+    const config = await this.integrationsService.getConfig<OpenAiIntegrationConfig>('openai');
+    if (!config) {
+      return { enabled: false as const };
+    }
+
+    const apiKeyRaw = config.apiKey ?? config.api_key;
+    const apiKey = typeof apiKeyRaw === 'string' ? apiKeyRaw.trim() : '';
+    if (!apiKey) {
+      return { enabled: false as const };
+    }
+
+    return {
+      enabled: true as const,
+      apiKey,
+      model: config.model || 'gpt-4-turbo-preview',
+      maxTokens: config.maxTokens ?? 1000,
+      temperature: config.temperature ?? 0.7,
+    };
+  }
 
   /**
    * Create a new conversation
@@ -79,6 +115,32 @@ export class AssistantService {
 
     // For guest users (no userId), provide stateless chat without saving history
     if (!userId) {
+      const guestClientReply = chatDto.clientAssistantReply?.text?.trim();
+      if (guestClientReply) {
+        const cards = chatDto.clientAssistantReply?.cards ?? [];
+        return {
+          conversationId: null,
+          assistantMessage: {
+            id: null,
+            text: guestClientReply,
+            createdAt: new Date(),
+          },
+          cards: cards.map((card) => ({
+            type: card.type,
+            id: card.id,
+            title: card.title,
+            subtitle: card.subtitle,
+            imageUrl: card.imageUrl,
+            route: card.route,
+            params: card.params,
+          })),
+          suggestions:
+            chatDto.clientAssistantReply?.suggestions?.length
+              ? chatDto.clientAssistantReply.suggestions
+              : this.defaultFollowUpSuggestions(),
+          isGuest: true,
+        };
+      }
       const response = await this.openaiService.chat(
         message,
         [], // No conversation history for guests
@@ -134,7 +196,20 @@ export class AssistantService {
       },
     });
 
-    // Get AI response
+    const clientReplyText = chatDto.clientAssistantReply?.text?.trim();
+    if (clientReplyText) {
+      return this.persistAssistantReplyAndReturn(
+        conversation.id,
+        conversationHistory.length === 0 ? conversation.title : undefined,
+        clientReplyText,
+        chatDto.clientAssistantReply?.cards ?? [],
+        chatDto.clientAssistantReply?.suggestions?.length
+          ? chatDto.clientAssistantReply.suggestions
+          : this.defaultFollowUpSuggestions(),
+      );
+    }
+
+    // Get AI response (server-side OpenAI when VPS has outbound access)
     const response = await this.openaiService.chat(
       message,
       conversationHistory,
@@ -142,50 +217,73 @@ export class AssistantService {
       chatDto.countryCode,
     );
 
-    // Save assistant message
+    return this.persistAssistantReplyAndReturn(
+      conversation.id,
+      conversationHistory.length === 0 ? conversation.title : undefined,
+      response.text,
+      response.cards,
+      response.suggestions,
+    );
+  }
+
+  /**
+   * Save assistant message + optional cards, bump conversation, return API shape.
+   */
+  private async persistAssistantReplyAndReturn(
+    conversationId: string,
+    title: string | undefined,
+    assistantText: string,
+    cardsInput: Array<{
+      type: string;
+      id: string;
+      title: string;
+      subtitle?: string;
+      imageUrl?: string;
+      route: string;
+      params?: Record<string, unknown>;
+    }>,
+    suggestions: string[],
+  ) {
     const assistantMessage = await this.prisma.assistantMessage.create({
       data: {
-        conversationId: conversation.id,
+        conversationId,
         role: 'assistant',
-        text: response.text,
+        text: assistantText,
       },
     });
 
-    // Save cards
-    if (response.cards.length > 0) {
+    if (cardsInput.length > 0) {
       await this.prisma.assistantMessageCard.createMany({
-        data: response.cards.map(card => ({
+        data: cardsInput.map((card) => ({
           messageId: assistantMessage.id,
-          type: card.type,
+          type: card.type as any,
           entityId: card.id,
           title: card.title,
           subtitle: card.subtitle || '',
           imageUrl: card.imageUrl,
           route: card.route,
-          params: card.params,
+          params: (card.params as object) ?? {},
         })),
       });
     }
 
-    // Update conversation timestamp
     await this.prisma.assistantConversation.update({
-      where: { id: conversation.id },
+      where: { id: conversationId },
       data: { lastMessageAt: new Date() },
     });
 
-    // Return response with cards
     const cards = await this.prisma.assistantMessageCard.findMany({
       where: { messageId: assistantMessage.id },
     });
 
     return {
-      conversationId: conversation.id,
+      conversationId,
       assistantMessage: {
         id: assistantMessage.id,
         text: assistantMessage.text,
         createdAt: assistantMessage.createdAt,
       },
-      cards: cards.map(card => ({
+      cards: cards.map((card) => ({
         type: card.type,
         id: card.entityId,
         title: card.title,
@@ -194,9 +292,17 @@ export class AssistantService {
         route: card.route,
         params: card.params,
       })),
-      suggestions: response.suggestions,
-      title: conversationHistory.length === 0 ? conversation.title : undefined,
+      suggestions,
+      title,
     };
+  }
+
+  private defaultFollowUpSuggestions(): string[] {
+    return [
+      'Show me popular places',
+      'Find restaurants in Kigali',
+      'What tours are available?',
+    ];
   }
 
   /**

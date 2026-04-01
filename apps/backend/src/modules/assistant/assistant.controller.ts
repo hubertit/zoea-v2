@@ -28,6 +28,20 @@ import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 export class AssistantController {
   constructor(private assistantService: AssistantService) {}
 
+  @Get('client-openai-config')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'OpenAI settings for device-side Ask Zoea',
+    description:
+      'Returns the active OpenAI integration from the database (same as admin integrations) so the app can call OpenAI directly when the API cannot. Requires a user JWT. Does not require admin role.',
+  })
+  @ApiResponse({ status: 200, description: 'enabled false if integration missing/inactive/no key' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getClientOpenAiConfig() {
+    return this.assistantService.getClientOpenAiConfig();
+  }
+
   @Post('chat')
   @UseGuards(OptionalJwtAuthGuard)
   @ApiBearerAuth()

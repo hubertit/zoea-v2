@@ -384,7 +384,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                             decoration: InputDecoration(
                               labelText: 'Phone Number',
                               prefixIcon: const Icon(Icons.phone_outlined),
-                              hintText: '788606765',
+                              hintText: '780 123 456',
                               hintStyle: context.bodySmall.copyWith(color: context.secondaryTextColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(AppTheme.borderRadius8),

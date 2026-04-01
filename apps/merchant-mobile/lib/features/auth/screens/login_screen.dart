@@ -353,7 +353,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               decoration: const InputDecoration(
                                 labelText: 'Phone Number',
                                 prefixIcon: Icon(Icons.phone_outlined),
-                                hintText: '788606765',
+                                hintText: '780 123 456',
                                 hintStyle: TextStyle(color: AppTheme.secondaryTextColor),
                               ),
                               validator: PhoneValidator.validateInternationalPhone,

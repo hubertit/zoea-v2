@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
-import '../../../core/providers/country_provider.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
 
 class AddFromRecommendationsScreen extends ConsumerStatefulWidget {
@@ -20,8 +19,7 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
 
   @override
   Widget build(BuildContext context) {
-    final selectedCountry = ref.watch(selectedCountryProvider).value;
-    final featuredAsync = ref.watch(featuredListingsProvider(selectedCountry?.id));
+    final featuredAsync = ref.watch(featuredListingsWithHomeFallbackProvider);
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
@@ -88,7 +86,7 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
             color: context.primaryColorTheme,
             backgroundColor: context.cardColor,
             onRefresh: () async {
-              ref.invalidate(featuredListingsProvider(selectedCountry?.id));
+              ref.invalidate(featuredListingsWithHomeFallbackProvider);
               await Future.delayed(const Duration(milliseconds: 500));
             },
             child: ListView.builder(
@@ -282,8 +280,7 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
   }
 
   void _addSelectedItems() {
-    final selectedCountry = ref.read(selectedCountryProvider).value;
-    final featuredAsync = ref.read(featuredListingsProvider(selectedCountry?.id));
+    final featuredAsync = ref.read(featuredListingsWithHomeFallbackProvider);
     
     featuredAsync.whenData((listings) {
       final selectedListings = listings.where((listing) {

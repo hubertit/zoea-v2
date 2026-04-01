@@ -193,12 +193,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             ref.invalidate(eventsProvider);
             ref.invalidate(listingsProvider);
             
-            // Refresh featured listings (with country filter and without)
+            ref.invalidate(featuredListingsWithHomeFallbackProvider);
             ref.invalidate(featuredListingsProvider(selectedCountry?.id));
             ref.invalidate(featuredListingsProvider(null));
             
             // Refresh near me section (random listings)
-            ref.invalidate(randomListingsProvider(5));
+            ref.invalidate(randomListingsProvider(kRandomNearMePreviewLimit));
+            ref.invalidate(randomListingsProvider(kRandomNearMeFullListLimit));
             
             // Refresh tour packages
             ref.invalidate(toursProvider(const ToursParams(
@@ -2002,9 +2003,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     return Consumer(
       builder: (context, ref, child) {
         final selectedCountry = ref.watch(selectedCountryProvider).value;
-        // Try with country filter first, if empty, fallback to all featured listings
-        final featuredAsync = ref.watch(featuredListingsProvider(selectedCountry?.id));
-        
+        final featuredAsync = ref.watch(featuredListingsWithHomeFallbackProvider);
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2040,41 +2040,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               child: featuredAsync.when(
                 data: (listings) {
                   if (listings.isEmpty) {
-                    // If no listings for selected country, try without country filter
-                    final allFeaturedAsync = ref.watch(featuredListingsProvider(null));
-                    return allFeaturedAsync.when(
-                      data: (allListings) {
-                        if (allListings.isEmpty) {
-                          return Center(
-                            child: Text(
-                              'No featured listings available',
-                              style: context.bodyMedium.copyWith(
-                                color: context.secondaryTextColor,
-                              ),
-                            ),
-                          );
-                        }
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: allListings.length > 5 ? 5 : allListings.length,
-                          itemBuilder: (context, index) {
-                            return _buildRecommendCardFromData(allListings[index]);
-                          },
-                        );
-                      },
-                      loading: () => ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return _buildSkeletonRecommendCard();
-                        },
-                      ),
-                      error: (error, stack) => Center(
-                        child: Text(
-                          'No featured listings',
-                          style: context.bodyMedium.copyWith(
-                            color: context.secondaryTextColor,
-                          ),
+                    return Center(
+                      child: Text(
+                        'No featured listings available',
+                        style: context.bodyMedium.copyWith(
+                          color: context.secondaryTextColor,
                         ),
                       ),
                     );
@@ -2127,7 +2097,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       const SizedBox(height: 16),
                       TextButton.icon(
                         onPressed: () {
+                          ref.invalidate(featuredListingsWithHomeFallbackProvider);
                           ref.invalidate(featuredListingsProvider(selectedCountry?.id));
+                          ref.invalidate(featuredListingsProvider(null));
                         },
                         icon: const Icon(Icons.refresh),
                         label: const Text('Retry'),
@@ -2465,7 +2437,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     return Consumer(
       builder: (context, ref, child) {
         // Use random listings for now until geolocation is implemented
-        final nearbyAsync = ref.watch(randomListingsProvider(5));
+        final nearbyAsync = ref.watch(randomListingsProvider(kRandomNearMePreviewLimit));
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2482,13 +2454,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 ),
                 TextButton(
                   onPressed: () {
-                    context.push('/map');
+                    context.push('/near-me');
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
                   child: const Text(
-                    'View Map',
+                    'View More',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),

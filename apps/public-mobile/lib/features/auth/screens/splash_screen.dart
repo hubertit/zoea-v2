@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/config/splash_session.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
@@ -252,26 +254,39 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.sizeOf(context);
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final cacheW = (mq.width * dpr).round().clamp(1, 4096);
+    final cacheH = (mq.height * dpr).round().clamp(1, 4096);
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background image
+          // Use rootBundle so we never rely on a mismatched DefaultAssetBundle.
+          // cacheWidth/Height downscales huge JPEGs before decode (helps iOS simulator).
           Image.asset(
-            AppAssets.splashBackground,
+            splashAssetPathForSession,
+            key: ValueKey(splashAssetPathForSession),
+            bundle: rootBundle,
+            cacheWidth: cacheW,
+            cacheHeight: cacheH,
             fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+            errorBuilder: (_, __, ___) => const _SplashFallbackBackground(),
           ),
-          // Gradient overlay - transparent at center to darker at bottom
+          // Top half stays clear so the photo reads; darken toward bottom for text.
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.center,
+                begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
+                stops: const [0.0, 0.45, 0.72, 1.0],
                 colors: [
                   Colors.transparent,
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.7),
-                  Colors.black.withOpacity(0.8),
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.45),
+                  Colors.black.withValues(alpha: 0.82),
                 ],
               ),
             ),
@@ -310,6 +325,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     AppAssets.logoWhite,
                     height: 40,
                     fit: BoxFit.contain,
+                    bundle: rootBundle,
                   ),
                   const SizedBox(height: 24),
                   // Bold headline - line 1
@@ -337,7 +353,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   Text(
                     'Explore stunning destinations, authentic experiences, and hidden gems across the Land of a Thousand Hills.',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.95),
+                      color: Colors.white.withValues(alpha: 0.95),
                       fontSize: 16,
                       height: 1.5,
                     ),
@@ -352,3 +368,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 }
 
+class _SplashFallbackBackground extends StatelessWidget {
+  const _SplashFallbackBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF4a5568),
+            Color(0xFF2d3748),
+            Color(0xFF1a202c),
+          ],
+        ),
+      ),
+    );
+  }
+}

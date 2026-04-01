@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/listings_provider.dart';
-import '../../../core/providers/country_provider.dart';
 import '../../../core/utils/price_formatter.dart';
 
 class RecommendationsScreen extends ConsumerStatefulWidget {
@@ -101,8 +99,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
   }
 
   Widget _buildRecommendationsList(String category) {
-    final selectedCountry = ref.watch(selectedCountryProvider).value;
-    final featuredAsync = ref.watch(featuredListingsProvider(selectedCountry?.id));
+    final featuredAsync = ref.watch(featuredListingsWithHomeFallbackProvider);
     
     return featuredAsync.when(
       data: (listings) {
@@ -160,7 +157,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
           color: context.primaryColorTheme,
           backgroundColor: context.cardColor,
           onRefresh: () async {
-            ref.invalidate(featuredListingsProvider(selectedCountry?.id));
+            ref.invalidate(featuredListingsWithHomeFallbackProvider);
             await Future.delayed(const Duration(milliseconds: 500));
           },
           child: ListView.builder(
@@ -207,7 +204,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(featuredListingsProvider(selectedCountry?.id));
+                ref.invalidate(featuredListingsWithHomeFallbackProvider);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.primaryColorTheme,

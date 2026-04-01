@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'country_provider.dart';
 import '../services/listings_service.dart';
 
 final listingsServiceProvider = Provider<ListingsService>((ref) {
@@ -215,6 +216,18 @@ final featuredListingsProvider = FutureProvider.family<List<Map<String, dynamic>
   return await listingsService.getFeaturedListings(countryId: countryId);
 });
 
+/// Same dataset as home "Recommended" carousel: featured for the selected country, or all featured when that is empty.
+final featuredListingsWithHomeFallbackProvider =
+    FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  final countryId = ref.watch(selectedCountryProvider).value?.id;
+  final listingsService = ref.watch(listingsServiceProvider);
+  var list = await listingsService.getFeaturedListings(countryId: countryId);
+  if (list.isEmpty) {
+    list = await listingsService.getFeaturedListings(countryId: null);
+  }
+  return list;
+});
+
 /// Parameters for nearby listings query
 class NearbyListingsParams {
   final double latitude;
@@ -262,6 +275,12 @@ final nearbyListingsProvider = FutureProvider.family<List<Map<String, dynamic>>,
     type: params.type,
   );
 });
+
+/// Home Explore “Near Me” horizontal strip count.
+const int kRandomNearMePreviewLimit = 5;
+
+/// Full list when opening “View more” from Near Me (same `/listings/random` source).
+const int kRandomNearMeFullListLimit = 40;
 
 /// Provider for random listings (for Near Me section until geolocation is implemented)
 final randomListingsProvider = FutureProvider.family<List<Map<String, dynamic>>, int>((ref, limit) async {

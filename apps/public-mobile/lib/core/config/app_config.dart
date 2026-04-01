@@ -141,6 +141,26 @@ class AppConfig {
   static const int maxChatHistory = 50;
   static const int aiResponseTimeout = 30000; // 30 seconds
 
+  /// When true, the app prefers calling OpenAI from the device, then persists
+  /// via `clientAssistantReply` on `POST /assistant/chat` (logged-in users).
+  ///
+  /// Credentials (in order):
+  /// 1. [openAiApiKeyFromEnvironment] if non-empty (dart-define)
+  /// 2. Else `GET /assistant/client-openai-config` (JWT) — same OpenAI row as admin integrations
+  ///
+  /// If neither is available, falls back to normal `POST /assistant/chat` (server OpenAI).
+  ///
+  /// **Security:** dart-define keys ship in the binary; JWT config exposes the integration
+  /// key to any logged-in user — only use with that threat model.
+  static bool get assistantUsesClientOpenAI =>
+      const bool.fromEnvironment('ASSISTANT_USE_CLIENT_OPENAI', defaultValue: false);
+
+  static String get openAiApiKeyFromEnvironment =>
+      const String.fromEnvironment('OPENAI_API_KEY', defaultValue: '');
+
+  static String get openAiModelFromEnvironment =>
+      const String.fromEnvironment('OPENAI_MODEL', defaultValue: 'gpt-4o-mini');
+
   // Weather Configuration
   static const String defaultWeatherCity = 'Kigali';
   static const String defaultWeatherCountryCode = 'RW';

@@ -115,6 +115,10 @@ flutter:
   # Assets
   assets:
     - assets/images/
+    # Splash: list files explicitly so iOS/Android bundles always pick them up after moves/clean builds
+    - assets/splash/kigali.jpg
+    - assets/splash/canopy.jpeg
+    - assets/splash/nyungwe2.jpg
     - assets/icons/
     - assets/animations/
 
