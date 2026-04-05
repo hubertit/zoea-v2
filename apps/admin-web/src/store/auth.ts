@@ -12,6 +12,18 @@ interface User {
   profileImageId?: string;
 }
 
+interface LoginApiResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    email: string;
+    phoneNumber?: string;
+    fullName: string;
+    roles?: User['roles'];
+  };
+}
+
 interface AuthState {
   user: User | null;
   token: string | null;
@@ -25,6 +37,8 @@ interface AuthState {
   logout: () => void;
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
+  /** Updates tokens after a silent refresh (keeps user / isAuthenticated). */
+  setSessionTokens: (accessToken: string, refreshToken: string) => void;
   clearError: () => void;
   checkAuth: () => Promise<void>;
 }
@@ -47,8 +61,8 @@ export const useAuthStore = create<AuthState>()(
             password,
           });
 
-          const data = response.data;
-          
+          const data = response.data as LoginApiResponse;
+
           set({
             user: {
               id: data.user.id,
@@ -100,12 +114,48 @@ export const useAuthStore = create<AuthState>()(
         set({ token, isAuthenticated: !!token });
       },
 
+      setSessionTokens: (accessToken: string, refreshToken: string) => {
+        set({
+          token: accessToken,
+          refreshToken,
+          isAuthenticated: true,
+        });
+      },
+
       clearError: () => {
         set({ error: null });
       },
 
       checkAuth: async () => {
-        const { token } = get();
+        let { token, refreshToken } = get();
+
+        if (!token && refreshToken) {
+          set({ isLoading: true });
+          try {
+            const data = await apiClient.refreshWithToken(refreshToken);
+            set({
+              token: data.accessToken,
+              refreshToken: data.refreshToken,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+            token = data.accessToken;
+            refreshToken = data.refreshToken;
+          } catch {
+            set({
+              isAuthenticated: false,
+              user: null,
+              token: null,
+              refreshToken: null,
+              isLoading: false,
+            });
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('auth-storage');
+            }
+            return;
+          }
+        }
+
         if (!token) {
           set({ isAuthenticated: false, user: null });
           return;
@@ -115,20 +165,20 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await apiClient.get('/users/me');
 
-          const userData = response.data;
+          const userData = response.data as User;
           set({
             user: {
               id: userData.id,
               email: userData.email,
               phoneNumber: userData.phoneNumber,
-              fullName: userData.fullName,
-              name: userData.fullName,
+              fullName: userData.fullName ?? userData.name ?? '',
+              name: userData.fullName ?? userData.name,
               roles: userData.roles || [],
             },
             isAuthenticated: true,
             isLoading: false,
           });
-        } catch (error) {
+        } catch {
           set({
             isAuthenticated: false,
             user: null,

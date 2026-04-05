@@ -189,9 +189,12 @@ export default function ListingsPage() {
           
           // Fetch Google Places API key from integrations
           try {
-            const integrationsRes = await apiClient.get('/integrations/google_places').catch(() => null);
-            if (integrationsRes?.data?.config?.apiKey) {
-              setGooglePlacesKey(integrationsRes.data.config.apiKey);
+            const integrationsRes = await apiClient
+              .get<{ config?: { apiKey?: string } }>('/integrations/google_places')
+              .catch(() => null);
+            const apiKey = integrationsRes?.data?.config?.apiKey;
+            if (apiKey) {
+              setGooglePlacesKey(apiKey);
             }
           } catch (e) {
             console.warn('Could not fetch Google Places API key:', e);

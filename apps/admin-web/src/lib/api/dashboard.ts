@@ -1,5 +1,11 @@
 import apiClient from './client';
 
+/** Admin list endpoints return { data, meta } */
+interface AdminPaginatedResponse<T = unknown> {
+  data?: T[];
+  meta?: { total?: number; page?: number; limit?: number; totalPages?: number };
+}
+
 export interface DashboardStats {
   users: {
     total: number;
@@ -33,39 +39,39 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   try {
     // Fetch counts from admin endpoints with limit=1 to get just the meta.total
     const [usersRes, listingsRes, eventsRes, bookingsRes] = await Promise.all([
-      apiClient.get('/admin/users', { params: { limit: 1, page: 1 } }),
-      apiClient.get('/admin/listings', { params: { limit: 1, page: 1 } }),
-      apiClient.get('/admin/events', { params: { limit: 1, page: 1 } }),
-      apiClient.get('/admin/bookings', { params: { limit: 1, page: 1 } }),
+      apiClient.get<AdminPaginatedResponse>('/admin/users', { params: { limit: 1, page: 1 } }),
+      apiClient.get<AdminPaginatedResponse>('/admin/listings', { params: { limit: 1, page: 1 } }),
+      apiClient.get<AdminPaginatedResponse>('/admin/events', { params: { limit: 1, page: 1 } }),
+      apiClient.get<AdminPaginatedResponse>('/admin/bookings', { params: { limit: 1, page: 1 } }),
     ]);
 
     // Get active users count
-    const activeUsersRes = await apiClient.get('/admin/users', {
+    const activeUsersRes = await apiClient.get<AdminPaginatedResponse>('/admin/users', {
       params: { limit: 1, page: 1, isActive: 'true' },
     });
 
     // Get active listings count
-    const activeListingsRes = await apiClient.get('/admin/listings', {
+    const activeListingsRes = await apiClient.get<AdminPaginatedResponse>('/admin/listings', {
       params: { limit: 1, page: 1, status: 'active' },
     });
 
     // Get pending listings count
-    const pendingListingsRes = await apiClient.get('/admin/listings', {
+    const pendingListingsRes = await apiClient.get<AdminPaginatedResponse>('/admin/listings', {
       params: { limit: 1, page: 1, status: 'pending_review' },
     });
 
     // Get active events count (events with status 'published' are active)
-    const activeEventsRes = await apiClient.get('/admin/events', {
+    const activeEventsRes = await apiClient.get<AdminPaginatedResponse>('/admin/events', {
       params: { limit: 1, page: 1, status: 'published' },
     });
 
     // Get pending bookings count
-    const pendingBookingsRes = await apiClient.get('/admin/bookings', {
+    const pendingBookingsRes = await apiClient.get<AdminPaginatedResponse>('/admin/bookings', {
       params: { limit: 1, page: 1, status: 'pending' },
     });
 
     // Get completed bookings count
-    const completedBookingsRes = await apiClient.get('/admin/bookings', {
+    const completedBookingsRes = await apiClient.get<AdminPaginatedResponse>('/admin/bookings', {
       params: { limit: 1, page: 1, status: 'completed' },
     });
 
@@ -77,11 +83,11 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     // Get new users this month - use startDate filter if available, otherwise get all and filter client-side
     let newUsersThisMonth = 0;
     try {
-      const newUsersThisMonthRes = await apiClient.get('/admin/users', {
+      const newUsersThisMonthRes = await apiClient.get<AdminPaginatedResponse<{ createdAt: string }>>('/admin/users', {
         params: { limit: 100, page: 1 }, // Get more to filter by date
       });
       if (newUsersThisMonthRes.data?.data) {
-        newUsersThisMonth = newUsersThisMonthRes.data.data.filter((user: any) => {
+        newUsersThisMonth = newUsersThisMonthRes.data.data.filter((user) => {
           const createdAt = new Date(user.createdAt);
           return createdAt >= startOfMonth;
         }).length;
@@ -94,12 +100,16 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     // Get bookings this month - use startDate filter
     let bookingsThisMonth = 0;
     try {
-      const bookingsThisMonthRes = await apiClient.get('/admin/bookings', {
+      const bookingsThisMonthRes = await apiClient.get<
+        AdminPaginatedResponse<{ bookingDate?: string; createdAt?: string }>
+      >('/admin/bookings', {
         params: { limit: 100, page: 1 }, // Get more to filter by date
       });
       if (bookingsThisMonthRes.data?.data) {
-        bookingsThisMonth = bookingsThisMonthRes.data.data.filter((booking: any) => {
-          const createdAt = new Date(booking.bookingDate || booking.createdAt);
+        bookingsThisMonth = bookingsThisMonthRes.data.data.filter((booking) => {
+          const raw = booking.bookingDate ?? booking.createdAt;
+          if (!raw) return false;
+          const createdAt = new Date(raw);
           return createdAt >= startOfMonth;
         }).length;
       }
@@ -111,12 +121,12 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     // Get upcoming events (events with startDate in future)
     let upcomingEvents = 0;
     try {
-      const upcomingEventsRes = await apiClient.get('/admin/events', {
+      const upcomingEventsRes = await apiClient.get<AdminPaginatedResponse<{ startDate: string }>>('/admin/events', {
         params: { limit: 100, page: 1 }, // Get more to filter by date
       });
       if (upcomingEventsRes.data?.data) {
         const now = new Date();
-        upcomingEvents = upcomingEventsRes.data.data.filter((event: any) => {
+        upcomingEvents = upcomingEventsRes.data.data.filter((event) => {
           const startDate = new Date(event.startDate);
           return startDate > now;
         }).length;
