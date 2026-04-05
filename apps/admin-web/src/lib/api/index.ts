@@ -39,6 +39,7 @@ export { RolesAPI, type RoleInfo, type RoleStats } from './roles';
 export * from './locations';
 export { CountriesAPI, type Country } from './countries';
 export * from './media';
+export * from './mobile-app-update';
 export * from './organizers';
 export { MerchantPortalAPI, type Business, type MerchantListing, type MerchantBooking, type MerchantReview, type DashboardData, type ApprovalStatus as MerchantPortalApprovalStatus, type ListingStatus as MerchantPortalListingStatus, type BookingStatus as MerchantPortalBookingStatus } from './merchant-portal';
 

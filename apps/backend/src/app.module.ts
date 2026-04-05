@@ -29,6 +29,7 @@ import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { AssistantModule } from './modules/assistant/assistant.module';
 import { ItinerariesModule } from './modules/itineraries/itineraries.module';
 import { WeatherModule } from './modules/weather/weather.module';
+import { AppUpdateModule } from './modules/app-update/app-update.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { WeatherModule } from './modules/weather/weather.module';
     AssistantModule,
     ItinerariesModule,
     WeatherModule,
+    AppUpdateModule,
   ],
 })
 export class AppModule {}

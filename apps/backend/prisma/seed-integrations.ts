@@ -2,6 +2,27 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const defaultMobileAppUpdateConfig = {
+  ios: {
+    minVersion: '1.0.0',
+    minBuild: null as number | null,
+    mode: 'none' as const,
+    title: 'Update Zoea',
+    message: 'A new version is available with improvements and fixes.',
+    storeUrl: '',
+    dismissForDays: 7,
+  },
+  android: {
+    minVersion: '1.0.0',
+    minBuild: null as number | null,
+    mode: 'none' as const,
+    title: 'Update Zoea',
+    message: 'A new version is available with improvements and fixes.',
+    storeUrl: '',
+    dismissForDays: 7,
+  },
+};
+
 async function main() {
   console.log('Seeding integrations...');
 
@@ -127,6 +148,18 @@ async function main() {
         baseUrl: 'https://api.open-meteo.com/v1',
         description: 'Free weather API with no API key required',
       },
+    },
+  });
+
+  await prisma.integration.upsert({
+    where: { name: 'mobile_app_update' },
+    update: {},
+    create: {
+      name: 'mobile_app_update',
+      displayName: 'Mobile app update prompts',
+      description: 'Optional or mandatory in-app update prompts for iOS and Android (public app)',
+      isActive: true,
+      config: defaultMobileAppUpdateConfig,
     },
   });
 

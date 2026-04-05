@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import Card, { CardHeader, CardBody } from '@/app/components/Card';
 import { Button, Input, Select, Textarea } from '@/app/components';
-import Icon, { faCog, faSave, faInfoCircle } from '@/app/components/Icon';
+import Icon, { faCog, faSave, faInfoCircle, faDownload } from '@/app/components/Icon';
 import { toast } from '@/app/components/Toaster';
 
 export default function SettingsPage() {
@@ -56,6 +57,19 @@ export default function SettingsPage() {
           {saving ? 'Saving...' : 'Save Settings'}
         </Button>
       </div>
+
+      <Link
+        href="/dashboard/settings/mobile-app-update"
+        className="block p-4 rounded-sm border border-gray-200 bg-white hover:border-[#0e1a30]/30 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <Icon icon={faDownload} className="text-[#0e1a30]" size="md" />
+          <div>
+            <p className="font-medium text-gray-900">Mobile app updates</p>
+            <p className="text-sm text-gray-600">Optional or mandatory update prompts for iOS and Android</p>
+          </div>
+        </div>
+      </Link>
 
       {/* General Settings */}
       <Card>

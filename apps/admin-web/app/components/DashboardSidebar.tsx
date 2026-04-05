@@ -32,6 +32,7 @@ import Icon, {
   faShieldAlt,
   faTags,
   faRoute,
+  faDownload,
 } from './Icon';
 
 interface DashboardSidebarProps {
@@ -312,6 +313,11 @@ export default function DashboardSidebar({ isOpen, onClose, onCollapsedChange }:
           icon: faCog,
           label: 'Settings',
           href: '/dashboard/settings',
+        },
+        {
+          icon: faDownload,
+          label: 'Mobile app updates',
+          href: '/dashboard/settings/mobile-app-update',
         },
       ],
     },

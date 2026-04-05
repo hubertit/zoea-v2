@@ -8,6 +8,7 @@ import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/user_data_collection_provider.dart';
 import 'core/providers/health_check_provider.dart';
+import 'core/widgets/app_update_layer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +80,9 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       themeMode: themeMode,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        return AppUpdateLayer(child: child);
+      },
     );
   }
 }
