@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { CategoriesAPI, type Category } from '@/src/lib/api';
+import { flattenCategoryTree, categoryNativeOptions } from '@/src/lib/category-options';
 import Icon, { faSearch, faPlus, faTimes, faTags, faChevronRight } from '@/app/components/Icon';
 import { toast } from '@/app/components/Toaster';
 import { Button, Modal } from '@/app/components';
@@ -12,8 +12,10 @@ import Input from '@/app/components/Input';
 import PageSkeleton from '@/app/components/PageSkeleton';
 
 export default function CategoriesPage() {
-  const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
+  /** Roots from `GET /categories?tree=true` (nested `children`). */
+  const [categoryTree, setCategoryTree] = useState<Category[]>([]);
+  /** Flat list for parent picker and lookups. */
+  const [flatCategories, setFlatCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -33,8 +35,12 @@ export default function CategoriesPage() {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const data = await CategoriesAPI.listCategories();
-        setCategories(data);
+        const [tree, flat] = await Promise.all([
+          CategoriesAPI.listCategories({ tree: true }),
+          CategoriesAPI.listCategories({ flat: true }),
+        ]);
+        setCategoryTree(tree);
+        setFlatCategories(flat);
       } catch (error: any) {
         console.error('Failed to fetch categories:', error);
         toast.error(error?.message || 'Failed to load categories');
@@ -74,9 +80,12 @@ export default function CategoriesPage() {
         isActive: true,
       });
       
-      // Refresh list
-      const data = await CategoriesAPI.listCategories();
-      setCategories(data);
+      const [tree, flat] = await Promise.all([
+        CategoriesAPI.listCategories({ tree: true }),
+        CategoriesAPI.listCategories({ flat: true }),
+      ]);
+      setCategoryTree(tree);
+      setFlatCategories(flat);
     } catch (error: any) {
       console.error('Failed to create category:', error);
       toast.error(error?.message || 'Failed to create category');
@@ -97,13 +106,31 @@ export default function CategoriesPage() {
     });
   };
 
-  const filteredCategories = categories.filter((cat) => {
-    if (!search.trim()) return true;
-    const searchLower = search.toLowerCase();
-    return cat.name.toLowerCase().includes(searchLower) ||
-           cat.slug.toLowerCase().includes(searchLower) ||
-           cat.description?.toLowerCase().includes(searchLower);
-  });
+  const flatFromTree = useMemo(() => flattenCategoryTree(categoryTree), [categoryTree]);
+
+  const searchMatches = useMemo(() => {
+    if (!search.trim()) return null;
+    const q = search.toLowerCase();
+    return flatFromTree.filter(
+      (cat) =>
+        cat.name.toLowerCase().includes(q) ||
+        cat.slug.toLowerCase().includes(q) ||
+        (cat.description && cat.description.toLowerCase().includes(q)),
+    );
+  }, [flatFromTree, search]);
+
+  const parentSelectOptions = useMemo(
+    () => categoryNativeOptions(flatCategories),
+    [flatCategories],
+  );
+
+  const pathLabelByCategoryId = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const o of parentSelectOptions) {
+      m.set(o.value, o.label);
+    }
+    return m;
+  }, [parentSelectOptions]);
 
   if (loading) {
     return <PageSkeleton />;
@@ -211,8 +238,28 @@ export default function CategoriesPage() {
 
       {/* Categories List */}
       <div className="space-y-2">
-        {filteredCategories.length > 0 ? (
-          filteredCategories.map((category) => renderCategory(category))
+        {searchMatches !== null ? (
+          searchMatches.length > 0 ? (
+            searchMatches.map((cat) => (
+              <div key={cat.id} className="border border-gray-200 rounded-sm p-4 hover:bg-gray-50">
+                <Link
+                  href={`/dashboard/categories/${cat.id}`}
+                  className="text-sm font-medium text-[#0e1a30] hover:underline"
+                >
+                  {pathLabelByCategoryId.get(cat.id) || cat.name}
+                </Link>
+                <p className="text-xs text-gray-500 mt-1">{cat.slug}</p>
+              </div>
+            ))
+          ) : (
+            <Card>
+              <CardBody>
+                <p className="text-center text-gray-500 py-8">No categories match your search</p>
+              </CardBody>
+            </Card>
+          )
+        ) : categoryTree.length > 0 ? (
+          categoryTree.map((category) => renderCategory(category))
         ) : (
           <Card>
             <CardBody>
@@ -262,9 +309,9 @@ export default function CategoriesPage() {
               className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#0e1a30] focus:border-[#0e1a30] text-sm"
             >
               <option value="">None (Top-level category)</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
+              {parentSelectOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>

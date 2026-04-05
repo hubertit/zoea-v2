@@ -23,6 +23,8 @@ export interface Category {
 export interface ListCategoriesParams {
   parentId?: string;
   flat?: boolean;
+  /** Full hierarchy: roots with nested `children` at every depth (ignores parentId/flat). */
+  tree?: boolean;
 }
 
 export interface CreateCategoryParams {
@@ -51,6 +53,12 @@ export const CategoriesAPI = {
    */
   listCategories: async (params: ListCategoriesParams = {}): Promise<Category[]> => {
     const response = await apiClient.get<Category[]>('/categories', { params });
+    return response.data;
+  },
+
+  /** Direct active children (`GET /categories/:id/children`). */
+  listCategoryChildren: async (parentId: string): Promise<Category[]> => {
+    const response = await apiClient.get<Category[]>(`/categories/${parentId}/children`);
     return response.data;
   },
 

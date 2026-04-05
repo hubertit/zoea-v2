@@ -24,7 +24,8 @@ export class ListingsController {
   @Get()
   @ApiOperation({ 
     summary: 'Get all listings with filters and sorting',
-    description: 'Retrieve paginated listings with optional filters and sorting. Supports filtering by type, location, category, price range, rating, and more. Sorting options include popular (default), rating, name, price, and creation date.'
+    description:
+      'Retrieve paginated listings with optional filters and sorting. When `categoryId` is set, filtering uses the category tree only (`includeChildren` expands to descendants); `type` / `types` are ignored for that request. Legacy clients that send only `type` / `types` keep previous behavior. Sorting: popular (default), rating, name, price, creation date.',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1, description: 'Page number (default: 1)' })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20, description: 'Items per page (default: 20)' })
@@ -34,6 +35,13 @@ export class ListingsController {
   @ApiQuery({ name: 'cityId', required: false, type: String, description: 'Filter by city UUID' })
   @ApiQuery({ name: 'countryId', required: false, type: String, description: 'Filter by country UUID' })
   @ApiQuery({ name: 'categoryId', required: false, type: String, description: 'Filter by category UUID' })
+  @ApiQuery({
+    name: 'includeChildren',
+    required: false,
+    type: Boolean,
+    description:
+      'With categoryId: include listings in descendant categories. When categoryId is set, type/types filters are ignored.',
+  })
   @ApiQuery({ name: 'search', required: false, type: String, description: 'Search in name and description' })
   @ApiQuery({ name: 'minPrice', required: false, type: Number, description: 'Minimum price filter' })
   @ApiQuery({ name: 'maxPrice', required: false, type: Number, description: 'Maximum price filter' })
@@ -85,10 +93,11 @@ export class ListingsController {
 
   @Get('random')
   @ApiOperation({ 
-    summary: 'Get random restaurant listings',
-    description: 'Retrieve random active restaurant listings. Used for "Near Me" section when geolocation is not available. Only returns active restaurant listings.'
+    summary: 'Get random listings (Restaurants category)',
+    description:
+      'Random active listings whose category slug is `restaurants`. Uses category as the source of truth (not listing `type`). Used when geolocation is unavailable.',
   })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Maximum number of restaurant listings to return (default: 10)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Maximum listings to return (default: 10)' })
   async getRandom(@Query('limit') limit?: string) {
     return this.listingsService.getRandom(limit ? +limit : 10);
   }

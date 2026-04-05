@@ -29,7 +29,7 @@ echo ""
 # Note: This requires authentication token
 # For now, we'll show the command and check if endpoint exists
 echo "📝 To test upload, you need:"
-echo "   1. Login to admin portal: http://159.198.65.38:3010"
+echo "   1. Login to admin portal: http://209.74.80.195:3015 (or https://admin.zoea.africa)"
 echo "   2. Get your auth token from browser DevTools"
 echo "   3. Or test via admin portal UI directly"
 echo ""
@@ -47,7 +47,7 @@ fi
 
 echo ""
 echo "📋 Manual Test Steps:"
-echo "   1. Open: http://159.198.65.38:3010"
+echo "   1. Open: http://209.74.80.195:3015 (or https://admin.zoea.africa)"
 echo "   2. Login to admin portal"
 echo "   3. Go to: Listings → Create Listing"
 echo "   4. Click 'Upload Images' button"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ListingsAPI, CategoriesAPI, MerchantsAPI, LocationsAPI, UsersAPI, MediaAPI, CountriesAPI, type Listing, type ListingStatus, type ListingType, type Category, type CreateListingParams, type Merchant, type Country, type City, type User } from '@/src/lib/api';
@@ -10,6 +10,7 @@ import { toast } from '@/app/components/Toaster';
 import { DataTable, Pagination, Button, Modal, Input, Select, SearchableSelect, Textarea, Breadcrumbs } from '@/app/components';
 import PageSkeleton from '@/app/components/PageSkeleton';
 import { useDebounce } from '@/src/hooks/useDebounce';
+import { categoryNativeOptions, categoryOptionsForSelect } from '@/src/lib/category-options';
 
 const STATUSES: { value: ListingStatus | ''; label: string }[] = [
   { value: '', label: 'All Status' },
@@ -20,8 +21,8 @@ const STATUSES: { value: ListingStatus | ''; label: string }[] = [
   { value: 'suspended', label: 'Suspended' },
 ];
 
-const TYPES: { value: ListingType | ''; label: string }[] = [
-  { value: '', label: 'All Types' },
+/** Merchant profile business type (not listing.type). */
+const MERCHANT_BUSINESS_TYPES: { value: ListingType; label: string }[] = [
   { value: 'hotel', label: 'Hotel' },
   { value: 'restaurant', label: 'Restaurant' },
   { value: 'tour', label: 'Tour' },
@@ -64,8 +65,9 @@ export default function ListingsPage() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [statusFilter, setStatusFilter] = useState<ListingStatus | ''>('');
-  const [typeFilter, setTypeFilter] = useState<ListingType | ''>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
+  /** Match public app: filter listings in selected category and active descendants. */
+  const [categoryIncludeSubcategories, setCategoryIncludeSubcategories] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [creating, setCreating] = useState(false);
   const [merchants, setMerchants] = useState<Merchant[]>([]);
@@ -89,7 +91,6 @@ export default function ListingsPage() {
     name: '',
     description: '',
     shortDescription: '',
-    type: undefined,
     categoryId: '',
     countryId: '',
     cityId: '',
@@ -121,13 +122,29 @@ export default function ListingsPage() {
     password: 'TempPass123!', // Default password for fast onboarding
   });
 
-  // Get categoryId from URL params
   useEffect(() => {
     const categoryId = searchParams.get('categoryId');
+    const inc = searchParams.get('includeSubcategories');
     if (categoryId) {
       setCategoryFilter(categoryId);
+      if (inc === '0' || inc === 'false') {
+        setCategoryIncludeSubcategories(false);
+      } else {
+        setCategoryIncludeSubcategories(true);
+      }
+    } else {
+      setCategoryFilter('');
+      setCategoryIncludeSubcategories(true);
     }
   }, [searchParams]);
+
+  const categoryPathById = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const o of categoryNativeOptions(categories)) {
+      m.set(o.value, o.label);
+    }
+    return m;
+  }, [categories]);
 
   // Fetch categories and countries
   useEffect(() => {
@@ -355,12 +372,11 @@ export default function ListingsPage() {
           params.status = statusFilter;
         }
 
-        if (typeFilter) {
-          params.type = typeFilter;
-        }
-
         if (categoryFilter) {
           params.categoryId = categoryFilter;
+          if (categoryIncludeSubcategories) {
+            params.includeChildren = true;
+          }
         }
 
         const response = await ListingsAPI.listListings(params);
@@ -375,7 +391,18 @@ export default function ListingsPage() {
     };
 
     fetchListings();
-  }, [page, pageSize, debouncedSearch, statusFilter, typeFilter, categoryFilter, countryFilter, cityFilter, dateFrom, dateTo]);
+  }, [
+    page,
+    pageSize,
+    debouncedSearch,
+    statusFilter,
+    categoryFilter,
+    categoryIncludeSubcategories,
+    countryFilter,
+    cityFilter,
+    dateFrom,
+    dateTo,
+  ]);
 
   const totalPages = Math.ceil(total / pageSize);
 
@@ -391,9 +418,6 @@ export default function ListingsPage() {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-900">{row?.name || '-'}</p>
-            {row?.type && (
-              <p className="text-xs text-gray-500">{row.type.replace(/_/g, ' ')}</p>
-            )}
           </div>
         </div>
       ),
@@ -493,7 +517,7 @@ export default function ListingsPage() {
 
       {/* Filters */}
       <div className="bg-white border border-gray-200 rounded-sm p-4">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
             <div className="relative">
@@ -544,49 +568,52 @@ export default function ListingsPage() {
             </select>
           </div>
 
-          {/* Type Filter */}
-          <div>
-            <select
-              value={typeFilter}
-              onChange={(e) => {
-                setTypeFilter(e.target.value as ListingType | '');
-                setPage(1);
-              }}
-              className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#0e1a30] focus:border-[#0e1a30] text-sm"
-            >
-              {TYPES.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Category Filter */}
-          <div>
+          <div className="space-y-2">
             <select
               value={categoryFilter}
               onChange={(e) => {
-                setCategoryFilter(e.target.value);
+                const v = e.target.value;
+                setCategoryFilter(v);
                 setPage(1);
-                // Update URL without navigation
                 const params = new URLSearchParams(searchParams.toString());
-                if (e.target.value) {
-                  params.set('categoryId', e.target.value);
+                if (v) {
+                  params.set('categoryId', v);
+                  params.set('includeSubcategories', categoryIncludeSubcategories ? '1' : '0');
                 } else {
                   params.delete('categoryId');
+                  params.delete('includeSubcategories');
                 }
                 router.push(`/dashboard/listings?${params.toString()}`, { scroll: false });
               }}
               className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#0e1a30] focus:border-[#0e1a30] text-sm"
             >
               <option value="">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
+              {categoryNativeOptions(categories).map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>
+            <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                className="rounded border-gray-300 text-[#0e1a30] focus:ring-[#0e1a30]"
+                checked={categoryIncludeSubcategories}
+                disabled={!categoryFilter}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setCategoryIncludeSubcategories(checked);
+                  setPage(1);
+                  const params = new URLSearchParams(searchParams.toString());
+                  if (categoryFilter) {
+                    params.set('includeSubcategories', checked ? '1' : '0');
+                    router.push(`/dashboard/listings?${params.toString()}`, { scroll: false });
+                  }
+                }}
+              />
+              Include subcategories (same scope as mobile “All” tab)
+            </label>
           </div>
 
           {/* Advanced Filters Toggle */}
@@ -710,7 +737,7 @@ export default function ListingsPage() {
           <div className="mt-3 flex items-center gap-2">
             <span className="text-sm text-gray-600">Filtered by category:</span>
             <Link href={`/dashboard/categories/${categoryFilter}`} className="text-sm text-[#0e1a30] hover:underline font-medium">
-              {categories.find(c => c.id === categoryFilter)?.name || categoryFilter}
+              {categoryPathById.get(categoryFilter) || categoryFilter}
             </Link>
             <button
               onClick={() => {
@@ -718,6 +745,7 @@ export default function ListingsPage() {
                 setPage(1);
                 const params = new URLSearchParams(searchParams.toString());
                 params.delete('categoryId');
+                params.delete('includeSubcategories');
                 router.push(`/dashboard/listings?${params.toString()}`, { scroll: false });
               }}
               className="text-sm text-gray-500 hover:text-gray-700"
@@ -766,7 +794,6 @@ export default function ListingsPage() {
                   name: '',
                   description: '',
                   shortDescription: '',
-                  type: undefined,
                   categoryId: '',
                   countryId: '',
                   cityId: '',
@@ -890,7 +917,7 @@ export default function ListingsPage() {
                       onChange={(e) => setMerchantFormData({ ...merchantFormData, businessType: e.target.value as ListingType || '' })}
                       options={[
                         { value: '', label: 'Select type' },
-                        ...TYPES.filter(t => t.value).map(t => ({ value: t.value, label: t.label })),
+                        ...MERCHANT_BUSINESS_TYPES.map((t) => ({ value: t.value, label: t.label })),
                       ]}
                     />
                   </div>
@@ -1029,29 +1056,11 @@ export default function ListingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Type
-              </label>
-              <Select
-                value={formData.type || ''}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as ListingType || undefined })}
-                options={[
-                  { value: '', label: 'Select type' },
-                  ...TYPES.filter(t => t.value).map(t => ({ value: t.value, label: t.label })),
-                ]}
-              />
-            </div>
-
-            <div>
               <SearchableSelect
                 label="Category"
                 value={formData.categoryId || ''}
                 onChange={(value) => setFormData({ ...formData, categoryId: value || undefined })}
-                options={categories.map(c => ({ 
-                  value: c.id, 
-                  label: c.name,
-                  group: c.parent?.name || 'Main Category'
-                }))}
+                options={categoryOptionsForSelect(categories)}
                 placeholder="Select category"
               />
             </div>
@@ -1300,7 +1309,6 @@ export default function ListingsPage() {
                   name: '',
                   description: '',
                   shortDescription: '',
-                  type: undefined,
                   categoryId: '',
                   countryId: '',
                   cityId: '',
@@ -1372,7 +1380,7 @@ export default function ListingsPage() {
                       const newMerchant = await MerchantsAPI.createMerchant({
                         userId: newUser.id,
                         businessName: merchantFormData.businessName || formData.name,
-                        businessType: merchantFormData.businessType || formData.type || undefined,
+                        businessType: merchantFormData.businessType || undefined,
                         businessEmail: merchantFormData.businessEmail || formData.contactEmail || undefined,
                         businessPhone: merchantFormData.businessPhone || formData.contactPhone || undefined,
                         website: merchantFormData.website || formData.website || undefined,
@@ -1429,7 +1437,6 @@ export default function ListingsPage() {
                     name: '',
                     description: '',
                     shortDescription: '',
-                    type: undefined,
                     categoryId: '',
                     countryId: '',
                     cityId: '',

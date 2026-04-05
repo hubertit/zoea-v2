@@ -172,14 +172,14 @@ And 74 more subcategories...
 
 ### Admin Portal
 - ✅ Deployed to production
-- ✅ URL: `http://159.198.65.38:3010`
+- ✅ URL: `http://209.74.80.195:3015` (or `https://admin.zoea.africa`)
 - ✅ SearchableSelect component active on all listing/tour forms
 - ✅ Ready to use
 
 ## Testing
 
 ### To Test the Feature:
-1. Navigate to Admin Portal: http://159.198.65.38:3010
+1. Navigate to Admin Portal: http://209.74.80.195:3015 (or https://admin.zoea.africa)
 2. Go to **Listings → Add Listing** (or any other form)
 3. Click on the **Category** field
 4. **Search**: Type "cafe" - should filter to show "Cafes"

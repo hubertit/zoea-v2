@@ -105,9 +105,6 @@ export default function MyListingsPage() {
           </div>
           <div>
             <div className="font-medium text-gray-900">{value}</div>
-            {row.type && (
-              <div className="text-xs text-gray-500 capitalize">{row.type.replace('_', ' ')}</div>
-            )}
           </div>
         </div>
       ),

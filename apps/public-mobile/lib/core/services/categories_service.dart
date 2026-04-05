@@ -6,15 +6,23 @@ class CategoriesService {
   final Dio _dio = AppConfig.dioInstance();
 
   /// Get all categories
-  /// Returns list of categories with their children (subcategories)
+  /// With [tree]: full hierarchy (roots with nested `children` at every depth).
+  /// Otherwise: top-level roots with one level of `children`, or flat list when [flat] is true.
   Future<List<Map<String, dynamic>>> getCategories({
     bool? includeInactive,
     String? parentId,
+    bool tree = false,
+    bool flat = false,
   }) async {
     try {
       final queryParams = <String, dynamic>{};
       if (includeInactive != null) queryParams['includeInactive'] = includeInactive;
-      if (parentId != null) queryParams['parentId'] = parentId;
+      if (tree) {
+        queryParams['tree'] = 'true';
+      } else {
+        if (parentId != null) queryParams['parentId'] = parentId;
+        if (flat) queryParams['flat'] = 'true';
+      }
 
       final response = await _dio.get(
         '/categories',
@@ -143,10 +151,10 @@ class CategoriesService {
     }
   }
 
-  /// Get subcategories (children) of a category
-  Future<List<Map<String, dynamic>>> getSubcategories(String parentId) async {
+  /// Direct active children of [parentId] (`GET /categories/:id/children`).
+  Future<List<Map<String, dynamic>>> getCategoryChildren(String parentId) async {
     try {
-      final response = await _dio.get('/categories', queryParameters: {'parentId': parentId});
+      final response = await _dio.get('/categories/$parentId/children');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -161,28 +169,34 @@ class CategoriesService {
       }
     } on DioException catch (e) {
       String errorMessage = 'Failed to fetch subcategories.';
-      
+
       if (e.response != null) {
         final statusCode = e.response!.statusCode;
         final message = e.response!.data?['message'] ?? e.response!.statusMessage;
-        
+
         if (statusCode == 401) {
           errorMessage = 'Unauthorized. Please login again.';
+        } else if (statusCode == 404) {
+          errorMessage = 'Category not found.';
         } else {
           errorMessage = message ?? errorMessage;
         }
       } else if (e.type == DioExceptionType.connectionTimeout ||
-                 e.type == DioExceptionType.receiveTimeout) {
+          e.type == DioExceptionType.receiveTimeout) {
         errorMessage = 'Connection timeout. Please check your internet connection.';
       } else if (e.type == DioExceptionType.connectionError) {
         errorMessage = 'No internet connection. Please check your network.';
       }
-      
+
       throw Exception(errorMessage);
     } catch (e) {
       throw Exception('Error fetching subcategories: $e');
     }
   }
+
+  /// Get subcategories (children) of a category — uses [getCategoryChildren].
+  Future<List<Map<String, dynamic>>> getSubcategories(String parentId) =>
+      getCategoryChildren(parentId);
 
   /// Create a new category
   Future<Map<String, dynamic>> createCategory({

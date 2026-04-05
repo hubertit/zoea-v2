@@ -10,6 +10,8 @@ cd "$(dirname "$0")"
 SERVER="${DEPLOY_SERVER:-root@209.74.80.195}"
 REMOTE_DIR="${DEPLOY_REMOTE_DIR:-/opt/zoea-admin}"
 
+# Password SSH (sshpass): use ./deploy-admin.sh with DEPLOY_SERVER_PASSWORD — same host/dir/port.
+
 echo "🚀 Zoea Admin deploy → ${SERVER}:${REMOTE_DIR} (host port 3015)"
 echo ""
 

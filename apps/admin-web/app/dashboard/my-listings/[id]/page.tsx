@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { MerchantPortalAPI, type MerchantListing, type Business, MediaAPI } from '@/src/lib/api';
 import { toast } from '@/app/components/Toaster';
@@ -9,6 +9,7 @@ import PageSkeleton from '@/app/components/PageSkeleton';
 import Icon, { faArrowLeft, faEdit, faBox, faCheckCircle, faImage, faPlus, faTrash, faCalendar } from '@/app/components/Icon';
 import { faBed, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { CategoriesAPI } from '@/src/lib/api';
+import { categoryOptionsForSelect } from '@/src/lib/category-options';
 
 export default function ListingDetailPage() {
   const router = useRouter();
@@ -39,7 +40,6 @@ export default function ListingDetailPage() {
     name: '',
     description: '',
     shortDescription: '',
-    type: '',
     categoryId: '',
     minPrice: '',
     maxPrice: '',
@@ -74,7 +74,6 @@ export default function ListingDetailPage() {
         name: data.name || '',
         description: data.description || '',
         shortDescription: data.shortDescription || '',
-        type: data.type || '',
         categoryId: data.categoryId || '',
         minPrice: data.minPrice?.toString() || '',
         maxPrice: data.maxPrice?.toString() || '',
@@ -119,7 +118,6 @@ export default function ListingDetailPage() {
         name: formData.name,
         description: formData.description || undefined,
         shortDescription: formData.shortDescription || undefined,
-        type: formData.type || undefined,
         categoryId: formData.categoryId || undefined,
         minPrice: formData.minPrice ? parseFloat(formData.minPrice) : undefined,
         maxPrice: formData.maxPrice ? parseFloat(formData.maxPrice) : undefined,
@@ -284,6 +282,12 @@ export default function ListingDetailPage() {
     }
   }, [listing?.type, businessId, listingId]);
 
+  const categoryLabel = useMemo(() => {
+    if (!listing?.categoryId) return '';
+    const opt = categoryOptionsForSelect(categories).find((o) => o.value === listing.categoryId);
+    return opt?.label || '';
+  }, [categories, listing?.categoryId]);
+
   if (loading) {
     return <PageSkeleton />;
   }
@@ -360,7 +364,6 @@ export default function ListingDetailPage() {
                       name: listing.name || '',
                       description: listing.description || '',
                       shortDescription: listing.shortDescription || '',
-                      type: listing.type || '',
                       categoryId: listing.categoryId || '',
                       minPrice: listing.minPrice?.toString() || '',
                       maxPrice: listing.maxPrice?.toString() || '',
@@ -414,35 +417,11 @@ export default function ListingDetailPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={6}
                 />
-                <Select
-                  label="Type"
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  options={[
-                    { value: '', label: 'Select type' },
-                    { value: 'hotel', label: 'Hotel' },
-                    { value: 'restaurant', label: 'Restaurant' },
-                    { value: 'tour', label: 'Tour' },
-                    { value: 'attraction', label: 'Attraction' },
-                    { value: 'bar', label: 'Bar' },
-                    { value: 'club', label: 'Club' },
-                    { value: 'lounge', label: 'Lounge' },
-                    { value: 'cafe', label: 'Cafe' },
-                    { value: 'fast_food', label: 'Fast Food' },
-                    { value: 'mall', label: 'Mall' },
-                    { value: 'market', label: 'Market' },
-                    { value: 'boutique', label: 'Boutique' },
-                  ]}
-                />
                 <SearchableSelect
                   label="Category"
                   value={formData.categoryId}
                   onChange={(value) => setFormData({ ...formData, categoryId: value })}
-                  options={categories.map(c => ({ 
-                    value: c.id, 
-                    label: c.name,
-                    group: c.parent?.name || 'Main Category'
-                  }))}
+                  options={categoryOptionsForSelect(categories)}
                   placeholder="Select category"
                 />
               </div>
@@ -464,10 +443,12 @@ export default function ListingDetailPage() {
                     <p className="text-gray-900">{listing.description}</p>
                   </div>
                 )}
-                <div>
-                  <p className="text-sm text-gray-600">Type</p>
-                  <p className="text-gray-900 capitalize">{listing.type?.replace('_', ' ') || 'N/A'}</p>
-                </div>
+                {listing.categoryId && (
+                  <div>
+                    <p className="text-sm text-gray-600">Category</p>
+                    <p className="text-gray-900">{categoryLabel || '—'}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Prisma, listing_type } from '@prisma/client';
+import { inferListingTypeFromCategoryId } from '../../common/listing-type-from-category';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class MerchantsService {
@@ -175,6 +176,12 @@ export class MerchantsService {
       };
     }
 
+    const resolvedType: listing_type =
+      data.type ??
+      (data.categoryId
+        ? await inferListingTypeFromCategoryId(this.prisma, data.categoryId)
+        : 'attraction');
+
     const listing = await this.prisma.listing.create({
       data: {
         merchantId: businessId,
@@ -182,7 +189,7 @@ export class MerchantsService {
         slug,
         description: data.description,
         shortDescription: data.shortDescription,
-        type: data.type,
+        type: resolvedType,
         categoryId: data.categoryId,
         countryId: data.countryId,
         cityId: data.cityId,
@@ -241,12 +248,21 @@ export class MerchantsService {
 
     if (!listing) throw new NotFoundException('Listing not found');
 
-    const { amenityIds, tagIds, latitude, longitude, ...updateData } = data;
+    const { amenityIds, tagIds, latitude, longitude, type: bodyType, categoryId, ...updateData } = data;
+
+    let typeToSet: listing_type | undefined = bodyType;
+    if (categoryId !== undefined && bodyType === undefined) {
+      typeToSet = categoryId
+        ? await inferListingTypeFromCategoryId(this.prisma, categoryId)
+        : undefined;
+    }
 
     const updated = await this.prisma.listing.update({
       where: { id: listingId },
       data: {
         ...updateData,
+        ...(categoryId !== undefined && { categoryId: categoryId || null }),
+        ...(typeToSet !== undefined && { type: typeToSet }),
       },
       include: {
         category: { select: { id: true, name: true } },

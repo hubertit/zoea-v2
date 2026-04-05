@@ -23,9 +23,13 @@ export class CreateListingDto {
   @IsString() @IsOptional()
   shortDescription?: string;
 
-  @ApiProperty({ example: 'hotel', enum: ['hotel', 'restaurant', 'attraction', 'activity', 'rental', 'nightlife', 'spa', 'other'] })
+  @ApiPropertyOptional({
+    example: 'hotel',
+    description: 'Optional when categoryId is set; otherwise defaults to attraction.',
+  })
   @IsString()
-  type: string;
+  @IsOptional()
+  type?: string;
 
   @ApiPropertyOptional()
   @IsUUID() @IsOptional()
@@ -311,6 +315,15 @@ export class ListingQueryDto {
   @ApiPropertyOptional()
   @IsUUID() @IsOptional()
   categoryId?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'When true with `categoryId`, matches listings in that category and all active descendant categories. Ignored without `categoryId`. When `categoryId` is set, `type` / `types` are ignored (category is authoritative).',
+    example: true,
+  })
+  @Transform(({ value }) => (value === undefined ? undefined : value === true || value === 'true'))
+  @IsBoolean() @IsOptional()
+  includeChildren?: boolean;
 
   @ApiPropertyOptional()
   @IsString() @IsOptional()

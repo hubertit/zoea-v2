@@ -16,7 +16,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
       - PORT=3000
-      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000,http://localhost:3001,http://127.0.0.1:3001,http://209.74.80.195:3015,https://admin.zoea.africa,http://admin.zoea.africa,http://159.198.65.38:3010}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000,http://localhost:3001,http://127.0.0.1:3001,http://209.74.80.195:3015,https://admin.zoea.africa,http://admin.zoea.africa}
     networks:
       - zoea-network
     healthcheck:

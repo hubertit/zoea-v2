@@ -1,9 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
+
+  /**
+   * Full active category tree: roots with nested `children` at every depth.
+   * Uses in-memory assembly so depth is not limited by fixed Prisma includes.
+   */
+  async findTree() {
+    const all = await this.prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      include: {
+        _count: { select: { listings: true, tours: true } },
+      },
+    });
+
+    type Node = (typeof all)[number] & { children: Node[] };
+    const byParent = new Map<string | null, typeof all>();
+    for (const c of all) {
+      const key = c.parentId ?? null;
+      if (!byParent.has(key)) byParent.set(key, []);
+      byParent.get(key)!.push(c);
+    }
+
+    const build = (parentKey: string | null): Node[] =>
+      (byParent.get(parentKey) || []).map((row) => ({
+        ...row,
+        children: build(row.id),
+      }));
+
+    return build(null);
+  }
+
+  /** Direct active child categories of a parent (for tabs / one level). */
+  async findChildren(parentId: string) {
+    return this.prisma.category.findMany({
+      where: { parentId, isActive: true },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      include: {
+        _count: { select: { listings: true, tours: true } },
+      },
+    });
+  }
+
+  /** Like `findChildren` but 404 when the parent id does not exist. */
+  async findChildrenByParentId(parentId: string) {
+    const parent = await this.prisma.category.findUnique({
+      where: { id: parentId },
+      select: { id: true },
+    });
+    if (!parent) {
+      throw new NotFoundException(`Category with id '${parentId}' not found`);
+    }
+    return this.findChildren(parentId);
+  }
 
   async findAll(parentId?: string, flat?: boolean) {
     // If flat is true, return all categories regardless of parentId

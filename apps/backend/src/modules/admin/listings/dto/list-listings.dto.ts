@@ -51,6 +51,15 @@ export class AdminListListingsDto extends PaginationDto {
   @IsOptional()
   @IsString()
   categoryId?: string;
+
+  @ApiPropertyOptional({
+    description: 'With categoryId: include listings in active descendant categories',
+    type: Boolean,
+  })
+  @IsOptional()
+  @Transform(({ value }) => (value === undefined ? undefined : value === true || value === 'true'))
+  @IsBoolean()
+  includeChildren?: boolean;
 }
 
 

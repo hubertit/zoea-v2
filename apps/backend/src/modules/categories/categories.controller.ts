@@ -19,6 +19,14 @@ export class CategoriesController {
   })
   @ApiQuery({ name: 'parentId', required: false, type: String, description: 'Filter by parent category ID to get subcategories', example: '123e4567-e89b-12d3-a456-426614174000' })
   @ApiQuery({ name: 'flat', required: false, type: Boolean, description: 'Return all categories in a flat list (ignores parentId filter)', example: true })
+  @ApiQuery({
+    name: 'tree',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, returns the full active category hierarchy as nested roots with `children` at every depth. Ignores parentId and flat.',
+    example: true,
+  })
   @ApiResponse({ 
     status: 200, 
     description: 'Categories retrieved successfully',
@@ -40,7 +48,14 @@ export class CategoriesController {
       }
     }
   })
-  async findAll(@Query('parentId') parentId?: string, @Query('flat') flat?: string) {
+  async findAll(
+    @Query('parentId') parentId?: string,
+    @Query('flat') flat?: string,
+    @Query('tree') tree?: string,
+  ) {
+    if (tree === 'true') {
+      return this.categoriesService.findTree();
+    }
     return this.categoriesService.findAll(parentId, flat === 'true');
   }
 
@@ -148,6 +163,19 @@ export class CategoriesController {
       throw new NotFoundException(`Category with slug '${slug}' not found`);
     }
     return category;
+  }
+
+  @Get(':id/children')
+  @ApiOperation({
+    summary: 'List direct child categories',
+    description:
+      'Returns active subcategories of the given category (one level). Use for parent category tabs without loading the full tree.',
+  })
+  @ApiParam({ name: 'id', type: String, description: 'Parent category UUID' })
+  @ApiResponse({ status: 200, description: 'Child categories retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Parent category not found' })
+  async findChildren(@Param('id') id: string) {
+    return this.categoriesService.findChildrenByParentId(id);
   }
 
   @Put(':id')

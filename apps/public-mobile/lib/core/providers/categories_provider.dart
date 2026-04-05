@@ -5,10 +5,17 @@ final categoriesServiceProvider = Provider<CategoriesService>((ref) {
   return CategoriesService();
 });
 
-/// Provider for all categories
+/// Provider for top-level categories (full nested tree under each root from API `tree=true`).
 final categoriesProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final categoriesService = ref.watch(categoriesServiceProvider);
-  return await categoriesService.getCategories();
+  return await categoriesService.getCategories(tree: true);
+});
+
+/// Direct children of a category (`GET /categories/:id/children`) for tabs and sub-navigation.
+final categoryChildrenProvider =
+    FutureProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, parentId) async {
+  final categoriesService = ref.watch(categoriesServiceProvider);
+  return await categoriesService.getCategoryChildren(parentId);
 });
 
 /// Provider for a single category by ID

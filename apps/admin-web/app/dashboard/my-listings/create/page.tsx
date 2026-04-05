@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MerchantPortalAPI, type Business } from '@/src/lib/api';
 import { CategoriesAPI, LocationsAPI } from '@/src/lib/api';
+import { categoryOptionsForSelect } from '@/src/lib/category-options';
 import { toast } from '@/app/components/Toaster';
 import { Button, Modal, Input, Select, SearchableSelect, Textarea, Breadcrumbs } from '@/app/components';
 import PageSkeleton from '@/app/components/PageSkeleton';
@@ -23,7 +24,6 @@ export default function CreateListingPage() {
     name: '',
     description: '',
     shortDescription: '',
-    type: '',
     categoryId: '',
     countryId: '',
     cityId: '',
@@ -88,7 +88,6 @@ export default function CreateListingPage() {
         name: formData.name,
         description: formData.description || undefined,
         shortDescription: formData.shortDescription || undefined,
-        type: formData.type || undefined,
         categoryId: formData.categoryId || undefined,
         countryId: formData.countryId || undefined,
         cityId: formData.cityId || undefined,
@@ -181,35 +180,11 @@ export default function CreateListingPage() {
               rows={6}
               placeholder="Full description"
             />
-            <Select
-              label="Type"
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              options={[
-                { value: '', label: 'Select type' },
-                { value: 'hotel', label: 'Hotel' },
-                { value: 'restaurant', label: 'Restaurant' },
-                { value: 'tour', label: 'Tour' },
-                { value: 'attraction', label: 'Attraction' },
-                { value: 'bar', label: 'Bar' },
-                { value: 'club', label: 'Club' },
-                { value: 'lounge', label: 'Lounge' },
-                { value: 'cafe', label: 'Cafe' },
-                { value: 'fast_food', label: 'Fast Food' },
-                { value: 'mall', label: 'Mall' },
-                { value: 'market', label: 'Market' },
-                { value: 'boutique', label: 'Boutique' },
-              ]}
-            />
             <SearchableSelect
               label="Category"
               value={formData.categoryId}
               onChange={(value) => setFormData({ ...formData, categoryId: value })}
-              options={categories.map(c => ({ 
-                value: c.id, 
-                label: c.name,
-                group: c.parent?.name || 'Main Category'
-              }))}
+              options={categoryOptionsForSelect(categories)}
               placeholder="Select category"
             />
           </div>

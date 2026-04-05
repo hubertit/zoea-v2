@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Prisma, listing_type } from '@prisma/client';
+import { inferListingTypeFromCategoryId } from '../../common/listing-type-from-category';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ListingsService {
@@ -16,6 +17,8 @@ export class ListingsService {
     cityId?: string;
     countryId?: string;
     categoryId?: string;
+    /** When true with categoryId, include all active descendant category IDs. */
+    includeChildren?: boolean;
     merchantId?: string;
     isFeatured?: boolean;
     minPrice?: number;
@@ -25,7 +28,25 @@ export class ListingsService {
     rating?: number;
     sortBy?: string;
   }) {
-    const { page = 1, limit = 20, type, types, status, cityId, countryId, categoryId, merchantId, isFeatured, minPrice, maxPrice, search, amenities, rating, sortBy = 'popular' } = params;
+    const {
+      page = 1,
+      limit = 20,
+      type,
+      types,
+      status,
+      cityId,
+      countryId,
+      categoryId,
+      includeChildren,
+      merchantId,
+      isFeatured,
+      minPrice,
+      maxPrice,
+      search,
+      amenities,
+      rating,
+      sortBy = 'popular',
+    } = params;
     const skip = (page - 1) * limit;
 
     const typeInList =
@@ -40,9 +61,22 @@ export class ListingsService {
           ? (type as any)
           : undefined;
 
+    const categoryScope =
+      categoryId != null && String(categoryId).trim() !== ''
+        ? await this.getCategorySubtreeIds(
+            categoryId,
+            includeChildren === true,
+          )
+        : null;
+
+    // Category is authoritative when present: legacy type filter must not narrow results.
+    const useLegacyTypeFilter =
+      (categoryScope == null || categoryScope.length === 0) &&
+      typeFilter !== undefined;
+
     const where: Prisma.ListingWhereInput = {
       deletedAt: null,
-      ...(typeFilter !== undefined && { type: typeFilter }),
+      ...(useLegacyTypeFilter && { type: typeFilter }),
       ...(status && { status: status as any }),
       ...(cityId && { cityId }),
       // Filter by country through city relation since countryId may not be populated on listings
@@ -52,7 +86,8 @@ export class ListingsService {
           { city: { countryId } }, // Through city relation
         ]
       }),
-      ...(categoryId && { categoryId }),
+      ...(categoryScope != null &&
+        categoryScope.length > 0 && { categoryId: { in: categoryScope } }),
       ...(merchantId && { merchantId }),
       ...(isFeatured !== undefined && { isFeatured }),
       ...(minPrice && { minPrice: { gte: minPrice } }),
@@ -232,7 +267,6 @@ export class ListingsService {
       LEFT JOIN categories c ON l.category_id = c.id
       WHERE l.status = 'active' 
         AND l.deleted_at IS NULL
-        AND l.type = 'restaurant'
         AND c.slug = 'restaurants'
       ORDER BY RANDOM()
       LIMIT ${limit}
@@ -269,7 +303,7 @@ export class ListingsService {
     slug?: string;
     description?: string;
     shortDescription?: string;
-    type: string;
+    type?: string;
     categoryId?: string;
     countryId?: string;
     cityId?: string;
@@ -306,6 +340,12 @@ export class ListingsService {
       };
     }
 
+    const resolvedType: listing_type =
+      (data.type as listing_type | undefined) ??
+      (data.categoryId
+        ? await inferListingTypeFromCategoryId(this.prisma, data.categoryId)
+        : 'attraction');
+
     const listing = await this.prisma.listing.create({
       data: {
         merchantId,
@@ -313,7 +353,7 @@ export class ListingsService {
         slug,
         description: data.description,
         shortDescription: data.shortDescription,
-        type: data.type as any,
+        type: resolvedType,
         categoryId: data.categoryId,
         status: 'draft',
         countryId: data.countryId,
@@ -380,10 +420,18 @@ export class ListingsService {
       if (existing) throw new BadRequestException('Slug already exists');
     }
 
+    const { merchantId: _merchantId, categoryId, ...rest } = data as typeof data & { merchantId?: string };
+    const typeFromCategory =
+      categoryId !== undefined && categoryId
+        ? { type: await inferListingTypeFromCategoryId(this.prisma, categoryId) }
+        : {};
+
     return this.prisma.listing.update({
       where: { id },
       data: {
-        ...data,
+        ...rest,
+        ...(categoryId !== undefined && { categoryId: categoryId || null }),
+        ...typeFromCategory,
         priceUnit: data.priceUnit as any,
       },
     });
@@ -670,5 +718,31 @@ export class ListingsService {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
       + '-' + Date.now().toString(36);
+  }
+
+  /** Category id plus optional active descendants (BFS). */
+  private async getCategorySubtreeIds(
+    rootId: string,
+    includeDescendants: boolean,
+  ): Promise<string[]> {
+    if (!includeDescendants) {
+      return [rootId];
+    }
+    const result = new Set<string>([rootId]);
+    let frontier = [rootId];
+    while (frontier.length > 0) {
+      const children = await this.prisma.category.findMany({
+        where: { parentId: { in: frontier }, isActive: true },
+        select: { id: true },
+      });
+      frontier = [];
+      for (const { id } of children) {
+        if (!result.has(id)) {
+          result.add(id);
+          frontier.push(id);
+        }
+      }
+    }
+    return [...result];
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, listing_status } from '@prisma/client';
+import { Prisma, listing_status, listing_type } from '@prisma/client';
+import { inferListingTypeFromCategoryId } from '../../../common/listing-type-from-category';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { AdminListListingsDto } from './dto/list-listings.dto';
 import { AdminUpdateListingStatusDto } from './dto/update-listing-status.dto';
@@ -38,7 +39,13 @@ export class AdminListingsService {
     if (dto.merchantId) andFilters.push({ merchantId: dto.merchantId });
     if (dto.countryId) andFilters.push({ countryId: dto.countryId });
     if (dto.cityId) andFilters.push({ cityId: dto.cityId });
-    if (dto.categoryId) andFilters.push({ categoryId: dto.categoryId });
+    if (dto.categoryId) {
+      const scope = await this.getCategorySubtreeIds(
+        dto.categoryId,
+        dto.includeChildren === true,
+      );
+      andFilters.push({ categoryId: { in: scope } });
+    }
 
     if (andFilters.length) {
       where.AND = andFilters;
@@ -55,9 +62,11 @@ export class AdminListingsService {
           name: true,
           status: true,
           type: true,
+          categoryId: true,
           isFeatured: true,
           isVerified: true,
           isBlocked: true,
+          category: { select: { id: true, name: true, slug: true } },
           country: { select: { id: true, name: true, code: true } },
           city: { select: { id: true, name: true } },
           merchant: { select: { id: true, businessName: true } },
@@ -80,6 +89,31 @@ export class AdminListingsService {
         totalPages: Math.max(Math.ceil(total / limit), 1),
       },
     };
+  }
+
+  private async getCategorySubtreeIds(
+    rootId: string,
+    includeDescendants: boolean,
+  ): Promise<string[]> {
+    if (!includeDescendants) {
+      return [rootId];
+    }
+    const result = new Set<string>([rootId]);
+    let frontier = [rootId];
+    while (frontier.length > 0) {
+      const children = await this.prisma.category.findMany({
+        where: { parentId: { in: frontier }, isActive: true },
+        select: { id: true },
+      });
+      frontier = [];
+      for (const { id } of children) {
+        if (!result.has(id)) {
+          result.add(id);
+          frontier.push(id);
+        }
+      }
+    }
+    return [...result];
   }
 
   async getListingById(id: string) {
@@ -154,6 +188,12 @@ export class AdminListingsService {
       };
     }
 
+    const resolvedType: listing_type =
+      dto.type ??
+      (dto.categoryId
+        ? await inferListingTypeFromCategoryId(this.prisma, dto.categoryId)
+        : 'attraction');
+
     const created = await this.prisma.listing.create({
       data: {
         merchantId: dto.merchantId,
@@ -161,7 +201,7 @@ export class AdminListingsService {
         slug,
         description: dto.description,
         shortDescription: dto.shortDescription,
-        type: dto.type,
+        type: resolvedType,
         categoryId: dto.categoryId,
         countryId: dto.countryId,
         cityId: dto.cityId,
@@ -209,6 +249,13 @@ export class AdminListingsService {
       }
     }
 
+    let typePatch: listing_type | undefined;
+    if (dto.type !== undefined) {
+      typePatch = dto.type;
+    } else if (dto.categoryId !== undefined && dto.categoryId) {
+      typePatch = await inferListingTypeFromCategoryId(this.prisma, dto.categoryId);
+    }
+
     const updated = await this.prisma.listing.update({
       where: { id },
       data: {
@@ -216,8 +263,8 @@ export class AdminListingsService {
         ...(dto.slug && { slug: dto.slug }),
         ...(dto.description && { description: dto.description }),
         ...(dto.shortDescription && { shortDescription: dto.shortDescription }),
-        ...(dto.type && { type: dto.type }),
-        ...(dto.categoryId && { categoryId: dto.categoryId }),
+        ...(typePatch !== undefined && { type: typePatch }),
+        ...(dto.categoryId !== undefined && { categoryId: dto.categoryId || null }),
         ...(dto.countryId && { countryId: dto.countryId }),
         ...(dto.cityId && { cityId: dto.cityId }),
         ...(dto.districtId && { districtId: dto.districtId }),

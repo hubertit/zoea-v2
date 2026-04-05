@@ -144,9 +144,13 @@ export class CreateMerchantListingDto {
   @IsString() @IsOptional()
   shortDescription?: string;
 
-  @ApiProperty({ example: 'hotel', enum: ['hotel', 'restaurant', 'attraction', 'activity', 'rental', 'nightlife', 'spa', 'other'] })
+  @ApiPropertyOptional({
+    example: 'hotel',
+    description: 'Optional when categoryId is set; otherwise defaults to attraction.',
+  })
   @IsString()
-  type: string;
+  @IsOptional()
+  type?: string;
 
   @ApiPropertyOptional()
   @IsUUID() @IsOptional()

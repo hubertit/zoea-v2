@@ -29,7 +29,7 @@ export interface Listing {
   createdAt: string;
   updatedAt: string;
   merchant?: { id: string; businessName: string } | null;
-  category?: { id: string; name: string } | null;
+  category?: { id: string; name: string; slug?: string | null } | null;
   country?: { id: string; name: string; code: string } | null;
   city?: { id: string; name: string } | null;
 }
@@ -46,6 +46,8 @@ export interface ListListingsParams {
   countryId?: string;
   cityId?: string;
   categoryId?: string;
+  /** With categoryId: include listings under active descendant categories */
+  includeChildren?: boolean;
 }
 
 export interface ListListingsResponse {

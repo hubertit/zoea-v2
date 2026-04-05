@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CategoriesAPI, type Category } from '@/src/lib/api';
+import { categoryNativeOptions } from '@/src/lib/category-options';
 import Icon, { 
   faArrowLeft, 
   faEdit, 
@@ -38,6 +39,11 @@ export default function CategoryDetailPage() {
     sortOrder: 0,
     isActive: true,
   });
+
+  const parentSelectOptions = useMemo(() => {
+    if (!categoryId) return [];
+    return categoryNativeOptions(categories.filter((c) => c.id !== categoryId));
+  }, [categories, categoryId]);
 
   useEffect(() => {
     if (!categoryId) {
@@ -158,7 +164,7 @@ export default function CategoryDetailPage() {
         </div>
         <div className="flex items-center gap-2">
           {category._count && (category._count.listings > 0 || category._count.tours > 0) && (
-            <Link href={`/dashboard/listings?categoryId=${categoryId}`}>
+            <Link href={`/dashboard/listings?categoryId=${categoryId}&includeSubcategories=1`}>
               <Button
                 variant="secondary"
                 size="sm"
@@ -331,9 +337,9 @@ export default function CategoryDetailPage() {
               className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#0e1a30] focus:border-[#0e1a30] text-sm"
             >
               <option value="">None (Top-level category)</option>
-              {categories.filter((cat) => cat.id !== categoryId).map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
+              {parentSelectOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>

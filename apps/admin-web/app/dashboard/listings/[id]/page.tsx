@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ListingsAPI, CategoriesAPI, CountriesAPI, MediaAPI, type Listing, type ListingStatus, type ListingType, type PriceUnit, type Category } from '@/src/lib/api';
+import { ListingsAPI, CategoriesAPI, CountriesAPI, MediaAPI, type Listing, type ListingStatus, type PriceUnit, type Category } from '@/src/lib/api';
+import { categoryOptionsForSelect } from '@/src/lib/category-options';
 import apiClient from '@/src/lib/api/client';
 import Icon, { 
   faArrowLeft, 
@@ -33,22 +34,6 @@ const STATUSES: { value: ListingStatus; label: string }[] = [
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' },
   { value: 'suspended', label: 'Suspended' },
-];
-
-const TYPES: { value: ListingType; label: string }[] = [
-  { value: 'hotel', label: 'Hotel' },
-  { value: 'restaurant', label: 'Restaurant' },
-  { value: 'tour', label: 'Tour' },
-  { value: 'event', label: 'Event' },
-  { value: 'attraction', label: 'Attraction' },
-  { value: 'bar', label: 'Bar' },
-  { value: 'club', label: 'Club' },
-  { value: 'lounge', label: 'Lounge' },
-  { value: 'cafe', label: 'Cafe' },
-  { value: 'fast_food', label: 'Fast Food' },
-  { value: 'mall', label: 'Mall' },
-  { value: 'market', label: 'Market' },
-  { value: 'boutique', label: 'Boutique' },
 ];
 
 const PRICE_UNITS: { value: PriceUnit; label: string }[] = [
@@ -101,7 +86,6 @@ export default function ListingDetailPage() {
     name: '',
     shortDescription: '',
     description: '',
-    type: '' as ListingType | '',
     categoryId: '',
     countryId: '',
     cityId: '',
@@ -144,7 +128,6 @@ export default function ListingDetailPage() {
           name: listingData.name || '',
           shortDescription: listingData.shortDescription || '',
           description: listingData.description || '',
-          type: listingData.type || '',
           categoryId: listingData.categoryId || '',
           countryId: listingData.countryId || '',
           cityId: listingData.cityId || '',
@@ -260,7 +243,6 @@ export default function ListingDetailPage() {
         name: editFormData.name,
         shortDescription: editFormData.shortDescription || undefined,
         description: editFormData.description || undefined,
-        type: editFormData.type || undefined,
         categoryId: editFormData.categoryId || undefined,
         countryId: editFormData.countryId || undefined,
         cityId: editFormData.cityId || undefined,
@@ -337,7 +319,8 @@ export default function ListingDetailPage() {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{listing.name || 'Listing Details'}</h1>
             <p className="text-gray-600 mt-1">
-              {listing.type?.replace(/_/g, ' ') || 'N/A'} • {listing.city?.name || 'N/A'}
+              {listing.category?.name || 'Uncategorized'}
+              {listing.city?.name ? ` • ${listing.city.name}` : ''}
             </p>
           </div>
         </div>
@@ -377,8 +360,14 @@ export default function ListingDetailPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-              <p className="text-sm text-gray-900">{listing.type?.replace(/_/g, ' ') || 'N/A'}</p>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              {listing.category ? (
+                <Link href={`/dashboard/categories/${listing.category.id}`} className="text-sm text-[#0e1a30] hover:underline">
+                  {listing.category.name}
+                </Link>
+              ) : (
+                <p className="text-sm text-gray-400">—</p>
+              )}
             </div>
 
             <div>
@@ -570,7 +559,6 @@ export default function ListingDetailPage() {
               name: listing.name || '',
               shortDescription: listing.shortDescription || '',
               description: listing.description || '',
-              type: listing.type || '',
               categoryId: listing.categoryId || '',
               countryId: listing.countryId || '',
               cityId: listing.cityId || '',
@@ -615,26 +603,13 @@ export default function ListingDetailPage() {
             rows={4}
           />
 
-          <div className="grid grid-cols-2 gap-4">
-            <Select
-              label="Type"
-              value={editFormData.type}
-              onChange={(e) => setEditFormData({ ...editFormData, type: e.target.value as ListingType })}
-              options={[{ value: '', label: 'Select Type' }, ...TYPES.map((t) => ({ value: t.value, label: t.label }))]}
-            />
-
-            <SearchableSelect
-              label="Category"
-              value={editFormData.categoryId}
-              onChange={(value) => setEditFormData({ ...editFormData, categoryId: value })}
-              options={categories.map((c) => ({ 
-                value: c.id, 
-                label: c.name,
-                group: c.parent?.name || 'Main Category'
-              }))}
-              placeholder="Select Category"
-            />
-          </div>
+          <SearchableSelect
+            label="Category"
+            value={editFormData.categoryId}
+            onChange={(value) => setEditFormData({ ...editFormData, categoryId: value })}
+            options={categoryOptionsForSelect(categories)}
+            placeholder="Select Category"
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <Select
@@ -856,7 +831,6 @@ export default function ListingDetailPage() {
                     name: listing.name || '',
                     shortDescription: listing.shortDescription || '',
                     description: listing.description || '',
-                    type: listing.type || '',
                     categoryId: listing.categoryId || '',
                     countryId: listing.countryId || '',
                     cityId: listing.cityId || '',

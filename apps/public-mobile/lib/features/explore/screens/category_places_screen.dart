@@ -43,8 +43,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   String? _selectedCategoryId; // Currently selected category/subcategory ID for listings
   // ignore: unused_field
   int _selectedTabIndex = 0; // 0 = All, 1 = Popular, 2+ = subcategories (tracked for state management)
-  String? _currentParentCategoryId; // Track which category's children we're showing
+  String? _currentParentCategoryId; // Root category for this screen (scope of "All" tab)
   bool _isInitializingTabs = false; // Prevent listener from firing during initialization
+  /// Detects when API children list changes so TabController is rebuilt.
+  String? _tabsInitSignature;
   
   // Filter state
   double? _minRating;
@@ -122,50 +124,20 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
 
   void _handleTabChange(int index) {
     if (!mounted || _tabController == null) return;
-    
+
     setState(() {
       _selectedTabIndex = index;
-      _currentPage = 1; // Reset to first page
-      
+      _currentPage = 1;
+
       if (index == 0) {
-        // "All" tab - show listings from current parent category
         _selectedCategoryId = _currentParentCategoryId ?? _categoryId;
-        _sortBy = null; // Reset sort for "All"
+        _sortBy = null;
       } else {
-        // Subcategory tab - show listings from selected subcategory
         final subcategoryIndex = index - 1;
         if (subcategoryIndex < _subcategories.length) {
           final subcategory = _subcategories[subcategoryIndex];
-          final subcategoryId = subcategory['id'] as String?;
-          final subcategoryChildren = subcategory['children'] as List?;
-          
-          // If this subcategory has children, update tabs to show them
-          if (subcategoryChildren != null && subcategoryChildren.isNotEmpty) {
-            // Prevent infinite loop: only update if we're not already showing these children
-            if (_currentParentCategoryId != subcategoryId) {
-              _currentParentCategoryId = subcategoryId;
-              _isInitializingTabs = true;
-              _initializeTabs(List<Map<String, dynamic>>.from(subcategoryChildren));
-              // Reset to "All" tab when switching to subcategory with children
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted && _tabController != null) {
-                  _isInitializingTabs = true;
-                  _tabController!.animateTo(0);
-                  setState(() {
-                    _selectedTabIndex = 0;
-                    _selectedCategoryId = subcategoryId;
-                    _sortBy = null;
-                    _isInitializingTabs = false;
-                  });
-                }
-              });
-              return; // Exit early, will be updated in postFrameCallback
-            }
-          }
-          
-          // No children or already showing this category's children - just show its listings
-          _selectedCategoryId = subcategoryId;
-          _sortBy = null; // Reset sort when selecting subcategory
+          _selectedCategoryId = subcategory['id'] as String?;
+          _sortBy = null;
         }
       }
     });
@@ -183,35 +155,51 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Fetch category by slug
     final categoryAsync = ref.watch(categoryBySlugProvider(widget.category));
 
     return categoryAsync.when(
       data: (categoryData) {
         final categoryId = categoryData['id'] as String?;
         final categoryName = categoryData['name'] as String?;
-        final isAccommodation = _isAccommodationCategory(categoryName, widget.category);
-        
-        // Update category info
-        _categoryId = categoryId;
-        _categoryName = categoryName;
-        _isAccommodation = isAccommodation;
-        
-        // Extract children from category data
-        final children = categoryData['children'] as List?;
-        
-        // Initialize tabs if not already done or if category changed
-        if (_tabController == null || _currentParentCategoryId != categoryId) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              setState(() {
-                _initializeTabs(children != null 
-                    ? List<Map<String, dynamic>>.from(children)
-                    : null);
-              });
-            }
-          });
+        if (categoryId == null) {
+          return Scaffold(
+            backgroundColor: context.grey50,
+            appBar: AppBar(
+              backgroundColor: context.backgroundColor,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.chevron_left, size: 32),
+                onPressed: () => context.pop(),
+                color: context.primaryTextColor,
+              ),
+              title: Text(widget.category),
+            ),
+            body: const Center(child: Text('Category not found')),
+          );
         }
+
+        final childrenAsync = ref.watch(categoryChildrenProvider(categoryId));
+
+        return childrenAsync.when(
+          data: (children) {
+            final isAccommodation =
+                _isAccommodationCategory(categoryName, widget.category);
+            final sig =
+                '$categoryId|${children.map((c) => c['id']).join(',')}';
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              if (_tabsInitSignature != sig) {
+                setState(() {
+                  _categoryId = categoryId;
+                  _categoryName = categoryName;
+                  _currentParentCategoryId = categoryId;
+                  _isAccommodation = isAccommodation;
+                  _initializeTabs(children);
+                  _tabsInitSignature = sig;
+                });
+              }
+            });
 
         return Scaffold(
           backgroundColor: context.grey50,
@@ -314,6 +302,81 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     )
                   : _buildSkeletonLoader(), // Show skeleton while tabs initialize
         );
+          },
+          loading: () => Scaffold(
+            backgroundColor: context.grey50,
+            appBar: AppBar(
+              backgroundColor: context.backgroundColor,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.chevron_left, size: 32),
+                onPressed: () => context.pop(),
+                color: context.primaryTextColor,
+              ),
+              title: Text(
+                categoryName ?? widget.category,
+                style: context.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.primaryTextColor,
+                ),
+              ),
+            ),
+            body: _buildSkeletonLoader(),
+          ),
+          error: (error, stack) => Scaffold(
+            backgroundColor: context.grey50,
+            appBar: AppBar(
+              backgroundColor: context.backgroundColor,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.chevron_left, size: 32),
+                onPressed: () => context.pop(),
+                color: context.primaryTextColor,
+              ),
+              title: Text(
+                categoryName ?? widget.category,
+                style: context.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.primaryTextColor,
+                ),
+              ),
+            ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: context.secondaryTextColor,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Failed to load subcategories',
+                    style: context.headlineSmall.copyWith(
+                      color: context.secondaryTextColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    error.toString(),
+                    style: context.bodyMedium.copyWith(
+                      color: context.secondaryTextColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.invalidate(categoryChildrenProvider(categoryId));
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
       loading: () => Scaffold(
         backgroundColor: context.grey50,
@@ -397,13 +460,13 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   ListingsParams _listingsParamsForCategoryTab({
     required String categoryId,
     String? sortBy,
-    String? listingType,
+    required bool includeSubtree,
   }) {
     return ListingsParams(
       page: 1,
       limit: _pageSize,
       category: categoryId,
-      type: listingType,
+      includeChildren: includeSubtree,
       rating: _minRating,
       minPrice: _minPrice,
       maxPrice: _maxPrice,
@@ -415,31 +478,28 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   // Get category ID and sort for a specific tab index
   Map<String, dynamic> _getTabParams(int tabIndex) {
     if (tabIndex == 0) {
-      // "All" tab - show top-rated items from parent category
       return {
         'categoryId': _currentParentCategoryId ?? _categoryId,
-        'sortBy': 'rating_desc', // Show best-rated items first for better discovery
-        'showSubcategoryBadge': true, // Flag to show subcategory badges
-        'listingType': null,
+        'sortBy': 'rating_desc',
+        'showSubcategoryBadge': true,
+        'includeChildren': true,
       };
-    } else {
-      // Subcategory tab
-      final subcategoryIndex = tabIndex - 1;
-      if (subcategoryIndex < _subcategories.length) {
-        final subcategory = _subcategories[subcategoryIndex];
-        return {
-          'categoryId': subcategory['id'] as String?,
-          'sortBy': null,
-          'showSubcategoryBadge': false,
-          'listingType': null,
-        };
-      }
+    }
+    final subcategoryIndex = tabIndex - 1;
+    if (subcategoryIndex < _subcategories.length) {
+      final subcategory = _subcategories[subcategoryIndex];
+      return {
+        'categoryId': subcategory['id'] as String?,
+        'sortBy': null,
+        'showSubcategoryBadge': false,
+        'includeChildren': false,
+      };
     }
     return {
       'categoryId': _categoryId,
       'sortBy': null,
       'showSubcategoryBadge': false,
-      'listingType': null,
+      'includeChildren': false,
     };
   }
 
@@ -447,102 +507,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     final tabParams = _getTabParams(tabIndex);
     final categoryId = tabParams['categoryId'] as String?;
     final sortBy = tabParams['sortBy'] as String?;
-    final listingType = tabParams['listingType'] as String?;
+    final includeSubtree = tabParams['includeChildren'] as bool? ?? false;
     final showSubcategoryBadge = tabParams['showSubcategoryBadge'] as bool? ?? false;
-    
+
     if (categoryId == null) {
       return Center(child: Text('Category not found'));
-    }
-
-    if (widget.category == 'shopping' && tabIndex == 0 && _subcategories.isNotEmpty) {
-      final subIds = _subcategories
-          .map((s) => s['id'] as String?)
-          .whereType<String>()
-          .toList();
-      if (subIds.isNotEmpty) {
-        final mergedParams = ShoppingMergedListingsParams(
-          subcategoryIds: subIds,
-          limitPerCategory: 100,
-          rating: _minRating,
-          minPrice: _minPrice,
-          maxPrice: _maxPrice,
-          isFeatured: _isFeatured,
-          sortBy: sortBy ?? 'rating_desc',
-        );
-        final mergedAsync = ref.watch(shoppingMergedListingsProvider(mergedParams));
-        return mergedAsync.when(
-          data: (response) {
-            final listings = response['data'] as List? ?? [];
-            if (listings.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.explore,
-                      size: 64,
-                      color: context.secondaryTextColor,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No ${_categoryName?.toLowerCase() ?? widget.category} found',
-                      style: context.headlineSmall.copyWith(
-                        color: context.secondaryTextColor,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Check back later for new listings',
-                      style: context.bodyMedium.copyWith(
-                        color: context.secondaryTextColor,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return RefreshIndicator(
-              color: context.primaryColorTheme,
-              backgroundColor: context.cardColor,
-              onRefresh: () async {
-                ref.invalidate(shoppingMergedListingsProvider(mergedParams));
-              },
-              child: ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount: listings.length,
-                itemBuilder: (context, index) {
-                  final listing = listings[index] as Map<String, dynamic>;
-                  if (_isAccommodation) {
-                    return _buildAccommodationCard(listing, showSubcategoryBadge: showSubcategoryBadge);
-                  }
-                  return _buildRegularListingCard(listing, showSubcategoryBadge: showSubcategoryBadge);
-                },
-              ),
-            );
-          },
-          loading: () => _buildSkeletonLoader(),
-          error: (error, stack) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, size: 64, color: context.errorColor),
-                const SizedBox(height: 16),
-                Text(
-                  'Failed to load listings',
-                  style: context.headlineSmall.copyWith(color: context.errorColor),
-                ),
-                const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () {
-                    ref.invalidate(shoppingMergedListingsProvider(mergedParams));
-                  },
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
     }
 
     final listingsAsync = ref.watch(
@@ -550,7 +519,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
         _listingsParamsForCategoryTab(
           categoryId: categoryId,
           sortBy: sortBy,
-          listingType: listingType,
+          includeSubtree: includeSubtree,
         ),
       ),
     );
@@ -599,7 +568,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 _listingsParamsForCategoryTab(
                   categoryId: categoryId,
                   sortBy: sortBy,
-                  listingType: listingType,
+                  includeSubtree: includeSubtree,
                 ),
               ),
             );
@@ -643,7 +612,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     _listingsParamsForCategoryTab(
                       categoryId: categoryId,
                       sortBy: sortBy,
-                      listingType: listingType,
+                      includeSubtree: includeSubtree,
                     ),
                   ),
                 );
