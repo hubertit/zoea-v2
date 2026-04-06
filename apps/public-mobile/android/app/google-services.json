@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "894634387496",
+    "project_id": "tarama-3f4fb",
+    "storage_bucket": "tarama-3f4fb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894634387496:android:d60f8b02a5947162cf6d1d",
+        "android_client_info": {
+          "package_name": "africa.zoea.zoea"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZyq1YGHqM6q_x0D0_8S9dY_UVKUQd_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894634387496:android:1f2d0b4ae326ee93cf6d1d",
+        "android_client_info": {
+          "package_name": "io.devslab.tarama"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZyq1YGHqM6q_x0D0_8S9dY_UVKUQd_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
