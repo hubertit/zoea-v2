@@ -10,9 +10,21 @@ import 'core/providers/user_data_collection_provider.dart';
 import 'core/providers/health_check_provider.dart';
 import 'core/widgets/app_update_layer.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'core/services/push_notification_service.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp();
+    // Initialize Push Notifications
+    await PushNotificationService.init();
+  } catch (e) {
+    debugPrint('⚠️ Firebase initialization failed: $e');
+  }
+
   // Initialize Hive for local storage
   await Hive.initFlutter();
 

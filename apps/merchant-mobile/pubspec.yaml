@@ -65,6 +65,11 @@ dependencies:
   device_info_plus: ^9.1.1
   connectivity_plus: ^5.0.2
   
+  # Push Notifications
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^16.3.2
+
   # Phone Validation
   country_picker: ^2.0.24
 

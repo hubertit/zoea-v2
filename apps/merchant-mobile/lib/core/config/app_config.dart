@@ -58,6 +58,9 @@ class AppConfig {
   static const String registrationSuccessMessage = 'Account created successfully!';
   static const String profileUpdateSuccessMessage = 'Profile updated successfully!';
 
+  // Feature Flags
+  static const bool enablePushNotifications = true;
+
   // Payment Configuration
   static const String paymentGateway = 'ZoeaPay';
   static const String currency = 'RWF';

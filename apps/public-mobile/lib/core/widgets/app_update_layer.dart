@@ -314,17 +314,6 @@ class _UpdatePromptCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                height: 4,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      cs.primary,
-                      cs.primary.withValues(alpha: 0.45),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
                 color: surface,
                 padding: const EdgeInsets.fromLTRB(28, 28, 28, 24),
                 child: Column(

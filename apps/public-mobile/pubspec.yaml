@@ -59,10 +59,10 @@ dependencies:
   # geolocator: ^10.1.0
   # geocoding: ^2.1.1
 
-  # Push Notifications (temporarily disabled for initial setup)
-  # firebase_core: ^2.24.2
-  # firebase_messaging: ^14.7.10
-  # flutter_local_notifications: ^16.3.2
+  # Push Notifications (15.x+ fixes iOS Xcode non-modular Firebase.h with plugins)
+  firebase_core: ^3.6.0
+  firebase_messaging: ^15.1.0
+  flutter_local_notifications: ^16.3.2
 
   # File Upload & Storage
   cloudinary_flutter: ^1.0.0

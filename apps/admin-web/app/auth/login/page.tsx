@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuthStore } from '@/src/store/auth';
+import AuthCoverPanel from '../../components/AuthCoverPanel';
 import { toast } from '../../components/Toaster';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -218,15 +218,11 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Side - Cover Image */}
-      <div className="hidden lg:flex lg:w-[60%] relative bg-gradient-to-br from-[#0e1a30] via-[#08101c] to-[#050b12]">
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-        </div>
-      </div>
+      {/* Right — same splash photography as Zoea mobile (assets/splash) */}
+      <AuthCoverPanel
+        imageIndex={0}
+        tagline="Discover Rwanda Like Never Before"
+      />
     </div>
   );
 }
