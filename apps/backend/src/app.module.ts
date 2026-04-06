@@ -30,6 +30,7 @@ import { AssistantModule } from './modules/assistant/assistant.module';
 import { ItinerariesModule } from './modules/itineraries/itineraries.module';
 import { WeatherModule } from './modules/weather/weather.module';
 import { AppUpdateModule } from './modules/app-update/app-update.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AppUpdateModule } from './modules/app-update/app-update.module';
       },
     ]),
     PrismaModule,
+    FirebaseModule,
     AuthModule,
     UsersModule,
     ListingsModule,

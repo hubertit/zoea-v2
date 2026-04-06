@@ -49,6 +49,30 @@ export class UsersController {
     return this.usersService.update(req.user.id, data);
   }
 
+  @Put('fcm-token')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ 
+    summary: 'Update FCM token',
+    description: 'Update the Firebase Cloud Messaging token for the current user device to receive push notifications.'
+  })
+  @ApiBody({ 
+    schema: {
+      type: 'object',
+      required: ['fcmToken'],
+      properties: {
+        fcmToken: { type: 'string', example: 'd_f0a...aTf3g' },
+        deviceId: { type: 'string', example: 'iphone-1234' },
+        deviceType: { type: 'string', example: 'ios' },
+      }
+    }
+  })
+  @ApiResponse({ status: 200, description: 'FCM token updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or missing token' })
+  async updateFcmToken(@Request() req, @Body() data: { fcmToken: string, deviceId?: string, deviceType?: string }) {
+    return this.usersService.updateFcmToken(req.user.id, data.fcmToken, data.deviceId, data.deviceType);
+  }
+
   @Put('me/email')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

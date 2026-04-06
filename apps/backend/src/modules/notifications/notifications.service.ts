@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(NotificationsService.name);
+
+  constructor(
+    private prisma: PrismaService,
+    private firebaseService: FirebaseService
+  ) {}
 
   async findAll(userId: string, params: { page?: number; limit?: number; unreadOnly?: boolean }) {
     const { page = 1, limit = 20, unreadOnly } = params;
@@ -90,7 +96,7 @@ export class NotificationsService {
     eventId?: string;
     listingId?: string;
   }) {
-    return this.prisma.notification.create({
+    const notification = await this.prisma.notification.create({
       data: {
         userId: data.userId,
         type: data.type as any,
@@ -103,5 +109,53 @@ export class NotificationsService {
         listingId: data.listingId,
       },
     });
+
+    // Try to send push notification via Firebase
+    await this.sendPushNotification(data.userId, data.title, data.body, data.actionUrl, data.actionData);
+
+    return notification;
+  }
+
+  async sendPushNotification(userId: string, title: string, body: string, actionUrl?: string, actionData?: any) {
+    try {
+      // Find all active sessions for this user that have FCM tokens
+      const sessions = await this.prisma.userSession.findMany({
+        where: {
+          userId,
+          isActive: true,
+          fcmToken: { not: null }
+        },
+        select: { fcmToken: true }
+      });
+
+      const tokens = sessions.map(s => s.fcmToken).filter(Boolean) as string[];
+
+      if (tokens.length === 0) {
+        return { success: false, reason: 'No active devices with FCM tokens' };
+      }
+
+      const messaging = this.firebaseService.getMessaging();
+      
+      const message = {
+        notification: {
+          title,
+          body,
+        },
+        data: {
+          actionUrl: actionUrl || '',
+          // FCM data payloads must be string values
+          actionData: actionData ? JSON.stringify(actionData) : '',
+        },
+        tokens,
+      };
+
+      const response = await messaging.sendEachForMulticast(message);
+      this.logger.debug(`Successfully sent push notifications. Success count: ${response.successCount}, Failure count: ${response.failureCount}`);
+      
+      return { success: true, response };
+    } catch (error) {
+      this.logger.error('Failed to send push notification:', error);
+      return { success: false, error };
+    }
   }
 }

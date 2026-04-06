@@ -237,6 +237,35 @@ export class UsersService {
     });
   }
 
+  async updateFcmToken(userId: string, fcmToken: string, deviceId?: string, deviceType?: string) {
+    if (deviceId) {
+      const existingSession = await this.prisma.userSession.findFirst({
+        where: { userId, deviceId }
+      });
+
+      if (existingSession) {
+        return this.prisma.userSession.update({
+          where: { id: existingSession.id },
+          data: { 
+            fcmToken, 
+            deviceType,
+            lastActiveAt: new Date()
+          }
+        });
+      }
+    }
+
+    return this.prisma.userSession.create({
+      data: {
+        userId,
+        fcmToken,
+        deviceId,
+        deviceType,
+        lastActiveAt: new Date()
+      }
+    });
+  }
+
   async updatePhone(userId: string, phoneNumber: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
