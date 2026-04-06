@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards, Requ
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import {
   UpdateUserDto,
   UpdateEmailDto,
@@ -50,11 +51,11 @@ export class UsersController {
   }
 
   @Put('fcm-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(OptionalJwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ 
     summary: 'Update FCM token',
-    description: 'Update the Firebase Cloud Messaging token for the current user device to receive push notifications.'
+    description: 'Update the Firebase Cloud Messaging token for the current user or guest device to receive push notifications.'
   })
   @ApiBody({ 
     schema: {
@@ -68,9 +69,9 @@ export class UsersController {
     }
   })
   @ApiResponse({ status: 200, description: 'FCM token updated successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or missing token' })
   async updateFcmToken(@Request() req, @Body() data: { fcmToken: string, deviceId?: string, deviceType?: string }) {
-    return this.usersService.updateFcmToken(req.user.id, data.fcmToken, data.deviceId, data.deviceType);
+    const userId = req.user?.id || null;
+    return this.usersService.updateFcmToken(userId, data.fcmToken, data.deviceId, data.deviceType);
   }
 
   @Put('me/email')

@@ -332,7 +332,9 @@ export default function NotificationsPage() {
             value={broadcastData.targetType}
             onChange={(e) => setBroadcastData({ ...broadcastData, targetType: e.target.value })}
             options={[
-              { value: 'all', label: 'All Users' },
+              { value: 'all', label: 'All Users & Guests' },
+              { value: 'users', label: 'Registered Users Only' },
+              { value: 'guests', label: 'Guests Only' },
               { value: 'explorers', label: 'Explorers' },
               { value: 'merchants', label: 'Merchants' },
               { value: 'event_organizers', label: 'Event Organizers' },

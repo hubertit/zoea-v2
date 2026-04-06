@@ -146,7 +146,7 @@ model User {
 
 model UserSession {
   id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  userId       String    @map("user_id") @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
   deviceId     String?   @map("device_id") @db.VarChar(255)
   deviceName   String?   @map("device_name") @db.VarChar(255)
   deviceType   String?   @map("device_type") @db.VarChar(50)
@@ -158,7 +158,7 @@ model UserSession {
   lastActiveAt DateTime? @default(now()) @map("last_active_at") @db.Timestamptz(6)
   createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   expiresAt    DateTime? @map("expires_at") @db.Timestamptz(6)
-  user         User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("user_sessions")
 }

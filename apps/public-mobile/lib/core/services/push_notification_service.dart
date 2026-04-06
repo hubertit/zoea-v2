@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -59,7 +60,7 @@ class PushNotificationService {
     
     final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (id, title, body, payload) => null,
+      onDidReceiveLocalNotification: (id, title, body, payload) {},
     );
 
     final InitializationSettings initializationSettings = InitializationSettings(
@@ -80,16 +81,41 @@ class PushNotificationService {
     // You can use a navigator key or a provider to navigate to a specific screen
   }
 
-  /// Get FCM Token
+  /// Get FCM Token — waits for APNS token on iOS before requesting the FCM token
   static Future<String?> getFCMToken() async {
     try {
-      String? token = await _firebaseMessaging.getToken();
+      if (Platform.isIOS) {
+        // On iOS, Firebase needs the APNS token before it can issue an FCM token.
+        // Poll for the APNS token with retries up to ~10 seconds total.
+        String? apnsToken;
+        for (int i = 0; i < 5; i++) {
+          apnsToken = await _firebaseMessaging.getAPNSToken();
+          if (apnsToken != null) break;
+          debugPrint('⏳ Waiting for APNS token (attempt ${i + 1}/5)...');
+          await Future.delayed(const Duration(seconds: 2));
+        }
+        if (apnsToken == null) {
+          debugPrint('⚠️ APNS token still null after retries. Skipping FCM token.');
+          return null;
+        }
+        debugPrint('✅ APNS token obtained.');
+      }
+
+      final String? token = await _firebaseMessaging.getToken();
       debugPrint('🔑 FCM Token: $token');
       return token;
     } catch (e) {
       debugPrint('❌ Error getting FCM token: $e');
       return null;
     }
+  }
+
+  /// Listen for token refreshes and forward the new token to the backend
+  static void listenForTokenRefresh(void Function(String token) onToken) {
+    _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      debugPrint('🔄 FCM Token refreshed: $newToken');
+      onToken(newToken);
+    });
   }
 
   /// Show a simple notification manually (e.g. for foreground messages)

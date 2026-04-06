@@ -1,13 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { Prisma, approval_status } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { FirebaseService } from '../../firebase/firebase.service';
 import { AdminListNotificationRequestsDto } from './dto/list-notification-requests.dto';
 import { AdminUpdateNotificationRequestDto } from './dto/update-notification-request.dto';
 import { AdminCreateBroadcastDto } from './dto/create-broadcast.dto';
 
 @Injectable()
 export class AdminNotificationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(AdminNotificationsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly firebaseService: FirebaseService
+  ) {}
 
   async listRequests(dto: AdminListNotificationRequestsDto) {
     const page = dto.page ?? 1;
@@ -83,6 +89,8 @@ export class AdminNotificationsService {
   }
 
   async createBroadcast(adminId: string, dto: AdminCreateBroadcastDto) {
+    const isApproved = !dto.scheduleAt;
+    
     const request = await this.prisma.notification_requests.create({
       data: {
         requester_id: adminId,
@@ -92,10 +100,10 @@ export class AdminNotificationsService {
         target_segment: dto.segments ? (dto.segments as any) : undefined,
         action_url: dto.actionUrl,
         scheduled_at: dto.scheduleAt,
-        status: dto.scheduleAt ? 'pending' : 'approved',
-        reviewed_by: dto.scheduleAt ? null : adminId,
-        reviewed_at: dto.scheduleAt ? null : new Date(),
-        sent_at: dto.scheduleAt ? null : new Date(),
+        status: isApproved ? 'approved' : 'pending',
+        reviewed_by: isApproved ? adminId : null,
+        reviewed_at: isApproved ? new Date() : null,
+        sent_at: isApproved ? new Date() : null,
       },
       select: {
         id: true,
@@ -106,7 +114,59 @@ export class AdminNotificationsService {
       },
     });
 
+    if (isApproved) {
+      // Dispatch immediately
+      await this.dispatchBroadcast(dto.targetType, dto.title, dto.body, dto.actionUrl);
+    }
+
     return request;
+  }
+
+  private async dispatchBroadcast(targetType: string, title: string, body: string, actionUrl?: string) {
+    try {
+      let sessionWhere: Prisma.UserSessionWhereInput = {
+        isActive: true,
+        fcmToken: { not: null }
+      };
+
+      if (targetType === 'guests') {
+        sessionWhere.userId = null;
+      } else if (targetType === 'users') {
+        sessionWhere.userId = { not: null };
+      }
+      // 'all' or other types will target everyone by default if no segment filtering is built
+
+      const sessions = await this.prisma.userSession.findMany({
+        where: sessionWhere,
+        select: { fcmToken: true }
+      });
+
+      const tokens = sessions.map(s => s.fcmToken).filter(Boolean) as string[];
+
+      if (tokens.length === 0) {
+        this.logger.debug(`No active devices found for broadcast to targetType=${targetType}`);
+        return;
+      }
+
+      const messaging = this.firebaseService.getMessaging();
+
+      const message = {
+        notification: {
+          title,
+          body,
+        },
+        data: {
+          actionUrl: actionUrl || '',
+          broadcast: 'true'
+        },
+        tokens,
+      };
+
+      const response = await messaging.sendEachForMulticast(message);
+      this.logger.debug(`Successfully sent broadcast push notifications. Success count: ${response.successCount}, Failure count: ${response.failureCount}`);
+    } catch (error) {
+      this.logger.error('Failed to dispatch broadcast push notifications:', error);
+    }
   }
 
   private async ensureRequestExists(id: string) {

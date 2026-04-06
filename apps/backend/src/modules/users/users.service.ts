@@ -237,22 +237,22 @@ export class UsersService {
     });
   }
 
-  async updateFcmToken(userId: string, fcmToken: string, deviceId?: string, deviceType?: string) {
-    if (deviceId) {
-      const existingSession = await this.prisma.userSession.findFirst({
-        where: { userId, deviceId }
-      });
+  async updateFcmToken(userId: string | null, fcmToken: string, deviceId?: string, deviceType?: string) {
+    const existingSession = await this.prisma.userSession.findFirst({
+      where: deviceId ? { deviceId } : { fcmToken }
+    });
 
-      if (existingSession) {
-        return this.prisma.userSession.update({
-          where: { id: existingSession.id },
-          data: { 
-            fcmToken, 
-            deviceType,
-            lastActiveAt: new Date()
-          }
-        });
-      }
+    if (existingSession) {
+      return this.prisma.userSession.update({
+        where: { id: existingSession.id },
+        data: { 
+          fcmToken, 
+          deviceType,
+          // Only update userId if it was provided (to avoid clearing it for logged in users returning as guests momentarily)
+          ...(userId && { userId }),
+          lastActiveAt: new Date()
+        }
+      });
     }
 
     return this.prisma.userSession.create({

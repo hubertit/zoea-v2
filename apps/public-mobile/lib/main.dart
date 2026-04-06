@@ -15,18 +15,53 @@ import 'core/services/push_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive for local storage FIRST
+  await Hive.initFlutter();
   
   // Initialize Firebase
   try {
     await Firebase.initializeApp();
     // Initialize Push Notifications
     await PushNotificationService.init();
+    
+    // Register FCM token even for guests
+    try {
+      // Listen for token refreshes — this fires whenever Firebase gets/refreshes its token.
+      // This is the most reliable way to capture the token on iOS.
+      PushNotificationService.listenForTokenRefresh((token) {
+        Future.microtask(() async {
+          try {
+            final dio = AppConfig.dioInstance();
+            await dio.put('/users/fcm-token', data: {'fcmToken': token});
+            debugPrint('✅ FCM token saved via refresh listener');
+          } catch (e) {
+            debugPrint('Failed to send refreshed FCM token: $e');
+          }
+        });
+      });
+
+      // Also try to get it immediately (works on Android and on iOS when APNS is ready)
+      final token = await PushNotificationService.getFCMToken();
+      if (token != null) {
+        Future.microtask(() async {
+          try {
+            final dio = AppConfig.dioInstance();
+            await dio.put('/users/fcm-token', data: {'fcmToken': token});
+            debugPrint('✅ Successfully sent guest FCM token to backend');
+          } catch (e) {
+            debugPrint('Failed to send guest FCM token async: $e');
+          }
+        });
+      } else {
+        debugPrint('⚠️ FCM token is null on startup — will be sent via refresh listener when ready');
+      }
+    } catch (e) {
+      debugPrint('Failed to send guest FCM token: $e');
+    }
   } catch (e) {
     debugPrint('⚠️ Firebase initialization failed: $e');
   }
-
-  // Initialize Hive for local storage
-  await Hive.initFlutter();
 
   await warmUpSplashBackground();
 

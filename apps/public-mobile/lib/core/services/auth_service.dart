@@ -4,6 +4,7 @@ import '../config/app_config.dart';
 import '../models/user.dart';
 import '../utils/phone_validator.dart';
 import 'token_storage_service.dart';
+import 'push_notification_service.dart';
 
 class AuthService {
   final StreamController<User?> _authController = StreamController<User?>.broadcast();
@@ -199,6 +200,22 @@ class AuthService {
     }
   }
 
+  Future<void> updateFCMToken() async {
+    try {
+      final token = await PushNotificationService.getFCMToken();
+      if (token != null) {
+        await _dio.put('/users/fcm-token', data: {
+          'fcmToken': token,
+          // You can also add deviceType/deviceId if you want to be more specific,
+          // for now we'll just send the token
+        });
+      }
+    } catch (e) {
+      // Fail silently, token update shouldn't break the app
+      print('Failed to update FCM token: $e');
+    }
+  }
+
   Future<User?> signInWithEmail(String email, String password) async {
     try {
       // Clean identifier if it looks like a phone number (contains only digits or starts with +)
@@ -233,6 +250,10 @@ class AuthService {
                
                _currentUser = user;
                _authController.add(user);
+
+               // Update FCM token after successful login
+               await updateFCMToken();
+
                return user;
       } else {
         throw Exception('Login failed: ${response.statusMessage}');
@@ -301,6 +322,10 @@ class AuthService {
                
                _currentUser = user;
                _authController.add(user);
+
+               // Update FCM token after successful login
+               await updateFCMToken();
+
                return user;
       } else {
         throw Exception('Registration failed: ${response.statusMessage}');
@@ -350,6 +375,10 @@ class AuthService {
         
         _currentUser = user;
         _authController.add(user);
+
+        // Update FCM token on app launch / profile fetch
+        updateFCMToken();
+
         return user;
       }
       return null;
