@@ -52,13 +52,11 @@ const COUNTRY_NAME = 'Rwanda';
 
 // We map a slug to multiple queries to fetch up to ~180-200 places per category via pagination
 const CATEGORIES_TO_SCRAPE = [
-  { slug: 'hotels', queries: ['Hotels in Kigali', 'Best hotels in Kigali', 'Luxury hotels in Kigali', 'Boutique hotels in Kigali'], type: 'hotel' },
-  { slug: 'hostels', queries: ['Hostels in Kigali', 'Backpackers in Kigali', 'Cheap hostels in Kigali'], type: 'hotel' },
-  { slug: 'resorts', queries: ['Resorts in Kigali', 'Eco resorts in Kigali', 'Luxury resorts in Kigali'], type: 'hotel' },
-  { slug: 'apartments', queries: ['Apartments in Kigali', 'Serviced apartments in Kigali', 'Furnished apartments in Kigali', 'Aparthotels in Kigali'], type: 'hotel' },
-  { slug: 'villas', queries: ['Villas in Kigali', 'Luxury villas in Kigali', 'Holiday villas in Kigali'], type: 'hotel' },
-  { slug: 'motels', queries: ['Motels in Kigali', 'Cheap motels in Kigali'], type: 'hotel' },
-  { slug: 'bnbs', queries: ['Bed and breakfast in Kigali', 'B&B in Kigali', 'Guest houses in Kigali'], type: 'hotel' }
+  { slug: 'pharmacy', queries: [
+      'Pharmacies in Kigali', '24 hour pharmacy in Kigali', 'Best pharmacy in Kigali',
+      'Pharmacies in Nyarutarama Kigali', 'Pharmacies in Kimihurura Kigali', 'Pharmacies in Kiyovu Kigali', 
+      'Pharmacies in Kacyiru Kigali', 'Pharmacies in Remera Kigali', 'Chemist in Kigali'
+    ], type: 'market' }
 ];
 
 async function uploadImage(photoReference: string, placeName: string): Promise<{ url: string; provider: string }> {
@@ -209,12 +207,12 @@ async function scrape() {
               // Prepare data
               const lat = details.geometry?.location?.lat;
               const lng = details.geometry?.location?.lng;
-              let shortDesc = `Scraped from Google Places: ${details.formatted_address}`;
+              let shortDesc = '';
               if (details.opening_hours && details.opening_hours.weekday_text) {
-                 shortDesc += `. Open: ${details.opening_hours.weekday_text[0]}`;
+                 shortDesc += `Open: ${details.opening_hours.weekday_text[0]}`;
               }
               
-              const overview = details.editorial_summary?.overview || shortDesc;
+              const overview = details.editorial_summary?.overview || null;
               
               // 1. Create Listing
               const slug = `${place.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString(36).substring(4)}`;
@@ -381,6 +379,19 @@ async function scrape() {
       }
     }
   }
+
+  console.log('\nCleaning up listings without images...');
+  await prisma.$executeRaw`
+    UPDATE listings
+    SET status = 'pending_review'
+    WHERE status = 'active'
+      AND NOT EXISTS (
+        SELECT 1 
+        FROM listing_images li 
+        WHERE li.listing_id = listings.id
+      );
+  `;
+  console.log('Cleanup complete!');
 
   console.log('\nScraping complete!');
   process.exit(0);
