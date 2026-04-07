@@ -1,0 +1,23 @@
+{
+  "name": "@zoea/places-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Google Places → listings scraper CLI (shared DB schema with backend)",
+  "scripts": {
+    "prisma:generate": "prisma generate --schema=../backend/prisma/schema.prisma",
+    "scrape:places": "npx ts-node src/scrape-google-places.ts",
+    "scrape:places:dining": "SCRAPE_ROOT_SLUG=dining LEAF_GOAL_LISTINGS=15 LEAF_FILL_MAX_ROUNDS=40 TEXT_SEARCH_MAX_PAGES=5 npx ts-node src/scrape-google-places.ts",
+    "report:category-gaps": "npx ts-node src/report-category-listing-gaps.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "axios": "^1.6.0",
+    "cloudinary": "^2.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,6 +1,6 @@
 /**
  * Reports active categories with fewer than N direct active listings.
- * Run: cd apps/backend && npx ts-node scripts/report-category-listing-gaps.ts
+ * Run: cd apps/places-scraper && npm run prisma:generate && npm run report:category-gaps
  */
 import { PrismaClient } from '@prisma/client';
 

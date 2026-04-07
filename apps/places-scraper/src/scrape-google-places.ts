@@ -49,6 +49,9 @@ const COUNTRY_NAME = 'Rwanda';
 const CURATED_POPULARITY_BOOST = process.env.SCRAPE_CURATED_BOOST === '1';
 const LEAF_GOAL = Number(process.env.LEAF_GOAL_LISTINGS ?? 8);
 const LEGACY_SCRAPE = process.env.LEGACY_SCRAPE === '1';
+/** If set (e.g. `dining`), only leaf categories under this root slug are filled. */
+const SCRAPE_ROOT_SLUG = (process.env.SCRAPE_ROOT_SLUG ?? '').trim();
+const TEXT_SEARCH_MAX_PAGES = Math.max(1, Math.min(10, Number(process.env.TEXT_SEARCH_MAX_PAGES ?? 3)));
 
 function sanitizeReviewText(text: string | undefined | null): string {
   if (!text) return '';
@@ -91,22 +94,91 @@ const STRUCTURAL_PARENTS: {
 
 /** Extra Google Text Search seeds (Kigali, well-known). Fallback: category name + Kigali. */
 const SLUG_QUERY_OVERRIDES: Record<string, string[]> = {
-  italian: ['Sole Luna Kigali', 'Filini Kigali', 'Italian restaurant Kigali'],
-  chinese: ['Great Wall Chinese Restaurant Kigali', 'Chinese restaurant Kigali'],
-  indian: ['Zaaffran Kigali', 'Khana Khazana Kigali', 'Indian restaurant Kigali'],
-  continental: ['Continental restaurant Kigali', 'Fine dining Kigali'],
-  'fine-dining': ['Heaven Restaurant Kigali', 'Fusion Bar and Grill Kigali', 'Repub Lounge Kigali'],
-  'casual-dining': ['Brochettes Kigali', 'local restaurant Kigali Kimihurura'],
-  'vegan-vegetarian': ['vegan restaurant Kigali', 'vegetarian food Kigali'],
-  halal: ['halal restaurant Kigali', 'Habesha Kigali'],
-  'kids-friendly': ['family restaurant Kigali', 'pizza Kigali'],
-  'outdoor-seating': ['rooftop restaurant Kigali', 'terrace dining Kigali'],
+  italian: [
+    'Sole Luna Kigali',
+    'Filini Restaurant Kigali',
+    'Brachetto Kigali',
+    'La Dolce Vita Kigali',
+    'Italian restaurant Kigali',
+  ],
+  chinese: [
+    'Great Wall Chinese Restaurant Kigali',
+    'Nihao Restaurant Kigali',
+    'Chinese restaurant Kimihurura',
+    'Chinese restaurant Kigali',
+  ],
+  indian: [
+    'Zaaffran Restaurant Kigali',
+    'Khana Khazana Kigali',
+    'Blue Spice Kigali',
+    'Indian restaurant Kigali',
+  ],
+  continental: [
+    'Poivre Noir Kigali',
+    'The Hut Restaurant Kigali',
+    'Continental restaurant Kigali',
+    'Fine dining Kigali',
+  ],
+  'fine-dining': [
+    'Heaven Restaurant Kigali',
+    'Fusion Bar and Grill Kigali',
+    'Radisson Blu Kigali restaurant',
+    'Marriott Kigali restaurant',
+    'Hotel des Mille Collines restaurant',
+    'fine dining Kigali',
+  ],
+  'casual-dining': [
+    'Cultiva Farm Kigali',
+    'Meze Fresh Kigali',
+    'Kisimenti restaurants Kigali',
+    'Brochettes Kigali',
+    'local restaurant Kigali Kimihurura',
+    'Nyamirambo food Kigali',
+  ],
+  'vegan-vegetarian': [
+    'Meze Fresh Kigali',
+    'Plant vegan Kigali',
+    'vegan restaurant Kigali',
+    'vegetarian food Kigali',
+  ],
+  halal: ['halal restaurant Kigali', 'Habesha Restaurant Kigali', 'halal food Nyamirambo'],
+  'kids-friendly': [
+    'Kisimenti family restaurant Kigali',
+    'pizza Kigali',
+    'burger Kigali',
+    'family restaurant Kigali',
+  ],
+  'outdoor-seating': [
+    'Pili Pili Kigali',
+    'rooftop restaurant Kigali',
+    'terrace dining Kigali',
+    'garden restaurant Kigali',
+  ],
   'take-a-coffee': [
     'Question Coffee Kigali',
     'Bourbon Coffee Kigali',
     'Brioche Kigali',
+    'Shokola Kigali',
+    'Inzora Rooftop Cafe',
     'cafe Kigali',
   ],
+  african: ['Afrika Bite Kigali', 'Rwandan restaurant Kigali', 'African cuisine Kigali'],
+  'local-cuisine': ['Brochettes Kigali', 'Rwandan food Kigali', 'Ugali buffet Kigali'],
+  ethiopian: ['Addis Ethiopian Kigali', 'Ethiopian restaurant Kigali'],
+  lebanese: ['Lebanese restaurant Kigali', 'shawarma Kigali'],
+  japanese: ['Sakura Restaurant Kigali', 'Soy Asian Table Kigali', 'Japanese restaurant Kigali'],
+  thai: ['Thai restaurant Kigali', 'Asian fusion Kigali'],
+  french: ['French restaurant Kigali', 'bistro Kigali'],
+  mexican: ['Mexican restaurant Kigali', 'taco Kigali'],
+  seafood: ['fish restaurant Kigali', 'seafood Kigali'],
+  steakhouse: ['Inka Steakhouse Kigali', 'steak restaurant Kigali'],
+  pizza: ['Mr Chips Kigali', 'pizzeria Kigali', 'pizza Kigali'],
+  bakery: ['boulangerie Kigali', 'bakery Kigali'],
+  brunch: ['brunch Kigali', 'breakfast Kigali'],
+  'fast-food': ['fried chicken Kigali', 'burger Kigali', 'fast food Kigali'],
+  'street-food': ['street food Nyamirambo', 'food stall Kigali'],
+  bbq: ['barbecue Kigali', 'grill restaurant Kigali'],
+  dessert: ['ice cream Kigali', 'dessert cafe Kigali'],
   monuments: ['Kigali monuments', 'ND\'Ese Ruganwa II monument Kigali'],
   'statues-memorials': ['statues Kigali', 'memorial Kigali'],
   museums: ['Kigali Genocide Memorial', 'Rwanda Art Museum Kigali', 'Kandt House Museum Kigali'],
@@ -539,12 +611,50 @@ async function countActiveListingsForCategory(categoryId: string): Promise<numbe
 type LeafRow = { id: string; slug: string; name: string; cnt: bigint };
 
 async function fetchLeavesBelowGoal(): Promise<LeafRow[]> {
+  if (!SCRAPE_ROOT_SLUG) {
+    return prisma.$queryRaw<LeafRow[]>`
+      SELECT c.id, c.slug, c.name,
+        COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL)::bigint AS cnt
+      FROM categories c
+      LEFT JOIN listings l ON l.category_id = c.id
+      WHERE c.is_active = true
+        AND NOT EXISTS (
+          SELECT 1 FROM categories ch
+          WHERE ch.parent_id = c.id AND ch.is_active = true
+        )
+      GROUP BY c.id, c.slug, c.name
+      HAVING COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL) < ${LEAF_GOAL}
+      ORDER BY cnt ASC, c.name ASC
+    `;
+  }
+
+  let root = await prisma.category.findFirst({
+    where: { slug: SCRAPE_ROOT_SLUG, parentId: null, isActive: true },
+  });
+  if (!root) {
+    root = await prisma.category.findFirst({
+      where: { slug: SCRAPE_ROOT_SLUG, isActive: true },
+    });
+  }
+  if (!root) {
+    console.error(`SCRAPE_ROOT_SLUG="${SCRAPE_ROOT_SLUG}": category slug not found. Check your DB.`);
+    return [];
+  }
+
   return prisma.$queryRaw<LeafRow[]>`
+    WITH RECURSIVE subtree AS (
+      SELECT id FROM categories WHERE id = CAST(${root.id} AS uuid)
+      UNION
+      SELECT c.id FROM categories c
+      INNER JOIN subtree s ON c.parent_id = s.id
+      WHERE c.is_active = true
+    )
     SELECT c.id, c.slug, c.name,
       COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL)::bigint AS cnt
     FROM categories c
     LEFT JOIN listings l ON l.category_id = c.id
     WHERE c.is_active = true
+      AND c.id IN (SELECT id FROM subtree)
       AND NOT EXISTS (
         SELECT 1 FROM categories ch
         WHERE ch.parent_id = c.id AND ch.is_active = true
@@ -589,7 +699,7 @@ async function fillLeafCategoryGaps(
         if (current + added >= LEAF_GOAL) break;
 
         let pageToken: string | undefined;
-        for (let page = 0; page < 3; page++) {
+        for (let page = 0; page < TEXT_SEARCH_MAX_PAGES; page++) {
           if (current + added >= LEAF_GOAL) break;
 
           try {
@@ -678,7 +788,7 @@ async function runLegacyCategoryScrape(
       let pageToken: string | undefined;
       let pagesFetched = 0;
 
-      while (pagesFetched < 3) {
+      while (pagesFetched < TEXT_SEARCH_MAX_PAGES) {
         try {
           const params: Record<string, string> = { key: GOOGLE_API_KEY! };
           if (pageToken) {
@@ -724,7 +834,9 @@ async function runLegacyCategoryScrape(
 
 async function scrape() {
   console.log('Starting Google Places scraper (structural children + leaf fill + optional legacy)...');
-  console.log(`LEAF_GOAL=${LEAF_GOAL}, LEGACY_SCRAPE=${LEGACY_SCRAPE}`);
+  console.log(
+    `LEAF_GOAL=${LEAF_GOAL}, LEGACY_SCRAPE=${LEGACY_SCRAPE}, SCRAPE_ROOT_SLUG=${SCRAPE_ROOT_SLUG || '(all)'}, TEXT_SEARCH_MAX_PAGES=${TEXT_SEARCH_MAX_PAGES}`
+  );
 
   await configureStorage();
 
@@ -747,7 +859,11 @@ async function scrape() {
     process.exit(1);
   }
 
-  await ensureStructuralChildCategories();
+  if (!SCRAPE_ROOT_SLUG) {
+    await ensureStructuralChildCategories();
+  } else {
+    console.log(`Skipping structural parent bootstrap (SCRAPE_ROOT_SLUG=${SCRAPE_ROOT_SLUG}).`);
+  }
   await fillLeafCategoryGaps(merchant, city, country, standardAmenities);
 
   if (LEGACY_SCRAPE) {

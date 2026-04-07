@@ -2,6 +2,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Keeps apps/places-scraper’s `import { PrismaClient } from '@prisma/client'` in sync (run generate from backend or scraper).
+generator places_scraper_client {
+  provider = "prisma-client-js"
+  output   = "../../places-scraper/node_modules/.prisma/client"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
