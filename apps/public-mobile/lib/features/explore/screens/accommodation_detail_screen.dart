@@ -1253,12 +1253,12 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                   onPressed: () {
                     _showReviewBottomSheet(listingId);
                   },
-                  backgroundColor: Colors.white.withOpacity(0.85),
+                  backgroundColor: context.cardColor.withOpacity(0.85),
                   elevation: 4,
                   shape: const CircleBorder(),
-                  child: const Icon(
+                  child: Icon(
                     Icons.edit,
-                    color: Colors.black87,
+                    color: context.primaryTextColor,
                   ),
                 ),
               ),
