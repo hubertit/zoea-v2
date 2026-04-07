@@ -1142,15 +1142,16 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             Positioned(
               bottom: 20,
               right: 20,
-              child: FloatingActionButton.extended(
+              child: FloatingActionButton(
                 onPressed: () {
                   _showReviewBottomSheet();
                 },
-              backgroundColor: AppTheme.primaryColor,
-              icon: Icon(Icons.edit, color: Colors.white),
-                label: Text(
-                  'Write Review',
-                  style: TextStyle(color: context.primaryTextColor),
+                backgroundColor: Colors.white.withOpacity(0.85),
+                elevation: 4,
+                shape: const CircleBorder(),
+                child: const Icon(
+                  Icons.edit,
+                  color: Colors.black87,
                 ),
               ),
             ),
@@ -2310,19 +2311,19 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
                 elevation: 0,
               ),
               child: _isSubmitting
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(context.primaryTextColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
                   : Text(
                       'Submit Review',
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: context.primaryTextColor,
+                        color: Colors.white,
                       ),
                     ),
             ),

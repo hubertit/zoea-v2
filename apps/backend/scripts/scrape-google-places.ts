@@ -52,19 +52,24 @@ const COUNTRY_NAME = 'Rwanda';
 
 // We map a slug to multiple queries to fetch up to ~180-200 places per category via pagination
 const CATEGORIES_TO_SCRAPE = [
-  { slug: 'stadiums-arenas', queries: [
-      'Stadiums in Kigali', 'BK Arena', 'Amahoro Stadium', 'Pele stadium Kigali', 'Football stadiums Kigali'
-    ], type: 'attraction' },
-  { slug: 'gyms-fitness', queries: [
-      'Gyms in Kigali', 'Fitness centers in Kigali', 'Kigali universe', 'Workout places Kigali', 'Crossfit Kigali'
-    ], type: 'attraction' },
-  { slug: 'sports-centers', queries: [
-      'Sports facilities in Kigali', 'Sports complexes in Kigali', 'Football pitches in Kigali',
-      'Basketball courts in Kigali', 'Tennis courts in Kigali', 'Swimming pools in Kigali', 'Sports clubs in Kigali'
-    ], type: 'attraction' },
-  { slug: 'golf-courses', queries: [
-      'Golf courses in Kigali', 'Kigali Golf Resort', 'Golf clubs in Rwanda'
-    ], type: 'attraction' }
+  { slug: 'restaurants', queries: [
+      'Restaurants in Kigali', 'Best restaurants in Kigali', 'Fine dining in Kigali', 
+      'Rwandan food Kigali', 'African restaurants in Kigali', 'Italian restaurants in Kigali', 
+      'Indian restaurants in Kigali', 'Asian restaurants in Kigali', 'Seafood restaurants Kigali', 
+      'Restaurants in Kimihurura', 'Restaurants in Nyarutarama', 'Restaurants in Kiyovu',
+      'Restaurants in Kacyiru', 'Restaurants in Remera', 'Steakhouse in Kigali'
+    ], type: 'restaurant' },
+  { slug: 'cafes', queries: [
+      'Cafes in Kigali', 'Coffee shops in Kigali', 'Best coffee in Kigali', 
+      'Cafes in Kimihurura', 'Cafes in Nyarutarama', 'Bakeries in Kigali', 
+      'Breakfast places in Kigali', 'Brunch in Kigali', 'Tea houses Kigali',
+      'Dessert shops Kigali'
+    ], type: 'cafe' },
+  { slug: 'fast-food', queries: [
+      'Fast food in Kigali', 'Burgers in Kigali', 'Pizza in Kigali', 
+      'Fried chicken Kigali', 'Quick bites Kigali', 'Shawarma Kigali', 
+      'Takeaway in Kigali', 'Food courts Kigali', 'Street food Kigali'
+    ], type: 'fast_food' }
 ];
 
 async function uploadImage(photoReference: string, placeName: string): Promise<{ url: string; provider: string }> {

@@ -1249,15 +1249,16 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
               Positioned(
                 bottom: 20,
                 right: 20,
-                child: FloatingActionButton.extended(
+                child: FloatingActionButton(
                   onPressed: () {
                     _showReviewBottomSheet(listingId);
                   },
-                backgroundColor: AppTheme.primaryColor,
-                icon: Icon(Icons.edit, color: Colors.white), // White on colored background is intentional
-                  label: Text(
-                    'Write Review',
-                    style: TextStyle(color: Colors.white),
+                  backgroundColor: Colors.white.withOpacity(0.85),
+                  elevation: 4,
+                  shape: const CircleBorder(),
+                  child: const Icon(
+                    Icons.edit,
+                    color: Colors.black87,
                   ),
                 ),
               ),
