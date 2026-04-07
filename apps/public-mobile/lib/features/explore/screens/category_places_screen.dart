@@ -17,19 +17,19 @@ import '../../../core/utils/price_formatter.dart';
 
 class CategoryPlacesScreen extends ConsumerStatefulWidget {
   final String category; // This is the slug
-  
+
   const CategoryPlacesScreen({
     super.key,
     required this.category,
   });
 
   @override
-  ConsumerState<CategoryPlacesScreen> createState() => _CategoryPlacesScreenState();
+  ConsumerState<CategoryPlacesScreen> createState() =>
+      _CategoryPlacesScreenState();
 }
 
 class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
-    with TickerProviderStateMixin {
-  TabController? _tabController;
+    with SingleTickerProviderStateMixin {
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
   int _currentPage = 1;
@@ -37,42 +37,40 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   String? _categoryId;
   String? _categoryName;
   bool _isAccommodation = false;
-  
-  // Subcategories and navigation
-  List<Map<String, dynamic>> _subcategories = [];
-  String? _selectedCategoryId; // Currently selected category/subcategory ID for listings
-  // ignore: unused_field
-  int _selectedTabIndex = 0; // 0 = All, 1 = Popular, 2+ = subcategories (tracked for state management)
-  String? _currentParentCategoryId; // Root category for this screen (scope of "All" tab)
-  bool _isInitializingTabs = false; // Prevent listener from firing during initialization
-  /// Detects when API children list changes so TabController is rebuilt.
-  String? _tabsInitSignature;
-  
+
+  // Navigation state for cascading pills
+  List<Map<String, dynamic>> _navigationStack = [];
+  String? _selectedCategoryId; // The ID currently being used to filter listings
+  bool _isLoadingSubcategories = false;
+
   // Filter state
   double? _minRating;
   double? _minPrice;
   double? _maxPrice;
   bool? _isFeatured;
-  
+
   // Sort state
   String? _sortBy;
-  
-  bool get _hasActiveFilters => _minRating != null || _minPrice != null || _maxPrice != null || _isFeatured != null;
+
+  bool get _hasActiveFilters =>
+      _minRating != null ||
+      _minPrice != null ||
+      _maxPrice != null ||
+      _isFeatured != null;
 
   @override
   void initState() {
     super.initState();
-    // TabController will be initialized after we know the number of tabs
-    
+
     // Shimmer animation controller
     _shimmerController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     // Start shimmer animation
     _shimmerController.repeat();
-    
+
     // Shimmer animation
     _shimmerAnimation = Tween<double>(
       begin: 0.0,
@@ -85,72 +83,75 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
 
   @override
   void dispose() {
-    _tabController?.dispose();
     _shimmerController.dispose();
     super.dispose();
   }
 
-  void _initializeTabs(List<Map<String, dynamic>>? children) {
-    _isInitializingTabs = true;
-    
-    // Extract direct children only (not nested)
-    _subcategories = (children ?? [])
-        .where((child) => child['isActive'] != false)
-        .toList();
-    
-    final tabCount = 1 + _subcategories.length; // All + subcategories
-    
-    // Dispose old controller if exists
-    _tabController?.dispose();
-    
-    // Create new controller with correct number of tabs
-    _tabController = TabController(length: tabCount, vsync: this);
-    _tabController!.addListener(() {
-      // Don't handle tab change during initialization
-      if (!_isInitializingTabs) {
-        // Handle both during swipe (indexIsChanging) and after completion
-        _handleTabChange(_tabController!.index);
-      }
-    });
-    
-    // Set initial selected category
-    if (_selectedCategoryId == null) {
-      _selectedCategoryId = _categoryId;
-      _currentParentCategoryId = _categoryId;
+  Future<void> _handleCategoryTap(Map<String, dynamic>? subcategory) async {
+    // If tapping "All" at the current level
+    if (subcategory == null) {
+      setState(() {
+        _selectedCategoryId = _navigationStack.last['id'] as String?;
+        _currentPage = 1;
+        _sortBy = null;
+      });
+      return;
     }
-    
-    _isInitializingTabs = false;
+
+    final subcategoryId = subcategory['id'] as String;
+
+    // Instantly filter listings by this subcategory
+    setState(() {
+      _selectedCategoryId = subcategoryId;
+      _currentPage = 1;
+      _sortBy = null;
+    });
+
+    // Check if it has children to drill down
+    setState(() {
+      _isLoadingSubcategories = true;
+    });
+
+    try {
+      final children = await ref
+          .read(categoriesServiceProvider)
+          .getCategoryChildren(subcategoryId);
+
+      if (children.isNotEmpty && mounted) {
+        setState(() {
+          _navigationStack.add(subcategory);
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching children: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingSubcategories = false;
+        });
+      }
+    }
   }
 
-  void _handleTabChange(int index) {
-    if (!mounted || _tabController == null) return;
-
-    setState(() {
-      _selectedTabIndex = index;
-      _currentPage = 1;
-
-      if (index == 0) {
-        _selectedCategoryId = _currentParentCategoryId ?? _categoryId;
+  void _handleBackTap() {
+    if (_navigationStack.length > 1) {
+      setState(() {
+        _navigationStack.removeLast();
+        _selectedCategoryId = _navigationStack.last['id'] as String?;
+        _currentPage = 1;
         _sortBy = null;
-      } else {
-        final subcategoryIndex = index - 1;
-        if (subcategoryIndex < _subcategories.length) {
-          final subcategory = _subcategories[subcategoryIndex];
-          _selectedCategoryId = subcategory['id'] as String?;
-          _sortBy = null;
-        }
-      }
-    });
+      });
+    }
   }
 
   bool _isAccommodationCategory(String? categoryName, String? categorySlug) {
     if (categoryName == null && categorySlug == null) return false;
     final name = (categoryName ?? '').toLowerCase();
     final slug = (categorySlug ?? widget.category).toLowerCase();
-    return name.contains('hotel') || 
-           name.contains('accommodation') || 
-           slug.contains('hotel') || 
-           slug.contains('accommodation');
+    return name.contains('hotel') ||
+        name.contains('accommodation') ||
+        slug.contains('hotel') ||
+        slug.contains('accommodation');
   }
 
   @override
@@ -184,124 +185,100 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
           data: (children) {
             final isAccommodation =
                 _isAccommodationCategory(categoryName, widget.category);
-            final sig =
-                '$categoryId|${children.map((c) => c['id']).join(',')}';
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
-              if (_tabsInitSignature != sig) {
+              if (_categoryId != categoryId) {
                 setState(() {
                   _categoryId = categoryId;
                   _categoryName = categoryName;
-                  _currentParentCategoryId = categoryId;
                   _isAccommodation = isAccommodation;
-                  _initializeTabs(children);
-                  _tabsInitSignature = sig;
+                  if (_selectedCategoryId == null) {
+                    _selectedCategoryId = categoryId;
+                  }
                 });
               }
             });
 
-        return Scaffold(
-          backgroundColor: context.grey50,
-          appBar: AppBar(
-            backgroundColor: context.backgroundColor,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.chevron_left, size: 32),
-              onPressed: () => context.pop(),
-              color: context.primaryTextColor,
-            ),
-            title: Text(
-              _categoryName ?? widget.category,
-              style: context.headlineSmall.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
-              ),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () => context.push('/search?category=${widget.category}'),
-              ),
-              Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.filter_list),
-                    onPressed: _showFilterBottomSheet,
+            return Scaffold(
+              backgroundColor: context.grey50,
+              appBar: AppBar(
+                backgroundColor: context.backgroundColor,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.chevron_left, size: 32),
+                  onPressed: () => context.pop(),
+                  color: context.primaryTextColor,
+                ),
+                title: Text(
+                  _categoryName ?? widget.category,
+                  style: context.headlineSmall.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.primaryTextColor,
                   ),
-                  if (_hasActiveFilters)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: context.primaryColorTheme,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              Stack(
-                children: [
+                ),
+                actions: [
                   IconButton(
-                    icon: const Icon(Icons.sort),
-                    onPressed: _showSortBottomSheet,
+                    icon: const Icon(Icons.search),
+                    onPressed: () =>
+                        context.push('/search?category=${widget.category}'),
                   ),
-                  if (_sortBy != null && _sortBy != 'popular')
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: context.primaryColorTheme,
-                          shape: BoxShape.circle,
-                        ),
+                  Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.filter_list),
+                        onPressed: _showFilterBottomSheet,
                       ),
-                    ),
+                      if (_hasActiveFilters)
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: context.primaryColorTheme,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.sort),
+                        onPressed: _showSortBottomSheet,
+                      ),
+                      if (_sortBy != null && _sortBy != 'popular')
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: context.primaryColorTheme,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
+                bottom: _isAccommodation
+                    ? null
+                    : PreferredSize(
+                        preferredSize: const Size.fromHeight(60),
+                        child: _buildCategoryPills(children),
+                      ),
               ),
-            ],
-            bottom: _isAccommodation || _tabController == null ? null : TabBar(
-              controller: _tabController,
-              indicatorColor: context.primaryColorTheme,
-              labelColor: context.primaryColorTheme,
-              unselectedLabelColor: context.secondaryTextColor,
-              labelStyle: context.bodySmall.copyWith(fontWeight: FontWeight.w600),
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-              tabs: [
-                const Tab(text: 'All'),
-                ..._subcategories.map((subcategory) {
-                  final name = subcategory['name'] as String? ?? 'Unknown';
-                  return Tab(text: name);
-                }),
-              ],
-            ),
-          ),
-          body: _categoryId != null && _tabController != null
-              ? TabBarView(
-                  controller: _tabController,
-                  children: [
-                    // "All" tab
-                    _buildListingsListForTab(0),
-                    // Subcategory tabs
-                    ..._subcategories.asMap().entries.map((entry) {
-                      return _buildListingsListForTab(entry.key + 1);
-                    }),
-                  ],
-                )
-              : _categoryId == null
-                  ? Center(
+              body: _categoryId != null
+                  ? _buildListingsList()
+                  : Center(
                       child: Text('Category not found'),
-                    )
-                  : _buildSkeletonLoader(), // Show skeleton while tabs initialize
-        );
+                    ),
+            );
           },
           loading: () => Scaffold(
             backgroundColor: context.grey50,
@@ -457,170 +434,144 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   // Getter for the category ID to use for listings
   String? get _categoryIdForListings => _selectedCategoryId ?? _categoryId;
 
-  ListingsParams _listingsParamsForCategoryTab({
-    required String categoryId,
-    String? sortBy,
-    required bool includeSubtree,
-  }) {
-    return ListingsParams(
-      page: 1,
-      limit: _pageSize,
-      category: categoryId,
-      includeChildren: includeSubtree,
-      rating: _minRating,
-      minPrice: _minPrice,
-      maxPrice: _maxPrice,
-      isFeatured: _isFeatured,
-      sortBy: sortBy,
-    );
-  }
-
-  // Get category ID and sort for a specific tab index
-  Map<String, dynamic> _getTabParams(int tabIndex) {
-    if (tabIndex == 0) {
-      return {
-        'categoryId': _currentParentCategoryId ?? _categoryId,
-        'sortBy': 'rating_desc',
-        'showSubcategoryBadge': true,
-        'includeChildren': true,
-      };
-    }
-    final subcategoryIndex = tabIndex - 1;
-    if (subcategoryIndex < _subcategories.length) {
-      final subcategory = _subcategories[subcategoryIndex];
-      return {
-        'categoryId': subcategory['id'] as String?,
-        'sortBy': null,
-        'showSubcategoryBadge': false,
-        'includeChildren': false,
-      };
-    }
-    return {
-      'categoryId': _categoryId,
-      'sortBy': null,
-      'showSubcategoryBadge': false,
-      'includeChildren': false,
-    };
-  }
-
-  Widget _buildListingsListForTab(int tabIndex) {
-    final tabParams = _getTabParams(tabIndex);
-    final categoryId = tabParams['categoryId'] as String?;
-    final sortBy = tabParams['sortBy'] as String?;
-    final includeSubtree = tabParams['includeChildren'] as bool? ?? false;
-    final showSubcategoryBadge = tabParams['showSubcategoryBadge'] as bool? ?? false;
-
-    if (categoryId == null) {
-      return Center(child: Text('Category not found'));
-    }
-
-    final listingsAsync = ref.watch(
-      listingsProvider(
-        _listingsParamsForCategoryTab(
-          categoryId: categoryId,
-          sortBy: sortBy,
-          includeSubtree: includeSubtree,
+  Widget _buildCategoryPills(List<Map<String, dynamic>> rootChildren) {
+    if (_isLoadingSubcategories) {
+      return const SizedBox(
+        height: 60,
+        child: Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
         ),
-      ),
-    );
+      );
+    }
 
-    return listingsAsync.when(
-      data: (response) {
-        final listings = response['data'] as List? ?? [];
-        final meta = response['meta'] as Map<String, dynamic>?;
-        final totalPages = meta?['totalPages'] ?? 1;
+    // Determine the current children to show
+    List<Map<String, dynamic>> currentChildren = [];
+    if (_navigationStack.isEmpty) {
+      currentChildren = rootChildren;
+    } else {
+      // For children of a subcategory, we'd ideally have them cached or in the stack
+      // However, we rely on the API to have fetched them.
+      // Let's watch the children for the current parent in the stack
+      final currentParentId = _navigationStack.last['id'] as String;
+      final currentChildrenAsync =
+          ref.watch(categoryChildrenProvider(currentParentId));
 
-        if (listings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.explore,
-                  size: 64,
-                  color: context.secondaryTextColor,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No ${_categoryName?.toLowerCase() ?? widget.category} found',
-                  style: context.headlineSmall.copyWith(
-                    color: context.secondaryTextColor,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Check back later for new listings',
-                  style: context.bodyMedium.copyWith(
-                    color: context.secondaryTextColor,
-                  ),
-                ),
-              ],
+      currentChildrenAsync.whenData((children) {
+        currentChildren =
+            children.where((child) => child['isActive'] != false).toList();
+      });
+    }
+
+    // Filter out inactive
+    final displayChildren =
+        currentChildren.where((child) => child['isActive'] != false).toList();
+
+    if (displayChildren.isEmpty && _navigationStack.isEmpty) {
+      return const SizedBox.shrink(); // No subcategories at all
+    }
+
+    return SizedBox(
+      height: 60,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        children: [
+          if (_navigationStack.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ActionChip(
+                onPressed: _handleBackTap,
+                avatar: Icon(Icons.arrow_back_ios,
+                    size: 16, color: context.primaryTextColor),
+                label: const Text('Back'),
+                backgroundColor: context.cardColor,
+                side: BorderSide(color: context.dividerColor),
+                labelStyle: context.bodyMedium
+                    .copyWith(color: context.primaryTextColor),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+              ),
             ),
-          );
-        }
 
-        return RefreshIndicator(
-          color: context.primaryColorTheme,
-          backgroundColor: context.cardColor,
-          onRefresh: () async {
-            ref.invalidate(
-              listingsProvider(
-                _listingsParamsForCategoryTab(
-                  categoryId: categoryId,
-                  sortBy: sortBy,
-                  includeSubtree: includeSubtree,
+          // The "All" pill for the current level
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+              label: Text(_navigationStack.isEmpty
+                  ? 'All'
+                  : 'All ${_navigationStack.last['name']}'),
+              selected: _selectedCategoryId ==
+                  (_navigationStack.isEmpty
+                      ? _categoryId
+                      : _navigationStack.last['id']),
+              onSelected: (selected) {
+                if (selected) {
+                  _handleCategoryTap(
+                      null); // Passing null means "All" for current parent
+                }
+              },
+              selectedColor: context.primaryColorTheme,
+              backgroundColor: context.cardColor,
+              side: BorderSide(
+                color: _selectedCategoryId ==
+                        (_navigationStack.isEmpty
+                            ? _categoryId
+                            : _navigationStack.last['id'])
+                    ? context.primaryColorTheme
+                    : context.dividerColor,
+              ),
+              labelStyle: context.bodyMedium.copyWith(
+                color: _selectedCategoryId ==
+                        (_navigationStack.isEmpty
+                            ? _categoryId
+                            : _navigationStack.last['id'])
+                    ? Colors.white
+                    : context.primaryTextColor,
+                fontWeight: _selectedCategoryId ==
+                        (_navigationStack.isEmpty
+                            ? _categoryId
+                            : _navigationStack.last['id'])
+                    ? FontWeight.w600
+                    : FontWeight.w400,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+
+          // Children pills
+          ...displayChildren.map((child) {
+            final isSelected = _selectedCategoryId == child['id'];
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                label: Text(child['name'] as String? ?? 'Unknown'),
+                selected: isSelected,
+                onSelected: (selected) {
+                  _handleCategoryTap(child);
+                },
+                selectedColor: context.primaryColorTheme,
+                backgroundColor: context.cardColor,
+                side: BorderSide(
+                  color: isSelected
+                      ? context.primaryColorTheme
+                      : context.dividerColor,
                 ),
+                labelStyle: context.bodyMedium.copyWith(
+                  color: isSelected ? Colors.white : context.primaryTextColor,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
               ),
             );
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: listings.length,
-            itemBuilder: (context, index) {
-              final listing = listings[index] as Map<String, dynamic>;
-              if (_isAccommodation) {
-                return _buildAccommodationCard(listing, showSubcategoryBadge: showSubcategoryBadge);
-              } else {
-                return _buildRegularListingCard(listing, showSubcategoryBadge: showSubcategoryBadge);
-              }
-            },
-          ),
-        );
-      },
-      loading: () => _buildSkeletonLoader(),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: context.errorColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Failed to load listings',
-              style: context.headlineSmall.copyWith(
-                color: context.errorColor,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () {
-                ref.invalidate(
-                  listingsProvider(
-                    _listingsParamsForCategoryTab(
-                      categoryId: categoryId,
-                      sortBy: sortBy,
-                      includeSubtree: includeSubtree,
-                    ),
-                  ),
-                );
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
+          }),
+        ],
       ),
     );
   }
@@ -629,13 +580,14 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     if (_categoryId == null) {
       return Center(child: Text('Category not found'));
     }
-    
+
     final listingsAsync = ref.watch(
       listingsProvider(
         ListingsParams(
           page: _currentPage,
           limit: _pageSize,
           category: _categoryIdForListings,
+          includeChildren: true,
           rating: _minRating,
           minPrice: _minPrice,
           maxPrice: _maxPrice,
@@ -690,6 +642,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   page: _currentPage,
                   limit: _pageSize,
                   category: _categoryIdForListings,
+                  includeChildren: true,
                   rating: _minRating,
                   minPrice: _minPrice,
                   maxPrice: _maxPrice,
@@ -708,39 +661,47 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _currentPage++;
-                          });
-                          // Invalidate to fetch next page with current filters and sort
-                          ref.invalidate(
-                            listingsProvider(
-                              ListingsParams(
-                                page: _currentPage,
-                                limit: _pageSize,
-                                category: _categoryIdForListings,
-                                rating: _minRating,
-                                minPrice: _minPrice,
-                                maxPrice: _maxPrice,
-                                isFeatured: _isFeatured,
-                                sortBy: _sortBy,
-                              ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _currentPage++;
+                        });
+                        // Invalidate to fetch next page with current filters and sort
+                        ref.invalidate(
+                          listingsProvider(
+                            ListingsParams(
+                              page: _currentPage,
+                              limit: _pageSize,
+                              category: _categoryIdForListings,
+                              includeChildren: true,
+                              rating: _minRating,
+                              minPrice: _minPrice,
+                              maxPrice: _maxPrice,
+                              isFeatured: _isFeatured,
+                              sortBy: _sortBy,
                             ),
-                          );
-                        },
-                        child: const Text('Load More'),
-                      ),
+                          ),
+                        );
+                      },
+                      child: const Text('Load More'),
+                    ),
                   ),
                 );
               }
 
               final listing = listings[index] as Map<String, dynamic>;
-              
+
+              // Only show subcategory badges if we are viewing the "All" view of a category
+              final showSubcategoryBadge = _selectedCategoryId == _categoryId ||
+                  (_navigationStack.isNotEmpty &&
+                      _selectedCategoryId == _navigationStack.last['id']);
+
               if (_isAccommodation) {
-                return _buildAccommodationCard(listing);
+                return _buildAccommodationCard(listing,
+                    showSubcategoryBadge: showSubcategoryBadge);
               } else {
-                return _buildRegularListingCard(listing);
+                return _buildRegularListingCard(listing,
+                    showSubcategoryBadge: showSubcategoryBadge);
               }
             },
           ),
@@ -797,21 +758,25 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     );
   }
 
-  Widget _buildRegularListingCard(Map<String, dynamic> listing, {bool showSubcategoryBadge = false}) {
+  Widget _buildRegularListingCard(Map<String, dynamic> listing,
+      {bool showSubcategoryBadge = false}) {
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Unknown';
-    
+
     // Extract image URL - images is a List of Maps with media objects
     String? imageUrl;
-    if (listing['images'] != null && listing['images'] is List && (listing['images'] as List).isNotEmpty) {
+    if (listing['images'] != null &&
+        listing['images'] is List &&
+        (listing['images'] as List).isNotEmpty) {
       final firstImage = (listing['images'] as List).first;
       if (firstImage is Map && firstImage['media'] != null) {
-        imageUrl = firstImage['media']['url'] ?? firstImage['media']['thumbnailUrl'];
+        imageUrl =
+            firstImage['media']['url'] ?? firstImage['media']['thumbnailUrl'];
       } else if (firstImage is String) {
         imageUrl = firstImage;
       }
     }
-    
+
     // Extract address - address is directly on listing, city is an object
     final address = listing['address'] as String? ?? '';
     String cityName = '';
@@ -828,7 +793,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : cityName.isNotEmpty
                 ? cityName
                 : 'Location not available';
-    
+
     // Extract rating
     final rating = listing['rating'] != null
         ? (listing['rating'] is String
@@ -836,9 +801,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : (listing['rating'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
     // Backend returns _count.reviews, not reviewCount directly
-    final reviewCount = (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ?? 
-                       listing['reviewCount'] as int? ?? 0;
-    
+    final reviewCount =
+        (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ??
+            listing['reviewCount'] as int? ??
+            0;
+
     // Extract price - minPrice and currency are directly on listing
     final minPrice = listing['minPrice'] != null
         ? (listing['minPrice'] is String
@@ -851,9 +818,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : (listing['maxPrice'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
     final currency = listing['currency'] as String? ?? 'RWF';
-    final priceText = minPrice > 0 
-        ? (maxPrice > minPrice 
-            ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
+    final priceText = minPrice > 0
+        ? (maxPrice > minPrice
+            ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice,
+                currency: currency)
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
         : '';
 
@@ -944,21 +912,25 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     );
   }
 
-  Widget _buildAccommodationCard(Map<String, dynamic> listing, {bool showSubcategoryBadge = false}) {
+  Widget _buildAccommodationCard(Map<String, dynamic> listing,
+      {bool showSubcategoryBadge = false}) {
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Unknown';
-    
+
     // Extract image URL - images is a List of Maps with media objects
     String? imageUrl;
-    if (listing['images'] != null && listing['images'] is List && (listing['images'] as List).isNotEmpty) {
+    if (listing['images'] != null &&
+        listing['images'] is List &&
+        (listing['images'] as List).isNotEmpty) {
       final firstImage = (listing['images'] as List).first;
       if (firstImage is Map && firstImage['media'] != null) {
-        imageUrl = firstImage['media']['url'] ?? firstImage['media']['thumbnailUrl'];
+        imageUrl =
+            firstImage['media']['url'] ?? firstImage['media']['thumbnailUrl'];
       } else if (firstImage is String) {
         imageUrl = firstImage;
       }
     }
-    
+
     // Extract address - address is directly on listing, city is an object
     final address = listing['address'] as String? ?? '';
     String cityName = '';
@@ -975,7 +947,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : cityName.isNotEmpty
                 ? cityName
                 : 'Location not available';
-    
+
     // Extract rating
     final rating = listing['rating'] != null
         ? (listing['rating'] is String
@@ -983,9 +955,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : (listing['rating'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
     // Backend returns _count.reviews, not reviewCount directly
-    final reviewCount = (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ?? 
-                       listing['reviewCount'] as int? ?? 0;
-    
+    final reviewCount =
+        (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ??
+            listing['reviewCount'] as int? ??
+            0;
+
     // Extract price - minPrice and currency are directly on listing
     final minPrice = listing['minPrice'] != null
         ? (listing['minPrice'] is String
@@ -993,7 +967,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             : (listing['minPrice'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
     final currency = listing['currency'] as String? ?? 'RWF';
-    
+
     // Extract amenities
     final amenities = listing['amenities'] as List? ?? [];
 
@@ -1033,7 +1007,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                   child: imageUrl != null
                       ? CachedNetworkImage(
                           imageUrl: imageUrl,
@@ -1043,7 +1018,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           placeholder: (context, url) => Container(
                             height: 200,
                             color: context.grey200,
-                            child: Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                                    color: context.primaryColorTheme)),
                           ),
                           errorWidget: (context, url, error) => Container(
                             height: 200,
@@ -1084,19 +1061,22 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                       }
 
                       try {
-                        final favoritesService = ref.read(favoritesServiceProvider);
+                        final favoritesService =
+                            ref.read(favoritesServiceProvider);
                         final isFavorited = isFavoritedAsync.value ?? false;
-                        
-                        await favoritesService.toggleFavorite(listingId: listingId);
-                        
+
+                        await favoritesService.toggleFavorite(
+                            listingId: listingId);
+
                         ref.invalidate(isListingFavoritedProvider(listingId));
-                        ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
-                        
+                        ref.invalidate(favoritesProvider(
+                            const FavoritesParams(page: 1, limit: 100)));
+
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             AppTheme.successSnackBar(
-                              message: isFavorited 
-                                  ? AppConfig.favoriteRemovedMessage 
+                              message: isFavorited
+                                  ? AppConfig.favoriteRemovedMessage
                                   : AppConfig.favoriteAddedMessage,
                             ),
                           );
@@ -1157,13 +1137,15 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     bottom: 12,
                     left: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: context.primaryColorTheme,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        PriceFormatter.formatAbbreviated(minPrice, currency: currency),
+                        PriceFormatter.formatAbbreviated(minPrice,
+                            currency: currency),
                         style: context.bodySmall.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -1240,7 +1222,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   if (subcategoryName != null) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: context.primaryColorTheme.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
@@ -1265,9 +1248,12 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                       spacing: 8,
                       runSpacing: 8,
                       children: amenities.take(4).map<Widget>((amenity) {
-                        final amenityName = amenity is String ? amenity : amenity['name'] as String? ?? '';
+                        final amenityName = amenity is String
+                            ? amenity
+                            : amenity['name'] as String? ?? '';
                         return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: context.grey100,
                             borderRadius: BorderRadius.circular(8),
@@ -1298,14 +1284,14 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     double? tempMinPrice = _minPrice;
     double? tempMaxPrice = _maxPrice;
     bool? tempIsFeatured = _isFeatured;
-    
+
     final minPriceController = TextEditingController(
       text: _minPrice != null ? _minPrice!.toStringAsFixed(0) : '',
     );
     final maxPriceController = TextEditingController(
       text: _maxPrice != null ? _maxPrice!.toStringAsFixed(0) : '',
     );
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -1342,7 +1328,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ],
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Minimum Rating
                 Text(
                   'Minimum Rating',
@@ -1355,7 +1341,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    _buildRatingChip(context,
+                    _buildRatingChip(
+                      context,
                       '4.0+ Stars',
                       4.0,
                       tempMinRating,
@@ -1365,7 +1352,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                         });
                       },
                     ),
-                    _buildRatingChip(context,
+                    _buildRatingChip(
+                      context,
                       '4.5+ Stars',
                       4.5,
                       tempMinRating,
@@ -1375,7 +1363,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                         });
                       },
                     ),
-                    _buildRatingChip(context,
+                    _buildRatingChip(
+                      context,
                       '5.0 Stars',
                       5.0,
                       tempMinRating,
@@ -1388,7 +1377,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Price Range
                 Text(
                   'Price Range',
@@ -1416,7 +1405,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: context.primaryColorTheme),
+                            borderSide:
+                                BorderSide(color: context.primaryColorTheme),
                           ),
                           prefixText: 'RWF ',
                         ),
@@ -1446,7 +1436,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: context.primaryColorTheme),
+                            borderSide:
+                                BorderSide(color: context.primaryColorTheme),
                           ),
                           prefixText: 'RWF ',
                         ),
@@ -1461,7 +1452,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Featured Only
                 CheckboxListTile(
                   title: Text(
@@ -1486,7 +1477,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   activeColor: context.primaryColorTheme,
                   contentPadding: EdgeInsets.zero,
                 ),
-                
+
                 // Action buttons
                 const SizedBox(height: 20),
                 Row(
@@ -1541,10 +1532,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                             ),
                           );
                         },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: const Text('Apply Filters'),
                       ),
@@ -1558,8 +1549,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
       ),
     );
   }
-  
-  Widget _buildRatingChip(BuildContext ctx, String label, double value, double? selectedValue, Function(double) onSelected) {
+
+  Widget _buildRatingChip(BuildContext ctx, String label, double value,
+      double? selectedValue, Function(double) onSelected) {
     final isSelected = selectedValue == value;
     return FilterChip(
       label: Text(label),
@@ -1577,7 +1569,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   void _showSortBottomSheet() {
     // Local state for bottom sheet
     String? tempSortBy = _sortBy;
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -1613,54 +1605,62 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ],
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Sort Options
                 _buildSortOption('Popular', 'popular', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Rating (High to Low)', 'rating_desc', tempSortBy, (value) {
+                _buildSortOption(
+                    'Rating (High to Low)', 'rating_desc', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Rating (Low to High)', 'rating_asc', tempSortBy, (value) {
+                _buildSortOption(
+                    'Rating (Low to High)', 'rating_asc', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Price (Low to High)', 'price_asc', tempSortBy, (value) {
+                _buildSortOption('Price (Low to High)', 'price_asc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Price (High to Low)', 'price_desc', tempSortBy, (value) {
+                _buildSortOption(
+                    'Price (High to Low)', 'price_desc', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Name (A to Z)', 'name_asc', tempSortBy, (value) {
+                _buildSortOption('Name (A to Z)', 'name_asc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Name (Z to A)', 'name_desc', tempSortBy, (value) {
+                _buildSortOption('Name (Z to A)', 'name_desc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Newest First', 'createdAt_desc', tempSortBy, (value) {
+                _buildSortOption('Newest First', 'createdAt_desc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Oldest First', 'createdAt_asc', tempSortBy, (value) {
+                _buildSortOption('Oldest First', 'createdAt_asc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                
+
                 // Action buttons
                 const SizedBox(height: 20),
                 Row(
@@ -1705,10 +1705,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                             ),
                           );
                         },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: const Text('Apply Sort'),
                       ),
@@ -1722,8 +1722,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
       ),
     );
   }
-  
-  Widget _buildSortOption(String label, String value, String? selectedValue, Function(String) onSelected) {
+
+  Widget _buildSortOption(String label, String value, String? selectedValue,
+      Function(String) onSelected) {
     final isSelected = selectedValue == value;
     return ListTile(
       title: Text(
@@ -1732,7 +1733,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
           color: context.primaryTextColor,
         ),
       ),
-      trailing: isSelected ? Icon(Icons.check, color: context.primaryColorTheme) : null,
+      trailing: isSelected
+          ? Icon(Icons.check, color: context.primaryColorTheme)
+          : null,
       onTap: () => onSelected(value),
       selected: isSelected,
       selectedTileColor: context.primaryColorTheme.withOpacity(0.1),
@@ -1781,7 +1784,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: context.grey200,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(16)),
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -1806,7 +1810,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: context.isDarkMode ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.7),
+                        color: context.isDarkMode
+                            ? Colors.white.withOpacity(0.2)
+                            : Colors.white.withOpacity(0.7),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -1830,11 +1836,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                      colors: [
-                        context.grey300,
-                        context.grey200,
-                        context.grey300,
-                      ],
+                                colors: [
+                                  context.grey300,
+                                  context.grey200,
+                                  context.grey300,
+                                ],
                                 stops: [
                                   0.0,
                                   _shimmerAnimation.value,
@@ -1876,11 +1882,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                      colors: [
-                        context.grey300,
-                        context.grey200,
-                        context.grey300,
-                      ],
+                                colors: [
+                                  context.grey300,
+                                  context.grey200,
+                                  context.grey300,
+                                ],
                                 stops: [
                                   0.0,
                                   _shimmerAnimation.value,
@@ -1970,7 +1976,8 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: context.grey200,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(12)),
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -2032,11 +2039,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                      colors: [
-                        context.grey300,
-                        context.grey200,
-                        context.grey300,
-                      ],
+                                colors: [
+                                  context.grey300,
+                                  context.grey200,
+                                  context.grey300,
+                                ],
                                 stops: [
                                   0.0,
                                   _shimmerAnimation.value,
@@ -2078,11 +2085,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                      colors: [
-                        context.grey300,
-                        context.grey200,
-                        context.grey300,
-                      ],
+                                colors: [
+                                  context.grey300,
+                                  context.grey200,
+                                  context.grey300,
+                                ],
                                 stops: [
                                   0.0,
                                   _shimmerAnimation.value,
