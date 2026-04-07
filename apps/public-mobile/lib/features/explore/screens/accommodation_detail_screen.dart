@@ -124,7 +124,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
   String _extractPrice(Map<String, dynamic> listing) {
     final minPrice = listing['minPrice'];
     
-    if (minPrice == null) return 'Price not available';
+    if (minPrice == null) return '';
     
     double minPriceValue = 0.0;
     if (minPrice is String) {
@@ -133,7 +133,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
       minPriceValue = minPrice.toDouble();
     }
     
-    if (minPriceValue == 0.0) return 'Price not available';
+    if (minPriceValue == 0.0) return '';
     
     final maxPrice = listing['maxPrice'];
     if (maxPrice != null) {

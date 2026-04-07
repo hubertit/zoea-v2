@@ -59,7 +59,7 @@ class BookingScreen extends ConsumerWidget {
           final minPrice = listing['minPrice'];
           final maxPrice = listing['maxPrice'];
           final currency = listing['currency'] ?? 'RWF';
-          String priceRange = 'Price not available';
+          String priceRange = '';
           if (minPrice != null) {
             final min = minPrice is String ? double.tryParse(minPrice) : minPrice?.toDouble();
             final max = maxPrice != null 

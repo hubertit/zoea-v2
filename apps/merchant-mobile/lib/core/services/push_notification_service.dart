@@ -59,7 +59,7 @@ class PushNotificationService {
     
     final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (id, title, body, payload) => null,
+      onDidReceiveLocalNotification: (id, title, body, payload) {},
     );
 
     final InitializationSettings initializationSettings = InitializationSettings(

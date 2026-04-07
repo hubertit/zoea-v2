@@ -855,7 +855,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
         ? (maxPrice > minPrice 
             ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
-        : 'Price not available';
+        : '';
 
     // Extract subcategory name if showing badge
     String displayCategory = _categoryName ?? widget.category;

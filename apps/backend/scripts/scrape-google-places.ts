@@ -52,11 +52,19 @@ const COUNTRY_NAME = 'Rwanda';
 
 // We map a slug to multiple queries to fetch up to ~180-200 places per category via pagination
 const CATEGORIES_TO_SCRAPE = [
-  { slug: 'pharmacy', queries: [
-      'Pharmacies in Kigali', '24 hour pharmacy in Kigali', 'Best pharmacy in Kigali',
-      'Pharmacies in Nyarutarama Kigali', 'Pharmacies in Kimihurura Kigali', 'Pharmacies in Kiyovu Kigali', 
-      'Pharmacies in Kacyiru Kigali', 'Pharmacies in Remera Kigali', 'Chemist in Kigali'
-    ], type: 'market' }
+  { slug: 'stadiums-arenas', queries: [
+      'Stadiums in Kigali', 'BK Arena', 'Amahoro Stadium', 'Pele stadium Kigali', 'Football stadiums Kigali'
+    ], type: 'attraction' },
+  { slug: 'gyms-fitness', queries: [
+      'Gyms in Kigali', 'Fitness centers in Kigali', 'Kigali universe', 'Workout places Kigali', 'Crossfit Kigali'
+    ], type: 'attraction' },
+  { slug: 'sports-centers', queries: [
+      'Sports facilities in Kigali', 'Sports complexes in Kigali', 'Football pitches in Kigali',
+      'Basketball courts in Kigali', 'Tennis courts in Kigali', 'Swimming pools in Kigali', 'Sports clubs in Kigali'
+    ], type: 'attraction' },
+  { slug: 'golf-courses', queries: [
+      'Golf courses in Kigali', 'Kigali Golf Resort', 'Golf clubs in Rwanda'
+    ], type: 'attraction' }
 ];
 
 async function uploadImage(photoReference: string, placeName: string): Promise<{ url: string; provider: string }> {

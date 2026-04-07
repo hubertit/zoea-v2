@@ -559,7 +559,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
         ? (maxPrice > minPrice 
             ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
-        : 'Price not available';
+        : '';
 
     // Extract subcategory name if in "All" tab (show subcategory badge)
     String displayCategory = _diningCategoryName ?? 'Dining';

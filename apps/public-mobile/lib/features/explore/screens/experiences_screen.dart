@@ -237,7 +237,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     final currency = tour['currency'] as String? ?? 'USD';
     final priceRange = pricePerPerson != null
         ? '${PriceFormatter.formatAbbreviated(pricePerPerson.toDouble(), currency: currency)}/person'
-        : 'Price not available';
+        : '';
     
     final category = tour['category'] as Map<String, dynamic>?;
     final categoryName = category?['name'] as String? ?? 'Tour';
@@ -437,7 +437,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     // Get location from first tour
     String location = 'Location not available';
     String? imageUrl;
-    String priceRange = 'Price not available';
+    String priceRange = '';
     String? phone;
     String? description;
     

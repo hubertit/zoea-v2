@@ -266,7 +266,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     final currency = listing['currency'] as String? ?? 'RWF';
     final priceRange = minPrice != null
         ? 'From ${_formatPrice(minPrice, currency)}'
-        : 'Price not available';
+        : '';
     
     // Extract category
     final category = listing['category']?['name'] as String? ?? 

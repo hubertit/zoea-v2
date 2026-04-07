@@ -875,7 +875,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
         ? (maxPrice > minPrice 
             ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
-        : 'Price not available';
+        : '';
     
     // Extract room types
     final roomTypes = listing['roomTypes'] as List? ?? [];
