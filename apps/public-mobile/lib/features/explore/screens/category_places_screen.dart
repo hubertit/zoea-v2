@@ -29,7 +29,8 @@ class CategoryPlacesScreen extends ConsumerStatefulWidget {
 }
 
 class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  TabController? _tabController;
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
   int _currentPage = 1;
@@ -38,10 +39,19 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   String? _categoryName;
   bool _isAccommodation = false;
 
-  // Navigation state for cascading pills
-  List<Map<String, dynamic>> _navigationStack = [];
-  String? _selectedCategoryId; // The ID currently being used to filter listings
-  bool _isLoadingSubcategories = false;
+  // Subcategories and navigation
+  List<Map<String, dynamic>> _subcategories = [];
+  String?
+      _selectedCategoryId; // Currently selected category/subcategory ID for listings
+  // ignore: unused_field
+  int _selectedTabIndex =
+      0; // 0 = All, 1 = Popular, 2+ = subcategories (tracked for state management)
+  String?
+      _currentParentCategoryId; // Root category for this screen (scope of "All" tab)
+  bool _isInitializingTabs =
+      false; // Prevent listener from firing during initialization
+  /// Detects when API children list changes so TabController is rebuilt.
+  String? _tabsInitSignature;
 
   // Filter state
   double? _minRating;
@@ -61,6 +71,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   @override
   void initState() {
     super.initState();
+    // TabController will be initialized after we know the number of tabs
 
     // Shimmer animation controller
     _shimmerController = AnimationController(
@@ -83,65 +94,61 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
 
   @override
   void dispose() {
+    _tabController?.dispose();
     _shimmerController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleCategoryTap(Map<String, dynamic>? subcategory) async {
-    // If tapping "All" at the current level
-    if (subcategory == null) {
-      setState(() {
-        _selectedCategoryId = _navigationStack.last['id'] as String?;
-        _currentPage = 1;
-        _sortBy = null;
-      });
-      return;
-    }
+  void _initializeTabs(List<Map<String, dynamic>>? children) {
+    _isInitializingTabs = true;
 
-    final subcategoryId = subcategory['id'] as String;
+    // Extract direct children only (not nested)
+    _subcategories =
+        (children ?? []).where((child) => child['isActive'] != false).toList();
 
-    // Instantly filter listings by this subcategory
-    setState(() {
-      _selectedCategoryId = subcategoryId;
-      _currentPage = 1;
-      _sortBy = null;
+    final tabCount = 1 + _subcategories.length; // All + subcategories
+
+    // Dispose old controller if exists
+    _tabController?.dispose();
+
+    // Create new controller with correct number of tabs
+    _tabController = TabController(length: tabCount, vsync: this);
+    _tabController!.addListener(() {
+      // Don't handle tab change during initialization
+      if (!_isInitializingTabs) {
+        // Handle both during swipe (indexIsChanging) and after completion
+        _handleTabChange(_tabController!.index);
+      }
     });
 
-    // Check if it has children to drill down
-    setState(() {
-      _isLoadingSubcategories = true;
-    });
-
-    try {
-      final children = await ref
-          .read(categoriesServiceProvider)
-          .getCategoryChildren(subcategoryId);
-
-      if (children.isNotEmpty && mounted) {
-        setState(() {
-          _navigationStack.add(subcategory);
-        });
-      }
-    } catch (e) {
-      debugPrint('Error fetching children: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingSubcategories = false;
-        });
-      }
+    // Set initial selected category
+    if (_selectedCategoryId == null) {
+      _selectedCategoryId = _categoryId;
+      _currentParentCategoryId = _categoryId;
     }
+
+    _isInitializingTabs = false;
   }
 
-  void _handleBackTap() {
-    if (_navigationStack.length > 1) {
-      setState(() {
-        _navigationStack.removeLast();
-        _selectedCategoryId = _navigationStack.last['id'] as String?;
-        _currentPage = 1;
+  void _handleTabChange(int index) {
+    if (!mounted || _tabController == null) return;
+
+    setState(() {
+      _selectedTabIndex = index;
+      _currentPage = 1;
+
+      if (index == 0) {
+        _selectedCategoryId = _currentParentCategoryId ?? _categoryId;
         _sortBy = null;
-      });
-    }
+      } else {
+        final subcategoryIndex = index - 1;
+        if (subcategoryIndex < _subcategories.length) {
+          final subcategory = _subcategories[subcategoryIndex];
+          _selectedCategoryId = subcategory['id'] as String?;
+          _sortBy = null;
+        }
+      }
+    });
   }
 
   bool _isAccommodationCategory(String? categoryName, String? categorySlug) {
@@ -185,17 +192,18 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
           data: (children) {
             final isAccommodation =
                 _isAccommodationCategory(categoryName, widget.category);
+            final sig = '$categoryId|${children.map((c) => c['id']).join(',')}';
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
-              if (_categoryId != categoryId) {
+              if (_tabsInitSignature != sig) {
                 setState(() {
                   _categoryId = categoryId;
                   _categoryName = categoryName;
+                  _currentParentCategoryId = categoryId;
                   _isAccommodation = isAccommodation;
-                  if (_selectedCategoryId == null) {
-                    _selectedCategoryId = categoryId;
-                  }
+                  _initializeTabs(children);
+                  _tabsInitSignature = sig;
                 });
               }
             });
@@ -266,18 +274,75 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     ],
                   ),
                 ],
-                bottom: _isAccommodation
+                bottom: _isAccommodation || _tabController == null
                     ? null
-                    : PreferredSize(
-                        preferredSize: const Size.fromHeight(60),
-                        child: _buildCategoryPills(children),
+                    : TabBar(
+                        controller: _tabController,
+                        indicatorColor: context.primaryColorTheme,
+                        labelColor: context.primaryColorTheme,
+                        unselectedLabelColor: context.secondaryTextColor,
+                        labelStyle: context.bodySmall
+                            .copyWith(fontWeight: FontWeight.w600),
+                        isScrollable: true,
+                        tabAlignment: TabAlignment.start,
+                        labelPadding:
+                            const EdgeInsets.symmetric(horizontal: 16),
+                        onTap: (index) async {
+                          if (index > 0) {
+                            final subcategory = _subcategories[index - 1];
+                            final subcategoryId = subcategory['id'] as String?;
+                            final slug = subcategory['slug'] as String?;
+
+                            if (subcategoryId != null && slug != null) {
+                              try {
+                                // Check condition in app by testing the endpoint response
+                                final children = await ref.read(
+                                    categoryChildrenProvider(subcategoryId)
+                                        .future);
+                                if (children.isNotEmpty) {
+                                  if (context.mounted) {
+                                    // Small delay to allow the ripple effect to show
+                                    Future.delayed(
+                                        const Duration(milliseconds: 150), () {
+                                      if (context.mounted) {
+                                        context.push('/category/$slug');
+                                      }
+                                    });
+                                  }
+                                }
+                              } catch (e) {
+                                // If it fails or has no children, just act as a normal tab
+                              }
+                            }
+                          }
+                        },
+                        tabs: [
+                          const Tab(text: 'All'),
+                          ..._subcategories.map((subcategory) {
+                            final name =
+                                subcategory['name'] as String? ?? 'Unknown';
+                            return Tab(text: name);
+                          }),
+                        ],
                       ),
               ),
-              body: _categoryId != null
-                  ? _buildListingsList()
-                  : Center(
-                      child: Text('Category not found'),
-                    ),
+              body: _categoryId != null && _tabController != null
+                  ? TabBarView(
+                      controller: _tabController,
+                      children: [
+                        // "All" tab
+                        _buildListingsListForTab(0),
+                        // Subcategory tabs
+                        ..._subcategories.asMap().entries.map((entry) {
+                          return _buildListingsListForTab(entry.key + 1);
+                        }),
+                      ],
+                    )
+                  : _categoryId == null
+                      ? Center(
+                          child: Text('Category not found'),
+                        )
+                      : _buildSkeletonLoader(), // Show skeleton while tabs initialize
             );
           },
           loading: () => Scaffold(
@@ -434,144 +499,173 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
   // Getter for the category ID to use for listings
   String? get _categoryIdForListings => _selectedCategoryId ?? _categoryId;
 
-  Widget _buildCategoryPills(List<Map<String, dynamic>> rootChildren) {
-    if (_isLoadingSubcategories) {
-      return const SizedBox(
-        height: 60,
-        child: Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
+  ListingsParams _listingsParamsForCategoryTab({
+    required String categoryId,
+    String? sortBy,
+    required bool includeSubtree,
+  }) {
+    return ListingsParams(
+      page: 1,
+      limit: _pageSize,
+      category: categoryId,
+      includeChildren: includeSubtree,
+      rating: _minRating,
+      minPrice: _minPrice,
+      maxPrice: _maxPrice,
+      isFeatured: _isFeatured,
+      sortBy: sortBy,
+    );
+  }
+
+  // Get category ID and sort for a specific tab index
+  Map<String, dynamic> _getTabParams(int tabIndex) {
+    if (tabIndex == 0) {
+      return {
+        'categoryId': _currentParentCategoryId ?? _categoryId,
+        'sortBy': 'rating_desc',
+        'showSubcategoryBadge': true,
+        'includeChildren': true,
+      };
+    }
+    final subcategoryIndex = tabIndex - 1;
+    if (subcategoryIndex < _subcategories.length) {
+      final subcategory = _subcategories[subcategoryIndex];
+      return {
+        'categoryId': subcategory['id'] as String?,
+        'sortBy': null,
+        'showSubcategoryBadge': false,
+        'includeChildren': false,
+      };
+    }
+    return {
+      'categoryId': _categoryId,
+      'sortBy': null,
+      'showSubcategoryBadge': false,
+      'includeChildren': false,
+    };
+  }
+
+  Widget _buildListingsListForTab(int tabIndex) {
+    final tabParams = _getTabParams(tabIndex);
+    final categoryId = tabParams['categoryId'] as String?;
+    final sortBy = tabParams['sortBy'] as String?;
+    final includeSubtree = tabParams['includeChildren'] as bool? ?? false;
+    final showSubcategoryBadge =
+        tabParams['showSubcategoryBadge'] as bool? ?? false;
+
+    if (categoryId == null) {
+      return Center(child: Text('Category not found'));
+    }
+
+    final listingsAsync = ref.watch(
+      listingsProvider(
+        _listingsParamsForCategoryTab(
+          categoryId: categoryId,
+          sortBy: sortBy,
+          includeSubtree: includeSubtree,
         ),
-      );
-    }
+      ),
+    );
 
-    // Determine the current children to show
-    List<Map<String, dynamic>> currentChildren = [];
-    if (_navigationStack.isEmpty) {
-      currentChildren = rootChildren;
-    } else {
-      // For children of a subcategory, we'd ideally have them cached or in the stack
-      // However, we rely on the API to have fetched them.
-      // Let's watch the children for the current parent in the stack
-      final currentParentId = _navigationStack.last['id'] as String;
-      final currentChildrenAsync =
-          ref.watch(categoryChildrenProvider(currentParentId));
+    return listingsAsync.when(
+      data: (response) {
+        final listings = response['data'] as List? ?? [];
+        final meta = response['meta'] as Map<String, dynamic>?;
+        final totalPages = meta?['totalPages'] ?? 1;
 
-      currentChildrenAsync.whenData((children) {
-        currentChildren =
-            children.where((child) => child['isActive'] != false).toList();
-      });
-    }
-
-    // Filter out inactive
-    final displayChildren =
-        currentChildren.where((child) => child['isActive'] != false).toList();
-
-    if (displayChildren.isEmpty && _navigationStack.isEmpty) {
-      return const SizedBox.shrink(); // No subcategories at all
-    }
-
-    return SizedBox(
-      height: 60,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        children: [
-          if (_navigationStack.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: ActionChip(
-                onPressed: _handleBackTap,
-                avatar: Icon(Icons.arrow_back_ios,
-                    size: 16, color: context.primaryTextColor),
-                label: const Text('Back'),
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.dividerColor),
-                labelStyle: context.bodyMedium
-                    .copyWith(color: context.primaryTextColor),
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-              ),
-            ),
-
-          // The "All" pill for the current level
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(_navigationStack.isEmpty
-                  ? 'All'
-                  : 'All ${_navigationStack.last['name']}'),
-              selected: _selectedCategoryId ==
-                  (_navigationStack.isEmpty
-                      ? _categoryId
-                      : _navigationStack.last['id']),
-              onSelected: (selected) {
-                if (selected) {
-                  _handleCategoryTap(
-                      null); // Passing null means "All" for current parent
-                }
-              },
-              selectedColor: context.primaryColorTheme,
-              backgroundColor: context.cardColor,
-              side: BorderSide(
-                color: _selectedCategoryId ==
-                        (_navigationStack.isEmpty
-                            ? _categoryId
-                            : _navigationStack.last['id'])
-                    ? context.primaryColorTheme
-                    : context.dividerColor,
-              ),
-              labelStyle: context.bodyMedium.copyWith(
-                color: _selectedCategoryId ==
-                        (_navigationStack.isEmpty
-                            ? _categoryId
-                            : _navigationStack.last['id'])
-                    ? Colors.white
-                    : context.primaryTextColor,
-                fontWeight: _selectedCategoryId ==
-                        (_navigationStack.isEmpty
-                            ? _categoryId
-                            : _navigationStack.last['id'])
-                    ? FontWeight.w600
-                    : FontWeight.w400,
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-            ),
-          ),
-
-          // Children pills
-          ...displayChildren.map((child) {
-            final isSelected = _selectedCategoryId == child['id'];
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: ChoiceChip(
-                label: Text(child['name'] as String? ?? 'Unknown'),
-                selected: isSelected,
-                onSelected: (selected) {
-                  _handleCategoryTap(child);
-                },
-                selectedColor: context.primaryColorTheme,
-                backgroundColor: context.cardColor,
-                side: BorderSide(
-                  color: isSelected
-                      ? context.primaryColorTheme
-                      : context.dividerColor,
+        if (listings.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.explore,
+                  size: 64,
+                  color: context.secondaryTextColor,
                 ),
-                labelStyle: context.bodyMedium.copyWith(
-                  color: isSelected ? Colors.white : context.primaryTextColor,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                const SizedBox(height: 16),
+                Text(
+                  'No ${_categoryName?.toLowerCase() ?? widget.category} found',
+                  style: context.headlineSmall.copyWith(
+                    color: context.secondaryTextColor,
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
+                const SizedBox(height: 8),
+                Text(
+                  'Check back later for new listings',
+                  style: context.bodyMedium.copyWith(
+                    color: context.secondaryTextColor,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          color: context.primaryColorTheme,
+          backgroundColor: context.cardColor,
+          onRefresh: () async {
+            ref.invalidate(
+              listingsProvider(
+                _listingsParamsForCategoryTab(
+                  categoryId: categoryId,
+                  sortBy: sortBy,
+                  includeSubtree: includeSubtree,
+                ),
               ),
             );
-          }),
-        ],
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: listings.length,
+            itemBuilder: (context, index) {
+              final listing = listings[index] as Map<String, dynamic>;
+              if (_isAccommodation) {
+                return _buildAccommodationCard(listing,
+                    showSubcategoryBadge: showSubcategoryBadge);
+              } else {
+                return _buildRegularListingCard(listing,
+                    showSubcategoryBadge: showSubcategoryBadge);
+              }
+            },
+          ),
+        );
+      },
+      loading: () => _buildSkeletonLoader(),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: context.errorColor,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Failed to load listings',
+              style: context.headlineSmall.copyWith(
+                color: context.errorColor,
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () {
+                ref.invalidate(
+                  listingsProvider(
+                    _listingsParamsForCategoryTab(
+                      categoryId: categoryId,
+                      sortBy: sortBy,
+                      includeSubtree: includeSubtree,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -587,7 +681,6 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
           page: _currentPage,
           limit: _pageSize,
           category: _categoryIdForListings,
-          includeChildren: true,
           rating: _minRating,
           minPrice: _minPrice,
           maxPrice: _maxPrice,
@@ -642,7 +735,6 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   page: _currentPage,
                   limit: _pageSize,
                   category: _categoryIdForListings,
-                  includeChildren: true,
                   rating: _minRating,
                   minPrice: _minPrice,
                   maxPrice: _maxPrice,
@@ -673,7 +765,6 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                               page: _currentPage,
                               limit: _pageSize,
                               category: _categoryIdForListings,
-                              includeChildren: true,
                               rating: _minRating,
                               minPrice: _minPrice,
                               maxPrice: _maxPrice,
@@ -691,17 +782,10 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
 
               final listing = listings[index] as Map<String, dynamic>;
 
-              // Only show subcategory badges if we are viewing the "All" view of a category
-              final showSubcategoryBadge = _selectedCategoryId == _categoryId ||
-                  (_navigationStack.isNotEmpty &&
-                      _selectedCategoryId == _navigationStack.last['id']);
-
               if (_isAccommodation) {
-                return _buildAccommodationCard(listing,
-                    showSubcategoryBadge: showSubcategoryBadge);
+                return _buildAccommodationCard(listing);
               } else {
-                return _buildRegularListingCard(listing,
-                    showSubcategoryBadge: showSubcategoryBadge);
+                return _buildRegularListingCard(listing);
               }
             },
           ),

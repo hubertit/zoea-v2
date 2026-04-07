@@ -73,22 +73,53 @@ import '../widgets/shell.dart';
 import '../providers/auth_provider.dart';
 import '../providers/listings_provider.dart';
 
+/// Push transition for category drill-down: slide in from the trailing edge with a soft fade.
+CustomTransitionPage<void> _categoryPlacesPage(
+    GoRouterState state, Widget child) {
+  const duration = Duration(milliseconds: 320);
+  const reverseDuration = Duration(milliseconds: 280);
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    name: state.name,
+    child: child,
+    transitionDuration: duration,
+    reverseTransitionDuration: reverseDuration,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeInCubic,
+      );
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0.12, 0),
+          end: Offset.zero,
+        ).animate(curved),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0.92, end: 1).animate(curved),
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
 final routerProvider = Provider<GoRouter>((ref) {
   final isLoggedIn = ref.watch(isLoggedInProvider);
-  
+
   // Create a refresh notifier for GoRouter
   final refreshNotifier = ValueNotifier<bool>(isLoggedIn);
-  
+
   // Update refresh notifier when auth state changes
   ref.listen<bool>(isLoggedInProvider, (previous, next) {
     if (previous != next) {
       refreshNotifier.value = next;
     }
   });
-  
+
   // Always start with splash screen - let splash handle navigation based on auth state
-  final initialLocation = '/splash';
-  
+  const initialLocation = '/splash';
+
   final router = GoRouter(
     refreshListenable: refreshNotifier,
     initialLocation: initialLocation,
@@ -97,16 +128,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (state.matchedLocation == '/splash') {
         return null;
       }
-      
-      final isAuthRoute = state.matchedLocation == '/login' || 
-                          state.matchedLocation == '/register' || 
-                          state.matchedLocation == '/onboarding';
-      
+
+      final isAuthRoute = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/register' ||
+          state.matchedLocation == '/onboarding';
+
       // Allow /onboarding-data for logged-in users (mandatory data collection)
       if (isLoggedIn && state.matchedLocation == '/onboarding-data') {
         return null; // Allow access
       }
-      
+
       // Define protected routes that require authentication
       final protectedRoutes = [
         '/profile',
@@ -121,25 +152,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         '/booking-confirmation',
         '/settings',
       ];
-      
-      final isProtectedRoute = protectedRoutes.any((route) => 
-        state.matchedLocation.startsWith(route) ||
-        state.matchedLocation.startsWith('/profile/') ||
-        state.matchedLocation.startsWith('/booking/') ||
-        state.matchedLocation.startsWith('/booking-confirmation/') ||
-        state.matchedLocation.contains('/book') // Accommodation booking
-      );
-      
+
+      final isProtectedRoute = protectedRoutes.any((route) =>
+              state.matchedLocation.startsWith(route) ||
+              state.matchedLocation.startsWith('/profile/') ||
+              state.matchedLocation.startsWith('/booking/') ||
+              state.matchedLocation.startsWith('/booking-confirmation/') ||
+              state.matchedLocation.contains('/book') // Accommodation booking
+          );
+
       // If user is not logged in and trying to access protected route
       if (!isLoggedIn && isProtectedRoute) {
         return '/login';
       }
-      
+
       // If user is logged in and trying to access auth routes, redirect to explore
       if (isLoggedIn && isAuthRoute) {
         return '/explore';
       }
-      
+
       return null; // No redirect needed
     },
     routes: [
@@ -148,13 +179,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/splash',
         builder: (context, state) => const SplashScreen(),
       ),
-      
+
       // Maintenance Screen (shown when backend is unavailable)
       GoRoute(
         path: '/maintenance',
         builder: (context, state) => const MaintenanceScreen(),
       ),
-      
+
       // Auth Routes
       GoRoute(
         path: '/onboarding',
@@ -513,7 +544,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final accommodationId = state.pathParameters['accommodationId']!;
           final bookingData = state.extra as Map<String, dynamic>?;
-          final selectedRooms = bookingData?['selectedRooms'] as Map<String, Map<String, dynamic>>?;
+          final selectedRooms = bookingData?['selectedRooms']
+              as Map<String, Map<String, dynamic>>?;
           final checkInDate = bookingData?['checkInDate'] as DateTime?;
           final checkOutDate = bookingData?['checkOutDate'] as DateTime?;
           final checkInTime = bookingData?['checkInTime'] as TimeOfDay?;
@@ -528,7 +560,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
-
 
       // Place Detail Route
       GoRoute(
@@ -620,18 +651,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/recommendations',
         builder: (context, state) => const RecommendationsScreen(),
       ),
-      
-      // Category Places Route
+
+      // Category Places Route (custom transition for hierarchy / drill-down)
       GoRoute(
         path: '/category/:category',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final category = state.pathParameters['category']!;
-          return CategoryPlacesScreen(category: category);
+          return _categoryPlacesPage(
+            state,
+            CategoryPlacesScreen(category: category),
+          );
         },
       ),
     ],
   );
-  
+
   return router;
 });
 
@@ -651,27 +685,30 @@ class _ListingDetailRouter extends ConsumerWidget {
         final category = listing['category'] as Map<String, dynamic>?;
         final categorySlug = category?['slug'] as String?;
         final categoryName = category?['name'] as String?;
-        
-        final isAccommodation = categorySlug == 'accommodation' || 
-                               categoryName?.toLowerCase() == 'accommodation';
-        
+
+        final isAccommodation = categorySlug == 'accommodation' ||
+            categoryName?.toLowerCase() == 'accommodation';
+
         if (isAccommodation) {
           // Redirect to accommodation detail screen
           WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.go('/accommodation/$listingId');
-        });
-        // Show loading while redirecting
-        return Scaffold(
-          body: Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        );
-      }
-      
-      // Use regular listing detail screen for non-accommodation listings
-      return ListingDetailScreen(listingId: listingId);
-    },
-    loading: () => Scaffold(
-      body: Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-    ),
+            context.go('/accommodation/$listingId');
+          });
+          // Show loading while redirecting
+          return Scaffold(
+            body: Center(
+                child: CircularProgressIndicator(
+                    color: context.primaryColorTheme)),
+          );
+        }
+
+        // Use regular listing detail screen for non-accommodation listings
+        return ListingDetailScreen(listingId: listingId);
+      },
+      loading: () => Scaffold(
+        body: Center(
+            child: CircularProgressIndicator(color: context.primaryColorTheme)),
+      ),
       error: (error, stack) => ListingDetailScreen(listingId: listingId),
     );
   }

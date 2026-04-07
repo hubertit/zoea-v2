@@ -26,43 +26,50 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
   TabController? _tabController;
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
-  
+
   // Category and subcategories
   String? _diningCategoryId;
   String? _diningCategoryName;
   List<Map<String, dynamic>> _subcategories = [];
-  String? _selectedCategoryId; // Currently selected category/subcategory ID for listings
+  String?
+      _selectedCategoryId; // Currently selected category/subcategory ID for listings
   // ignore: unused_field
-  int _selectedTabIndex = 0; // 0 = All, 1 = Popular, 2+ = subcategories (tracked for state management)
-  bool _isPopularTab = false; // Track if we're showing popular (random) listings
-  
+  int _selectedTabIndex =
+      0; // 0 = All, 1 = Popular, 2+ = subcategories (tracked for state management)
+  bool _isPopularTab =
+      false; // Track if we're showing popular (random) listings
+
   // Pagination
   int _currentPage = 1;
   final int _pageSize = 20;
   final int _popularLimit = 12; // Limit for popular tab (random listings)
-  
+
   // Filter state
   double? _minRating;
   double? _minPrice;
   double? _maxPrice;
   bool? _isFeatured;
-  
+
   // Sort state
   String? _sortBy;
-  
-  bool get _hasActiveFilters => _minRating != null || _minPrice != null || _maxPrice != null || _isFeatured != null;
+
+  bool get _hasActiveFilters =>
+      _minRating != null ||
+      _minPrice != null ||
+      _maxPrice != null ||
+      _isFeatured != null;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Shimmer animation controller
     _shimmerController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
     _shimmerController.repeat();
-    
+
     _shimmerAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -81,15 +88,14 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
 
   void _initializeTabs(List<Map<String, dynamic>>? children) {
     // Extract direct children only (not nested)
-    _subcategories = (children ?? [])
-        .where((child) => child['isActive'] != false)
-        .toList();
-    
+    _subcategories =
+        (children ?? []).where((child) => child['isActive'] != false).toList();
+
     final tabCount = 2 + _subcategories.length; // All + Popular + subcategories
-    
+
     // Dispose old controller if exists
     _tabController?.dispose();
-    
+
     // Create new controller with correct number of tabs
     _tabController = TabController(length: tabCount, vsync: this);
     _tabController!.addListener(() {
@@ -97,7 +103,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
         _handleTabChange(_tabController!.index);
       }
     });
-    
+
     // Set initial selected category
     _selectedCategoryId ??= _diningCategoryId;
   }
@@ -112,7 +118,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       if (index == 0) {
         // "All" tab - show top-rated listings from dining category
         _selectedCategoryId = _diningCategoryId;
-        _sortBy = 'rating_desc'; // Show best-rated items first for better discovery
+        _sortBy =
+            'rating_desc'; // Show best-rated items first for better discovery
         _isPopularTab = false;
       } else if (index == 1) {
         // "Popular" tab - show random listings from all dining
@@ -129,7 +136,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           _isPopularTab = false;
         }
       }
-      
+
       // Invalidate listings provider to refresh with new category/sort
       ref.invalidate(listingsProvider(ListingsParams(
         page: _isPopularTab ? 1 : _currentPage,
@@ -145,7 +152,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
   }
 
   // Getter for the category ID to use for listings
-  String? get _categoryIdForListings => _selectedCategoryId ?? _diningCategoryId;
+  String? get _categoryIdForListings =>
+      _selectedCategoryId ?? _diningCategoryId;
 
   @override
   Widget build(BuildContext context) {
@@ -156,20 +164,20 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       data: (categoryData) {
         _diningCategoryId = categoryData['id'] as String?;
         _diningCategoryName = categoryData['name'] as String?;
-        
+
         // Set initial selected category to dining category for "All" tab
         if (_selectedCategoryId == null) {
           _selectedCategoryId = _diningCategoryId;
         }
-        
+
         // Extract children from category data
         final children = categoryData['children'] as List?;
-        
+
         // Initialize tabs if not already done
         if (_tabController == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
-              _initializeTabs(children != null 
+              _initializeTabs(children != null
                   ? List<Map<String, dynamic>>.from(children)
                   : null);
             }
@@ -184,7 +192,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
             centerTitle: false,
             leading: IconButton(
               onPressed: () => context.go('/explore'),
-              icon: Icon(Icons.chevron_left, size: 32, color: context.primaryTextColor),
+              icon: Icon(Icons.chevron_left,
+                  size: 32, color: context.primaryTextColor),
               style: IconButton.styleFrom(
                 foregroundColor: context.primaryTextColor,
               ),
@@ -244,24 +253,57 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                 ],
               ),
             ],
-            bottom: _tabController == null ? null : TabBar(
-              controller: _tabController,
-              indicatorColor: context.primaryColorTheme,
-              labelColor: context.primaryColorTheme,
-              unselectedLabelColor: context.secondaryTextColor,
-              labelStyle: context.bodySmall.copyWith(fontWeight: FontWeight.w600),
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-              tabs: [
-                const Tab(text: 'All'),
-                const Tab(text: 'Popular'),
-                ..._subcategories.map((subcategory) {
-                  final name = subcategory['name'] as String? ?? 'Unknown';
-                  return Tab(text: name);
-                }),
-              ],
-            ),
+            bottom: _tabController == null
+                ? null
+                : TabBar(
+                    controller: _tabController,
+                    indicatorColor: context.primaryColorTheme,
+                    labelColor: context.primaryColorTheme,
+                    unselectedLabelColor: context.secondaryTextColor,
+                    labelStyle:
+                        context.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    onTap: (index) async {
+                      if (index > 1) {
+                        // Skip All and Popular
+                        final subcategory = _subcategories[index - 2];
+                        final subcategoryId = subcategory['id'] as String?;
+                        final slug = subcategory['slug'] as String?;
+
+                        if (subcategoryId != null && slug != null) {
+                          try {
+                            // Check condition in app by testing the endpoint response
+                            final children = await ref.read(
+                                categoryChildrenProvider(subcategoryId).future);
+                            if (children.isNotEmpty) {
+                              if (context.mounted) {
+                                // Add a small delay for ripple effect, then push
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  if (context.mounted) {
+                                    context.push('/category/$slug');
+                                  }
+                                });
+                              }
+                            }
+                          } catch (e) {
+                            // If it fails or has no children, just act as a normal tab
+                          }
+                        }
+                      }
+                    },
+                    tabs: [
+                      const Tab(text: 'All'),
+                      const Tab(text: 'Popular'),
+                      ..._subcategories.map((subcategory) {
+                        final name =
+                            subcategory['name'] as String? ?? 'Unknown';
+                        return Tab(text: name);
+                      }),
+                    ],
+                  ),
           ),
           body: _diningCategoryId != null
               ? _buildDiningList()
@@ -284,13 +326,14 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           ),
           title: Text(
             'Dining',
-              style: context.headlineMedium.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
-              ),
+            style: context.headlineMedium.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.primaryTextColor,
+            ),
           ),
         ),
-        body: Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
+        body: Center(
+            child: CircularProgressIndicator(color: context.primaryColorTheme)),
       ),
       error: (error, stack) => Scaffold(
         backgroundColor: context.grey50,
@@ -306,10 +349,10 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           ),
           title: Text(
             'Dining',
-              style: context.headlineMedium.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
-              ),
+            style: context.headlineMedium.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.primaryTextColor,
+            ),
           ),
         ),
         body: Center(
@@ -356,7 +399,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
     }
 
     // For Popular tab, fetch more listings to randomize from
-    final fetchLimit = _isPopularTab ? 50 : _pageSize; // Fetch more for popular to randomize
+    final fetchLimit =
+        _isPopularTab ? 50 : _pageSize; // Fetch more for popular to randomize
 
     final listingsAsync = ref.watch(
       listingsProvider(
@@ -376,13 +420,13 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
     return listingsAsync.when(
       data: (response) {
         List listings = List.from(response['data'] as List? ?? []);
-        
+
         // For Popular tab, randomize and limit
         if (_isPopularTab && listings.isNotEmpty) {
           listings.shuffle(); // Randomize the list
           listings = listings.take(_popularLimit).toList();
         }
-        
+
         final meta = response['meta'] as Map<String, dynamic>?;
         final totalPages = meta?['totalPages'] ?? 1;
 
@@ -411,7 +455,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(12),
-            itemCount: listings.length + (!_isPopularTab && _currentPage < totalPages ? 1 : 0),
+            itemCount: listings.length +
+                (!_isPopularTab && _currentPage < totalPages ? 1 : 0),
             itemBuilder: (context, index) {
               // Load more indicator (only for non-popular tabs)
               if (!_isPopularTab && index == listings.length) {
@@ -504,18 +549,21 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
   Widget _buildRegularListingCard(Map<String, dynamic> listing) {
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Unknown';
-    
+
     // Extract image URL - images is a List of Maps with media objects
     String? imageUrl;
-    if (listing['images'] != null && listing['images'] is List && (listing['images'] as List).isNotEmpty) {
+    if (listing['images'] != null &&
+        listing['images'] is List &&
+        (listing['images'] as List).isNotEmpty) {
       final firstImage = (listing['images'] as List).first;
       if (firstImage is Map && firstImage['media'] != null) {
-        imageUrl = firstImage['media']['url'] ?? firstImage['media']['thumbnailUrl'];
+        imageUrl =
+            firstImage['media']['url'] ?? firstImage['media']['thumbnailUrl'];
       } else if (firstImage is String) {
         imageUrl = firstImage;
       }
     }
-    
+
     // Extract address - address is directly on listing, city is an object
     final address = listing['address'] as String? ?? '';
     String cityName = '';
@@ -532,7 +580,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
             : cityName.isNotEmpty
                 ? cityName
                 : 'Location not available';
-    
+
     // Extract rating
     final rating = listing['rating'] != null
         ? (listing['rating'] is String
@@ -540,9 +588,11 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
             : (listing['rating'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
     // Backend returns _count.reviews, not reviewCount directly
-    final reviewCount = (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ?? 
-                       listing['reviewCount'] as int? ?? 0;
-    
+    final reviewCount =
+        (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ??
+            listing['reviewCount'] as int? ??
+            0;
+
     // Extract price - minPrice and currency are directly on listing
     final minPrice = listing['minPrice'] != null
         ? (listing['minPrice'] is String
@@ -555,9 +605,10 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
             : (listing['maxPrice'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
     final currency = listing['currency'] as String? ?? 'RWF';
-    final priceText = minPrice > 0 
-        ? (maxPrice > minPrice 
-            ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice, currency: currency)
+    final priceText = minPrice > 0
+        ? (maxPrice > minPrice
+            ? PriceFormatter.formatAbbreviatedRange(minPrice, maxPrice,
+                currency: currency)
             : PriceFormatter.formatAbbreviated(minPrice, currency: currency))
         : '';
 
@@ -708,7 +759,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: context.grey200,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(16)),
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -780,14 +832,14 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
     double? tempMinPrice = _minPrice;
     double? tempMaxPrice = _maxPrice;
     bool? tempIsFeatured = _isFeatured;
-    
+
     final minPriceController = TextEditingController(
       text: _minPrice != null ? _minPrice!.toStringAsFixed(0) : '',
     );
     final maxPriceController = TextEditingController(
       text: _maxPrice != null ? _maxPrice!.toStringAsFixed(0) : '',
     );
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -823,7 +875,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   ],
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Minimum Rating
                 Text(
                   'Minimum Rating',
@@ -869,7 +921,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Price Range
                 Text(
                   'Price Range',
@@ -897,7 +949,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: context.primaryColorTheme),
+                            borderSide:
+                                BorderSide(color: context.primaryColorTheme),
                           ),
                           prefixText: 'RWF ',
                         ),
@@ -927,7 +980,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: context.primaryColorTheme),
+                            borderSide:
+                                BorderSide(color: context.primaryColorTheme),
                           ),
                           prefixText: 'RWF ',
                         ),
@@ -942,15 +996,15 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Featured Only
                 CheckboxListTile(
                   title: Text(
                     'Featured Only',
-                style: context.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: context.primaryTextColor,
-                ),
+                    style: context.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: context.primaryTextColor,
+                    ),
                   ),
                   subtitle: Text(
                     'Show only featured listings',
@@ -967,7 +1021,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   activeColor: context.primaryColorTheme,
                   contentPadding: EdgeInsets.zero,
                 ),
-                
+
                 // Action buttons
                 const SizedBox(height: 20),
                 Row(
@@ -1021,10 +1075,10 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                             ),
                           );
                         },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: const Text('Apply Filters'),
                       ),
@@ -1038,8 +1092,9 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       ),
     );
   }
-  
-  Widget _buildRatingChip(String label, double value, double? selectedValue, Function(double) onSelected) {
+
+  Widget _buildRatingChip(String label, double value, double? selectedValue,
+      Function(double) onSelected) {
     final isSelected = selectedValue == value;
     return FilterChip(
       label: Text(label),
@@ -1048,7 +1103,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       selectedColor: context.primaryColorTheme.withOpacity(0.2),
       checkmarkColor: context.primaryColorTheme,
       labelStyle: context.bodySmall.copyWith(
-        color: isSelected ? context.primaryColorTheme : context.primaryTextColor,
+        color:
+            isSelected ? context.primaryColorTheme : context.primaryTextColor,
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
       ),
     );
@@ -1057,7 +1113,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
   void _showSortBottomSheet() {
     // Local state for bottom sheet
     String? tempSortBy = _sortBy;
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -1093,54 +1149,62 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   ],
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Sort Options
                 _buildSortOption('Popular', 'popular', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Rating (High to Low)', 'rating_desc', tempSortBy, (value) {
+                _buildSortOption(
+                    'Rating (High to Low)', 'rating_desc', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Rating (Low to High)', 'rating_asc', tempSortBy, (value) {
+                _buildSortOption(
+                    'Rating (Low to High)', 'rating_asc', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Price (Low to High)', 'price_asc', tempSortBy, (value) {
+                _buildSortOption('Price (Low to High)', 'price_asc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Price (High to Low)', 'price_desc', tempSortBy, (value) {
+                _buildSortOption(
+                    'Price (High to Low)', 'price_desc', tempSortBy, (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Name (A to Z)', 'name_asc', tempSortBy, (value) {
+                _buildSortOption('Name (A to Z)', 'name_asc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Name (Z to A)', 'name_desc', tempSortBy, (value) {
+                _buildSortOption('Name (Z to A)', 'name_desc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Newest First', 'createdAt_desc', tempSortBy, (value) {
+                _buildSortOption('Newest First', 'createdAt_desc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                _buildSortOption('Oldest First', 'createdAt_asc', tempSortBy, (value) {
+                _buildSortOption('Oldest First', 'createdAt_asc', tempSortBy,
+                    (value) {
                   setModalState(() {
                     tempSortBy = tempSortBy == value ? null : value;
                   });
                 }),
-                
+
                 // Action buttons
                 const SizedBox(height: 20),
                 Row(
@@ -1184,10 +1248,10 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                             ),
                           );
                         },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: const Text('Apply Sort'),
                       ),
@@ -1201,15 +1265,18 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       ),
     );
   }
-  
-  Widget _buildSortOption(String label, String value, String? selectedValue, Function(String) onSelected) {
+
+  Widget _buildSortOption(String label, String value, String? selectedValue,
+      Function(String) onSelected) {
     final isSelected = selectedValue == value;
     return ListTile(
       title: Text(
         label,
         style: context.bodyMedium,
       ),
-      trailing: isSelected ? Icon(Icons.check, color: context.primaryColorTheme) : null,
+      trailing: isSelected
+          ? Icon(Icons.check, color: context.primaryColorTheme)
+          : null,
       onTap: () => onSelected(value),
       selected: isSelected,
       selectedTileColor: context.primaryColorTheme.withOpacity(0.1),
