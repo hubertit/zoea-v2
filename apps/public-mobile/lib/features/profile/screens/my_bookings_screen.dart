@@ -803,13 +803,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showBookAgainDialog(booking);
               },
-              icon: const Icon(Icons.repeat, size: 16),
-              label: const Text('Book Again'),
+              icon: const Icon(Icons.repeat, size: 14),
+              label: Text(
+                'Book Again',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.primaryColorTheme,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.primaryColorTheme),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -828,13 +835,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showBookingDetails(booking);
               },
-              icon: const Icon(Icons.visibility, size: 16),
-              label: const Text('View Details'),
+              icon: const Icon(Icons.visibility, size: 14),
+              label: Text(
+                'View Details',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.primaryColorTheme,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.primaryColorTheme),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -847,13 +861,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showCancelBookingDialog(booking, bookingId);
               },
-              icon: const Icon(Icons.cancel, size: 16),
-              label: const Text('Cancel'),
+              icon: const Icon(Icons.cancel, size: 14),
+              label: Text(
+                'Cancel',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.errorColor,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.errorColor,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.errorColor),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -870,13 +891,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showBookingDetails(booking);
               },
-              icon: const Icon(Icons.visibility, size: 16),
-              label: const Text('View Details'),
+              icon: const Icon(Icons.visibility, size: 14),
+              label: Text(
+                'View Details',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.primaryColorTheme,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.primaryColorTheme),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -1624,13 +1652,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showOrderDetails(order);
               },
-              icon: const Icon(Icons.visibility, size: 16),
-              label: const Text('View Details'),
+              icon: const Icon(Icons.visibility, size: 14),
+              label: Text(
+                'View Details',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.primaryColorTheme,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.primaryColorTheme),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -1647,13 +1682,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showOrderDetails(order);
               },
-              icon: const Icon(Icons.visibility, size: 16),
-              label: const Text('View Details'),
+              icon: const Icon(Icons.visibility, size: 14),
+              label: Text(
+                'View Details',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.primaryColorTheme,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.primaryColorTheme),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -1666,13 +1708,20 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               onPressed: () {
                 _showCancelOrderDialog(order, orderId);
               },
-              icon: const Icon(Icons.cancel, size: 16),
-              label: const Text('Cancel'),
+              icon: const Icon(Icons.cancel, size: 14),
+              label: Text(
+                'Cancel',
+                style: context.bodySmall.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: context.errorColor,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.errorColor,
                 backgroundColor: context.cardColor,
                 side: BorderSide(color: context.errorColor),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
