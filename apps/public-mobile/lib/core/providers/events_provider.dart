@@ -2,6 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/event.dart';
 import '../services/events_service.dart';
 
+class _CopyWithSentinel {
+  const _CopyWithSentinel();
+}
+
+const _keepError = _CopyWithSentinel();
+
 final eventsServiceProvider = Provider<EventsService>((ref) {
   return EventsService();
 });
@@ -29,14 +35,14 @@ class EventsState {
   EventsState copyWith({
     List<Event>? events,
     bool? isLoading,
-    String? error,
+    Object? error = _keepError,
     EventsTab? currentTab,
     Map<String, dynamic>? filters,
   }) {
     return EventsState(
       events: events ?? this.events,
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      error: identical(error, _keepError) ? this.error : error as String?,
       currentTab: currentTab ?? this.currentTab,
       filters: filters ?? this.filters,
     );
@@ -64,6 +70,7 @@ class EventsNotifier extends StateNotifier<EventsState> {
       state = state.copyWith(
         events: response.data.events,
         isLoading: false,
+        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -87,6 +94,7 @@ class EventsNotifier extends StateNotifier<EventsState> {
       state = state.copyWith(
         events: response.data.events,
         isLoading: false,
+        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -104,6 +112,7 @@ class EventsNotifier extends StateNotifier<EventsState> {
       state = state.copyWith(
         events: response.data.events,
         isLoading: false,
+        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -121,6 +130,7 @@ class EventsNotifier extends StateNotifier<EventsState> {
       state = state.copyWith(
         events: response.data.events,
         isLoading: false,
+        error: null,
       );
     } catch (e) {
       state = state.copyWith(

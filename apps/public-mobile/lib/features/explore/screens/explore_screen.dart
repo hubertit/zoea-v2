@@ -1400,6 +1400,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.error_outline,
@@ -1411,6 +1412,25 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                         'Failed to load events',
                         style: context.bodySmall.copyWith(
                           color: context.errorColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton.icon(
+                        onPressed: () {
+                          ref.read(eventsProvider.notifier).loadTrendingEvents();
+                        },
+                        icon: Icon(
+                          Icons.refresh,
+                          size: 18,
+                          color: context.primaryColorTheme,
+                        ),
+                        label: Text(
+                          'Refresh',
+                          style: TextStyle(
+                            color: context.primaryColorTheme,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
