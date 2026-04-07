@@ -12,7 +12,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "fix:broken-text": "node dist/scripts/fix-broken-text.js"
+    "fix:broken-text": "node dist/scripts/fix-broken-text.js",
+    "scrape:places": "npx ts-node scripts/scrape-google-places.ts",
+    "report:category-gaps": "npx ts-node scripts/report-category-listing-gaps.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",
