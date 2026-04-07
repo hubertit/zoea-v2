@@ -799,7 +799,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       return Row(
         children: [
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showBookAgainDialog(booking);
               },
@@ -811,10 +811,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.primaryColorTheme,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.primaryColorTheme),
+                backgroundColor: context.primaryColorTheme.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
@@ -831,7 +831,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       return Row(
         children: [
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showBookingDetails(booking);
               },
@@ -843,10 +843,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.primaryColorTheme,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.primaryColorTheme),
+                backgroundColor: context.primaryColorTheme.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
@@ -857,7 +857,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showCancelBookingDialog(booking, bookingId);
               },
@@ -869,10 +869,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.errorColor,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.errorColor,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.errorColor),
+                backgroundColor: context.errorColor.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
@@ -887,7 +887,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       return Row(
         children: [
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showBookingDetails(booking);
               },
@@ -899,10 +899,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.primaryColorTheme,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.primaryColorTheme),
+                backgroundColor: context.primaryColorTheme.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
@@ -1648,7 +1648,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       return Row(
         children: [
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showOrderDetails(order);
               },
@@ -1660,10 +1660,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.primaryColorTheme,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.primaryColorTheme),
+                backgroundColor: context.primaryColorTheme.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
@@ -1678,7 +1678,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       return Row(
         children: [
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showOrderDetails(order);
               },
@@ -1690,10 +1690,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.primaryColorTheme,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.primaryColorTheme),
+                backgroundColor: context.primaryColorTheme.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
@@ -1704,7 +1704,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: OutlinedButton.icon(
+            child: ElevatedButton.icon(
               onPressed: () {
                 _showCancelOrderDialog(order, orderId);
               },
@@ -1716,10 +1716,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   color: context.errorColor,
                 ),
               ),
-              style: OutlinedButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 foregroundColor: context.errorColor,
-                backgroundColor: context.cardColor,
-                side: BorderSide(color: context.errorColor),
+                backgroundColor: context.errorColor.withOpacity(0.1),
+                elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(0, 36),
                 shape: RoundedRectangleBorder(
