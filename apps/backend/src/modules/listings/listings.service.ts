@@ -3,6 +3,13 @@ import { Prisma, listing_type } from '@prisma/client';
 import { inferListingTypeFromCategoryId } from '../../common/listing-type-from-category';
 import { PrismaService } from '../../prisma/prisma.service';
 
+/**
+ * When true, `GET /listings/random` returns featured listings (see `getFeatured`) instead of
+ * random rows in the restaurants category. Used for mobile “Near Me” until miscategorized
+ * restaurant data is cleaned. Set to false to restore random-restaurants behavior.
+ */
+const NEAR_ME_RANDOM_USES_FEATURED_TEMPORARILY = true;
+
 @Injectable()
 export class ListingsService {
   constructor(private prisma: PrismaService) {}
@@ -259,8 +266,11 @@ export class ListingsService {
   }
 
   async getRandom(limit = 10) {
-    // Get random listing IDs using PostgreSQL's random() function
-    // Only select ID to avoid geography column deserialization issues
+    if (NEAR_ME_RANDOM_USES_FEATURED_TEMPORARILY) {
+      return this.getFeatured(limit);
+    }
+
+    // Random active listings in restaurants category (category slug source of truth)
     const listings = await this.prisma.$queryRaw<Array<{ id: string }>>`
       SELECT l.id
       FROM listings l
@@ -271,14 +281,13 @@ export class ListingsService {
       ORDER BY RANDOM()
       LIMIT ${limit}
     `;
-    
-    // Fetch full details with relations for each listing
+
     const listingIds = listings.map((l) => l.id);
-    
+
     if (listingIds.length === 0) {
       return [];
     }
-    
+
     return this.prisma.listing.findMany({
       where: {
         id: { in: listingIds },

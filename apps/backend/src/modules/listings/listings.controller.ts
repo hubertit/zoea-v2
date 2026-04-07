@@ -93,9 +93,9 @@ export class ListingsController {
 
   @Get('random')
   @ApiOperation({ 
-    summary: 'Get random listings (Restaurants category)',
+    summary: 'Get listings for Near Me fallback',
     description:
-      'Random active listings whose category slug is `restaurants`. Uses category as the source of truth (not listing `type`). Used when geolocation is unavailable.',
+      'TEMPORARY: Returns featured active listings (same as GET /listings/featured, no country filter) for app “Near Me” while restaurant category data is cleaned. Previously: random active listings in category slug `restaurants`.',
   })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Maximum listings to return (default: 10)' })
   async getRandom(@Query('limit') limit?: string) {
