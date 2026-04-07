@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
 
 class EventsService {
@@ -66,13 +68,28 @@ class EventsService {
       );
 
       if (response.statusCode == 200) {
+        try {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString(
+              'cached_trending_events', json.encode(response.data));
+        } catch (_) {} // Ignore caching errors
         return EventsResponse.fromJson(response.data);
       } else {
-        throw Exception('Failed to load trending events: ${response.statusCode}');
+        throw Exception(
+            'Failed to load trending events: ${response.statusCode}');
       }
-    } on DioException catch (e) {
-      throw Exception('Network error: ${e.message}');
     } catch (e) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final cachedData = prefs.getString('cached_trending_events');
+        if (cachedData != null) {
+          return EventsResponse.fromJson(json.decode(cachedData));
+        }
+      } catch (_) {} // Fallback to original error if cache fails
+
+      if (e is DioException) {
+        throw Exception('Network error: ${e.message}');
+      }
       throw Exception('Error loading trending events: $e');
     }
   }
@@ -124,7 +141,8 @@ class EventsService {
       if (response.statusCode == 200) {
         return EventsResponse.fromJson(response.data);
       } else {
-        throw Exception('Failed to load this week events: ${response.statusCode}');
+        throw Exception(
+            'Failed to load this week events: ${response.statusCode}');
       }
     } on DioException catch (e) {
       throw Exception('Network error: ${e.message}');
