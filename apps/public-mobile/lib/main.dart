@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'core/config/app_config.dart';
-import 'core/config/splash_session.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
@@ -62,8 +61,6 @@ void main() async {
   } catch (e) {
     debugPrint('⚠️ Firebase initialization failed: $e');
   }
-
-  await warmUpSplashBackground();
 
   runApp(const ProviderScope(child: MyApp()));
 }

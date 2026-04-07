@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/config/app_config.dart';
-import '../../../core/config/splash_session.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
@@ -266,8 +265,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           // Use rootBundle so we never rely on a mismatched DefaultAssetBundle.
           // cacheWidth/Height downscales huge JPEGs before decode (helps iOS simulator).
           Image.asset(
-            splashAssetPathForSession,
-            key: ValueKey(splashAssetPathForSession),
+            AppAssets.splashBackground,
+            key: const ValueKey(AppAssets.splashBackground),
             bundle: rootBundle,
             cacheWidth: cacheW,
             cacheHeight: cacheH,
