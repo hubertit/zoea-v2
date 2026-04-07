@@ -27,10 +27,17 @@ export class CategoriesService {
     }
 
     const build = (parentKey: string | null): Node[] =>
-      (byParent.get(parentKey) || []).map((row) => ({
-        ...row,
-        children: build(row.id),
-      }));
+      (byParent.get(parentKey) || []).map((row) => {
+        const children = build(row.id);
+        return {
+          ...row,
+          children,
+          _count: {
+            ...row._count,
+            children: children.length,
+          },
+        };
+      });
 
     return build(null);
   }
@@ -41,7 +48,7 @@ export class CategoriesService {
       where: { parentId, isActive: true },
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
       include: {
-        _count: { select: { listings: true, tours: true } },
+        _count: { select: { listings: true, tours: true, children: true } },
       },
     });
   }
@@ -92,8 +99,9 @@ export class CategoriesService {
         children: {
           where: { isActive: true },
           orderBy: { sortOrder: 'asc' },
+          include: { _count: { select: { children: true } } }
         },
-        _count: { select: { listings: true, tours: true } },
+        _count: { select: { listings: true, tours: true, children: true } },
       },
       orderBy: { sortOrder: 'asc' },
     });
@@ -104,8 +112,12 @@ export class CategoriesService {
       where: { id },
       include: {
         parent: true,
-        children: { where: { isActive: true }, orderBy: { sortOrder: 'asc' } },
-        _count: { select: { listings: true, tours: true } },
+        children: { 
+          where: { isActive: true }, 
+          orderBy: { sortOrder: 'asc' },
+          include: { _count: { select: { children: true } } }
+        },
+        _count: { select: { listings: true, tours: true, children: true } },
       },
     });
   }
@@ -115,8 +127,12 @@ export class CategoriesService {
       where: { slug },
       include: {
         parent: true,
-        children: { where: { isActive: true }, orderBy: { sortOrder: 'asc' } },
-        _count: { select: { listings: true, tours: true } },
+        children: { 
+          where: { isActive: true }, 
+          orderBy: { sortOrder: 'asc' },
+          include: { _count: { select: { children: true } } }
+        },
+        _count: { select: { listings: true, tours: true, children: true } },
       },
     });
   }
