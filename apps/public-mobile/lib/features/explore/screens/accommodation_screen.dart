@@ -32,7 +32,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
   TimeOfDay? _checkOutTime;
   int _guestCount = 1;
   String? _accommodationCategoryId;
-  final List<String> _tabs = [
+  List<String> _tabs = [
     'All',
     'Hotels',
     'B&Bs',
@@ -68,7 +68,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
 
   Future<void> _loadAccommodationCategoryId() async {
     try {
-      final categories = await ref.read(categoriesProvider.future);
+      // Force refresh categories to get latest subcategories
+      final categories = await ref.refresh(categoriesProvider.future);
       final accommodationCategory = categories.firstWhere(
         (cat) => cat['slug'] == 'accommodation',
         orElse: () => <String, dynamic>{},
@@ -76,6 +77,26 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       if (accommodationCategory.isNotEmpty && mounted) {
         setState(() {
           _accommodationCategoryId = accommodationCategory['id'] as String?;
+          
+          final children = accommodationCategory['children'] as List?;
+          if (children != null && children.isNotEmpty) {
+            final sortedChildren = List<Map<String, dynamic>>.from(children)
+              ..sort((a, b) => (a['sortOrder'] as int? ?? 99).compareTo(b['sortOrder'] as int? ?? 99));
+            
+            final newTabs = ['All', ...sortedChildren.map((c) => c['name'] as String)];
+            
+            // Re-initialize tab controller if tabs have changed
+            if (_tabs.length != newTabs.length || !_tabs.every((t) => newTabs.contains(t))) {
+              _tabs = newTabs;
+              final oldIndex = _tabController.index;
+              _tabController.dispose();
+              _tabController = TabController(
+                length: _tabs.length,
+                vsync: this,
+                initialIndex: oldIndex < _tabs.length ? oldIndex : 0,
+              );
+            }
+          }
         });
       }
     } catch (e) {
@@ -314,6 +335,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
           limit: 200, // Increased limit to fetch all accommodation listings
           type: typeFilter,
           category: _accommodationCategoryId, // Filter by accommodation category
+          includeChildren: true, // IMPORTANT: Ensure we get all subcategory listings like apartments, villas
           sortBy: sortBy,
         ),
       ),
@@ -353,6 +375,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   limit: 200,
                   type: typeFilter,
                   category: _accommodationCategoryId,
+                  includeChildren: true,
                 ),
               ),
             );
@@ -404,6 +427,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         limit: 200,
                         type: typeFilter,
                         category: _accommodationCategoryId,
+                        includeChildren: true,
                       ),
                     ),
                   );
