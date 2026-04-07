@@ -323,11 +323,20 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       data: (response) {
         final listings = response['data'] as List? ?? [];
         
-        // Filter by category tab if needed (for B&Bs, Apartments, Villas)
-        // Since backend only has 'hotel' type, we'll show all for now
-        final filteredListings = category.toLowerCase() == 'all' || category.toLowerCase() == 'hotels'
+        // Filter by category tab
+        final filteredListings = category.toLowerCase() == 'all'
             ? listings
-            : <Map<String, dynamic>>[]; // Empty for B&Bs, Apartments, Villas (no backend support yet)
+            : listings.where((listing) {
+                final listingCategory = listing['category'] as Map<String, dynamic>?;
+                if (listingCategory == null) return false;
+                
+                final slug = (listingCategory['slug'] as String?)?.toLowerCase() ?? '';
+                final name = (listingCategory['name'] as String?)?.toLowerCase() ?? '';
+                final tabSlug = category.toLowerCase().replaceAll('&', 'n').replaceAll(' ', '-');
+                final tabName = category.toLowerCase();
+                
+                return slug.contains(tabSlug) || name.contains(tabName) || tabSlug.contains(slug) || tabName.contains(name);
+              }).toList();
 
         if (filteredListings.isEmpty) {
           return _buildEmptyState(category);
