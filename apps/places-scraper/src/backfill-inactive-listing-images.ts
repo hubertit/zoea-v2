@@ -14,14 +14,12 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { v2 as cloudinary } from 'cloudinary';
+import { loadPlacesScraperEnvFromFiles, resolveGooglePlacesApiKey } from './resolve-google-places-key';
 
 const prisma = new PrismaClient();
 
-const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
-if (!GOOGLE_API_KEY) {
-  console.error('Missing GOOGLE_PLACES_API_KEY');
-  process.exit(1);
-}
+/** Set in main() from env files, env vars, or integrations.google_places */
+let googlePlacesApiKey = '';
 
 const DRY_RUN = process.env.DRY_RUN === '1' || process.env.DRY_RUN === 'true';
 const LIMIT = process.env.LIMIT ? Math.max(1, parseInt(process.env.LIMIT, 10)) : undefined;
@@ -69,7 +67,7 @@ async function uploadImage(
   photoReference: string,
   placeName: string,
 ): Promise<{ url: string; provider: string }> {
-  const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoReference}&key=${GOOGLE_API_KEY}`;
+  const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoReference}&key=${googlePlacesApiKey}`;
   if (cloudinaryConfigured) {
     try {
       const result = await cloudinary.uploader.upload(photoUrl, {
@@ -90,7 +88,7 @@ async function fetchPlaceDetails(placeId: string): Promise<{ photos: { photo_ref
     params: {
       place_id: placeId,
       fields: 'photos,name',
-      key: GOOGLE_API_KEY,
+      key: googlePlacesApiKey,
     },
   });
   const details = detailsRes.data?.result;
@@ -114,7 +112,7 @@ async function resolvePlaceId(listing: {
   if (!query.trim()) return null;
 
   const searchRes = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
-    params: { query, key: GOOGLE_API_KEY },
+    params: { query, key: googlePlacesApiKey },
   });
   if (searchRes.data.status !== 'OK' || !searchRes.data.results?.length) return null;
 
@@ -134,6 +132,15 @@ async function resolvePlaceId(listing: {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function main() {
+  loadPlacesScraperEnvFromFiles();
+  googlePlacesApiKey = (await resolveGooglePlacesApiKey(prisma)) || '';
+  if (!googlePlacesApiKey) {
+    console.error(
+      'Missing Google Places API key (GOOGLE_PLACES_API_KEY, apps/backend/.env, or integrations.google_places)',
+    );
+    process.exit(1);
+  }
+
   console.log(
     `backfill-inactive-listing-images DRY_RUN=${DRY_RUN} LIMIT=${LIMIT ?? '∞'} DELAY_MS=${DELAY_MS} MAX_PHOTOS=${MAX_PHOTOS} TEXT_SEARCH_FALLBACK=${TEXT_SEARCH_FALLBACK} INCLUDE_PENDING_REVIEW=${INCLUDE_PENDING_REVIEW} TARGET_STATUS=${TARGET_STATUS}`,
   );

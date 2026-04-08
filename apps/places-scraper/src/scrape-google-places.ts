@@ -8,10 +8,17 @@ import {
   type IngestContext,
 } from './google-place-ingest';
 import { loadLodgingAmenitySlugMap } from './lodging-from-google';
+import {
+  googlePlacesKeyFromEnv,
+  loadPlacesScraperEnvFromFiles,
+  resolveGooglePlacesApiKey,
+} from './resolve-google-places-key';
+
+loadPlacesScraperEnvFromFiles();
 
 const prisma = new PrismaClient();
 
-const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
+let GOOGLE_API_KEY: string | undefined = googlePlacesKeyFromEnv();
 
 if ((process.env.SCRAPE_TASK ?? '').trim() === 'list-tasks') {
   console.log(formatTasksHelp());
@@ -778,8 +785,14 @@ async function scrape() {
     process.exit(0);
   }
 
-  if (!GOOGLE_API_KEY) {
-    console.error('Missing GOOGLE_PLACES_API_KEY in environment variables.');
+  if (!GOOGLE_API_KEY?.trim()) {
+    const fromDb = await resolveGooglePlacesApiKey(prisma);
+    if (fromDb) GOOGLE_API_KEY = fromDb;
+  }
+  if (!GOOGLE_API_KEY?.trim()) {
+    console.error(
+      'Missing Google Places API key. Set GOOGLE_PLACES_API_KEY (or GOOGLE_MAPS_API_KEY), add it to apps/backend/.env, or configure integrations.google_places in the DB.',
+    );
     process.exit(1);
   }
 
@@ -805,7 +818,7 @@ async function scrape() {
 
   const ingestCtx: IngestContext = {
     prisma,
-    googleApiKey: GOOGLE_API_KEY,
+    googleApiKey: GOOGLE_API_KEY!,
     curatedPopularityBoost: CURATED_POPULARITY_BOOST,
     cloudinaryConfigured,
   };

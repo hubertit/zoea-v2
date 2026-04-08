@@ -12,35 +12,24 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { v2 as cloudinary } from 'cloudinary';
-import * as fs from 'fs';
-import * as path from 'path';
 import {
   createSystemMerchant,
   ingestGooglePlaceForCategory,
   type IngestContext,
 } from './google-place-ingest';
 import { loadLodgingAmenitySlugMap } from './lodging-from-google';
+import { loadPlacesScraperEnvFromFiles, resolveGooglePlacesApiKey } from './resolve-google-places-key';
 
 const prisma = new PrismaClient();
 
 const DRY_RUN = process.env.DRY_RUN === '1' || process.env.DRY_RUN === 'true';
 const SKIP_IMPORT = process.env.SKIP_IMPORT === '1' || process.env.SKIP_IMPORT === 'true';
-const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 const DELAY_MS = Math.max(0, Number(process.env.DELAY_MS ?? 2000));
 
 let cloudinaryConfigured = false;
 
 function loadBackendEnv(): void {
-  if (process.env.DATABASE_URL) return;
-  const envPath = path.join(__dirname, '../../backend/.env');
-  if (!fs.existsSync(envPath)) return;
-  for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^DATABASE_URL=(.*)$/);
-    if (m) {
-      process.env.DATABASE_URL = m[1].trim().replace(/^["']|["']$/g, '');
-      break;
-    }
-  }
+  loadPlacesScraperEnvFromFiles();
 }
 
 async function configureStorage(): Promise<void> {
@@ -101,10 +90,12 @@ const IMPORT_TARGETS: ImportTarget[] = [
   { query: 'Dereva Hotel Kigali', categorySlug: 'hotels' },
 ];
 
-async function textSearchFirst(query: string): Promise<{ place_id: string; name: string } | null> {
-  if (!GOOGLE_API_KEY) return null;
+async function textSearchFirst(
+  query: string,
+  googleApiKey: string,
+): Promise<{ place_id: string; name: string } | null> {
   const res = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
-    params: { query: `${query}`, key: GOOGLE_API_KEY },
+    params: { query: `${query}`, key: googleApiKey },
   });
   if (res.data.status !== 'OK' && res.data.status !== 'ZERO_RESULTS') {
     console.warn(`Text search status ${res.data.status}: ${res.data.error_message || ''}`);
@@ -251,6 +242,7 @@ async function importTargets(
   countryId: string,
   standardAmenities: { id: string }[],
   lodgingAmenitySlugToId: Map<string, string>,
+  googleApiKey: string,
 ): Promise<void> {
   const seen = new Set<string>();
   for (const t of IMPORT_TARGETS) {
@@ -265,7 +257,7 @@ async function importTargets(
     const listingType = inferListingTypeForSlug(category.slug);
     console.log(`\nImport: "${t.query}" → ${category.slug}`);
 
-    const place = await textSearchFirst(`${t.query}`);
+    const place = await textSearchFirst(`${t.query}`, googleApiKey);
     if (!place) {
       console.warn('  No Text Search results');
       continue;
@@ -342,15 +334,19 @@ async function main(): Promise<void> {
     console.log('\nSKIP_IMPORT=1 — done.');
     return;
   }
-  if (!GOOGLE_API_KEY) {
-    console.error('GOOGLE_PLACES_API_KEY required for import phase (or set SKIP_IMPORT=1)');
+
+  const googleApiKey = await resolveGooglePlacesApiKey(prisma);
+  if (!googleApiKey) {
+    console.error(
+      'Google Places API key required for import (env, apps/backend/.env, or integrations.google_places), or set SKIP_IMPORT=1',
+    );
     process.exit(1);
   }
 
   const merchant = await createSystemMerchant(prisma);
   const ingestCtx: IngestContext = {
     prisma,
-    googleApiKey: GOOGLE_API_KEY,
+    googleApiKey,
     curatedPopularityBoost: process.env.SCRAPE_CURATED_BOOST === '1',
     cloudinaryConfigured,
   };
@@ -360,7 +356,15 @@ async function main(): Promise<void> {
   });
   const lodgingAmenitySlugToId = await loadLodgingAmenitySlugMap(prisma);
 
-  await importTargets(ingestCtx, merchant, city, countryId, standardAmenities, lodgingAmenitySlugToId);
+  await importTargets(
+    ingestCtx,
+    merchant,
+    city,
+    countryId,
+    standardAmenities,
+    lodgingAmenitySlugToId,
+    googleApiKey,
+  );
   console.log('\nDone.');
 }
 

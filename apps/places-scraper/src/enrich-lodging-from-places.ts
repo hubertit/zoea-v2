@@ -15,8 +15,6 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import * as fs from 'fs';
-import * as path from 'path';
 import {
   buildLodgingRoomPlans,
   fetchGooglePlaceDetails,
@@ -27,6 +25,7 @@ import {
   preferredPhone,
 } from './lodging-from-google';
 import { shouldCreateHotelRooms, truncate } from './google-place-ingest';
+import { loadPlacesScraperEnvFromFiles, resolveGooglePlacesApiKey } from './resolve-google-places-key';
 
 const prisma = new PrismaClient();
 
@@ -34,31 +33,21 @@ const DRY_RUN = process.env.DRY_RUN === '1' || process.env.DRY_RUN === 'true';
 const LIMIT = process.env.LIMIT ? Math.max(1, parseInt(process.env.LIMIT, 10)) : undefined;
 const DELAY_MS = Math.max(0, Number(process.env.DELAY_MS ?? 1500));
 const CITY_SLUG = (process.env.CITY_SLUG ?? '').trim();
-const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
-
-function loadBackendEnv(): void {
-  if (process.env.DATABASE_URL) return;
-  const envPath = path.join(__dirname, '../../backend/.env');
-  if (!fs.existsSync(envPath)) return;
-  for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^DATABASE_URL=(.*)$/);
-    if (m) {
-      process.env.DATABASE_URL = m[1].trim().replace(/^["']|["']$/g, '');
-      break;
-    }
-  }
-}
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function main(): Promise<void> {
-  loadBackendEnv();
+  loadPlacesScraperEnvFromFiles();
   if (!process.env.DATABASE_URL) {
     console.error('DATABASE_URL missing');
     process.exit(1);
   }
-  if (!GOOGLE_API_KEY) {
-    console.error('GOOGLE_PLACES_API_KEY required');
+
+  const googleApiKey = await resolveGooglePlacesApiKey(prisma);
+  if (!googleApiKey) {
+    console.error(
+      'Google Places API key missing (GOOGLE_PLACES_API_KEY / GOOGLE_MAPS_API_KEY, apps/backend/.env, or integrations.google_places)',
+    );
     process.exit(1);
   }
 
@@ -124,7 +113,7 @@ async function main(): Promise<void> {
     }
 
     try {
-      const details = await fetchGooglePlaceDetails(GOOGLE_API_KEY, full.sourcePlaceId);
+      const details = await fetchGooglePlaceDetails(googleApiKey, full.sourcePlaceId);
       if (!details) {
         if (noDetailsLogged < 5) {
           console.warn(`No Place Details for ${full.name} (${full.sourcePlaceId?.slice(0, 20)}…)`);
