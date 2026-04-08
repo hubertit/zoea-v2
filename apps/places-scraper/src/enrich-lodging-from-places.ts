@@ -103,6 +103,7 @@ async function main(): Promise<void> {
 
   let ok = 0;
   let skip = 0;
+  let noDetailsLogged = 0;
   for (const row of rows) {
     const full = await prisma.listing.findUnique({
       where: { id: row.id },
@@ -125,7 +126,10 @@ async function main(): Promise<void> {
     try {
       const details = await fetchGooglePlaceDetails(GOOGLE_API_KEY, full.sourcePlaceId);
       if (!details) {
-        console.warn(`No details for ${full.name} (${full.sourcePlaceId})`);
+        if (noDetailsLogged < 5) {
+          console.warn(`No Place Details for ${full.name} (${full.sourcePlaceId?.slice(0, 20)}…)`);
+          noDetailsLogged++;
+        }
         skip++;
         continue;
       }
