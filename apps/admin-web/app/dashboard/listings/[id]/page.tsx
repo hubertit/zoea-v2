@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ListingsAPI, CategoriesAPI, CountriesAPI, MediaAPI, type Listing, type ListingStatus, type PriceUnit, type Category } from '@/src/lib/api';
 import { categoryOptionsForSelect } from '@/src/lib/category-options';
-import apiClient from '@/src/lib/api/client';
 import Icon, { 
   faArrowLeft, 
   faEdit, 
@@ -45,6 +44,22 @@ const PRICE_UNITS: { value: PriceUnit; label: string }[] = [
   { value: 'per_hour', label: 'Per Hour' },
   { value: 'per_table', label: 'Per Table' },
 ];
+
+/** Normalize admin API listing.images for UI (listing row id + display url). */
+function listingImagesForEditor(listing: Listing | null): Array<{ id: string; url: string; isPrimary?: boolean }> {
+  if (!listing?.images || !Array.isArray(listing.images)) return [];
+  return listing.images
+    .map((img) => {
+      const rowId = img.id;
+      const url = img.media?.url || '';
+      return {
+        id: rowId,
+        url,
+        isPrimary: !!img.isPrimary,
+      };
+    })
+    .filter((x) => x.id && x.url);
+}
 
 const getStatusBadgeColor = (status: ListingStatus) => {
   switch (status) {
@@ -106,6 +121,7 @@ export default function ListingDetailPage() {
   const [uploadedImages, setUploadedImages] = useState<Array<{ id: string; url: string; isPrimary?: boolean }>>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [existingImages, setExistingImages] = useState<Array<{ id: string; url: string; isPrimary?: boolean }>>([]);
+  const [imageActionId, setImageActionId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!listingId) {
@@ -144,15 +160,6 @@ export default function ListingDetailPage() {
           isFeatured: listingData.isFeatured || false,
           isVerified: listingData.isVerified || false,
         });
-        
-        // Load existing images if available
-        if ((listingData as any).images && Array.isArray((listingData as any).images)) {
-          setExistingImages((listingData as any).images.map((img: any) => ({
-            id: img.id || img.mediaId,
-            url: img.url || img.media?.url,
-            isPrimary: img.isPrimary || false,
-          })));
-        }
       } catch (error: any) {
         console.error('Failed to fetch listing:', error);
         toast.error(error?.message || 'Failed to load listing');
@@ -164,6 +171,13 @@ export default function ListingDetailPage() {
 
     fetchListing();
   }, [listingId, router]);
+
+  /** Keep gallery in sync when listing is refreshed (e.g. after image ops). */
+  useEffect(() => {
+    if (listing) {
+      setExistingImages(listingImagesForEditor(listing));
+    }
+  }, [listing]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -234,6 +248,36 @@ export default function ListingDetailPage() {
     }
   };
 
+  const handleRemoveListingImage = async (imageRowId: string) => {
+    if (!listingId) return;
+    if (!globalThis.confirm('Remove this image from the listing?')) return;
+    setImageActionId(imageRowId);
+    try {
+      await ListingsAPI.removeListingImage(listingId, imageRowId);
+      const updated = await ListingsAPI.getListingById(listingId);
+      setListing(updated);
+      toast.success('Image removed');
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to remove image');
+    } finally {
+      setImageActionId(null);
+    }
+  };
+
+  const handleSetPrimaryListingImage = async (imageRowId: string) => {
+    if (!listingId) return;
+    setImageActionId(imageRowId);
+    try {
+      const updated = await ListingsAPI.setPrimaryListingImage(listingId, imageRowId);
+      setListing(updated);
+      toast.success('Primary image updated');
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to set primary image');
+    } finally {
+      setImageActionId(null);
+    }
+  };
+
   const handleSaveEdit = async () => {
     if (!listingId) return;
 
@@ -260,24 +304,22 @@ export default function ListingDetailPage() {
         isVerified: editFormData.isVerified,
       });
       
-      // Upload new images if any
+      // Upload new images (sequential so sortOrder stays consistent)
       if (uploadedImages.length > 0) {
         try {
-          const imagePromises = uploadedImages.map((img, idx) =>
-            apiClient.post(`/listings/${listingId}/images`, {
-              merchantId: listing?.merchantId,
+          for (let idx = 0; idx < uploadedImages.length; idx++) {
+            const img = uploadedImages[idx];
+            await ListingsAPI.addListingImage(listingId, {
               mediaId: img.id,
-              isPrimary: img.isPrimary || (existingImages.length === 0 && idx === 0),
-            })
-          );
-          await Promise.all(imagePromises);
+              isPrimary: !!img.isPrimary || (existingImages.length === 0 && idx === 0),
+            });
+          }
         } catch (imgError: any) {
           console.error('Failed to add images:', imgError);
-          toast.error('Listing updated but failed to add some images');
+          toast.error(imgError?.message || 'Listing saved but failed to attach some images');
         }
       }
-      
-      // Refresh listing data
+
       const updatedListing = await ListingsAPI.getListingById(listingId);
       setListing(updatedListing);
       setEditModalOpen(false);
@@ -418,6 +460,34 @@ export default function ListingDetailPage() {
               </div>
             )}
           </div>
+        </CardBody>
+      </Card>
+
+      {/* Photos */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900">Photos</h2>
+          <Button variant="secondary" size="sm" icon={faEdit} onClick={() => setEditModalOpen(true)}>
+            Manage photos
+          </Button>
+        </CardHeader>
+        <CardBody>
+          {listingImagesForEditor(listing).length === 0 ? (
+            <p className="text-sm text-gray-500">No images yet. Open Edit Listing to upload.</p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+              {listingImagesForEditor(listing).map((img) => (
+                <div key={img.id} className="relative rounded-md overflow-hidden border border-gray-200">
+                  <img src={img.url} alt="" className="w-full h-24 object-cover" />
+                  {img.isPrimary && (
+                    <span className="absolute top-1 left-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded">
+                      Primary
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </CardBody>
       </Card>
 
@@ -656,14 +726,34 @@ export default function ListingDetailPage() {
             {/* Existing Images */}
             {existingImages.length > 0 && (
               <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-2">Existing Images:</p>
-                <div className="grid grid-cols-3 gap-4">
+                <p className="text-sm text-gray-600 mb-2">Current images — set primary or remove:</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {existingImages.map((img) => (
-                    <div key={img.id} className="relative">
-                      <img src={img.url} alt="Listing" className="w-full h-24 object-cover rounded-md" />
+                    <div key={img.id} className="relative rounded-md border border-gray-200 overflow-hidden">
+                      <img src={img.url} alt="Listing" className="w-full h-28 object-cover" />
                       {img.isPrimary && (
-                        <span className="absolute top-1 left-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">Primary</span>
+                        <span className="absolute top-1 left-1 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">
+                          Primary
+                        </span>
                       )}
+                      <div className="flex gap-1 p-1 bg-gray-50 border-t border-gray-200">
+                        <button
+                          type="button"
+                          disabled={!!img.isPrimary || imageActionId !== null}
+                          onClick={() => handleSetPrimaryListingImage(img.id)}
+                          className="flex-1 text-xs py-1 px-2 rounded bg-white border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+                        >
+                          {imageActionId === img.id ? '…' : 'Set primary'}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={imageActionId !== null}
+                          onClick={() => handleRemoveListingImage(img.id)}
+                          className="text-xs py-1 px-2 rounded bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 disabled:opacity-50"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

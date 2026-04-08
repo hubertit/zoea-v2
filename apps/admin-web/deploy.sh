@@ -1,6 +1,7 @@
 #!/bin/bash
-# Zoea Admin — same flow as Kwezi: rsync sources to server, then docker compose.
+# Zoea Admin — Kwezi production VPS (default root@209.74.80.195): rsync sources, then docker compose on server.
 # Run from this directory:  cd apps/admin-web && ./deploy.sh
+# Full deploy including remote rebuild:  ./deploy-kwezi.sh
 #
 # Prerequisites on server: Docker + Docker Compose plugin, directory /opt/zoea-admin
 
@@ -19,8 +20,11 @@ if ! command -v docker >/dev/null 2>&1; then
   echo "⚠️  docker not found locally — skip local build check"
 else
   echo "📦 docker compose build (local verification, optional)..."
-  docker compose build
-  echo "✅ Local build OK"
+  if docker compose build; then
+    echo "✅ Local build OK"
+  else
+    echo "⚠️  Local build skipped (daemon missing or build failed) — continuing with rsync"
+  fi
 fi
 
 echo ""

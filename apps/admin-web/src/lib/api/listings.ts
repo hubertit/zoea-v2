@@ -32,6 +32,13 @@ export interface Listing {
   category?: { id: string; name: string; slug?: string | null } | null;
   country?: { id: string; name: string; code: string } | null;
   city?: { id: string; name: string } | null;
+  /** Present on getListingById — listing_images with nested media */
+  images?: Array<{
+    id: string;
+    mediaId?: string;
+    isPrimary?: boolean | null;
+    media?: { id: string; url: string } | null;
+  }>;
 }
 
 export interface ListListingsParams {
@@ -151,6 +158,27 @@ export const ListingsAPI = {
    */
   restoreListing: async (id: string): Promise<Listing> => {
     const response = await apiClient.patch<Listing>(`/admin/listings/${id}/restore`);
+    return response.data;
+  },
+
+  /** Attach media to listing (admin only; upload file via MediaAPI first). */
+  addListingImage: async (
+    listingId: string,
+    data: { mediaId: string; isPrimary?: boolean; caption?: string },
+  ): Promise<unknown> => {
+    const response = await apiClient.post(`/admin/listings/${listingId}/images`, data);
+    return response.data;
+  },
+
+  removeListingImage: async (listingId: string, imageId: string): Promise<void> => {
+    await apiClient.delete(`/admin/listings/${listingId}/images/${imageId}`);
+  },
+
+  /** Returns full listing after setting primary image. */
+  setPrimaryListingImage: async (listingId: string, imageId: string): Promise<Listing> => {
+    const response = await apiClient.patch<Listing>(`/admin/listings/${listingId}/images/primary`, {
+      imageId,
+    });
     return response.data;
   },
 };

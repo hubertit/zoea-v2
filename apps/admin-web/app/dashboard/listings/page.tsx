@@ -1418,14 +1418,13 @@ export default function ListingsPage() {
                   // Upload images if any - use local merchantId variable, not formData.merchantId
                   if (uploadedImages.length > 0) {
                     try {
-                      const imagePromises = uploadedImages.map((img, idx) =>
-                        apiClient.post(`/listings/${listing.id}/images`, {
-                          merchantId: merchantId, // Use local variable, not formData
+                      for (let idx = 0; idx < uploadedImages.length; idx++) {
+                        const img = uploadedImages[idx];
+                        await ListingsAPI.addListingImage(listing.id, {
                           mediaId: img.id,
-                          isPrimary: img.isPrimary || idx === 0,
-                        })
-                      );
-                      await Promise.all(imagePromises);
+                          isPrimary: !!img.isPrimary || idx === 0,
+                        });
+                      }
                       toast.success(`${uploadedImages.length} image(s) attached to listing`);
                     } catch (imgError: any) {
                       console.error('Failed to add images:', imgError);
