@@ -8,6 +8,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/country_provider.dart';
+import '../../../core/models/user.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -23,6 +24,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String _selectedLocation = 'Kigali';
   String _selectedLanguage = 'English';
   
+  // Track if location was manually changed in this session to avoid overwriting
+  bool _locationManuallyChanged = false;
+  
   @override
   void initState() {
     super.initState();
@@ -30,28 +34,47 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
   
   Future<void> _loadUserPreferences() async {
-    final user = ref.read(currentUserProvider);
-    if (user == null || user.preferences == null) return;
+    final initial = ref.read(currentUserProvider);
+    if (initial == null) return;
 
-      setState(() {
-        _selectedCurrency = user.preferences!.currency ?? 'RWF';
-        // Map language codes to display names
-        final langCode = user.preferences!.language ?? 'en';
-        _selectedLanguage = _mapLanguageCodeToName(langCode);
-        _selectedCountry = user.countryName ?? _selectedCountry;
+    // Non-null `User` — inferred `User?` from `getCurrentUser()` would break promotion.
+    User user = initial;
+
+    // `currentUserProvider` can lag behind the server after profile edits elsewhere.
+    // Refresh auth cache so labels match DB and we never push stale cityId into prefs.
+    try {
+      final fresh = await ref.read(authServiceProvider).getCurrentUser();
+      if (fresh != null) user = fresh;
+    } catch (_) {
+      // Keep cached user if refresh fails (offline, etc.).
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _selectedCurrency = user.preferences?.currency ?? 'RWF';
+      final langCode = user.preferences?.language ?? 'en';
+      _selectedLanguage = _mapLanguageCodeToName(langCode);
+      _selectedCountry = user.countryName ?? _selectedCountry;
+      // Only update location from user if it hasn't been manually changed
+      if (!_locationManuallyChanged) {
         _selectedLocation = user.cityName ?? _selectedLocation;
-      });
-
-      final countryId = user.countryId;
-      if (countryId != null && countryId.isNotEmpty) {
-        try {
-          final countriesService = ref.read(countriesServiceProvider);
-          final persistedCountry = await countriesService.getCountryById(countryId);
-          await ref.read(selectedCountryProvider.notifier).selectCountry(persistedCountry);
-        } catch (_) {
-          // Ignore provider sync failures; local labels are still shown.
-        }
       }
+    });
+
+    final countryId = user.countryId;
+    if (countryId != null && countryId.isNotEmpty) {
+      try {
+        final countriesService = ref.read(countriesServiceProvider);
+        final persistedCountry = await countriesService.getCountryById(countryId);
+        await ref.read(selectedCountryProvider.notifier).selectCountry(persistedCountry);
+      } catch (_) {
+        // Ignore provider sync failures; local labels are still shown.
+      }
+    }
+
+    // Do not call `selectedCityProvider.selectCity(user.cityId)` here — that was
+    // overwriting a valid persisted/browse city with stale cached `user.cityId`.
   }
   
   @override
@@ -59,25 +82,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     // Watch user provider to reload preferences when user data changes
     final user = ref.watch(currentUserProvider);
     
-    // Update preferences state when user data changes
-    if (user?.preferences != null) {
-      final newCurrency = user!.preferences!.currency ?? 'RWF';
-      final langCode = user.preferences!.language ?? 'en';
+    // Sync currency / language / country when auth user updates.
+    // Location is *not* synced here: `user.cityName` is often stale vs server until
+    // `_loadUserPreferences` runs `getCurrentUser()`, and syncing it every build
+    // reset the subtitle to Kigali after returning to this screen.
+    if (user != null) {
+      final newCurrency = user.preferences?.currency ?? 'RWF';
+      final langCode = user.preferences?.language ?? 'en';
       final newLanguage = _mapLanguageCodeToName(langCode);
-      final newCountry = user.countryName ?? _selectedCountry;
-      final newLocation = user.cityName ?? _selectedLocation;
-      
+      final newCountry = user.countryName ?? 'Rwanda';
+
       if (_selectedCurrency != newCurrency ||
           _selectedLanguage != newLanguage ||
-          _selectedCountry != newCountry ||
-          _selectedLocation != newLocation) {
+          _selectedCountry != newCountry) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             setState(() {
               _selectedCurrency = newCurrency;
               _selectedLanguage = newLanguage;
               _selectedCountry = newCountry;
-              _selectedLocation = newLocation;
             });
           }
         });
@@ -1257,12 +1280,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             if (country != null) {
               // Save country selection
               await ref.read(selectedCountryProvider.notifier).selectCountry(country);
+              await ref.read(selectedCityProvider.notifier).clearCity();
               final userService = ref.read(userServiceProvider);
               await userService.updateProfile(countryId: country.id);
-              
+              try {
+                await ref.read(authServiceProvider).getCurrentUser();
+              } catch (_) {}
+
               setState(() {
                 _selectedCountry = name;
                 _selectedLocation = 'Select city';
+                _locationManuallyChanged = true;
               });
               
               if (mounted) {
@@ -1391,6 +1419,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         onTap: () async {
           setState(() {
             _selectedLocation = name;
+            _locationManuallyChanged = true;
           });
           Navigator.pop(context);
 
@@ -1402,6 +1431,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           try {
             final userService = ref.read(userServiceProvider);
             await userService.updateProfile(countryId: countryId, cityId: cityId);
+            await ref.read(selectedCityProvider.notifier).selectCity(cityId);
+            try {
+              await ref.read(authServiceProvider).getCurrentUser();
+            } catch (_) {}
             _showFeedbackSnackBar('Location changed to $name', isSuccess: true);
           } catch (e) {
             _showFeedbackSnackBar(

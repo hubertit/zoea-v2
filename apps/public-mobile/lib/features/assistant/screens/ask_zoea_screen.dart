@@ -25,9 +25,9 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
   String? _currentConversationId;
   bool _isLoading = false;
   List<String> _suggestions = [
-    'Show me popular places',
-    'Find restaurants in Kigali',
-    'What tours are available?',
+    'Italian dinner in Kigali',
+    'Gorilla or safari tours',
+    'Pharmacy or ATM nearby',
   ];
 
   @override

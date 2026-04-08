@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'country_provider.dart';
+import 'auth_provider.dart';
 import '../services/listings_service.dart';
 
 final listingsServiceProvider = Provider<ListingsService>((ref) {
@@ -87,6 +88,11 @@ class ListingsParams {
 /// Provider for all listings with pagination
 final listingsProvider = FutureProvider.family<Map<String, dynamic>, ListingsParams>((ref, params) async {
   final listingsService = ref.watch(listingsServiceProvider);
+  final user = ref.watch(currentUserProvider);
+  final selectedCityId = ref.watch(selectedCityProvider).valueOrNull;
+  final selectedCountryId = ref.watch(selectedCountryProvider).valueOrNull?.id;
+  final effectiveCityId = params.city ?? selectedCityId ?? user?.cityId;
+  final effectiveCountryId = params.country ?? selectedCountryId ?? user?.countryId;
   return await listingsService.getListings(
     page: params.page,
     limit: params.limit,
@@ -94,8 +100,8 @@ final listingsProvider = FutureProvider.family<Map<String, dynamic>, ListingsPar
     types: params.types,
     category: params.category,
     includeChildren: params.includeChildren,
-    city: params.city,
-    country: params.country,
+    city: effectiveCityId,
+    country: effectiveCountryId,
     search: params.search,
     minPrice: params.minPrice,
     maxPrice: params.maxPrice,
@@ -109,17 +115,27 @@ final listingsProvider = FutureProvider.family<Map<String, dynamic>, ListingsPar
 /// Provider for featured listings
 final featuredListingsProvider = FutureProvider.family<List<Map<String, dynamic>>, String?>((ref, countryId) async {
   final listingsService = ref.watch(listingsServiceProvider);
-  return await listingsService.getFeaturedListings(countryId: countryId);
+  final user = ref.watch(currentUserProvider);
+  final selectedCityId = ref.watch(selectedCityProvider).valueOrNull;
+  return await listingsService.getFeaturedListings(
+    countryId: countryId,
+    cityId: selectedCityId ?? user?.cityId,
+  );
 });
 
 /// Same dataset as home "Recommended" carousel: featured for the selected country, or all featured when that is empty.
 final featuredListingsWithHomeFallbackProvider =
     FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final countryId = ref.watch(selectedCountryProvider).value?.id;
+  final selectedCityId = ref.watch(selectedCityProvider).valueOrNull;
+  final user = ref.watch(currentUserProvider);
   final listingsService = ref.watch(listingsServiceProvider);
-  var list = await listingsService.getFeaturedListings(countryId: countryId);
+  var list = await listingsService.getFeaturedListings(
+    countryId: countryId,
+    cityId: selectedCityId ?? user?.cityId,
+  );
   if (list.isEmpty) {
-    list = await listingsService.getFeaturedListings(countryId: null);
+    list = await listingsService.getFeaturedListings(countryId: null, cityId: null);
   }
   return list;
 });
@@ -181,7 +197,14 @@ const int kRandomNearMeFullListLimit = 40;
 /// Provider for random listings (for Near Me section until geolocation is implemented)
 final randomListingsProvider = FutureProvider.family<List<Map<String, dynamic>>, int>((ref, limit) async {
   final listingsService = ref.watch(listingsServiceProvider);
-  return await listingsService.getRandomListings(limit: limit);
+  final user = ref.watch(currentUserProvider);
+  final selectedCityId = ref.watch(selectedCityProvider).valueOrNull;
+  final selectedCountryId = ref.watch(selectedCountryProvider).valueOrNull?.id;
+  return await listingsService.getRandomListings(
+    limit: limit,
+    cityId: selectedCityId ?? user?.cityId,
+    countryId: selectedCountryId ?? user?.countryId,
+  );
 });
 
 /// Parameters for listings by type query
@@ -231,12 +254,14 @@ class ListingsByTypeParams {
 /// Provider for listings by type
 final listingsByTypeProvider = FutureProvider.family<Map<String, dynamic>, ListingsByTypeParams>((ref, params) async {
   final listingsService = ref.watch(listingsServiceProvider);
+  final user = ref.watch(currentUserProvider);
+  final selectedCityId = ref.watch(selectedCityProvider).valueOrNull;
   return await listingsService.getListingsByType(
     type: params.type,
     page: params.page,
     limit: params.limit,
     category: params.category,
-    city: params.city,
+    city: params.city ?? selectedCityId ?? user?.cityId,
     search: params.search,
     status: params.status,
   );

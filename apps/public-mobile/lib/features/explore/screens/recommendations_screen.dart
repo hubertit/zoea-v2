@@ -5,7 +5,60 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/listings_provider.dart';
+import '../../../core/providers/categories_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+
+/// One top-level category tab: label + every category id in that subtree (root and descendants).
+class _RecommendationRootTab {
+  final String name;
+  final Set<String> descendantIds;
+
+  const _RecommendationRootTab({
+    required this.name,
+    required this.descendantIds,
+  });
+}
+
+Set<String> _collectDescendantCategoryIds(Map<String, dynamic> node) {
+  final out = <String>{};
+  final id = node['id']?.toString();
+  if (id != null && id.isNotEmpty) out.add(id);
+  final children = node['children'];
+  if (children is List) {
+    for (final c in children) {
+      if (c is Map<String, dynamic>) {
+        out.addAll(_collectDescendantCategoryIds(c));
+      }
+    }
+  }
+  return out;
+}
+
+/// Root slugs excluded from Recommendations tabs (e.g. events live elsewhere in the app).
+const _recommendationsExcludedRootSlugs = {'events'};
+
+List<_RecommendationRootTab> _rootTabsFromCategoryTree(List<Map<String, dynamic>> roots) {
+  final out = <_RecommendationRootTab>[];
+  for (final r in roots) {
+    if (r['isActive'] == false) continue;
+    final slug = (r['slug'] as String?)?.trim().toLowerCase() ?? '';
+    if (slug.isNotEmpty && _recommendationsExcludedRootSlugs.contains(slug)) continue;
+    final name = (r['name'] as String?)?.trim();
+    if (name == null || name.isEmpty) continue;
+    final ids = _collectDescendantCategoryIds(r);
+    if (ids.isEmpty) continue;
+    out.add(_RecommendationRootTab(name: name, descendantIds: ids));
+  }
+  return out;
+}
+
+String? _listingCategoryId(Map<String, dynamic> listing) {
+  final cat = listing['category'];
+  if (cat is Map<String, dynamic>) {
+    return cat['id']?.toString();
+  }
+  return null;
+}
 
 class RecommendationsScreen extends ConsumerStatefulWidget {
   const RecommendationsScreen({super.key});
@@ -14,116 +67,116 @@ class RecommendationsScreen extends ConsumerStatefulWidget {
   ConsumerState<RecommendationsScreen> createState() => _RecommendationsScreenState();
 }
 
-class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
+class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
   final Set<String> _favoritePlaces = {};
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 7, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  List<Map<String, dynamic>> _filterByCategorySubtree(
+    List<Map<String, dynamic>> listings,
+    Set<String>? allowedCategoryIds,
+  ) {
+    if (allowedCategoryIds == null || allowedCategoryIds.isEmpty) return listings;
+    return listings.where((listing) {
+      final cid = _listingCategoryId(listing);
+      return cid != null && allowedCategoryIds.contains(cid);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.backgroundColor,
-      appBar: AppBar(
+    final categoriesAsync = ref.watch(categoriesProvider);
+
+    return categoriesAsync.when(
+      loading: () => Scaffold(
         backgroundColor: context.backgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, size: 32),
-          onPressed: () => context.pop(),
-          color: context.primaryTextColor,
-        ),
-        title: Text(
-          'Recommendations',
-          style: context.headlineSmall.copyWith(
-            fontWeight: FontWeight.w600,
+        appBar: AppBar(
+          backgroundColor: context.backgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left, size: 32),
+            onPressed: () => context.pop(),
+            color: context.primaryTextColor,
+          ),
+          title: Text(
+            'Recommendations',
+            style: context.headlineSmall.copyWith(fontWeight: FontWeight.w600),
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => context.push('/search?category=recommendations'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterBottomSheet,
-          ),
-          IconButton(
-            icon: const Icon(Icons.sort),
-            onPressed: _showSortBottomSheet,
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: context.primaryColorTheme,
-          labelColor: context.primaryColorTheme,
-          unselectedLabelColor: context.secondaryTextColor,
-          labelStyle: context.bodySmall.copyWith(fontWeight: FontWeight.w600),
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-          tabs: const [
-            Tab(text: 'All'),
-            Tab(text: 'Wildlife'),
-            Tab(text: 'Nature'),
-            Tab(text: 'History'),
-            Tab(text: 'Water'),
-            Tab(text: 'Adventure'),
-            Tab(text: 'Culture'),
-          ],
+        body: Center(
+          child: CircularProgressIndicator(color: context.primaryColorTheme),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildRecommendationsList('All'),
-          _buildRecommendationsList('Wildlife'),
-          _buildRecommendationsList('Nature'),
-          _buildRecommendationsList('History'),
-          _buildRecommendationsList('Water'),
-          _buildRecommendationsList('Adventure'),
-          _buildRecommendationsList('Culture'),
-        ],
+      error: (_, __) => _buildScaffoldWithTabs(context, const []),
+      data: (roots) => _buildScaffoldWithTabs(context, _rootTabsFromCategoryTree(roots)),
+    );
+  }
+
+  Widget _buildScaffoldWithTabs(BuildContext context, List<_RecommendationRootTab> rootTabs) {
+    final tabCount = 1 + rootTabs.length;
+
+    return DefaultTabController(
+      length: tabCount,
+      key: ValueKey<int>(tabCount),
+      child: Scaffold(
+        backgroundColor: context.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: context.backgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left, size: 32),
+            onPressed: () => context.pop(),
+            color: context.primaryTextColor,
+          ),
+          title: Text(
+            'Recommendations',
+            style: context.headlineSmall.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => context.push('/search?category=recommendations'),
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterBottomSheet,
+            ),
+            IconButton(
+              icon: const Icon(Icons.sort),
+              onPressed: _showSortBottomSheet,
+            ),
+          ],
+          bottom: TabBar(
+            indicatorColor: context.primaryColorTheme,
+            labelColor: context.primaryColorTheme,
+            unselectedLabelColor: context.secondaryTextColor,
+            labelStyle: context.bodySmall.copyWith(fontWeight: FontWeight.w600),
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+            tabs: [
+              const Tab(text: 'All'),
+              ...rootTabs.map((t) => Tab(text: t.name)),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildRecommendationsList(null),
+            ...rootTabs.map((t) => _buildRecommendationsList(t.descendantIds)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildRecommendationsList(String category) {
+  Widget _buildRecommendationsList(Set<String>? allowedCategoryIds) {
     final featuredAsync = ref.watch(featuredListingsWithHomeFallbackProvider);
-    
+
     return featuredAsync.when(
       data: (listings) {
-        // Filter by category if not "All"
-        List<Map<String, dynamic>> filteredListings = listings;
-        if (category != 'All') {
-          filteredListings = listings.where((listing) {
-            final categoryName = listing['category']?['name'] as String? ?? '';
-            // Map category names to match tab categories
-            final categoryMap = {
-              'Wildlife': ['Wildlife', 'Safari', 'Animal'],
-              'Nature': ['Nature', 'Forest', 'Park', 'Mountain'],
-              'History': ['History', 'Memorial', 'Museum', 'Heritage'],
-              'Water': ['Water', 'Lake', 'Beach', 'River'],
-              'Adventure': ['Adventure', 'Hiking', 'Trekking', 'Outdoor'],
-              'Culture': ['Culture', 'Art', 'Arts', 'Cultural'],
-            };
-            final matchingCategories = categoryMap[category] ?? [category];
-            return matchingCategories.any((cat) => 
-              categoryName.toLowerCase().contains(cat.toLowerCase())
-            );
-          }).toList();
-        }
-        
+        final filteredListings = _filterByCategorySubtree(listings, allowedCategoryIds);
+
         if (filteredListings.isEmpty) {
           return Center(
             child: Column(
@@ -143,10 +196,13 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Check back later for new recommendations',
+                  allowedCategoryIds == null
+                      ? 'Check back later for new recommendations'
+                      : 'No featured places in this category yet — try All or Explore',
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -158,6 +214,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
           backgroundColor: context.cardColor,
           onRefresh: () async {
             ref.invalidate(featuredListingsWithHomeFallbackProvider);
+            ref.invalidate(categoriesProvider);
             await Future.delayed(const Duration(milliseconds: 500));
           },
           child: ListView.builder(
@@ -216,9 +273,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       ),
     );
   }
-  
+
   Widget _buildPlaceCardFromListing(Map<String, dynamic> listing) {
-    // Extract image URL
     String? imageUrl;
     if (listing['images'] != null && listing['images'] is List && (listing['images'] as List).isNotEmpty) {
       final firstImage = (listing['images'] as List).first;
@@ -228,13 +284,12 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
         imageUrl = firstImage;
       }
     }
-    
-    // Extract location
+
     final address = listing['address'] as String? ?? '';
     String cityName = '';
     final city = listing['city'];
     if (city is Map) {
-      cityName = (city as Map<String, dynamic>)['name'] as String? ?? '';
+      cityName = (city)['name'] as String? ?? '';
     } else if (city is String) {
       cityName = city;
     }
@@ -245,19 +300,17 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
             : cityName.isNotEmpty
                 ? cityName
                 : 'Location not available';
-    
-    // Extract rating
+
     final rating = listing['rating'] != null
         ? (listing['rating'] is String
             ? double.tryParse(listing['rating']) ?? 0.0
             : (listing['rating'] as num?)?.toDouble() ?? 0.0)
         : 0.0;
-    
-    // Extract review count
-    final reviewCount = (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ?? 
-                       listing['reviewCount'] as int? ?? 0;
-    
-    // Extract price range
+
+    final reviewCount = (listing['_count'] as Map<String, dynamic>?)?['reviews'] as int? ??
+        listing['reviewCount'] as int? ??
+        0;
+
     final minPrice = listing['minPrice'] != null
         ? (listing['minPrice'] is String
             ? double.tryParse(listing['minPrice'])
@@ -267,15 +320,13 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     final priceRange = minPrice != null
         ? 'From ${_formatPrice(minPrice, currency)}'
         : '';
-    
-    // Extract category
-    final category = listing['category']?['name'] as String? ?? 
-                    listing['type'] as String? ?? 
-                    'Place';
-    
-    // Extract ID
+
+    final category = listing['category']?['name'] as String? ??
+        listing['type'] as String? ??
+        'Place';
+
     final id = listing['id'] as String? ?? '';
-    
+
     return PlaceCard(
       name: listing['name'] as String? ?? 'Unknown',
       location: locationText,
@@ -299,11 +350,11 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       },
     );
   }
-  
+
   String _formatPrice(double price, String currency) {
     return PriceFormatter.formatAbbreviated(price, currency: currency);
   }
-  
+
   Widget _buildSkeletonCard() {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -351,7 +402,6 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     );
   }
 
-
   void _showFilterBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -377,8 +427,6 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                 ),
               ),
               const SizedBox(height: 20),
-              
-              // Rating Filter
               Text(
                 'Minimum Rating',
                 style: context.titleMedium.copyWith(
@@ -396,10 +444,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                   _buildFilterChip('5.0 Stars', false),
                 ],
               ),
-              
               const SizedBox(height: 20),
-              
-              // Features Filter
               Text(
                 'Features',
                 style: context.titleMedium.copyWith(
@@ -420,10 +465,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                   _buildFilterChip('Restrooms', false),
                 ],
               ),
-              
               const SizedBox(height: 30),
-              
-              // Action Buttons
               Row(
                 children: [
                   Expanded(
@@ -483,7 +525,6 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                 ),
               ),
               const SizedBox(height: 20),
-              
               _buildSortOption('Popular', true),
               _buildSortOption('Rating (High to Low)', false),
               _buildSortOption('Rating (Low to High)', false),
@@ -502,9 +543,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     return FilterChip(
       label: Text(label),
       selected: isSelected,
-      onSelected: (selected) {
-        // Handle filter selection
-      },
+      onSelected: (selected) {},
       selectedColor: context.primaryColorTheme.withOpacity(0.2),
       checkmarkColor: context.primaryColorTheme,
       labelStyle: context.bodySmall.copyWith(
@@ -524,7 +563,6 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       trailing: isSelected ? Icon(Icons.check, color: context.primaryColorTheme) : null,
       onTap: () {
         Navigator.pop(context);
-        // Handle sort selection
       },
     );
   }

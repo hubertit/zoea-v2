@@ -19,6 +19,11 @@ final selectedCountryProvider = StateNotifierProvider<SelectedCountryNotifier, A
   return SelectedCountryNotifier(ref);
 });
 
+/// Provider for selected cityId with persistence.
+final selectedCityProvider = StateNotifierProvider<SelectedCityNotifier, AsyncValue<String?>>((ref) {
+  return SelectedCityNotifier();
+});
+
 class SelectedCountryNotifier extends StateNotifier<AsyncValue<Country?>> {
   final Ref ref;
   static const String _storageKey = 'selected_country_id';
@@ -108,6 +113,43 @@ class SelectedCountryNotifier extends StateNotifier<AsyncValue<Country?>> {
   /// Refresh country data
   Future<void> refresh() async {
     await _loadSavedCountry();
+  }
+}
+
+class SelectedCityNotifier extends StateNotifier<AsyncValue<String?>> {
+  static const String _storageKey = 'selected_city_id';
+
+  SelectedCityNotifier() : super(const AsyncValue.loading()) {
+    _loadSavedCity();
+  }
+
+  Future<void> _loadSavedCity() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      state = AsyncValue.data(prefs.getString(_storageKey));
+    } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
+    }
+  }
+
+  Future<void> selectCity(String cityId) async {
+    state = AsyncValue.data(cityId);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_storageKey, cityId);
+    } catch (_) {
+      // Ignore persistence failures
+    }
+  }
+
+  Future<void> clearCity() async {
+    state = const AsyncValue.data(null);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_storageKey);
+    } catch (_) {
+      // Ignore persistence failures
+    }
   }
 }
 

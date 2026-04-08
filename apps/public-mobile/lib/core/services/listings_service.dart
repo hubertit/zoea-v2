@@ -82,14 +82,21 @@ class ListingsService {
   }
 
   /// Get featured listings
-  Future<List<Map<String, dynamic>>> getFeaturedListings({String? countryId}) async {
+  Future<List<Map<String, dynamic>>> getFeaturedListings({
+    String? countryId,
+    String? cityId,
+    int limit = 200,
+  }) async {
     try {
-      final queryParams = <String, dynamic>{};
+      final queryParams = <String, dynamic>{
+        'limit': limit,
+      };
       if (countryId != null) queryParams['countryId'] = countryId;
-      
+      if (cityId != null) queryParams['cityId'] = cityId;
+
       final response = await _dio.get(
         '${AppConfig.listingsEndpoint}/featured',
-        queryParameters: queryParams.isEmpty ? null : queryParams,
+        queryParameters: queryParams,
       );
 
       if (response.statusCode == 200) {
@@ -188,11 +195,19 @@ class ListingsService {
   }
 
   /// Get random listings (for Near Me section until geolocation is implemented)
-  Future<List<Map<String, dynamic>>> getRandomListings({int limit = 10}) async {
+  Future<List<Map<String, dynamic>>> getRandomListings({
+    int limit = 10,
+    String? countryId,
+    String? cityId,
+  }) async {
     try {
+      final queryParams = <String, dynamic>{'limit': limit};
+      if (countryId != null) queryParams['countryId'] = countryId;
+      if (cityId != null) queryParams['cityId'] = cityId;
+
       final response = await _dio.get(
         '${AppConfig.listingsEndpoint}/random',
-        queryParameters: {'limit': limit},
+        queryParameters: queryParams,
       );
 
       if (response.statusCode == 200) {
