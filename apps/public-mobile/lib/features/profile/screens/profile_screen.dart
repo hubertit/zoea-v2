@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -30,16 +29,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     _loadUserPreferences();
   }
   
-  void _loadUserPreferences() {
+  Future<void> _loadUserPreferences() async {
     final user = ref.read(currentUserProvider);
-    if (user?.preferences != null) {
+    if (user == null || user.preferences == null) return;
+
       setState(() {
-        _selectedCurrency = user!.preferences!.currency ?? 'RWF';
+        _selectedCurrency = user.preferences!.currency ?? 'RWF';
         // Map language codes to display names
         final langCode = user.preferences!.language ?? 'en';
         _selectedLanguage = _mapLanguageCodeToName(langCode);
+        _selectedCountry = user.countryName ?? _selectedCountry;
+        _selectedLocation = user.cityName ?? _selectedLocation;
       });
-    }
+
+      final countryId = user.countryId;
+      if (countryId != null && countryId.isNotEmpty) {
+        try {
+          final countriesService = ref.read(countriesServiceProvider);
+          final persistedCountry = await countriesService.getCountryById(countryId);
+          await ref.read(selectedCountryProvider.notifier).selectCountry(persistedCountry);
+        } catch (_) {
+          // Ignore provider sync failures; local labels are still shown.
+        }
+      }
   }
   
   @override
@@ -52,13 +64,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       final newCurrency = user!.preferences!.currency ?? 'RWF';
       final langCode = user.preferences!.language ?? 'en';
       final newLanguage = _mapLanguageCodeToName(langCode);
+      final newCountry = user.countryName ?? _selectedCountry;
+      final newLocation = user.cityName ?? _selectedLocation;
       
-      if (_selectedCurrency != newCurrency || _selectedLanguage != newLanguage) {
+      if (_selectedCurrency != newCurrency ||
+          _selectedLanguage != newLanguage ||
+          _selectedCountry != newCountry ||
+          _selectedLocation != newLocation) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             setState(() {
               _selectedCurrency = newCurrency;
               _selectedLanguage = newLanguage;
+              _selectedCountry = newCountry;
+              _selectedLocation = newLocation;
             });
           }
         });
@@ -920,12 +939,55 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             
-            // Country options
-            _buildCountryOption('Rwanda', '🇷🇼', _selectedCountry == 'Rwanda'),
-            _buildCountryOption('Kenya', '🇰🇪', _selectedCountry == 'Kenya'),
-            _buildCountryOption('Uganda', '🇺🇬', _selectedCountry == 'Uganda'),
-            _buildCountryOption('South Africa', '🇿🇦', _selectedCountry == 'South Africa'),
-            _buildCountryOption('Nigeria', '🇳🇬', _selectedCountry == 'Nigeria'),
+            FutureBuilder(
+              future: ref.read(countriesServiceProvider).getActiveCountries(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      'Failed to load countries. Please try again.',
+                      style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                    ),
+                  );
+                }
+
+                final countries = snapshot.data ?? const [];
+                if (countries.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      'No countries available.',
+                      style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                    ),
+                  );
+                }
+
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 360),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: countries.map((country) {
+                        final code = country.code2.toUpperCase();
+                        return _buildCountryOption(
+                          country.name,
+                          _flagFromCountryCode(code),
+                          _selectedCountry == country.name,
+                          countryCode: code,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
+            ),
             
             // Add bottom padding for safe area
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
@@ -936,6 +998,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _showLocationBottomSheet(BuildContext context) {
+    final selectedCountry = ref.read(selectedCountryProvider).valueOrNull;
+    final countryId = selectedCountry?.id;
+    final countryName = selectedCountry?.name ?? _selectedCountry;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -968,12 +1034,71 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            
-            // Location options
-            _buildLocationOption('Kigali', 'Capital city', _selectedLocation == 'Kigali'),
-            _buildLocationOption('Butare', 'University town', _selectedLocation == 'Butare'),
-            _buildLocationOption('Gisenyi', 'Lake town', _selectedLocation == 'Gisenyi'),
-            _buildLocationOption('Ruhengeri', 'Mountain region', _selectedLocation == 'Ruhengeri'),
+
+            if (countryId == null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Text(
+                  'Select a country first to load locations.',
+                  style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                ),
+              )
+            else
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: ref.read(countriesServiceProvider).getCountryCities(countryId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Text(
+                        'Failed to load locations. Please try again.',
+                        style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                      ),
+                    );
+                  }
+
+                  final cities = (snapshot.data ?? [])
+                      .where((c) => (c['name']?.toString().trim().isNotEmpty ?? false))
+                      .toList()
+                    ..sort((a, b) => a['name'].toString().compareTo(b['name'].toString()));
+
+                  if (cities.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Text(
+                        'No locations available for $countryName.',
+                        style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                      ),
+                    );
+                  }
+
+                  return ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 360),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: cities.map((city) {
+                          final cityName = city['name'].toString();
+                          final desc = city['description']?.toString();
+                          return _buildLocationOption(
+                            cityName,
+                            (desc != null && desc.isNotEmpty) ? desc : 'City in $countryName',
+                            _selectedLocation == cityName,
+                            cityId: city['id']?.toString(),
+                            countryId: countryId,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                },
+              ),
             
             // Add bottom padding for safe area
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
@@ -1072,26 +1197,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             final userService = ref.read(userServiceProvider);
             await userService.updatePreferences(currency: code);
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Currency changed to $code',
-                    style: context.bodyMedium.copyWith(color: context.primaryTextColor),
-                  ),
-                  backgroundColor: context.primaryColorTheme,
-                ),
-              );
+              _showFeedbackSnackBar('Currency changed to $code', isSuccess: true);
             }
           } catch (e) {
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to update currency: ${e.toString().replaceFirst('Exception: ', '')}',
-                    style: context.bodyMedium.copyWith(color: context.primaryTextColor),
-                  ),
-                  backgroundColor: context.errorColor,
-                ),
+              _showFeedbackSnackBar(
+                'Failed to update currency: ${e.toString().replaceFirst('Exception: ', '')}',
+                isError: true,
               );
             }
           }
@@ -1100,7 +1212,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildCountryOption(String name, String flag, bool isSelected) {
+  Widget _buildCountryOption(
+    String name,
+    String flag,
+    bool isSelected, {
+    String? countryCode,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -1129,47 +1246,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           size: 20,
         ) : null,
         onTap: () async {
-          // Map country name to code
-          final countryCode = _getCountryCode(name);
+          // Use provided country code for dynamic options; fallback to name mapping.
+          final code = countryCode ?? _getCountryCode(name);
           
           try {
             // Get country from API by code
             final countriesService = ref.read(countriesServiceProvider);
-            final country = await countriesService.getCountryByCode(countryCode);
+            final country = await countriesService.getCountryByCode(code);
             
             if (country != null) {
               // Save country selection
               await ref.read(selectedCountryProvider.notifier).selectCountry(country);
+              final userService = ref.read(userServiceProvider);
+              await userService.updateProfile(countryId: country.id);
               
               setState(() {
                 _selectedCountry = name;
+                _selectedLocation = 'Select city';
               });
               
               if (mounted) {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Country changed to $name. Content will be filtered accordingly.',
-                      style: context.bodyMedium.copyWith(color: Colors.white),
-                    ),
-                    backgroundColor: context.successColor,
-                    duration: const Duration(seconds: 3),
-                  ),
+                _showFeedbackSnackBar(
+                  'Country changed to $name. Content will be filtered accordingly.',
+                  isSuccess: true,
                 );
               }
             }
           } catch (e) {
             if (mounted) {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to change country. Please try again.',
-                    style: context.bodyMedium.copyWith(color: Colors.white),
-                  ),
-                  backgroundColor: context.errorColor,
-                ),
+              _showFeedbackSnackBar(
+                'Failed to change country. Please try again.',
+                isError: true,
               );
             }
           }
@@ -1196,7 +1305,56 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
-  Widget _buildLocationOption(String name, String description, bool isSelected) {
+  String _flagFromCountryCode(String code) {
+    const codeToFlag = {
+      'RW': '🇷🇼',
+      'KE': '🇰🇪',
+      'UG': '🇺🇬',
+      'ZA': '🇿🇦',
+      'NG': '🇳🇬',
+    };
+    return codeToFlag[code] ?? '🌍';
+  }
+
+  void _showFeedbackSnackBar(
+    String message, {
+    bool isError = false,
+    bool isSuccess = false,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final backgroundColor = isError
+        ? colorScheme.errorContainer
+        : isSuccess
+            ? colorScheme.primaryContainer
+            : colorScheme.inverseSurface;
+    final textColor = isError
+        ? colorScheme.onErrorContainer
+        : isSuccess
+            ? colorScheme.onPrimaryContainer
+            : colorScheme.onInverseSurface;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            message,
+            style: context.bodyMedium.copyWith(color: textColor),
+          ),
+          backgroundColor: backgroundColor,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+  }
+
+  Widget _buildLocationOption(
+    String name,
+    String description,
+    bool isSelected, {
+    String? cityId,
+    String? countryId,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -1230,20 +1388,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           color: context.primaryColorTheme,
           size: 20,
         ) : null,
-        onTap: () {
+        onTap: () async {
           setState(() {
             _selectedLocation = name;
           });
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Location changed to $name',
-                style: context.bodyMedium.copyWith(color: context.primaryTextColor),
-              ),
-              backgroundColor: context.primaryColorTheme,
-            ),
-          );
+
+          if (cityId == null || countryId == null) {
+            _showFeedbackSnackBar('Location changed to $name', isSuccess: true);
+            return;
+          }
+
+          try {
+            final userService = ref.read(userServiceProvider);
+            await userService.updateProfile(countryId: countryId, cityId: cityId);
+            _showFeedbackSnackBar('Location changed to $name', isSuccess: true);
+          } catch (e) {
+            _showFeedbackSnackBar(
+              'Failed to save location: ${e.toString().replaceFirst('Exception: ', '')}',
+              isError: true,
+            );
+          }
         },
       ),
     );
@@ -1291,26 +1456,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             final langCode = _mapLanguageNameToCode(name);
             await userService.updatePreferences(language: langCode);
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Language changed to $name',
-                    style: context.bodyMedium.copyWith(color: context.primaryTextColor),
-                  ),
-                  backgroundColor: context.primaryColorTheme,
-                ),
-              );
+              _showFeedbackSnackBar('Language changed to $name', isSuccess: true);
             }
           } catch (e) {
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to update language: ${e.toString().replaceFirst('Exception: ', '')}',
-                    style: context.bodyMedium.copyWith(color: context.primaryTextColor),
-                  ),
-                  backgroundColor: context.errorColor,
-                ),
+              _showFeedbackSnackBar(
+                'Failed to update language: ${e.toString().replaceFirst('Exception: ', '')}',
+                isError: true,
               );
             }
           }

@@ -9,6 +9,10 @@ class User {
   final String fullName;
   final String? phoneNumber;
   final String? profileImage;
+  final String? countryId;
+  final String? cityId;
+  final String? countryName;
+  final String? cityName;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isVerified;
@@ -21,6 +25,10 @@ class User {
     required this.fullName,
     this.phoneNumber,
     this.profileImage,
+    this.countryId,
+    this.cityId,
+    this.countryName,
+    this.cityName,
     required this.createdAt,
     required this.updatedAt,
     this.isVerified = false,
@@ -36,6 +44,10 @@ class User {
       'fullName': fullName,
       'phoneNumber': phoneNumber,
       'profileImage': profileImage,
+      'countryId': countryId,
+      'cityId': cityId,
+      'countryName': countryName,
+      'cityName': cityName,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isVerified': isVerified,
@@ -52,6 +64,10 @@ class User {
       fullName: json['fullName'] ?? '',
       phoneNumber: json['phoneNumber'],
       profileImage: json['profileImage'],
+      countryId: json['countryId']?.toString(),
+      cityId: json['cityId']?.toString(),
+      countryName: json['countryName']?.toString(),
+      cityName: json['cityName']?.toString(),
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
           : DateTime.now(),

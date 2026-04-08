@@ -55,6 +55,8 @@ class UserService {
     String? fullName,
     String? phoneNumber,
     String? bio,
+    String? countryId,
+    String? cityId,
     Map<String, dynamic>? preferences,
   }) async {
     try {
@@ -65,6 +67,8 @@ class UserService {
         data['phoneNumber'] = PhoneValidator.cleanPhoneNumber(phoneNumber);
       }
       if (bio != null) data['bio'] = bio;
+      if (countryId != null) data['countryId'] = countryId;
+      if (cityId != null) data['cityId'] = cityId;
       if (preferences != null) data['preferences'] = preferences;
 
       final response = await (await _getDio()).put(
@@ -603,6 +607,10 @@ class UserService {
       fullName: fullName,
       phoneNumber: data['phoneNumber']?.toString(),
       profileImage: profileImage,
+      countryId: data['countryId']?.toString(),
+      cityId: data['cityId']?.toString(),
+      countryName: data['country']?['name']?.toString(),
+      cityName: data['city']?['name']?.toString(),
       createdAt: createdAt,
       updatedAt: updatedAt,
       isVerified: data['isVerified'] == true,

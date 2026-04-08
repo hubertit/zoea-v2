@@ -12,7 +12,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "fix:broken-text": "node dist/scripts/fix-broken-text.js"
+    "fix:broken-text": "node dist/scripts/fix-broken-text.js",
+    "featured:balance": "npx ts-node scripts/balance-featured-listings.ts",
+    "cities:update-rwanda-names": "npx ts-node scripts/update-rwanda-city-names.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",
