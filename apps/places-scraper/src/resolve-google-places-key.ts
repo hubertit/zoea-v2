@@ -1,5 +1,7 @@
 /**
- * Load the same Google Places key used for Kigali scraping: env / .env files / DB `integrations.google_places`.
+ * Env loading for **apps/places-scraper** (the Google Places CLI — not apps/backend).
+ * Sources: shell → apps/backend/.env → apps/places-scraper/.env → repo root .env → DB `integrations.google_places`.
+ * First file wins per key for vars not already set in process.env.
  */
 
 import * as fs from 'fs';
@@ -20,6 +22,7 @@ export function loadPlacesScraperEnvFromFiles(): void {
   const candidates = [
     path.join(__dirname, '../../backend/.env'),
     path.join(__dirname, '../.env'),
+    path.join(__dirname, '../../../.env'),
   ];
   for (const envPath of candidates) {
     if (!fs.existsSync(envPath)) continue;
