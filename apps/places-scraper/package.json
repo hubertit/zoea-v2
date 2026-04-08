@@ -16,7 +16,10 @@
     "scrape:places:musanze:all": "TARGET_CITY_NAME=Musanze TARGET_CITY_ALIASES=Ruhengeri LEAF_GOAL_LISTINGS=12 LEAF_FILL_MAX_ROUNDS=80 TEXT_SEARCH_MAX_PAGES=6 LEGACY_SCRAPE=1 npx ts-node src/scrape-google-places.ts",
     "report:category-gaps": "npx ts-node src/report-category-listing-gaps.ts",
     "backfill:inactive-images": "npx ts-node src/backfill-inactive-listing-images.ts",
-    "backfill:inactive-images:dry": "DRY_RUN=1 npx ts-node src/backfill-inactive-listing-images.ts"
+    "backfill:inactive-images:dry": "DRY_RUN=1 npx ts-node src/backfill-inactive-listing-images.ts",
+    "fix:kigali-accommodation": "npx ts-node src/fix-kigali-accommodation-gaps.ts",
+    "fix:kigali-accommodation:db-only": "SKIP_IMPORT=1 npx ts-node src/fix-kigali-accommodation-gaps.ts",
+    "fix:kigali-accommodation:dry": "DRY_RUN=1 npx ts-node src/fix-kigali-accommodation-gaps.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
