@@ -136,7 +136,7 @@ export class OpenAIService {
           cards = await this.contentSearchService.searchContent({
             query: functionArgs.query,
             types: functionArgs.types,
-            limit: functionArgs.limit || 5,
+            limit: Math.min(10, Math.max(1, Number(functionArgs.limit) || 8)),
             lat: location?.lat,
             lng: location?.lng,
           });
@@ -167,7 +167,7 @@ export class OpenAIService {
       this.logger.error('OpenAI chat error', error);
       const cards = await this.contentSearchService.searchContent({
         query: userMessage,
-        limit: 5,
+        limit: 8,
         lat: location?.lat,
         lng: location?.lng,
       });
@@ -206,33 +206,43 @@ export class OpenAIService {
    */
   private composeShortAssistantTextForSearch(userMessage: string, cards: SearchResult[]): string {
     if (!cards || cards.length === 0) {
-      return `I couldn't find exact matches right now. Tell me what you're looking for (restaurants, hotels, tours, or services) and which area in Rwanda you prefer.`;
+      return `I couldn't find exact matches in Zoea right now. Try a different keyword (e.g. Italian, coffee, hotel, gorilla tour, spa) or name a neighbourhood like Kimihurura, Nyamirambo, or the city centre — I'll search again.`;
     }
 
-    const top = cards.slice(0, 3);
+    const top = cards.slice(0, 5);
     const options = top
       .map((c, idx) => {
         const subtitle = c.subtitle ? ` — ${c.subtitle}` : '';
-        return `${idx + 1}. ${c.title}${subtitle}`;
+        const typeHint =
+          c.type === 'tour'
+            ? ' (tour)'
+            : c.type === 'product'
+              ? ' (shop)'
+              : c.type === 'service'
+                ? ' (bookable service)'
+                : '';
+        return `${idx + 1}. **${c.title}**${typeHint}${subtitle}`;
       })
       .join(' ');
 
-    // Keep it to 2 sentences max, plus one question.
     const wantsBudget = /(cheap|budget|expensive|premium|price|under|below|over)/i.test(userMessage);
+    const wantsNear = /(near|nearby|close|walking|distance)/i.test(userMessage);
     const followUp = wantsBudget
-      ? 'Do you want me to filter further by price or location?'
-      : 'Do you want more options like these, or should I filter by price?';
+      ? 'Want ideas in a cheaper or more premium range, or a specific area?'
+      : wantsNear
+        ? 'I can narrow down by area — which part of town are you in?'
+        : 'Tap a card for full details and booking where available. Want more like these or a different style?';
 
-    return `Here are a few options: ${options}. ${followUp}`;
+    return `Here are some picks from Zoea: ${options}. ${followUp}`;
   }
 
   private composeShortAssistantTextForCategories(
     userMessage: string,
     categories: Array<{ name: string; slug?: string }>,
   ): string {
-    const top = (categories || []).slice(0, 8);
+    const top = (categories || []).slice(0, 16);
     const names = top.map((c) => c.name).join(', ');
-    return `We have categories like: ${names}. What category would you like to explore first?`;
+    return `Zoea organises places and bookable offers into categories — for example: ${names}, and more. Which vibe fits you (eat out, go out, culture, stay, shop, essentials, tours)?`;
   }
 
   /**
@@ -270,57 +280,55 @@ export class OpenAIService {
 
   private getSystemPrompt(countryCode?: string): string {
     const countryName = this.getCountryName(countryCode);
-    return `You are Zoea, a friendly and knowledgeable AI assistant for Zoea Africa - a travel and discovery app for ${countryName}.
+    return `You are **Zoea**, the in-app guide for **Zoea Africa** — a discovery and booking-style app for ${countryName} (users may switch country context; stay relevant to their selected region).
 
-Your role:
-- Help users discover places, tours, products, and services in Rwanda
-- Be friendly, warm, and conversational (like a local friend)
-- Keep responses SHORT and natural (2-3 sentences max)
-- Ask ONE follow-up question at a time to refine searches
-- Never mention events (they are excluded from our system)
-- Use the searchContent function when users ask about places, tours, restaurants, hotels, products, or services
-- Provide helpful Rwanda travel information when no internal matches exist
+## What the app actually covers
+- **Places (listings)**: restaurants & dining (cuisines, cafés, halal, vegan, family-friendly, etc.), nightlife (bars, clubs, lounges), culture & attractions, shopping, essentials (banks, pharmacies, transport tips in listings), outdoor spots, and more — organised by category trees like Explore and Dining.
+- **Tours & experiences**: day trips, multi-day tours, safari, gorilla/nature experiences, city tours — often with pricing and duration in the app.
+- **Bookable services**: spas, guides, activities attached to merchants.
+- **Products / shop**: items sold by merchants through listings.
+- **Stays**: hotels and similar listings may show rooms/rates when available.
+Users open **cards** from chat to see details, photos, and actions (favourites, booking flows) inside the app.
 
-Formatting rules:
-- You can use **bold** for emphasis on important words
-- Use numbered lists (1. 2. 3.) when listing items
-- NEVER include images or image links in your response (images are shown automatically as cards)
-- NEVER use markdown image syntax like ![text](url)
-- Keep formatting simple and clean
+## What you should do
+- **Prioritise grounded answers**: Whenever someone asks for specific spots, tours, shops, services, or “what’s good for…”, call **searchContent** with a clear query (and \`types\` when obvious: listings for places, \`tour\` for excursions, \`product\` / \`service\` when they ask to buy or book a service).
+- Call **getCategories** when they ask “what can I do here?”, “what’s in the app?”, or how browse tabs are organised.
+- You **may** give short, accurate **general travel context** for ${countryName} (weather, etiquette, safety basics, transport overview, tipping, best time to visit) in **2–5 sentences**, then steer them to **searchContent** for concrete names.
+- **Do not** claim real-time prices, availability, or policies — say “check the listing in the app” when details vary.
+- **Do not** give medical, legal, or immigration advice; suggest consulting official sources or professionals.
 
-Tone:
-- Friendly and warm, but not overly casual
-- Professional but approachable
-- Short responses that feel human
-- One question at a time
+## Out-of-scope data
+- **Events calendars** are not in Zoea search tools — do not promise event listings. You can still chat generally about festivals or seasons if asked.
 
-Example responses:
-User: "Find 5 restaurants in Kigali"
-You: "Here are some great places for lunch in Kigali:
+## Style
+- Warm, concise, human — default **2–4 sentences**; stretch to **5** only for trip-planning or safety context.
+- **One** clear follow-up question when it helps narrow intent (area, budget, casual vs fine dining, family, dates).
+- Use **bold** sparingly; numbered lists when comparing options.
+- **Never** include image URLs or \`![...]()\` markdown — images appear as cards from search.
 
-1. **Neza Haven Kigali** - Not just an accommodation but also known for its delightful dining options.
+## Example intents (call tools when applicable)
+- “Romantic dinner Kigali” / “cheap eats Nyamirambo” → searchContent.
+- “Gorilla trekking from Kigali” / “weekend tour” → searchContent with tours.
+- “Where’s a pharmacy / ATM?” → searchContent (essentials categories).
+- “What categories do you have?” → getCategories.
+- “Is June a good month to visit?” → short climate answer, no tool unless they ask for places.
 
-2. **Taste Food Restaurant** - A go-to for delicious meals in a cozy setting.
-
-Would you like more options or details on these?"
-
-User: "What's the weather like in Rwanda?"
-You: "Rwanda has a pleasant climate year-round, with temperatures around 20-25°C. The dry seasons (June-September and December-February) are ideal for visiting. Planning a trip?"
-
-Remember: Be helpful, be brief, be human. Never include image URLs in your text.`;
+Be helpful, honest about limits, and tie answers to what users can do next in Zoea.`;
   }
 
   private getFunctions() {
     return [
       {
         name: 'searchContent',
-        description: 'Search for places, tours, products, or services in Rwanda. Use this when users ask about restaurants, hotels, attractions, tours, shopping, or services.',
+        description:
+          'Primary search over Zoea’s database. Use for any concrete discovery: food & drink (cuisine, café, rooftop, brochettes, halal, vegan), nightlife (bar, club, lounge), hotels & stays, attractions & culture, shopping, practical spots (pharmacy, bank), outdoor/recreation, tours (safari, gorilla, city tour, Akagera, Nyungwe), bookable services, and products. Pass focused English keywords plus city or neighbourhood names when the user gives them. Prefer types=[listing] for places; types=[tour] for excursions; add product/service only when they explicitly want to buy or book a service.',
         parameters: {
           type: 'object',
           properties: {
             query: {
               type: 'string',
-              description: 'The search query (e.g., "restaurants", "hotels in Kigali", "tours")',
+              description:
+                'Focused search string, e.g. "Italian restaurant Kimihurura", "budget hotel Kigali", "gorilla tour", "spa massage", "coffee workshop", "pharmacy Kigali".',
             },
             types: {
               type: 'array',
@@ -328,11 +336,12 @@ Remember: Be helpful, be brief, be human. Never include image URLs in your text.
                 type: 'string',
                 enum: ['listing', 'tour', 'product', 'service'],
               },
-              description: 'Types of content to search. listing=places/restaurants/hotels, tour=tours/experiences, product=products to buy, service=services',
+              description:
+                'listing = venues/places/stays; tour = multi-day or experience offers; product = retail; service = bookable add-ons. Omit to search all.',
             },
             limit: {
               type: 'number',
-              description: 'Number of results to return (default: 5, max: 10)',
+              description: 'Number of merged results (default 5, max 10).',
             },
           },
           required: ['query'],
@@ -340,7 +349,8 @@ Remember: Be helpful, be brief, be human. Never include image URLs in your text.
       },
       {
         name: 'getCategories',
-        description: 'Get all available categories of places and services. Use this to understand what types of content exist in the app.',
+        description:
+          'Returns the full category taxonomy (Explore, Dining, nightlife, essentials, etc.). Use when the user asks what the app offers, how browsing works, or to map vague questions (“something fun tonight”) to category areas before or instead of a broad search.',
         parameters: {
           type: 'object',
           properties: {},
@@ -350,21 +360,34 @@ Remember: Be helpful, be brief, be human. Never include image URLs in your text.
   }
 
   private generateSuggestions(userMessage: string, cards: SearchResult[]): string[] {
+    const m = userMessage.toLowerCase();
     const suggestions: string[] = [];
 
     if (cards.length > 0) {
-      // Suggestions based on results
-      suggestions.push('Show me more options');
-      suggestions.push('Filter by price');
-      suggestions.push('What\'s nearby?');
+      suggestions.push('Show me more like this');
+      if (/(eat|food|restaurant|cafe|coffee|dinner|lunch|drink)/i.test(m)) {
+        suggestions.push('Fine dining or casual?');
+        suggestions.push('What’s good for vegetarians?');
+      } else if (/(tour|safari|gorilla|trip|day trip)/i.test(m)) {
+        suggestions.push('Multi-day tours');
+        suggestions.push('City tours in Kigali');
+      } else if (/(hotel|stay|sleep|room)/i.test(m)) {
+        suggestions.push('Hotels under my budget');
+        suggestions.push('Boutique stays');
+      } else if (/(shop|buy|gift|product)/i.test(m)) {
+        suggestions.push('Local crafts and gifts');
+        suggestions.push('Popular products');
+      } else {
+        suggestions.push('What’s nearby?');
+        suggestions.push('Something for tonight');
+      }
     } else {
-      // Suggestions when no results
-      suggestions.push('Show me popular places');
-      suggestions.push('What can I do in Kigali?');
-      suggestions.push('Find tours');
+      suggestions.push('Try restaurants in Kigali');
+      suggestions.push('Tours and experiences');
+      suggestions.push('What categories exist in Zoea?');
     }
 
-    return suggestions.slice(0, 3);
+    return [...new Set(suggestions)].slice(0, 3);
   }
 }
 

@@ -5,6 +5,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { AdminListListingsDto } from './dto/list-listings.dto';
 import { AdminUpdateListingStatusDto } from './dto/update-listing-status.dto';
 import { AdminCreateListingDto, AdminUpdateListingDto } from './dto/create-listing.dto';
+import { AdminAddListingImageDto } from './dto/listing-image.dto';
 
 @Injectable()
 export class AdminListingsService {
@@ -342,6 +343,64 @@ export class AdminListingsService {
     if (!exists) {
       throw new NotFoundException('Listing not found');
     }
+  }
+
+  /** Admin: attach uploaded media to listing (no merchant ownership check). */
+  async addListingImage(listingId: string, dto: AdminAddListingImageDto) {
+    await this.ensureListingExists(listingId);
+
+    const count = await this.prisma.listingImage.count({ where: { listingId } });
+
+    if (dto.isPrimary) {
+      await this.prisma.listingImage.updateMany({
+        where: { listingId },
+        data: { isPrimary: false },
+      });
+    }
+
+    return this.prisma.listingImage.create({
+      data: {
+        listingId,
+        mediaId: dto.mediaId,
+        isPrimary: dto.isPrimary === true || count === 0,
+        caption: dto.caption,
+        sortOrder: count,
+      },
+      include: { media: true },
+    });
+  }
+
+  /** Admin: remove a listing image by listing_images.id */
+  async removeListingImage(listingId: string, imageId: string) {
+    await this.ensureListingExists(listingId);
+    const row = await this.prisma.listingImage.findFirst({
+      where: { id: imageId, listingId },
+    });
+    if (!row) {
+      throw new NotFoundException('Listing image not found');
+    }
+    await this.prisma.listingImage.delete({ where: { id: imageId } });
+    return { success: true };
+  }
+
+  /** Admin: set primary image (listing_images.id) */
+  async setPrimaryListingImage(listingId: string, imageId: string) {
+    await this.ensureListingExists(listingId);
+    const row = await this.prisma.listingImage.findFirst({
+      where: { id: imageId, listingId },
+    });
+    if (!row) {
+      throw new NotFoundException('Listing image not found');
+    }
+    await this.prisma.listingImage.updateMany({
+      where: { listingId },
+      data: { isPrimary: false },
+    });
+    await this.prisma.listingImage.update({
+      where: { id: imageId },
+      data: { isPrimary: true, sortOrder: 0 },
+    });
+    return this.getListingById(listingId);
   }
 }
 

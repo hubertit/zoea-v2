@@ -179,7 +179,7 @@ export class AssistantService {
     const history = await this.prisma.assistantMessage.findMany({
       where: { conversationId: conversation.id },
       orderBy: { createdAt: 'asc' },
-      take: 10, // Last 10 messages for context
+      take: 24, // enough turns for follow-ups without huge token use
     });
 
     const conversationHistory = history.map(msg => ({
@@ -299,9 +299,9 @@ export class AssistantService {
 
   private defaultFollowUpSuggestions(): string[] {
     return [
-      'Show me popular places',
-      'Find restaurants in Kigali',
-      'What tours are available?',
+      'Romantic rooftop dinner',
+      'Family-friendly restaurants',
+      'Day trips outside the city',
     ];
   }
 

@@ -69,8 +69,13 @@ export class ListingsController {
   })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Maximum number of listings to return (default: 10)' })
   @ApiQuery({ name: 'countryId', required: false, type: String, description: 'Filter by country UUID' })
-  async getFeatured(@Query('limit') limit?: string, @Query('countryId') countryId?: string) {
-    return this.listingsService.getFeatured(limit ? +limit : 10, countryId);
+  @ApiQuery({ name: 'cityId', required: false, type: String, description: 'Filter by city UUID' })
+  async getFeatured(
+    @Query('limit') limit?: string,
+    @Query('countryId') countryId?: string,
+    @Query('cityId') cityId?: string,
+  ) {
+    return this.listingsService.getFeatured(limit ? +limit : 10, countryId, cityId);
   }
 
   @Get('nearby')
@@ -98,8 +103,14 @@ export class ListingsController {
       'TEMPORARY: Returns featured active listings (same as GET /listings/featured, no country filter) for app “Near Me” while restaurant category data is cleaned. Previously: random active listings in category slug `restaurants`.',
   })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Maximum listings to return (default: 10)' })
-  async getRandom(@Query('limit') limit?: string) {
-    return this.listingsService.getRandom(limit ? +limit : 10);
+  @ApiQuery({ name: 'countryId', required: false, type: String, description: 'Filter by country UUID' })
+  @ApiQuery({ name: 'cityId', required: false, type: String, description: 'Filter by city UUID' })
+  async getRandom(
+    @Query('limit') limit?: string,
+    @Query('countryId') countryId?: string,
+    @Query('cityId') cityId?: string,
+  ) {
+    return this.listingsService.getRandom(limit ? +limit : 10, countryId, cityId);
   }
 
   @Get('type/:type')

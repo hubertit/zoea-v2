@@ -7,6 +7,7 @@ import { AdminListingsService } from './admin-listings.service';
 import { AdminListListingsDto } from './dto/list-listings.dto';
 import { AdminUpdateListingStatusDto } from './dto/update-listing-status.dto';
 import { AdminCreateListingDto, AdminUpdateListingDto } from './dto/create-listing.dto';
+import { AdminAddListingImageDto, AdminSetPrimaryListingImageDto } from './dto/listing-image.dto';
 
 @ApiTags('Admin - Listings')
 @ApiBearerAuth()
@@ -56,6 +57,24 @@ export class AdminListingsController {
   @ApiOperation({ summary: 'Restore soft deleted listing' })
   async restore(@Param('id') id: string) {
     return this.adminListingsService.restoreListing(id);
+  }
+
+  @Post(':id/images')
+  @ApiOperation({ summary: 'Add listing image (media must be uploaded first)' })
+  async addImage(@Param('id') id: string, @Body() dto: AdminAddListingImageDto) {
+    return this.adminListingsService.addListingImage(id, dto);
+  }
+
+  @Delete(':id/images/:imageId')
+  @ApiOperation({ summary: 'Remove a listing image' })
+  async removeImage(@Param('id') id: string, @Param('imageId') imageId: string) {
+    return this.adminListingsService.removeListingImage(id, imageId);
+  }
+
+  @Patch(':id/images/primary')
+  @ApiOperation({ summary: 'Set primary listing image' })
+  async setPrimaryImage(@Param('id') id: string, @Body() dto: AdminSetPrimaryListingImageDto) {
+    return this.adminListingsService.setPrimaryListingImage(id, dto.imageId);
   }
 }
 
