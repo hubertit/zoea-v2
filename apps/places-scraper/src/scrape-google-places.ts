@@ -44,8 +44,12 @@ async function configureStorage() {
   }
 }
 
-const TARGET_CITY_NAME = 'Kigali';
-const COUNTRY_NAME = 'Rwanda';
+const TARGET_CITY_NAME = (process.env.TARGET_CITY_NAME ?? 'Kigali').trim();
+const COUNTRY_NAME = (process.env.COUNTRY_NAME ?? 'Rwanda').trim();
+const TARGET_CITY_ALIASES = (process.env.TARGET_CITY_ALIASES ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 const CURATED_POPULARITY_BOOST = process.env.SCRAPE_CURATED_BOOST === '1';
 const LEAF_GOAL = Number(process.env.LEAF_GOAL_LISTINGS ?? 8);
 const LEGACY_SCRAPE = process.env.LEGACY_SCRAPE === '1';
@@ -56,6 +60,11 @@ const TEXT_SEARCH_MAX_PAGES = Math.max(1, Math.min(10, Number(process.env.TEXT_S
 function sanitizeReviewText(text: string | undefined | null): string {
   if (!text) return '';
   return text.trim();
+}
+
+function truncate(input: string | null | undefined, max: number): string | null {
+  if (!input) return null;
+  return input.length > max ? input.substring(0, max) : input;
 }
 
 function anonymousReviewTitle(_rating: number): string | null {
@@ -251,13 +260,23 @@ function inferListingType(slug: string, name: string): string {
   return 'attraction';
 }
 
+function localizeSeedQuery(query: string): string {
+  // Reuse curated seeds by swapping Kigali references with target city.
+  return query.replace(/\bKigali\b/gi, TARGET_CITY_NAME);
+}
+
 function buildQueriesForLeaf(slug: string, name: string): string[] {
-  const extra = SLUG_QUERY_OVERRIDES[slug] ?? [];
+  const extra = (SLUG_QUERY_OVERRIDES[slug] ?? []).map(localizeSeedQuery);
   const human = name.replace(/\s*&\s*/g, ' ').trim();
+  const cityTerms = [TARGET_CITY_NAME, ...TARGET_CITY_ALIASES];
   const base = [
-    `${human} Kigali Rwanda`,
-    `${human} Kigali`,
-    `${slug.replace(/-/g, ' ')} Kigali Rwanda`,
+    ...cityTerms.flatMap((city) => [
+      `${human} ${city} ${COUNTRY_NAME}`,
+      `${human} ${city}`,
+      `${slug.replace(/-/g, ' ')} ${city} ${COUNTRY_NAME}`,
+    ]),
+    `${human} ${COUNTRY_NAME}`,
+    `${slug.replace(/-/g, ' ')} ${COUNTRY_NAME}`,
   ];
   return [...extra, ...base].filter((q, i, a) => a.indexOf(q) === i);
 }
@@ -457,7 +476,8 @@ async function ingestGooglePlaceForCategory(
     }
 
     const overview = details.editorial_summary?.overview || null;
-    const slug = `${(details.name || place.name).toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString(36).substring(4)}`;
+    const slugBase = (details.name || place.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const slug = truncate(`${slugBase}-${Date.now().toString(36).substring(4)}`, 120)!;
 
     const rawRating = details.rating ?? place.rating ?? 4;
     const rawTotal = details.user_ratings_total ?? 0;
@@ -476,16 +496,16 @@ async function ingestGooglePlaceForCategory(
         categoryId,
         cityId: city.id,
         countryId: country.id,
-        name: details.name || place.name,
+        name: truncate(details.name || place.name, 255)!,
         slug,
         sourcePlaceId: place.place_id,
-        address: details.formatted_address,
-        contactPhone: details.formatted_phone_number,
-        website: details.website,
+        address: truncate(details.formatted_address, 500),
+        contactPhone: truncate(details.formatted_phone_number, 20),
+        website: truncate(details.website, 255),
         rating,
         reviewCount,
-        shortDescription: shortDesc.substring(0, 255),
-        description: overview,
+        shortDescription: truncate(shortDesc, 255),
+        description: truncate(overview, 5000),
         status: 'active',
         type: listingType as any,
         isVerified: true,
@@ -506,7 +526,7 @@ async function ingestGooglePlaceForCategory(
             url: photoInfo.url,
             storageProvider: photoInfo.provider,
             mediaType: 'image',
-            fileName: `${slug}-photo-${i}`,
+            fileName: truncate(`${slug}-photo-${i}`, 255),
             mimeType: 'image/jpeg',
           },
         });
@@ -699,12 +719,15 @@ async function fillLeafCategoryGaps(
         if (current + added >= LEAF_GOAL) break;
 
         let pageToken: string | undefined;
+        let pageTokenInvalidRetries = 0;
         for (let page = 0; page < TEXT_SEARCH_MAX_PAGES; page++) {
           if (current + added >= LEAF_GOAL) break;
 
           try {
             const params: Record<string, string> = { key: GOOGLE_API_KEY! };
+            let usedPageToken = false;
             if (pageToken) {
+              usedPageToken = true;
               params.pagetoken = pageToken;
               await sleep(2000);
             } else {
@@ -714,6 +737,19 @@ async function fillLeafCategoryGaps(
             const searchRes = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
               params,
             });
+
+            if (searchRes.data.status === 'INVALID_REQUEST' && usedPageToken) {
+              // Google next_page_token can take a few seconds before it becomes valid.
+              // Retry this same page once with a longer delay instead of spamming warnings.
+              if (pageTokenInvalidRetries < 1) {
+                pageTokenInvalidRetries++;
+                await sleep(2500);
+                page--;
+                continue;
+              }
+              break;
+            }
+            pageTokenInvalidRetries = 0;
 
             if (searchRes.data.status !== 'OK' && searchRes.data.status !== 'ZERO_RESULTS') {
               console.warn(`Google status: ${searchRes.data.status}`, searchRes.data.error_message || '');
@@ -782,16 +818,20 @@ async function runLegacyCategoryScrape(
     let totalAddedForCategory = 0;
     const seenPlaces = new Set<string>();
 
-    for (const query of cat.queries) {
+    for (const seedQuery of cat.queries) {
       if (totalAddedForCategory >= 200) break;
+      const query = localizeSeedQuery(seedQuery);
 
       let pageToken: string | undefined;
       let pagesFetched = 0;
+      let pageTokenInvalidRetries = 0;
 
       while (pagesFetched < TEXT_SEARCH_MAX_PAGES) {
         try {
           const params: Record<string, string> = { key: GOOGLE_API_KEY! };
+          let usedPageToken = false;
           if (pageToken) {
+            usedPageToken = true;
             params.pagetoken = pageToken;
             await sleep(2000);
           } else {
@@ -801,6 +841,16 @@ async function runLegacyCategoryScrape(
           const searchRes = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
             params,
           });
+
+          if (searchRes.data.status === 'INVALID_REQUEST' && usedPageToken) {
+            if (pageTokenInvalidRetries < 1) {
+              pageTokenInvalidRetries++;
+              await sleep(2500);
+              continue;
+            }
+            break;
+          }
+          pageTokenInvalidRetries = 0;
 
           if (searchRes.data.status !== 'OK' && searchRes.data.status !== 'ZERO_RESULTS') break;
 
@@ -835,7 +885,7 @@ async function runLegacyCategoryScrape(
 async function scrape() {
   console.log('Starting Google Places scraper (structural children + leaf fill + optional legacy)...');
   console.log(
-    `LEAF_GOAL=${LEAF_GOAL}, LEGACY_SCRAPE=${LEGACY_SCRAPE}, SCRAPE_ROOT_SLUG=${SCRAPE_ROOT_SLUG || '(all)'}, TEXT_SEARCH_MAX_PAGES=${TEXT_SEARCH_MAX_PAGES}`
+    `CITY=${TARGET_CITY_NAME}, COUNTRY=${COUNTRY_NAME}, LEAF_GOAL=${LEAF_GOAL}, LEGACY_SCRAPE=${LEGACY_SCRAPE}, SCRAPE_ROOT_SLUG=${SCRAPE_ROOT_SLUG || '(all)'}, TEXT_SEARCH_MAX_PAGES=${TEXT_SEARCH_MAX_PAGES}`
   );
 
   await configureStorage();
@@ -843,8 +893,11 @@ async function scrape() {
   const merchant = await createSystemMerchant();
   console.log(`Merchant: ${merchant.id}`);
 
+  const cityNames = [TARGET_CITY_NAME, ...TARGET_CITY_ALIASES];
   const city = await prisma.city.findFirst({
-    where: { name: { equals: TARGET_CITY_NAME, mode: 'insensitive' } },
+    where: {
+      OR: cityNames.map((n) => ({ name: { equals: n, mode: 'insensitive' as const } })),
+    },
   });
   const country = await prisma.country.findFirst({
     where: { name: { equals: COUNTRY_NAME, mode: 'insensitive' } },
@@ -855,7 +908,7 @@ async function scrape() {
   });
 
   if (!city || !country) {
-    console.error('City or Country not found.');
+    console.error(`City or Country not found. CITY=${TARGET_CITY_NAME}, ALIASES=${TARGET_CITY_ALIASES.join('|') || '(none)'}, COUNTRY=${COUNTRY_NAME}`);
     process.exit(1);
   }
 
