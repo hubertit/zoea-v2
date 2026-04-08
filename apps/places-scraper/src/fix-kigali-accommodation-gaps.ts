@@ -19,6 +19,7 @@ import {
   ingestGooglePlaceForCategory,
   type IngestContext,
 } from './google-place-ingest';
+import { loadLodgingAmenitySlugMap } from './lodging-from-google';
 
 const prisma = new PrismaClient();
 
@@ -249,6 +250,7 @@ async function importTargets(
   city: { id: string },
   countryId: string,
   standardAmenities: { id: string }[],
+  lodgingAmenitySlugToId: Map<string, string>,
 ): Promise<void> {
   const seen = new Set<string>();
   for (const t of IMPORT_TARGETS) {
@@ -314,6 +316,7 @@ async function importTargets(
         city,
         { id: countryId },
         standardAmenities,
+        lodgingAmenitySlugToId,
         seen,
       );
       console.log(ok ? '  Ingested.' : '  Not ingested (duplicate name/city or error).');
@@ -355,8 +358,9 @@ async function main(): Promise<void> {
   const standardAmenities = await prisma.amenity.findMany({
     where: { slug: { in: ['wifi', 'parking', 'ac', 'tv', 'room-service', 'pool'] } },
   });
+  const lodgingAmenitySlugToId = await loadLodgingAmenitySlugMap(prisma);
 
-  await importTargets(ingestCtx, merchant, city, countryId, standardAmenities);
+  await importTargets(ingestCtx, merchant, city, countryId, standardAmenities, lodgingAmenitySlugToId);
   console.log('\nDone.');
 }
 

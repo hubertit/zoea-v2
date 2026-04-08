@@ -1,6 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { v2 as cloudinary } from 'cloudinary';
+import {
+  buildLodgingRoomPlans,
+  fetchGooglePlaceDetails,
+  lodgingCurrency,
+  operatingHoursPayload,
+  pickLodgingAmenityIds,
+  preferredPhone,
+} from './lodging-from-google';
 
 export function truncate(input: string | null | undefined, max: number): string | null {
   if (!input) return null;
@@ -94,6 +102,8 @@ export async function ingestGooglePlaceForCategory(
   city: { id: string },
   country: { id: string },
   standardAmenities: { id: string }[],
+  /** When non-empty, lodging listings use Google signals + DB slugs (no random amenities). */
+  lodgingAmenitySlugToId: Map<string, string>,
   seenPlaces: Set<string>,
 ): Promise<boolean> {
   if (seenPlaces.has(place.place_id)) return false;
@@ -116,16 +126,7 @@ export async function ingestGooglePlaceForCategory(
 
     console.log(`  - Fetching details for ${place.name}...`);
 
-    const detailsRes = await axios.get('https://maps.googleapis.com/maps/api/place/details/json', {
-      params: {
-        place_id: place.place_id,
-        fields:
-          'name,formatted_address,geometry,rating,user_ratings_total,photos,reviews,website,formatted_phone_number,opening_hours,editorial_summary',
-        key: ctx.googleApiKey,
-      },
-    });
-
-    const details = detailsRes.data.result;
+    const details = await fetchGooglePlaceDetails(ctx.googleApiKey, place.place_id);
     if (!details) return false;
 
     const lat = details.geometry?.location?.lat;
@@ -142,6 +143,13 @@ export async function ingestGooglePlaceForCategory(
       .replace(/^-+|-+$/g, '');
     const slug = truncate(`${slugBase}-${Date.now().toString(36).substring(4)}`, 120)!;
 
+    const cur = lodgingCurrency();
+    const roomPlans = shouldCreateHotelRooms(categorySlug, listingType)
+      ? buildLodgingRoomPlans(details.price_level)
+      : [];
+    const minP = roomPlans.length ? Math.min(...roomPlans.map((r) => r.basePrice)) : null;
+    const maxP = roomPlans.length ? Math.max(...roomPlans.map((r) => r.basePrice)) : null;
+
     const rawRating = details.rating ?? place.rating ?? 4;
     const rawTotal = details.user_ratings_total ?? 0;
     const rating = ctx.curatedPopularityBoost
@@ -153,6 +161,10 @@ export async function ingestGooglePlaceForCategory(
         : 500
       : rawTotal;
 
+    const oh = operatingHoursPayload(details);
+    const phone = preferredPhone(details) ?? truncate(details.formatted_phone_number, 20);
+    const acceptsBookings = details.reservable === true ? true : listingType === 'hotel';
+
     const listing = await ctx.prisma.listing.create({
       data: {
         merchantId: merchant.id,
@@ -163,12 +175,18 @@ export async function ingestGooglePlaceForCategory(
         slug,
         sourcePlaceId: place.place_id,
         address: truncate(details.formatted_address, 500),
-        contactPhone: truncate(details.formatted_phone_number, 20),
+        contactPhone: phone,
         website: truncate(details.website, 255),
         rating,
         reviewCount,
         shortDescription: truncate(shortDesc, 255),
         description: truncate(overview, 5000),
+        operatingHours: oh as any,
+        minPrice: minP != null ? minP : undefined,
+        maxPrice: maxP != null ? maxP : undefined,
+        currency: roomPlans.length ? cur : undefined,
+        priceUnit: roomPlans.length ? 'per_night' : undefined,
+        acceptsBookings,
         status: 'active',
         type: listingType as any,
         isVerified: true,
@@ -205,36 +223,41 @@ export async function ingestGooglePlaceForCategory(
       }
     }
 
-    if (standardAmenities.length > 0) {
+    const attachAmenityIds = new Set<string>();
+    if (shouldCreateHotelRooms(categorySlug, listingType) && lodgingAmenitySlugToId.size > 0) {
+      for (const id of pickLodgingAmenityIds(details, lodgingAmenitySlugToId)) {
+        attachAmenityIds.add(id);
+      }
+    }
+    if (attachAmenityIds.size === 0 && standardAmenities.length > 0) {
       const pAttach = shouldCreateHotelRooms(categorySlug, listingType) ? 0.8 : 0.25;
       for (const amenity of standardAmenities) {
-        if (Math.random() < pAttach) {
-          await ctx.prisma.listingAmenity.create({
-            data: { listingId: listing.id, amenityId: amenity.id },
-          });
-        }
+        if (Math.random() < pAttach) attachAmenityIds.add(amenity.id);
       }
+    }
+    for (const amenityId of attachAmenityIds) {
+      await ctx.prisma.listingAmenity.create({
+        data: { listingId: listing.id, amenityId },
+      });
     }
 
     if (shouldCreateHotelRooms(categorySlug, listingType)) {
-      const roomTypes = [
-        { name: 'Standard Double Room', price: 80 },
-        { name: 'Deluxe Suite', price: 150 },
-      ];
-
-      for (const rt of roomTypes) {
+      const curRc = lodgingCurrency();
+      for (const rt of roomPlans) {
         const roomType = await ctx.prisma.roomType.create({
           data: {
             listingId: listing.id,
-            name: rt.name,
-            description: `A comfortable ${rt.name.toLowerCase()}.`,
-            maxOccupancy: 2,
-            bedType: 'Double',
-            bedCount: 1,
-            basePrice: rt.price,
-            currency: 'USD',
+            name: truncate(rt.name, 100)!,
+            description: truncate(rt.description, 500),
+            maxOccupancy: rt.maxOccupancy,
+            bedType: rt.bedType,
+            bedCount: rt.bedCount,
+            basePrice: rt.basePrice,
+            currency: curRc,
             totalRooms: 5,
             isActive: true,
+            amenities: [],
+            images: [],
           },
         });
 

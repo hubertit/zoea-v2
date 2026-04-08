@@ -7,6 +7,7 @@ import {
   ingestGooglePlaceForCategory,
   type IngestContext,
 } from './google-place-ingest';
+import { loadLodgingAmenitySlugMap } from './lodging-from-google';
 
 const prisma = new PrismaClient();
 
@@ -451,6 +452,7 @@ async function fillLeafCategoryGaps(
   city: { id: string },
   country: { id: string },
   standardAmenities: { id: string }[],
+  lodgingAmenitySlugToId: Map<string, string>,
 ): Promise<void> {
   const globalSeen = new Set<string>();
   const maxRounds = Number(process.env.LEAF_FILL_MAX_ROUNDS ?? 25);
@@ -530,6 +532,7 @@ async function fillLeafCategoryGaps(
                 city,
                 country,
                 standardAmenities,
+                lodgingAmenitySlugToId,
                 globalSeen,
               );
               if (ok) {
@@ -569,6 +572,7 @@ async function runLegacyCategoryScrape(
   city: { id: string },
   country: { id: string },
   standardAmenities: { id: string }[],
+  lodgingAmenitySlugToId: Map<string, string>,
 ): Promise<void> {
   for (const cat of CATEGORIES_TO_SCRAPE) {
     const categoryDb = await prisma.category.findUnique({ where: { slug: cat.slug } });
@@ -630,6 +634,7 @@ async function runLegacyCategoryScrape(
               city,
               country,
               standardAmenities,
+              lodgingAmenitySlugToId,
               seenPlaces,
             );
             if (ok) totalAddedForCategory++;
@@ -809,15 +814,18 @@ async function scrape() {
     where: { slug: { in: ['wifi', 'parking', 'ac', 'tv', 'room-service', 'pool'] } },
   });
 
+  const lodgingAmenitySlugToId = await loadLodgingAmenitySlugMap(prisma);
+  console.log(`Lodging amenity slugs loaded: ${lodgingAmenitySlugToId.size}`);
+
   if (!EFFECTIVE_CATEGORY_SLUG) {
     await ensureStructuralChildCategories();
   } else {
     console.log(`Skipping structural parent bootstrap (category scope=${EFFECTIVE_CATEGORY_SLUG}).`);
   }
-  await fillLeafCategoryGaps(ingestCtx, merchant, city, country, standardAmenities);
+  await fillLeafCategoryGaps(ingestCtx, merchant, city, country, standardAmenities, lodgingAmenitySlugToId);
 
   if (legacyScrape()) {
-    await runLegacyCategoryScrape(ingestCtx, merchant, city, country, standardAmenities);
+    await runLegacyCategoryScrape(ingestCtx, merchant, city, country, standardAmenities, lodgingAmenitySlugToId);
   }
 
   console.log('\nCleaning up listings without images...');
