@@ -1,15 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { v2 as cloudinary } from 'cloudinary';
+import { applyScrapeTaskIfSet, formatTasksHelp } from './scrape-task-presets';
 
 const prisma = new PrismaClient();
 
 const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 
-if (!GOOGLE_API_KEY) {
-  console.error('Missing GOOGLE_PLACES_API_KEY in environment variables.');
-  process.exit(1);
+if ((process.env.SCRAPE_TASK ?? '').trim() === 'list-tasks') {
+  console.log(formatTasksHelp());
+  process.exit(0);
 }
+
+applyScrapeTaskIfSet();
 
 let cloudinaryConfigured = false;
 
@@ -51,11 +54,23 @@ const TARGET_CITY_ALIASES = (process.env.TARGET_CITY_ALIASES ?? '')
   .map((s) => s.trim())
   .filter(Boolean);
 const CURATED_POPULARITY_BOOST = process.env.SCRAPE_CURATED_BOOST === '1';
-const LEAF_GOAL = Number(process.env.LEAF_GOAL_LISTINGS ?? 8);
-const LEGACY_SCRAPE = process.env.LEGACY_SCRAPE === '1';
-/** If set (e.g. `dining`), only leaf categories under this root slug are filled. */
-const SCRAPE_ROOT_SLUG = (process.env.SCRAPE_ROOT_SLUG ?? '').trim();
-const TEXT_SEARCH_MAX_PAGES = Math.max(1, Math.min(10, Number(process.env.TEXT_SEARCH_MAX_PAGES ?? 3)));
+/** Prefer `SCRAPE_CATEGORY_SLUG`; `SCRAPE_ROOT_SLUG` kept for backward compatibility. Set at runtime in `scrape()`. */
+let EFFECTIVE_CATEGORY_SLUG = '';
+/** Resolved from DB in `scrape()` (drives Text Search locality). */
+let RESOLVED_CITY_NAME = TARGET_CITY_NAME;
+let RESOLVED_COUNTRY_NAME = COUNTRY_NAME;
+
+function leafGoal(): number {
+  return Number(process.env.LEAF_GOAL_LISTINGS ?? 8);
+}
+
+function legacyScrape(): boolean {
+  return process.env.LEGACY_SCRAPE === '1';
+}
+
+function textSearchMaxPages(): number {
+  return Math.max(1, Math.min(10, Number(process.env.TEXT_SEARCH_MAX_PAGES ?? 3)));
+}
 
 function sanitizeReviewText(text: string | undefined | null): string {
   if (!text) return '';
@@ -262,21 +277,21 @@ function inferListingType(slug: string, name: string): string {
 
 function localizeSeedQuery(query: string): string {
   // Reuse curated seeds by swapping Kigali references with target city.
-  return query.replace(/\bKigali\b/gi, TARGET_CITY_NAME);
+  return query.replace(/\bKigali\b/gi, RESOLVED_CITY_NAME);
 }
 
 function buildQueriesForLeaf(slug: string, name: string): string[] {
   const extra = (SLUG_QUERY_OVERRIDES[slug] ?? []).map(localizeSeedQuery);
   const human = name.replace(/\s*&\s*/g, ' ').trim();
-  const cityTerms = [TARGET_CITY_NAME, ...TARGET_CITY_ALIASES];
+  const cityTerms = [RESOLVED_CITY_NAME, ...TARGET_CITY_ALIASES];
   const base = [
     ...cityTerms.flatMap((city) => [
-      `${human} ${city} ${COUNTRY_NAME}`,
+      `${human} ${city} ${RESOLVED_COUNTRY_NAME}`,
       `${human} ${city}`,
-      `${slug.replace(/-/g, ' ')} ${city} ${COUNTRY_NAME}`,
+      `${slug.replace(/-/g, ' ')} ${city} ${RESOLVED_COUNTRY_NAME}`,
     ]),
-    `${human} ${COUNTRY_NAME}`,
-    `${slug.replace(/-/g, ' ')} ${COUNTRY_NAME}`,
+    `${human} ${RESOLVED_COUNTRY_NAME}`,
+    `${slug.replace(/-/g, ' ')} ${RESOLVED_COUNTRY_NAME}`,
   ];
   return [...extra, ...base].filter((q, i, a) => a.indexOf(q) === i);
 }
@@ -631,7 +646,7 @@ async function countActiveListingsForCategory(categoryId: string): Promise<numbe
 type LeafRow = { id: string; slug: string; name: string; cnt: bigint };
 
 async function fetchLeavesBelowGoal(): Promise<LeafRow[]> {
-  if (!SCRAPE_ROOT_SLUG) {
+  if (!EFFECTIVE_CATEGORY_SLUG) {
     return prisma.$queryRaw<LeafRow[]>`
       SELECT c.id, c.slug, c.name,
         COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL)::bigint AS cnt
@@ -643,27 +658,38 @@ async function fetchLeavesBelowGoal(): Promise<LeafRow[]> {
           WHERE ch.parent_id = c.id AND ch.is_active = true
         )
       GROUP BY c.id, c.slug, c.name
-      HAVING COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL) < ${LEAF_GOAL}
+      HAVING COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL) < ${leafGoal()}
       ORDER BY cnt ASC, c.name ASC
     `;
   }
 
-  let root = await prisma.category.findFirst({
-    where: { slug: SCRAPE_ROOT_SLUG, parentId: null, isActive: true },
+  const cat = await prisma.category.findFirst({
+    where: { slug: EFFECTIVE_CATEGORY_SLUG, isActive: true },
   });
-  if (!root) {
-    root = await prisma.category.findFirst({
-      where: { slug: SCRAPE_ROOT_SLUG, isActive: true },
-    });
-  }
-  if (!root) {
-    console.error(`SCRAPE_ROOT_SLUG="${SCRAPE_ROOT_SLUG}": category slug not found. Check your DB.`);
+  if (!cat) {
+    console.error(`SCRAPE_CATEGORY_SLUG / SCRAPE_ROOT_SLUG="${EFFECTIVE_CATEGORY_SLUG}": category not found.`);
     return [];
+  }
+
+  const childCount = await prisma.category.count({
+    where: { parentId: cat.id, isActive: true },
+  });
+
+  if (childCount === 0) {
+    return prisma.$queryRaw<LeafRow[]>`
+      SELECT c.id, c.slug, c.name,
+        COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL)::bigint AS cnt
+      FROM categories c
+      LEFT JOIN listings l ON l.category_id = c.id
+      WHERE c.is_active = true AND c.id = CAST(${cat.id} AS uuid)
+      GROUP BY c.id, c.slug, c.name
+      HAVING COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL) < ${leafGoal()}
+    `;
   }
 
   return prisma.$queryRaw<LeafRow[]>`
     WITH RECURSIVE subtree AS (
-      SELECT id FROM categories WHERE id = CAST(${root.id} AS uuid)
+      SELECT id FROM categories WHERE id = CAST(${cat.id} AS uuid)
       UNION
       SELECT c.id FROM categories c
       INNER JOIN subtree s ON c.parent_id = s.id
@@ -680,7 +706,7 @@ async function fetchLeavesBelowGoal(): Promise<LeafRow[]> {
         WHERE ch.parent_id = c.id AND ch.is_active = true
       )
     GROUP BY c.id, c.slug, c.name
-    HAVING COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL) < ${LEAF_GOAL}
+    HAVING COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.deleted_at IS NULL) < ${leafGoal()}
     ORDER BY cnt ASC, c.name ASC
   `;
 }
@@ -698,30 +724,30 @@ async function fillLeafCategoryGaps(
   for (let round = 0; round < maxRounds; round++) {
     const leaves = await fetchLeavesBelowGoal();
     if (leaves.length === 0) {
-      console.log(`\n✅ All leaf categories have at least ${LEAF_GOAL} active listings.`);
+      console.log(`\n✅ All leaf categories have at least ${leafGoal()} active listings.`);
       break;
     }
 
-    console.log(`\n📍 Round ${round + 1}: ${leaves.length} leaf categories below ${LEAF_GOAL}`);
+    console.log(`\n📍 Round ${round + 1}: ${leaves.length} leaf categories below ${leafGoal()}`);
     let roundAdded = 0;
 
     for (const row of leaves) {
       let added = 0;
       const current = Number(row.cnt);
-      if (current >= LEAF_GOAL) continue;
+      if (current >= leafGoal()) continue;
 
       const listingType = inferListingType(row.slug, row.name);
       const queries = buildQueriesForLeaf(row.slug, row.name);
 
-      console.log(`\n=== Leaf "${row.name}" (${row.slug}) — have ${current}, goal ${LEAF_GOAL} ===`);
+      console.log(`\n=== Leaf "${row.name}" (${row.slug}) — have ${current}, goal ${leafGoal()} ===`);
 
       for (const q of queries) {
-        if (current + added >= LEAF_GOAL) break;
+        if (current + added >= leafGoal()) break;
 
         let pageToken: string | undefined;
         let pageTokenInvalidRetries = 0;
-        for (let page = 0; page < TEXT_SEARCH_MAX_PAGES; page++) {
-          if (current + added >= LEAF_GOAL) break;
+        for (let page = 0; page < textSearchMaxPages(); page++) {
+          if (current + added >= leafGoal()) break;
 
           try {
             const params: Record<string, string> = { key: GOOGLE_API_KEY! };
@@ -758,7 +784,7 @@ async function fillLeafCategoryGaps(
 
             const places = searchRes.data.results || [];
             for (const place of places) {
-              if (current + added >= LEAF_GOAL) break;
+              if (current + added >= leafGoal()) break;
               const ok = await ingestGooglePlaceForCategory(
                 place,
                 row.id,
@@ -826,7 +852,7 @@ async function runLegacyCategoryScrape(
       let pagesFetched = 0;
       let pageTokenInvalidRetries = 0;
 
-      while (pagesFetched < TEXT_SEARCH_MAX_PAGES) {
+      while (pagesFetched < textSearchMaxPages()) {
         try {
           const params: Record<string, string> = { key: GOOGLE_API_KEY! };
           let usedPageToken = false;
@@ -882,44 +908,170 @@ async function runLegacyCategoryScrape(
   }
 }
 
+async function printAccommodationLeafCategories(): Promise<void> {
+  const root = await prisma.category.findFirst({
+    where: { slug: 'accommodation', isActive: true },
+    select: { id: true },
+  });
+  if (!root) {
+    console.error('Root category "accommodation" not found in DB.');
+    return;
+  }
+
+  const rows = await prisma.$queryRaw<{ slug: string; name: string }[]>`
+    WITH RECURSIVE subtree AS (
+      SELECT id FROM categories WHERE id = CAST(${root.id} AS uuid)
+      UNION
+      SELECT c.id FROM categories c
+      INNER JOIN subtree s ON c.parent_id = s.id
+      WHERE c.is_active = true
+    )
+    SELECT c.slug, c.name
+    FROM categories c
+    WHERE c.is_active = true
+      AND c.id IN (SELECT id FROM subtree)
+      AND NOT EXISTS (
+        SELECT 1 FROM categories ch
+        WHERE ch.parent_id = c.id AND ch.is_active = true
+      )
+    ORDER BY c.name ASC
+  `;
+
+  console.log('Accommodation — leaf categories (slug used in SCRAPE_CATEGORY_SLUG for a single leaf):\n');
+  for (const r of rows) {
+    console.log(`  ${r.slug}\t${r.name}`);
+  }
+  console.log(`\nTotal: ${rows.length} leaves under "accommodation".`);
+}
+
+async function resolveScrapeTarget(): Promise<{
+  city: { id: string; name: string; slug: string };
+  country: { id: string; name: string };
+}> {
+  const countryCode = (process.env.SCRAPE_COUNTRY_CODE ?? '').trim().toUpperCase();
+  const citySlug = (process.env.SCRAPE_CITY_SLUG ?? '').trim();
+  const cityNameEnv = (process.env.SCRAPE_CITY ?? TARGET_CITY_NAME).trim();
+  const nameCandidates = [cityNameEnv, ...TARGET_CITY_ALIASES];
+  const strictCityInCountry = Boolean(
+    countryCode || (process.env.SCRAPE_CITY ?? '').trim() || citySlug,
+  );
+
+  let country =
+    countryCode.length > 0
+      ? await prisma.country.findFirst({
+          where: { OR: [{ code2: countryCode }, { code: countryCode }] },
+        })
+      : null;
+
+  if (!country) {
+    country = await prisma.country.findFirst({
+      where: { name: { equals: COUNTRY_NAME, mode: 'insensitive' } },
+    });
+  }
+
+  if (!country) {
+    throw new Error(
+      `Country not found. Set SCRAPE_COUNTRY_CODE (ISO alpha-2 e.g. RW, or alpha-3) or COUNTRY_NAME=${COUNTRY_NAME}.`,
+    );
+  }
+
+  let city: { id: string; name: string; slug: string; countryId: string } | null = null;
+
+  if (citySlug) {
+    city = await prisma.city.findFirst({
+      where: { countryId: country.id, slug: citySlug, isActive: true },
+      select: { id: true, name: true, slug: true, countryId: true },
+    });
+    if (!city) {
+      throw new Error(`No active city with slug "${citySlug}" in ${country.name} (${countryCode || COUNTRY_NAME}).`);
+    }
+  } else {
+    city = await prisma.city.findFirst({
+      where: {
+        countryId: country.id,
+        isActive: true,
+        OR: nameCandidates.map((n) => ({ name: { equals: n, mode: 'insensitive' as const } })),
+      },
+      select: { id: true, name: true, slug: true, countryId: true },
+    });
+  }
+
+  if (!city && !strictCityInCountry) {
+    city = await prisma.city.findFirst({
+      where: {
+        OR: nameCandidates.map((n) => ({ name: { equals: n, mode: 'insensitive' as const } })),
+      },
+      select: { id: true, name: true, slug: true, countryId: true },
+    });
+    if (city) {
+      const ctry = await prisma.country.findUnique({ where: { id: city.countryId } });
+      if (ctry) country = ctry;
+    }
+  }
+
+  if (!city) {
+    throw new Error(
+      `City not found. SCRAPE_CITY=${cityNameEnv}, SCRAPE_CITY_SLUG=${citySlug || '(not set)'}, SCRAPE_COUNTRY_CODE=${countryCode || '(not set)'}, country=${country.name}, aliases=${TARGET_CITY_ALIASES.join('|') || '(none)'}`,
+    );
+  }
+
+  if (city.countryId !== country.id) {
+    throw new Error(
+      `City "${city.name}" is not in ${country.name}. Check SCRAPE_COUNTRY_CODE and city fields.`,
+    );
+  }
+
+  return { city, country };
+}
+
 async function scrape() {
   console.log('Starting Google Places scraper (structural children + leaf fill + optional legacy)...');
-  console.log(
-    `CITY=${TARGET_CITY_NAME}, COUNTRY=${COUNTRY_NAME}, LEAF_GOAL=${LEAF_GOAL}, LEGACY_SCRAPE=${LEGACY_SCRAPE}, SCRAPE_ROOT_SLUG=${SCRAPE_ROOT_SLUG || '(all)'}, TEXT_SEARCH_MAX_PAGES=${TEXT_SEARCH_MAX_PAGES}`
-  );
 
   await configureStorage();
 
+  const taskEarly = (process.env.SCRAPE_TASK ?? '').trim();
+  if (taskEarly === 'list-accommodation-leaves') {
+    await printAccommodationLeafCategories();
+    process.exit(0);
+  }
+
+  if (!GOOGLE_API_KEY) {
+    console.error('Missing GOOGLE_PLACES_API_KEY in environment variables.');
+    process.exit(1);
+  }
+
+  let resolved: { city: { id: string; name: string; slug: string }; country: { id: string; name: string } };
+  try {
+    resolved = await resolveScrapeTarget();
+  } catch (e: any) {
+    console.error(e?.message ?? e);
+    process.exit(1);
+  }
+
+  const { city, country } = resolved;
+  RESOLVED_CITY_NAME = city.name;
+  RESOLVED_COUNTRY_NAME = country.name;
+  EFFECTIVE_CATEGORY_SLUG = (process.env.SCRAPE_CATEGORY_SLUG ?? process.env.SCRAPE_ROOT_SLUG ?? '').trim();
+
+  console.log(
+    `task=${(process.env.SCRAPE_TASK ?? '').trim() || '(none)'}, city=${city.name} (${city.slug}), country=${country.name}, SCRAPE_COUNTRY_CODE=${(process.env.SCRAPE_COUNTRY_CODE ?? '').trim() || '(not set)'}, category=${EFFECTIVE_CATEGORY_SLUG || '(all leaves)'}, LEAF_GOAL=${leafGoal()}, LEGACY_SCRAPE=${legacyScrape()}, TEXT_SEARCH_MAX_PAGES=${textSearchMaxPages()}`
+  );
+
   const merchant = await createSystemMerchant();
   console.log(`Merchant: ${merchant.id}`);
-
-  const cityNames = [TARGET_CITY_NAME, ...TARGET_CITY_ALIASES];
-  const city = await prisma.city.findFirst({
-    where: {
-      OR: cityNames.map((n) => ({ name: { equals: n, mode: 'insensitive' as const } })),
-    },
-  });
-  const country = await prisma.country.findFirst({
-    where: { name: { equals: COUNTRY_NAME, mode: 'insensitive' } },
-  });
 
   const standardAmenities = await prisma.amenity.findMany({
     where: { slug: { in: ['wifi', 'parking', 'ac', 'tv', 'room-service', 'pool'] } },
   });
 
-  if (!city || !country) {
-    console.error(`City or Country not found. CITY=${TARGET_CITY_NAME}, ALIASES=${TARGET_CITY_ALIASES.join('|') || '(none)'}, COUNTRY=${COUNTRY_NAME}`);
-    process.exit(1);
-  }
-
-  if (!SCRAPE_ROOT_SLUG) {
+  if (!EFFECTIVE_CATEGORY_SLUG) {
     await ensureStructuralChildCategories();
   } else {
-    console.log(`Skipping structural parent bootstrap (SCRAPE_ROOT_SLUG=${SCRAPE_ROOT_SLUG}).`);
+    console.log(`Skipping structural parent bootstrap (category scope=${EFFECTIVE_CATEGORY_SLUG}).`);
   }
   await fillLeafCategoryGaps(merchant, city, country, standardAmenities);
 
-  if (LEGACY_SCRAPE) {
+  if (legacyScrape()) {
     await runLegacyCategoryScrape(merchant, city, country, standardAmenities);
   }
 

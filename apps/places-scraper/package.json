@@ -6,8 +6,17 @@
   "scripts": {
     "prisma:generate": "prisma generate --schema=../backend/prisma/schema.prisma",
     "scrape:places": "npx ts-node src/scrape-google-places.ts",
+    "scrape:task:list": "SCRAPE_TASK=list-tasks npx ts-node src/scrape-google-places.ts",
+    "scrape:task:accommodation-kigali": "SCRAPE_TASK=accommodation-kigali npx ts-node src/scrape-google-places.ts",
+    "scrape:task:general-kigali": "SCRAPE_TASK=general-kigali npx ts-node src/scrape-google-places.ts",
+    "scrape:task:dining-kigali": "SCRAPE_TASK=dining-kigali npx ts-node src/scrape-google-places.ts",
+    "scrape:accommodation:leaves": "SCRAPE_TASK=list-accommodation-leaves npx ts-node src/scrape-google-places.ts",
     "scrape:places:dining": "SCRAPE_ROOT_SLUG=dining LEAF_GOAL_LISTINGS=15 LEAF_FILL_MAX_ROUNDS=40 TEXT_SEARCH_MAX_PAGES=5 npx ts-node src/scrape-google-places.ts",
-    "report:category-gaps": "npx ts-node src/report-category-listing-gaps.ts"
+    "scrape:places:musanze:dining": "TARGET_CITY_NAME=Musanze TARGET_CITY_ALIASES=Ruhengeri SCRAPE_ROOT_SLUG=dining LEAF_GOAL_LISTINGS=15 LEAF_FILL_MAX_ROUNDS=50 TEXT_SEARCH_MAX_PAGES=6 npx ts-node src/scrape-google-places.ts",
+    "scrape:places:musanze:all": "TARGET_CITY_NAME=Musanze TARGET_CITY_ALIASES=Ruhengeri LEAF_GOAL_LISTINGS=12 LEAF_FILL_MAX_ROUNDS=80 TEXT_SEARCH_MAX_PAGES=6 LEGACY_SCRAPE=1 npx ts-node src/scrape-google-places.ts",
+    "report:category-gaps": "npx ts-node src/report-category-listing-gaps.ts",
+    "backfill:inactive-images": "npx ts-node src/backfill-inactive-listing-images.ts",
+    "backfill:inactive-images:dry": "DRY_RUN=1 npx ts-node src/backfill-inactive-listing-images.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
