@@ -42,6 +42,8 @@ export const GOOGLE_PLACE_DETAILS_FIELDS = [
 
 export type GooglePlaceDetails = Record<string, any>;
 
+let warnedPlaceDetailsQuota = false;
+
 export async function fetchGooglePlaceDetails(
   googleApiKey: string,
   placeId: string,
@@ -56,6 +58,16 @@ export async function fetchGooglePlaceDetails(
   const st = res.data?.status;
   if (st !== 'OK') {
     if (st === 'NOT_FOUND' || st === 'ZERO_RESULTS') return null;
+    // Billing / key issues — skip row instead of failing whole batch (enrich / scraper).
+    if (st === 'REQUEST_DENIED' || st === 'OVER_QUERY_LIMIT') {
+      if (!warnedPlaceDetailsQuota) {
+        warnedPlaceDetailsQuota = true;
+        console.warn(
+          `Place Details ${st}: ${res.data?.error_message || 'Enable billing or check API key.'} (further errors omitted for this run)`,
+        );
+      }
+      return null;
+    }
     throw new Error(`Place Details ${st}: ${res.data?.error_message || ''}`);
   }
   return res.data?.result ?? null;
