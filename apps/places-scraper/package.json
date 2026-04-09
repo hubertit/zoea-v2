@@ -20,7 +20,11 @@
     "fix:kigali-accommodation": "npx ts-node src/fix-kigali-accommodation-gaps.ts",
     "fix:kigali-accommodation:db-only": "SKIP_IMPORT=1 npx ts-node src/fix-kigali-accommodation-gaps.ts",
     "fix:kigali-accommodation:dry": "DRY_RUN=1 npx ts-node src/fix-kigali-accommodation-gaps.ts",
-    "enrich:lodging": "npx ts-node src/enrich-lodging-from-places.ts"
+    "enrich:lodging": "npx ts-node src/enrich-lodging-from-places.ts",
+    "backfill:listing-location-address": "npx ts-node src/backfill-listing-location-address.ts",
+    "backfill:listing-location-address:dry": "DRY_RUN=1 npx ts-node src/backfill-listing-location-address.ts",
+    "backfill:listing-source-place-id": "npx ts-node src/backfill-listing-source-place-id.ts",
+    "backfill:listing-source-place-id:dry": "DRY_RUN=1 npx ts-node src/backfill-listing-source-place-id.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
