@@ -199,11 +199,17 @@ final randomListingsProvider = FutureProvider.family<List<Map<String, dynamic>>,
   final listingsService = ref.watch(listingsServiceProvider);
   final user = ref.watch(currentUserProvider);
   final selectedCityId = ref.watch(selectedCityProvider).valueOrNull;
-  final selectedCountryId = ref.watch(selectedCountryProvider).valueOrNull?.id;
+  final effectiveCityId = selectedCityId ?? user?.cityId;
+
+  // Near Me must remain city-scoped (selected city or profile city).
+  if (effectiveCityId == null || effectiveCityId.isEmpty) {
+    return [];
+  }
+
   return await listingsService.getRandomListings(
     limit: limit,
-    cityId: selectedCityId ?? user?.cityId,
-    countryId: selectedCountryId ?? user?.countryId,
+    cityId: effectiveCityId,
+    countryId: null,
   );
 });
 

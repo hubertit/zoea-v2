@@ -100,7 +100,7 @@ export class ListingsController {
   @ApiOperation({ 
     summary: 'Get listings for Near Me fallback',
     description:
-      'TEMPORARY: Returns featured active listings (same as GET /listings/featured, no country filter) for app “Near Me” while restaurant category data is cleaned. Previously: random active listings in category slug `restaurants`.',
+      'Returns active listings for app “Near Me” restricted to dining/accommodation category trees, sorted by rating (highest first).',
   })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10, description: 'Maximum listings to return (default: 10)' })
   @ApiQuery({ name: 'countryId', required: false, type: String, description: 'Filter by country UUID' })

@@ -4,11 +4,9 @@ import { inferListingTypeFromCategoryId } from '../../common/listing-type-from-c
 import { PrismaService } from '../../prisma/prisma.service';
 
 /**
- * When true, `GET /listings/random` returns featured listings (see `getFeatured`) instead of
- * random rows in the restaurants category. Used for mobile “Near Me” until miscategorized
- * restaurant data is cleaned. Set to false to restore random-restaurants behavior.
+ * Near Me category roots (with descendants) served by `GET /listings/random`.
  */
-const NEAR_ME_RANDOM_USES_FEATURED_TEMPORARILY = true;
+const NEAR_ME_ALLOWED_ROOT_SLUGS = ['dining', 'accommodation'] as const;
 
 @Injectable()
 export class ListingsService {
@@ -267,45 +265,23 @@ export class ListingsService {
   }
 
   async getRandom(limit = 10, countryId?: string, cityId?: string) {
-    if (NEAR_ME_RANDOM_USES_FEATURED_TEMPORARILY) {
-      return this.getFeatured(limit, countryId, cityId);
-    }
-
-    // Random active listings in restaurants category (category slug source of truth)
-    const listings = await this.prisma.$queryRaw<Array<{ id: string }>>`
-      SELECT l.id
-      FROM listings l
-      LEFT JOIN categories c ON l.category_id = c.id
-      WHERE l.status = 'active' 
-        AND l.deleted_at IS NULL
-        ${cityId ? Prisma.sql`AND l.city_id = ${cityId}::uuid` : Prisma.empty}
-        ${
-          countryId
-            ? Prisma.sql`AND (l.country_id = ${countryId}::uuid OR EXISTS (SELECT 1 FROM cities ci WHERE ci.id = l.city_id AND ci.country_id = ${countryId}::uuid))`
-            : Prisma.empty
-        }
-        AND c.slug = 'restaurants'
-      ORDER BY RANDOM()
-      LIMIT ${limit}
-    `;
-
-    const listingIds = listings.map((l) => l.id);
-
-    if (listingIds.length === 0) {
-      return [];
-    }
-
     return this.prisma.listing.findMany({
       where: {
-        id: { in: listingIds },
         status: 'active',
         deletedAt: null,
+        categoryId: { in: await this.getNearMeCategoryIds() },
+        ...(cityId && { cityId }),
+        ...(countryId && {
+          OR: [{ countryId }, { city: { countryId } }],
+        }),
       },
       include: {
         category: { select: { id: true, name: true, icon: true } },
         city: { select: { id: true, name: true } },
         images: { include: { media: true }, take: 1, where: { isPrimary: true } },
       },
+      orderBy: [{ rating: 'desc' }, { reviewCount: 'desc' }, { createdAt: 'desc' }],
+      take: limit,
     });
   }
 
@@ -760,5 +736,19 @@ export class ListingsService {
       }
     }
     return [...result];
+  }
+
+  private async getNearMeCategoryIds(): Promise<string[]> {
+    const roots = await this.prisma.category.findMany({
+      where: { slug: { in: [...NEAR_ME_ALLOWED_ROOT_SLUGS] }, isActive: true },
+      select: { id: true },
+    });
+    const all = new Set<string>();
+    for (const root of roots) {
+      for (const id of await this.getCategorySubtreeIds(root.id, true)) {
+        all.add(id);
+      }
+    }
+    return [...all];
   }
 }

@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/theme/amenity_chip_tokens.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -558,7 +559,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                       ...shopTabs.children,
                       _buildReviewsTab(listing['id'] ?? widget.listingId),
                       _buildPhotosTab(images),
-                      _buildAmenitiesTab(amenities),
+                      _buildAmenitiesTab(amenities, listing),
                     ];
                     
                     return Container(
@@ -811,7 +812,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
     );
   }
 
-  Widget _buildAmenitiesTab(List amenities) {
+  Widget _buildAmenitiesTab(List amenities, Map<String, dynamic> listing) {
     // Extract amenity data from nested structure
     final amenityList = amenities
         .map((item) {
@@ -842,7 +843,46 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
         .where((a) => a['name'] != null && (a['name'] as String).isNotEmpty)
         .toList();
 
-    if (amenityList.isEmpty) {
+    final isAccommodation = _isAccommodationListing(listing);
+    final filteredAmenities = amenityList.where((amenity) {
+      final category = (amenity['category'] as String? ?? '').trim().toLowerCase();
+      if (!isAccommodation && category == 'room') {
+        return false;
+      }
+      return true;
+    }).toList();
+
+    final normalizedAmenityNames = filteredAmenities
+        .map((a) => (a['name'] as String? ?? '').trim().toLowerCase())
+        .where((name) => name.isNotEmpty)
+        .toSet();
+
+    final commonAmenities = <Map<String, dynamic>>[
+      {
+        'name': 'WiFi',
+        'icon': 'wifi',
+        'description': null,
+        'category': 'general',
+      },
+      {
+        'name': 'Parking',
+        'icon': 'parking',
+        'description': null,
+        'category': 'general',
+      },
+    ];
+
+    final fallbackCommonAmenities = commonAmenities.where((amenity) {
+      final name = (amenity['name'] as String).trim().toLowerCase();
+      return !normalizedAmenityNames.contains(name);
+    });
+
+    final displayAmenities = [
+      ...filteredAmenities,
+      ...fallbackCommonAmenities,
+    ];
+
+    if (displayAmenities.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -877,7 +917,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
 
     // Group amenities by category if available
     final Map<String, List<Map<String, dynamic>>> groupedAmenities = {};
-    for (final amenity in amenityList) {
+    for (final amenity in displayAmenities) {
       final category = amenity['category'] as String? ?? 'general';
       if (!groupedAmenities.containsKey(category)) {
         groupedAmenities[category] = [];
@@ -894,9 +934,9 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
           if (groupedAmenities.length == 1)
             // Single category - show as grid
             Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: amenityList.map<Widget>((amenity) {
+              spacing: AmenityChipTokens.wrapSpacing,
+              runSpacing: AmenityChipTokens.wrapRunSpacing,
+              children: displayAmenities.map<Widget>((amenity) {
                 return _buildAmenityChip(amenity);
               }).toList(),
             )
@@ -918,10 +958,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                         color: context.primaryTextColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AmenityChipTokens.categoryChipGap),
                     Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
+                      spacing: AmenityChipTokens.wrapSpacing,
+                      runSpacing: AmenityChipTokens.wrapRunSpacing,
                       children: categoryAmenities.map<Widget>((amenity) {
                         return _buildAmenityChip(amenity);
                       }).toList(),
@@ -932,6 +972,32 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             }),
         ],
       ),
+    );
+  }
+
+  bool _isAccommodationListing(Map<String, dynamic> listing) {
+    final listingType = listing['type']?.toString().toLowerCase() ?? '';
+    final category = listing['category'] as Map<String, dynamic>?;
+    final categorySlug = category?['slug']?.toString().toLowerCase() ?? '';
+    final categoryName = category?['name']?.toString().toLowerCase() ?? '';
+
+    if (listingType == 'hotel') return true;
+
+    const accommodationSignals = [
+      'accommodation',
+      'hotel',
+      'hostel',
+      'apartment',
+      'villa',
+      'bnb',
+      'motel',
+      'resort',
+      'lodge',
+      'guest house',
+    ];
+
+    return accommodationSignals.any(
+      (token) => categorySlug.contains(token) || categoryName.contains(token),
     );
   }
 
@@ -978,13 +1044,11 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 12,
-      ),
+      padding: AmenityChipTokens.padding,
       decoration: BoxDecoration(
         color: context.primaryColorTheme.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius:
+            BorderRadius.circular(AmenityChipTokens.borderRadius),
         border: Border.all(
           color: context.primaryColorTheme.withOpacity(0.2),
           width: 1,
@@ -995,10 +1059,10 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
         children: [
           Icon(
             getIconForName(iconName),
-            size: 20,
+            size: AmenityChipTokens.iconSize,
             color: context.primaryColorTheme,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: AmenityChipTokens.iconLabelGap),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1006,7 +1070,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               children: [
                 Text(
                   name,
-                  style: context.bodyMedium.copyWith(
+                  style: context.bodySmall.copyWith(
                     color: context.primaryColorTheme,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1016,7 +1080,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     description,
                     style: context.bodySmall.copyWith(
                       color: context.secondaryTextColor,
-                      fontSize: 11,
+                      fontSize: 10,
+                      height: 1.2,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
