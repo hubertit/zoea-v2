@@ -216,13 +216,17 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.refresh, size: 20, color: context.primaryTextColor),
+                          Icon(
+                            Icons.refresh,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
                           const SizedBox(width: AppTheme.spacing8),
                           Text(
                             'Try Again',
                             style: context.bodyLarge.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: context.primaryTextColor,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           ),
                         ],

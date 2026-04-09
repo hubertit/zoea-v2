@@ -441,40 +441,6 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                 
                 const SizedBox(height: AppTheme.spacing32),
                 
-                // Info Box (placeholder code)
-                Container(
-                  padding: const EdgeInsets.all(AppTheme.spacing16),
-                  decoration: BoxDecoration(
-                    color: context.primaryColorTheme.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(AppTheme.borderRadius12),
-                    border: Border.all(
-                      color: context.primaryColorTheme.withOpacity(0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: context.primaryColorTheme,
-                        size: 20,
-                      ),
-                      const SizedBox(width: AppTheme.spacing12),
-                      Expanded(
-                        child: Text(
-                          'For testing, use reset code: 0000',
-                          style: context.bodySmall.copyWith(
-                            color: context.primaryColorTheme,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(height: AppTheme.spacing32),
-                
                 // Submit Button
                 ElevatedButton(
                   onPressed: _isLoading ? null : _handleRequestReset,
@@ -495,14 +461,16 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(context.primaryTextColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).colorScheme.onPrimary,
+                            ),
                           ),
                         )
                       : Text(
                           'Send Reset Code',
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: context.primaryTextColor,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                 ),

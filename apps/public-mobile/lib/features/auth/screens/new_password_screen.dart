@@ -253,14 +253,16 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(context.primaryTextColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).colorScheme.onPrimary,
+                            ),
                           ),
                         )
                       : Text(
                           'Reset Password',
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: context.primaryTextColor,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                 ),

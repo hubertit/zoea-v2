@@ -163,7 +163,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
               'Explore Events',
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),

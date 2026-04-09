@@ -427,7 +427,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                 'Explore Now',
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: context.primaryTextColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
             ),

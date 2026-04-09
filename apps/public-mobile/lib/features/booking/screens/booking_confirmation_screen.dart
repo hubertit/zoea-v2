@@ -443,7 +443,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
               'View My Bookings',
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),

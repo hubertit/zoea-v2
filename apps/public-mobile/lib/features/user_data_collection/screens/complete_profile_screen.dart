@@ -185,14 +185,15 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(context.primaryTextColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).colorScheme.onPrimary,
+                                ),
                               ),
                             )
                           : Text(
                               'Save Changes',
                               style: context.labelLarge.copyWith(
-                                color: context.backgroundColor,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                     ),

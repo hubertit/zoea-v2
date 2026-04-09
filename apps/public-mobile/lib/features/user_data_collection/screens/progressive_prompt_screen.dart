@@ -179,14 +179,15 @@ class _ProgressivePromptScreenState
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(context.primaryTextColor),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
                           )
                         : Text(
                             'Save',
                             style: context.labelLarge.copyWith(
-                              color: context.backgroundColor,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           ),
                   ),
