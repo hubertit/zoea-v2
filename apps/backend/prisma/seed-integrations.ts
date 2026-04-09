@@ -27,20 +27,27 @@ async function main() {
   console.log('Seeding integrations...');
 
   // OpenAI Integration
-  // Note: Set OPENAI_API_KEY environment variable before running this seed
-  const openaiApiKey = process.env.OPENAI_API_KEY || '';
-  
+  // Safety: never wipe an existing key by running seed without env vars.
+  const openaiApiKey = (process.env.OPENAI_API_KEY || '').trim();
+  if (!openaiApiKey) {
+    console.warn(
+      '[seed-integrations] OPENAI_API_KEY not provided - preserving existing openai config/isActive (if any).',
+    );
+  }
+
   await prisma.integration.upsert({
     where: { name: 'openai' },
-    update: {
-      config: {
-        apiKey: openaiApiKey,
-        model: 'gpt-4-turbo-preview',
-        maxTokens: 1000,
-        temperature: 0.7,
-      },
-      isActive: openaiApiKey !== '',
-    },
+    update: openaiApiKey
+      ? {
+          config: {
+            apiKey: openaiApiKey,
+            model: 'gpt-4-turbo-preview',
+            maxTokens: 1000,
+            temperature: 0.7,
+          },
+          isActive: true,
+        }
+      : {},
     create: {
       name: 'openai',
       displayName: 'OpenAI',
@@ -73,17 +80,24 @@ async function main() {
   });
 
   // Google Places API Integration
-  // Note: Set GOOGLE_PLACES_API_KEY environment variable before running this seed
-  const googlePlacesApiKey = process.env.GOOGLE_PLACES_API_KEY || '';
-  
+  // Safety: same rule as OpenAI; don't disable existing integration accidentally.
+  const googlePlacesApiKey = (process.env.GOOGLE_PLACES_API_KEY || '').trim();
+  if (!googlePlacesApiKey) {
+    console.warn(
+      '[seed-integrations] GOOGLE_PLACES_API_KEY not provided - preserving existing google_places config/isActive (if any).',
+    );
+  }
+
   await prisma.integration.upsert({
     where: { name: 'google_places' },
-    update: {
-      config: {
-        apiKey: googlePlacesApiKey,
-      },
-      isActive: googlePlacesApiKey !== '',
-    },
+    update: googlePlacesApiKey
+      ? {
+          config: {
+            apiKey: googlePlacesApiKey,
+          },
+          isActive: true,
+        }
+      : {},
     create: {
       name: 'google_places',
       displayName: 'Google Places API',
@@ -96,27 +110,36 @@ async function main() {
   });
 
   // Cloudinary Integration
-  // Note: Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET environment variables before running this seed
-  // Default values for Zoea account
-  const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME || 'dzcvbnvh3';
-  const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY || '752864623346824';
-  const cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET || 'CceWTvKzJ1hTnZ81L80aps7neUc';
-  
+  // Safety: do not overwrite existing credentials unless all values are provided.
+  const cloudinaryCloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').trim();
+  const cloudinaryApiKey = (process.env.CLOUDINARY_API_KEY || '').trim();
+  const cloudinaryApiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim();
+  const hasCloudinaryCredentials =
+    cloudinaryCloudName !== '' && cloudinaryApiKey !== '' && cloudinaryApiSecret !== '';
+
+  if (!hasCloudinaryCredentials) {
+    console.warn(
+      '[seed-integrations] Cloudinary env vars missing/incomplete - preserving existing cloudinary config/isActive (if any).',
+    );
+  }
+
   await prisma.integration.upsert({
     where: { name: 'cloudinary' },
-    update: {
-      config: {
-        cloudName: cloudinaryCloudName,
-        apiKey: cloudinaryApiKey,
-        apiSecret: cloudinaryApiSecret,
-      },
-      isActive: cloudinaryCloudName !== '' && cloudinaryApiKey !== '' && cloudinaryApiSecret !== '',
-    },
+    update: hasCloudinaryCredentials
+      ? {
+          config: {
+            cloudName: cloudinaryCloudName,
+            apiKey: cloudinaryApiKey,
+            apiSecret: cloudinaryApiSecret,
+          },
+          isActive: true,
+        }
+      : {},
     create: {
       name: 'cloudinary',
       displayName: 'Cloudinary',
       description: 'Cloudinary for image and media storage and optimization',
-      isActive: cloudinaryCloudName !== '' && cloudinaryApiKey !== '' && cloudinaryApiSecret !== '',
+      isActive: hasCloudinaryCredentials,
       config: {
         cloudName: cloudinaryCloudName,
         apiKey: cloudinaryApiKey,
