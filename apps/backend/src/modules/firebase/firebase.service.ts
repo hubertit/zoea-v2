@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { ConfigService } from '@nestjs/config';
 
+export type FirebaseDecodedIdToken = admin.auth.DecodedIdToken;
+
 @Injectable()
 export class FirebaseService {
   constructor(private configService: ConfigService) {
@@ -35,5 +37,17 @@ export class FirebaseService {
       throw new Error('Firebase Admin is not initialized');
     }
     return admin.messaging();
+  }
+
+  isInitialized(): boolean {
+    return admin.apps.length > 0;
+  }
+
+  /** Verifies a Firebase Auth ID token (e.g. from Google Sign-In on the client). */
+  async verifyIdToken(idToken: string): Promise<FirebaseDecodedIdToken> {
+    if (admin.apps.length === 0) {
+      throw new Error('Firebase Admin is not initialized');
+    }
+    return admin.auth().verifyIdToken(idToken);
   }
 }
