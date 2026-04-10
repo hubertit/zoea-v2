@@ -31,6 +31,7 @@ import { ItinerariesModule } from './modules/itineraries/itineraries.module';
 import { WeatherModule } from './modules/weather/weather.module';
 import { AppUpdateModule } from './modules/app-update/app-update.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
+import { ReferralsModule } from './modules/referrals/referrals.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
     ItinerariesModule,
     WeatherModule,
     AppUpdateModule,
+    ReferralsModule,
   ],
 })
 export class AppModule {}

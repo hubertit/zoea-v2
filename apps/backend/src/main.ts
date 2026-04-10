@@ -72,6 +72,7 @@ async function bootstrap() {
     .addTag('Merchants', 'Merchant business and listing management')
     .addTag('Notifications', 'User notifications management')
     .addTag('Zoea Card', 'Zoea Card digital wallet operations')
+    .addTag('Referrals', 'Referral program, codes, and rewards')
     .addTag('Analytics', 'Analytics and tracking endpoints')
     .addTag('Products', 'Product catalog and inventory management for marketplace/shop')
     .addTag('Services', 'Service offerings and booking management')
@@ -111,6 +112,7 @@ async function bootstrap() {
           'Merchants',
           'Notifications',
           'Zoea Card',
+          'Referrals',
           'Analytics',
           'Products',
           'Services',
