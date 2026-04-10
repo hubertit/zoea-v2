@@ -150,7 +150,7 @@ export class AuthService {
   async loginWithFirebaseIdToken(idToken: string) {
     if (!this.firebaseService.isInitialized()) {
       throw new ServiceUnavailableException(
-        'Firebase Admin is not configured on the server (missing FIREBASE_* env).',
+        'Firebase Admin is not configured. Add the firebase_admin integration (projectId, clientEmail, privateKey) and set it active.',
       );
     }
 
