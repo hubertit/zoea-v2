@@ -310,72 +310,78 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: context.primaryColorTheme.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.smart_toy,
-                  size: 50,
-                  color: context.primaryColorTheme,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(32),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: context.primaryColorTheme.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.smart_toy,
+                      size: 50,
+                      color: context.primaryColorTheme,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Hi! I\'m Zoea 👋',
-              style: context.headlineSmall.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.primaryTextColor,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Your friendly guide to Rwanda. Ask me about places to visit, restaurants, tours, or anything else!',
-              textAlign: TextAlign.center,
-              style: context.bodyLarge.copyWith(
-                color: context.secondaryTextColor,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'Try asking:',
-              style: context.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ..._suggestions.map((suggestion) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: OutlinedButton(
-                onPressed: () => _sendMessage(suggestion),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: context.dividerColor),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: Text(
-                  suggestion,
-                  style: context.bodyMedium.copyWith(
+                const SizedBox(height: 24),
+                Text(
+                  'Hi! I\'m Zoea 👋',
+                  style: context.headlineSmall.copyWith(
+                    fontWeight: FontWeight.bold,
                     color: context.primaryTextColor,
                   ),
                 ),
-              ),
-            )),
-          ],
-        ),
-      ),
+                const SizedBox(height: 12),
+                Text(
+                  'Your friendly guide to Rwanda. Ask me about places to visit, restaurants, tours, or anything else!',
+                  textAlign: TextAlign.center,
+                  style: context.bodyLarge.copyWith(
+                    color: context.secondaryTextColor,
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  'Try asking:',
+                  style: context.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.primaryTextColor,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ..._suggestions.map((suggestion) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: OutlinedButton(
+                    onPressed: () => _sendMessage(suggestion),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: context.dividerColor),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    child: Text(
+                      suggestion,
+                      style: context.bodyMedium.copyWith(
+                        color: context.primaryTextColor,
+                      ),
+                    ),
+                  ),
+                )),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -41,7 +41,7 @@ async function main() {
       ? {
           config: {
             apiKey: openaiApiKey,
-            model: 'gpt-4-turbo-preview',
+            model: 'gpt-4o-mini',
             maxTokens: 1000,
             temperature: 0.7,
           },
@@ -55,7 +55,7 @@ async function main() {
       isActive: openaiApiKey !== '',
       config: {
         apiKey: openaiApiKey,
-        model: 'gpt-4-turbo-preview',
+        model: 'gpt-4o-mini',
         maxTokens: 1000,
         temperature: 0.7,
       },

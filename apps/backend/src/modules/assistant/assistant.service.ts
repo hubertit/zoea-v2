@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { OpenAIService } from './openai.service';
 import { ChatDto } from './dto/chat.dto';
 import { IntegrationsService } from '../integrations/integrations.service';
+import { resolveOpenAiChatModel } from './openai-model.util';
 
 @Injectable()
 export class AssistantService {
@@ -40,7 +41,7 @@ export class AssistantService {
     return {
       enabled: true as const,
       apiKey,
-      model: config.model || 'gpt-4-turbo-preview',
+      model: resolveOpenAiChatModel(config.model),
       maxTokens: config.maxTokens ?? 1000,
       temperature: config.temperature ?? 0.7,
     };

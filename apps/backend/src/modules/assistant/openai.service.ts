@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import OpenAI from 'openai';
 import { IntegrationsService } from '../integrations/integrations.service';
 import { ContentSearchService, SearchResult } from './content-search.service';
+import { resolveOpenAiChatModel } from './openai-model.util';
 
 interface OpenAIConfig {
   // Some deployments store the key as `apiKey`, others as `api_key`.
@@ -112,7 +113,7 @@ export class OpenAIService {
       // If OpenAI is unreachable, we must return fast (avoid 504 gateway timeouts).
       const response = await this.withTimeout(
         this.openai.chat.completions.create({
-        model: config?.model || 'gpt-4-turbo-preview',
+        model: resolveOpenAiChatModel(config?.model),
         messages: messages as any,
         functions: this.getFunctions(),
         function_call: 'auto',
@@ -126,31 +127,69 @@ export class OpenAIService {
       let cards: SearchResult[] = [];
       let assistantText = '';
 
-      // Check if function was called
-      if (choice.message.function_call) {
-        const functionName = choice.message.function_call.name;
-        const functionArgs = JSON.parse(choice.message.function_call.arguments);
+      const msg = choice.message as {
+        content?: string | null;
+        function_call?: { name: string; arguments?: string } | null;
+        tool_calls?: Array<{ type?: string; function?: { name: string; arguments?: string } }>;
+      };
 
-        // Execute the function
+      let parsedTool: { name: string; args: Record<string, unknown> } | null = null;
+      if (msg.function_call?.name) {
+        try {
+          parsedTool = {
+            name: msg.function_call.name,
+            args: JSON.parse(msg.function_call.arguments || '{}') as Record<string, unknown>,
+          };
+        } catch {
+          parsedTool = { name: msg.function_call.name, args: {} };
+        }
+      } else if (Array.isArray(msg.tool_calls)) {
+        const fn = msg.tool_calls.find((t) => t?.type === 'function' && t?.function?.name)?.function;
+        if (fn?.name) {
+          try {
+            parsedTool = { name: fn.name, args: JSON.parse(fn.arguments || '{}') as Record<string, unknown> };
+          } catch {
+            parsedTool = { name: fn.name, args: {} };
+          }
+        }
+      }
+
+      if (parsedTool) {
+        const functionName = parsedTool.name;
+        const functionArgs = parsedTool.args;
+
         if (functionName === 'searchContent') {
+          const toolQuery =
+            typeof functionArgs.query === 'string' ? functionArgs.query.trim() : '';
+          const mergedQuery = [userMessage.trim(), toolQuery].filter(Boolean).join(' ');
           cards = await this.contentSearchService.searchContent({
-            query: functionArgs.query,
-            types: functionArgs.types,
+            query: mergedQuery || toolQuery || userMessage,
+            anchorMessage: userMessage,
+            types: functionArgs.types as ('listing' | 'tour' | 'product' | 'service')[] | undefined,
             limit: Math.min(10, Math.max(1, Number(functionArgs.limit) || 8)),
             lat: location?.lat,
             lng: location?.lng,
           });
-            // Important: avoid a second OpenAI call.
-            // The additional round trip frequently hits gateway timeouts (504).
-            assistantText = this.composeShortAssistantTextForSearch(userMessage, cards);
+          assistantText = this.composeShortAssistantTextForSearch(userMessage, cards);
         } else if (functionName === 'getCategories') {
-          const categories = await this.contentSearchService.getCategories();
-            // Avoid second OpenAI call for the same timeout reason.
+          // Model sometimes picks taxonomy for dietary questions — force a real listing search.
+          if (/\b(vegetarian|vegan|halal|kosher|plant[-\s]?based)\b/i.test(userMessage)) {
+            cards = await this.contentSearchService.searchContent({
+              query: userMessage,
+              anchorMessage: userMessage,
+              types: ['listing'],
+              limit: 8,
+              lat: location?.lat,
+              lng: location?.lng,
+            });
+            assistantText = this.composeShortAssistantTextForSearch(userMessage, cards);
+          } else {
+            const categories = await this.contentSearchService.getCategories();
             assistantText = this.composeShortAssistantTextForCategories(userMessage, categories);
+          }
         }
       } else {
-        // No function call - just return the text response
-        assistantText = this.cleanResponseText(choice.message.content || '');
+        assistantText = this.cleanResponseText((msg.content ?? '') as string);
       }
 
       // Generate suggestions
@@ -167,6 +206,7 @@ export class OpenAIService {
       this.logger.error('OpenAI chat error', error);
       const cards = await this.contentSearchService.searchContent({
         query: userMessage,
+        anchorMessage: userMessage,
         limit: 8,
         lat: location?.lat,
         lng: location?.lng,
@@ -292,7 +332,8 @@ Users open **cards** from chat to see details, photos, and actions (favourites, 
 
 ## What you should do
 - **Prioritise grounded answers**: Whenever someone asks for specific spots, tours, shops, services, or “what’s good for…”, call **searchContent** with a clear query (and \`types\` when obvious: listings for places, \`tour\` for excursions, \`product\` / \`service\` when they ask to buy or book a service).
-- Call **getCategories** when they ask “what can I do here?”, “what’s in the app?”, or how browse tabs are organised.
+- Call **getCategories** only for taxonomy / “what’s in the app?” questions — **not** for dietary preferences, hunger, or “what’s good to eat” (those must use **searchContent** with keywords like \`vegetarian restaurant Kigali\`, \`vegan dining\`, \`halal food\`).
+- When calling **searchContent**, pass **focused keywords only** (e.g. \`Italian restaurant Kimihurura\`, \`restaurants Kigali\`) — **never** copy UI chip text verbatim if it starts with “Try”, “Find”, or “Show me”.
 - You **may** give short, accurate **general travel context** for ${countryName} (weather, etiquette, safety basics, transport overview, tipping, best time to visit) in **2–5 sentences**, then steer them to **searchContent** for concrete names.
 - **Do not** claim real-time prices, availability, or policies — say “check the listing in the app” when details vary.
 - **Do not** give medical, legal, or immigration advice; suggest consulting official sources or professionals.
@@ -311,6 +352,7 @@ Users open **cards** from chat to see details, photos, and actions (favourites, 
 - “Gorilla trekking from Kigali” / “weekend tour” → searchContent with tours.
 - “Where’s a pharmacy / ATM?” → searchContent (essentials categories).
 - “What categories do you have?” → getCategories.
+- “What’s good for vegetarians?” / “vegan options?” → **searchContent** (never getCategories alone).
 - “Is June a good month to visit?” → short climate answer, no tool unless they ask for places.
 
 Be helpful, honest about limits, and tie answers to what users can do next in Zoea.`;
@@ -328,7 +370,7 @@ Be helpful, honest about limits, and tie answers to what users can do next in Zo
             query: {
               type: 'string',
               description:
-                'Focused search string, e.g. "Italian restaurant Kimihurura", "budget hotel Kigali", "gorilla tour", "spa massage", "coffee workshop", "pharmacy Kigali".',
+                'Focused keywords only (no "Try"/"Find" prefixes), e.g. "Italian restaurant Kimihurura", "restaurants Kigali", "gorilla tour", "pharmacy Kigali".',
             },
             types: {
               type: 'array',
@@ -350,7 +392,7 @@ Be helpful, honest about limits, and tie answers to what users can do next in Zo
       {
         name: 'getCategories',
         description:
-          'Returns the full category taxonomy (Explore, Dining, nightlife, essentials, etc.). Use when the user asks what the app offers, how browsing works, or to map vague questions (“something fun tonight”) to category areas before or instead of a broad search.',
+          'Returns the full category taxonomy. Use only when the user asks how browsing works, what tabs exist, or “what categories are in Zoea”. Do **not** use for food preferences (vegetarian/vegan/halal), restaurants, or “what should I eat” — use searchContent for those.',
         parameters: {
           type: 'object',
           properties: {},
