@@ -21,9 +21,13 @@ void main() async {
   // FlutterFire: background handler must be registered before runApp (cannot run in a post-runApp future).
   PushNotificationService.registerBackgroundHandler();
 
+  // Firebase must be initialized before runApp so firebase_auth / google_sign_in native channels work
+  // (otherwise iOS can throw PlatformException channel-error on "Continue with Google").
+  await Firebase.initializeApp();
+
   runApp(const ProviderScope(child: MyApp()));
 
-  // Do Firebase + push registration after first frame so app launch is not blocked.
+  // Push permission + listeners after first frame (Firebase Core already ready).
   Future<void>(() async {
     await _initializePushInBackground();
   });
@@ -31,7 +35,6 @@ void main() async {
 
 Future<void> _initializePushInBackground() async {
   try {
-    await Firebase.initializeApp();
     await PushNotificationService.init();
 
     PushNotificationService.listenForTokenRefresh((token) {

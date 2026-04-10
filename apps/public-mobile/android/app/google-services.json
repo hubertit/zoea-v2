@@ -12,7 +12,12 @@
           "package_name": "africa.zoea.zoea"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "894634387496-mmm9et2fv90eq75a06lirh4jppjlfb6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBLZyq1YGHqM6q_x0D0_8S9dY_UVKUQd_c"
@@ -20,7 +25,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894634387496-mmm9et2fv90eq75a06lirh4jppjlfb6g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "894634387496-v7n2lecm87225134ob0t2vt5qoh4tpg2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.vonsung.tarama",
+                "app_store_id": "6479386277"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +49,12 @@
           "package_name": "io.devslab.tarama"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "894634387496-mmm9et2fv90eq75a06lirh4jppjlfb6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBLZyq1YGHqM6q_x0D0_8S9dY_UVKUQd_c"
@@ -39,7 +62,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894634387496-mmm9et2fv90eq75a06lirh4jppjlfb6g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "894634387496-v7n2lecm87225134ob0t2vt5qoh4tpg2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.vonsung.tarama",
+                "app_store_id": "6479386277"
+              }
+            }
+          ]
         }
       }
     }

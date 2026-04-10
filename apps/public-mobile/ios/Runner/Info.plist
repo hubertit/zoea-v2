@@ -71,5 +71,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Google Sign-In: must match REVERSED_CLIENT_ID in GoogleService-Info.plist -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.894634387496-v7n2lecm87225134ob0t2vt5qoh4tpg2</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
