@@ -5,12 +5,14 @@ import {
   ConflictException,
   BadRequestException,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 import {
   RegisterDto,
   LoginDto,
@@ -22,6 +24,7 @@ import {
 } from './dto/auth.dto';
 import { ReferralsService } from '../referrals/referrals.service';
 import { SmsService } from '../../common/services/sms.service';
+import { FirebaseService, type FirebaseDecodedIdToken } from '../firebase/firebase.service';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +36,7 @@ export class AuthService {
     private configService: ConfigService,
     private referralsService: ReferralsService,
     private smsService: SmsService,
+    private firebaseService: FirebaseService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -126,6 +130,122 @@ export class AuthService {
 
     // Generate tokens
     const tokens = await this.generateTokens(user.id, user.email);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        fullName: user.fullName,
+        roles: user.roles,
+      },
+      ...tokens,
+    };
+  }
+
+  /**
+   * Exchange a Firebase Auth ID token for app JWTs (same shape as `login`).
+   * Links `firebaseUid` to an existing account when the email matches.
+   */
+  async loginWithFirebaseIdToken(idToken: string) {
+    if (!this.firebaseService.isInitialized()) {
+      throw new ServiceUnavailableException(
+        'Firebase Admin is not configured. Add the firebase_admin integration (projectId, clientEmail, privateKey) and set it active.',
+      );
+    }
+
+    let decoded: FirebaseDecodedIdToken;
+    try {
+      decoded = await this.firebaseService.verifyIdToken(idToken);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+
+    const uid = decoded.uid;
+    const emailRaw = decoded.email?.trim().toLowerCase();
+    if (!emailRaw) {
+      throw new BadRequestException('This sign-in method did not provide an email address.');
+    }
+
+    const fullName =
+      typeof decoded.name === 'string' && decoded.name.trim().length > 0
+        ? decoded.name.trim()
+        : emailRaw.split('@')[0];
+
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ firebaseUid: uid }, { email: emailRaw }],
+      },
+      select: {
+        id: true,
+        firebaseUid: true,
+        fullName: true,
+        emailVerifiedAt: true,
+      },
+    });
+
+    type FirebaseLoginUser = Prisma.UserGetPayload<{
+      select: {
+        id: true;
+        email: true;
+        phoneNumber: true;
+        fullName: true;
+        roles: true;
+      };
+    }>;
+
+    let user: FirebaseLoginUser;
+
+    if (existing) {
+      const updates: {
+        firebaseUid?: string;
+        fullName?: string;
+        emailVerifiedAt?: Date;
+        lastLoginAt?: Date;
+      } = { lastLoginAt: new Date() };
+
+      if (!existing.firebaseUid) {
+        updates.firebaseUid = uid;
+      }
+      if (!existing.fullName || existing.fullName.trim().length === 0) {
+        updates.fullName = fullName;
+      }
+      if (!existing.emailVerifiedAt) {
+        updates.emailVerifiedAt = new Date();
+      }
+
+      user = await this.prisma.user.update({
+        where: { id: existing.id },
+        data: updates,
+        select: {
+          id: true,
+          email: true,
+          phoneNumber: true,
+          fullName: true,
+          roles: true,
+        },
+      });
+    } else {
+      user = await this.prisma.user.create({
+        data: {
+          email: emailRaw,
+          firebaseUid: uid,
+          fullName,
+          passwordHash: null,
+          emailVerifiedAt: new Date(),
+          lastLoginAt: new Date(),
+        },
+        select: {
+          id: true,
+          email: true,
+          phoneNumber: true,
+          fullName: true,
+          roles: true,
+        },
+      });
+    }
+
+    const tokens = await this.generateTokens(user.id, user.email ?? emailRaw);
 
     return {
       user: {

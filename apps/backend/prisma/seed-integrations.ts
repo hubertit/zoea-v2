@@ -223,6 +223,21 @@ async function main() {
     },
   });
 
+  // Firebase Admin (FCM, Google Sign-In ID token verification) — same pattern as OpenAI: secrets live in DB.
+  // Do not overwrite an existing row from seed; create an inactive placeholder if missing.
+  await prisma.integration.upsert({
+    where: { name: 'firebase_admin' },
+    update: {},
+    create: {
+      name: 'firebase_admin',
+      displayName: 'Firebase Admin',
+      description:
+        'Service account fields in config: projectId, clientEmail, privateKey (PEM; use \\n for newlines in JSON). Used for push (FCM) and verifying Google Sign-In tokens.',
+      isActive: false,
+      config: {},
+    },
+  });
+
   console.log('Integrations seeded successfully!');
 }
 

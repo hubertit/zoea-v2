@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../config/app_config.dart';
 import '../models/user.dart';
 import '../utils/phone_validator.dart';
@@ -213,6 +216,81 @@ class AuthService {
     } catch (e) {
       // Fail silently, token update shouldn't break the app
       print('Failed to update FCM token: $e');
+    }
+  }
+
+  /// Google Sign-In via Firebase Auth, then exchange ID token for app JWTs (`POST /auth/firebase`).
+  /// Returns `null` if the user closed the Google account picker.
+  Future<User?> signInWithGoogle() async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+
+    final googleSignIn = GoogleSignIn(scopes: const ['email', 'profile']);
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser == null) {
+      return null;
+    }
+
+    final googleAuth = await googleUser.authentication;
+    final credential = firebase_auth.GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final userCred =
+        await firebase_auth.FirebaseAuth.instance.signInWithCredential(credential);
+    final idToken = await userCred.user?.getIdToken();
+    if (idToken == null) {
+      throw Exception('Could not obtain Firebase ID token.');
+    }
+
+    try {
+      final response = await _dio.post(
+        '${AppConfig.authEndpoint}/firebase',
+        data: {'idToken': idToken},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+
+        await _tokenStorage?.saveTokens(
+          data['accessToken'],
+          data['refreshToken'],
+        );
+        await _tokenStorage?.setLoggedIn(true);
+
+        final userData = data['user'] as Map<String, dynamic>;
+        final user = _parseUserFromResponse(userData);
+
+        await _tokenStorage?.saveUserData(user);
+
+        _currentUser = user;
+        _authController.add(user);
+
+        await updateFCMToken();
+
+        return user;
+      } else {
+        throw Exception('Google sign-in failed: ${response.statusMessage}');
+      }
+    } on DioException catch (e) {
+      String errorMessage = 'Google sign-in failed. Please try again.';
+      if (e.response != null) {
+        final message = e.response!.data?['message'] ?? e.response!.statusMessage;
+        errorMessage = message ?? errorMessage;
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        errorMessage = 'Connection timeout. Please check your internet connection.';
+      } else if (e.type == DioExceptionType.connectionError) {
+        errorMessage = 'No internet connection. Please check your network.';
+      }
+      throw Exception(errorMessage);
+    } finally {
+      try {
+        await googleSignIn.signOut();
+        await firebase_auth.FirebaseAuth.instance.signOut();
+      } catch (_) {}
     }
   }
 
@@ -605,6 +683,10 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    try {
+      await GoogleSignIn().signOut();
+      await firebase_auth.FirebaseAuth.instance.signOut();
+    } catch (_) {}
     await _tokenStorage?.clearTokens();
     await _tokenStorage?.clearUserData();
     _currentUser = null;

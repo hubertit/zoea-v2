@@ -14,6 +14,7 @@ import {
   RegisterDto,
   LoginDto,
   RefreshTokenDto,
+  FirebaseLoginDto,
   RequestPasswordResetDto,
   VerifyResetCodeDto,
   ResetPasswordDto,
@@ -92,6 +93,21 @@ export class AuthController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Post('firebase')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Login with Firebase ID token (Google Sign-In)',
+    description:
+      'Verifies a Firebase Auth ID token and returns the same JWT pair as password login. Creates a user on first sign-in.',
+  })
+  @ApiBody({ type: FirebaseLoginDto })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 401, description: 'Invalid or expired token' })
+  @ApiResponse({ status: 503, description: 'Firebase Admin not configured on server' })
+  async loginWithFirebase(@Body() dto: FirebaseLoginDto) {
+    return this.authService.loginWithFirebaseIdToken(dto.idToken);
   }
 
   @Post('refresh')

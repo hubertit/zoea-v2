@@ -52,6 +52,15 @@ export class RefreshTokenDto {
   refreshToken: string;
 }
 
+export class FirebaseLoginDto {
+  @ApiProperty({
+    description: 'Firebase Auth ID token (after Google Sign-In on the app).',
+    example: 'eyJhbGciOiJSUzI1NiIs...',
+  })
+  @IsString()
+  idToken: string;
+}
+
 export class RequestPasswordResetDto {
   @ApiProperty({ 
     description: 'Email address or phone number',

@@ -6,6 +6,7 @@ import 'package:country_picker/country_picker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/utils/phone_validator.dart';
 import '../../../core/utils/phone_input_formatter.dart';
@@ -24,6 +25,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   bool _isPhoneLogin = true; // Toggle between email and phone login (default to phone)
   
   // Country picker for phone login
@@ -148,6 +150,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() {
+      _isGoogleLoading = true;
+    });
+    try {
+      final authService = ref.read(authServiceProvider);
+      final user = await authService.signInWithGoogle();
+      if (!mounted) return;
+      if (user != null) {
+        context.go('/explore');
+      }
+    } catch (e) {
+      if (mounted) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        ScaffoldMessenger.of(context).showSnackBar(
+          AppTheme.errorSnackBar(
+            message: errorMessage.isNotEmpty
+                ? errorMessage
+                : 'Google sign-in failed. Please try again.',
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
         });
       }
     }
@@ -496,6 +529,77 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           : const Text('Sign In'),
                     ),
                   ),
+                  if (AppConfig.enableSocialLogin) ...[
+                    const SizedBox(height: AppTheme.spacing16),
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: context.dividerColor)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppTheme.spacing12,
+                          ),
+                          child: Text(
+                            'or',
+                            style: context.bodySmall.copyWith(
+                              color: context.secondaryTextColor,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: context.dividerColor)),
+                      ],
+                    ),
+                    const SizedBox(height: AppTheme.spacing16),
+                    SizedBox(
+                      height: 56,
+                      child: OutlinedButton(
+                        onPressed: (_isLoading || _isGoogleLoading)
+                            ? null
+                            : _handleGoogleSignIn,
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: context.borderColor, width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppTheme.borderRadius12),
+                          ),
+                        ),
+                        child: _isGoogleLoading
+                            ? SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: context.primaryColorTheme,
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    width: 24,
+                                    child: Center(
+                                      child: Text(
+                                        'G',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFF4285F4),
+                                          height: 1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppTheme.spacing8),
+                                  Text(
+                                    'Continue with Google',
+                                    style: context.bodyLarge.copyWith(
+                                      color: context.primaryTextColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppTheme.spacing16),
                   
                   // Browse as Guest Button
