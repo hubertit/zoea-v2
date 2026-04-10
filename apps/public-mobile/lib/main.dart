@@ -18,6 +18,9 @@ void main() async {
   // Initialize Hive for local storage FIRST
   await Hive.initFlutter();
 
+  // FlutterFire: background handler must be registered before runApp (cannot run in a post-runApp future).
+  PushNotificationService.registerBackgroundHandler();
+
   runApp(const ProviderScope(child: MyApp()));
 
   // Do Firebase + push registration after first frame so app launch is not blocked.

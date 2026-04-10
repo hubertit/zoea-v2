@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -9,6 +10,11 @@ class PushNotificationService {
       FlutterLocalNotificationsPlugin();
 
   static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  /// Must be called in [main] before [runApp] (FlutterFire requirement).
+  static void registerBackgroundHandler() {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
 
   /// Initialize Firebase Messaging and Local Notifications
   static Future<void> init() async {
@@ -27,9 +33,6 @@ class PushNotificationService {
 
     // Initialize Local Notifications
     await localNotiInit();
-
-    // Handle background messages
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Handle foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -150,7 +153,6 @@ class PushNotificationService {
 /// Top-level function for background message handling
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Ensure Firebase is initialized for background tasks if needed
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   debugPrint('🌙 Handling background message: ${message.messageId}');
 }
