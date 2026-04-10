@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomInt } from 'crypto';
 import { Prisma, referral_reward_status } from '@prisma/client';
@@ -106,6 +106,92 @@ export class ReferralsService {
       }
       throw e;
     }
+  }
+
+  /**
+   * Admin / jobs: move all pending referral_rewards for one referrals row to credited,
+   * and sync referral_codes.pending_points + total_points_earned when a code row exists.
+   * Idempotent: no pending rows → { creditedRewards: 0 }.
+   */
+  async creditPendingRewardsForReferral(referralId: string): Promise<{
+    creditedRewards: number;
+    referralId: string;
+  }> {
+    const referral = await this.prisma.referrals.findUnique({
+      where: { id: referralId },
+    });
+    if (!referral) {
+      throw new NotFoundException(`Referral ${referralId} not found`);
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const rewards = await tx.referral_rewards.findMany({
+        where: {
+          referral_id: referralId,
+          status: referral_reward_status.pending,
+        },
+      });
+      if (rewards.length === 0) {
+        return { creditedRewards: 0, referralId };
+      }
+
+      const now = new Date();
+      for (const rw of rewards) {
+        await tx.referral_rewards.update({
+          where: { id: rw.id },
+          data: {
+            status: referral_reward_status.credited,
+            credited_at: now,
+          },
+        });
+
+        const code = await tx.referral_codes.findUnique({
+          where: { user_id: rw.user_id },
+        });
+        if (code) {
+          const pend = code.pending_points ?? 0;
+          const earned = code.total_points_earned ?? 0;
+          await tx.referral_codes.update({
+            where: { user_id: rw.user_id },
+            data: {
+              pending_points: Math.max(0, pend - rw.points),
+              total_points_earned: earned + rw.points,
+            },
+          });
+        }
+      }
+
+      return { creditedRewards: rewards.length, referralId };
+    });
+  }
+
+  /**
+   * Admin: credit pending rewards for every referral that has signup_* rewards still pending.
+   */
+  async creditAllPendingSignupRewards(): Promise<{
+    referralsProcessed: number;
+    totalRewardsCredited: number;
+  }> {
+    const rows = await this.prisma.referral_rewards.findMany({
+      where: {
+        status: referral_reward_status.pending,
+        reward_type: { in: ['signup_referrer', 'signup_referee'] },
+      },
+      select: { referral_id: true },
+      distinct: ['referral_id'],
+    });
+
+    const ids = rows.map((r) => r.referral_id);
+    let totalRewardsCredited = 0;
+    for (const referralId of ids) {
+      const r = await this.creditPendingRewardsForReferral(referralId);
+      totalRewardsCredited += r.creditedRewards;
+    }
+
+    return {
+      referralsProcessed: ids.length,
+      totalRewardsCredited,
+    };
   }
 
   /** Authenticated: user code, share URL, stats (ledger-based), and current program snapshot. */

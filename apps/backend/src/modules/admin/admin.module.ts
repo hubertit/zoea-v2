@@ -17,10 +17,12 @@ import { AdminNotificationsService } from './notifications/admin-notifications.s
 import { AdminNotificationsController } from './notifications/admin-notifications.controller';
 import { AdminReviewsService } from './reviews/admin-reviews.service';
 import { AdminReviewsController } from './reviews/admin-reviews.controller';
+import { AdminReferralsController } from './referrals/admin-referrals.controller';
 import { ReviewsModule } from '../reviews/reviews.module';
+import { ReferralsModule } from '../referrals/referrals.module';
 
 @Module({
-  imports: [PrismaModule, ReviewsModule],
+  imports: [PrismaModule, ReviewsModule, ReferralsModule],
   controllers: [
     AdminUsersController,
     AdminMerchantsController,
@@ -30,6 +32,7 @@ import { ReviewsModule } from '../reviews/reviews.module';
     AdminEventsController,
     AdminNotificationsController,
     AdminReviewsController,
+    AdminReferralsController,
   ],
   providers: [
     AdminUsersService,

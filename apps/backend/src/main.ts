@@ -87,6 +87,7 @@ async function bootstrap() {
     .addTag('Admin - Payments', 'Admin payment and transaction management')
     .addTag('Admin - Notifications', 'Admin notification management endpoints')
     .addTag('Admin - Reviews', 'Admin review moderation and management endpoints')
+    .addTag('Admin - Referrals', 'Referral rewards and program administration')
     .addTag('Integrations', 'Third-party integrations and external service connections')
     .addTag('Assistant (Ask Zoea)', 'AI assistant chat and conversation endpoints')
     .build();
@@ -127,6 +128,7 @@ async function bootstrap() {
           'Admin - Payments',
           'Admin - Notifications',
           'Admin - Reviews',
+          'Admin - Referrals',
           'Integrations',
           'Assistant (Ask Zoea)',
         ];
