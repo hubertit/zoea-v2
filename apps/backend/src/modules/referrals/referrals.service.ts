@@ -4,9 +4,9 @@ import { randomInt } from 'crypto';
 import { Prisma, referral_reward_status } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
-const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-const CODE_LENGTH = 8;
-const MAX_CODE_ALLOC_ATTEMPTS = 16;
+/** Six random digits (000000–999999); easy to read and share. Retries on collision. */
+const CODE_NUM_DIGITS = 6;
+const MAX_CODE_ALLOC_ATTEMPTS = 32;
 
 @Injectable()
 export class ReferralsService {
@@ -253,11 +253,11 @@ export class ReferralsService {
   }
 
   private generateCode(): string {
-    let out = '';
-    for (let i = 0; i < CODE_LENGTH; i++) {
-      out += CODE_ALPHABET[randomInt(CODE_ALPHABET.length)];
+    let digits = '';
+    for (let i = 0; i < CODE_NUM_DIGITS; i++) {
+      digits += String(randomInt(0, 10));
     }
-    return out;
+    return digits;
   }
 
   private async getOrCreateReferralCode(userId: string) {
