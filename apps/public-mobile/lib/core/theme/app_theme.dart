@@ -216,6 +216,20 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: darkCardColor,
+        // Focused label must not use ColorScheme.primary (navy); it disappears on dark fills.
+        labelStyle: const TextStyle(color: darkSecondaryTextColor),
+        floatingLabelStyle: WidgetStateTextStyle.resolveWith((states) {
+          if (states.contains(WidgetState.error)) {
+            return const TextStyle(color: darkErrorColor);
+          }
+          if (states.contains(WidgetState.focused)) {
+            return const TextStyle(color: lightPrimaryColor);
+          }
+          return const TextStyle(color: darkSecondaryTextColor);
+        }),
+        hintStyle: TextStyle(
+          color: darkSecondaryTextColor.withValues(alpha: 0.75),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: darkDividerColor),

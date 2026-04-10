@@ -621,7 +621,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             onChanged: (value) => setState(() => _contactNumber = value),
             decoration: InputDecoration(
               labelText: 'Phone Number',
-              hintText: '+250 788 123 456',
+              hintText: '+250 796 889 900',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

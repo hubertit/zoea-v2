@@ -135,7 +135,7 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-10 sm:mt-12 lg:mt-16 pt-8 sm:pt-10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[13px] sm:text-[14px] text-gray-400 text-center sm:text-left">
-            © {new Date().getFullYear()} Zoea. All rights reserved.
+            © {new Date().getFullYear()} Zoea Africa. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8">
             <Link href="/terms" className="text-[13px] sm:text-[14px] text-gray-400 hover:text-white transition-colors">

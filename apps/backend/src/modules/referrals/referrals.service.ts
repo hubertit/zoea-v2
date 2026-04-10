@@ -248,7 +248,7 @@ export class ReferralsService {
   private buildShareUrl(code: string): string {
     const base =
       this.config.get<string>('REFERRAL_WEB_BASE_URL')?.replace(/\/$/, '') ||
-      'https://zoea.africa';
+      'https://www.zoea.africa';
     return `${base}/r/${encodeURIComponent(code)}`;
   }
 

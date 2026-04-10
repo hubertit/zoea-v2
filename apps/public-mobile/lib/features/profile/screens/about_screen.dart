@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../../../core/theme/app_theme.dart';
+import '../../../core/providers/app_update_check_provider.dart';
+import '../../../core/providers/package_info_provider.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
+import '../../../core/utils/app_build_metadata.dart';
 
 class AboutScreen extends ConsumerStatefulWidget {
   const AboutScreen({super.key});
@@ -14,8 +18,55 @@ class AboutScreen extends ConsumerStatefulWidget {
 }
 
 class _AboutScreenState extends ConsumerState<AboutScreen> {
+  static const String _contactEmail = 'contact@zoea.africa';
+  static const String _contactPhoneTel = '+250796889900'; // tel: URI (no spaces)
+  static const String _websiteUrl = 'https://www.zoea.africa';
+
+  Future<void> _tryLaunchUri(Uri uri) async {
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Could not open link. Try again later.'),
+            backgroundColor: context.primaryColorTheme,
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Could not open link. Try again later.'),
+            backgroundColor: context.primaryColorTheme,
+          ),
+        );
+      }
+    }
+  }
+
+  void _launchEmail() => _tryLaunchUri(Uri.parse('mailto:$_contactEmail'));
+
+  void _launchPhone() => _tryLaunchUri(Uri(scheme: 'tel', path: _contactPhoneTel));
+
+  void _launchWebsite() {
+    context.push(
+      '/webview?url=${Uri.encodeComponent(_websiteUrl)}'
+      '&title=${Uri.encodeComponent('Zoea Africa')}',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final packageInfo = ref.watch(packageInfoProvider);
+    final appUpdateCheck = ref.watch(appUpdateCheckProvider);
+    final locale = Localizations.localeOf(context);
+    final lastUpdated = lastUpdatedDisplayLabel(
+      policyUpdatedAtIso: appUpdateCheck.valueOrNull?.policyUpdatedAt,
+      fallback: 'Not specified',
+      intlLocale: locale.toLanguageTag(),
+    );
+
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -42,19 +93,11 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // App Logo and Info
-            _buildAppHeader(),
+            _buildAppHeader(packageInfo),
             const SizedBox(height: 32),
             
             // App Information
-            _buildAppInformation(),
-            const SizedBox(height: 24),
-            
-            // Features
-            _buildFeatures(),
-            const SizedBox(height: 24),
-            
-            // Team
-            _buildTeam(),
+            _buildAppInformation(context, packageInfo, lastUpdated),
             const SizedBox(height: 24),
             
             // Legal
@@ -70,7 +113,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  Widget _buildAppHeader() {
+  Widget _buildAppHeader(AsyncValue<PackageInfo> packageInfo) {
     return Center(
       child: Column(
         children: [
@@ -126,7 +169,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Version 1.0.0',
+              packageInfo.maybeWhen(
+                data: (p) => 'Version ${p.version}',
+                orElse: () => 'Version …',
+              ),
               style: context.bodySmall.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w600,
@@ -138,7 +184,13 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  Widget _buildAppInformation() {
+  Widget _buildAppInformation(
+    BuildContext context,
+    AsyncValue<PackageInfo> packageInfo,
+    String lastUpdated,
+  ) {
+    final locale = Localizations.localeOf(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -162,38 +214,62 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              _buildInfoItem(
-                icon: Icons.info_outline,
-                title: 'App Version',
-                value: '1.0.0',
+          child: packageInfo.when(
+            data: (p) => Column(
+              children: [
+                _buildInfoItem(
+                  icon: Icons.info_outline,
+                  title: 'App Version',
+                  value: p.version,
+                ),
+                _buildDivider(),
+                _buildInfoItem(
+                  icon: Icons.build_outlined,
+                  title: 'Build Number',
+                  value: p.buildNumber,
+                ),
+                _buildDivider(),
+                _buildInfoItem(
+                  icon: Icons.update_outlined,
+                  title: 'Last Updated',
+                  value: lastUpdated,
+                ),
+                _buildDivider(),
+                _buildInfoItem(
+                  icon: Icons.phone_android_outlined,
+                  title: 'Platform',
+                  value: describeRuntimePlatform(),
+                ),
+                _buildDivider(),
+                _buildInfoItem(
+                  icon: Icons.language_outlined,
+                  title: 'Language',
+                  value: localeDisplayLabel(locale),
+                ),
+              ],
+            ),
+            loading: () => Padding(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: context.primaryColorTheme,
+                  ),
+                ),
               ),
-              _buildDivider(),
-              _buildInfoItem(
-                icon: Icons.build_outlined,
-                title: 'Build Number',
-                value: '100',
+            ),
+            error: (_, __) => Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Could not load package info.',
+                style: context.bodyMedium.copyWith(
+                  color: context.secondaryTextColor,
+                ),
               ),
-              _buildDivider(),
-              _buildInfoItem(
-                icon: Icons.update_outlined,
-                title: 'Last Updated',
-                value: 'December 2024',
-              ),
-              _buildDivider(),
-              _buildInfoItem(
-                icon: Icons.phone_android_outlined,
-                title: 'Platform',
-                value: 'Flutter',
-              ),
-              _buildDivider(),
-              _buildInfoItem(
-                icon: Icons.language_outlined,
-                title: 'Language',
-                value: 'English',
-              ),
-            ],
+            ),
           ),
         ),
       ],
@@ -243,221 +319,6 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  Widget _buildFeatures() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Features',
-          style: context.titleMedium.copyWith(
-            fontWeight: FontWeight.w600,
-            color: context.primaryTextColor,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          decoration: BoxDecoration(
-            color: context.backgroundColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: context.dividerColor.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              _buildFeatureItem(
-                icon: Icons.event_outlined,
-                title: 'Events & Bookings',
-                subtitle: 'Discover and book amazing events',
-              ),
-              _buildDivider(),
-              _buildFeatureItem(
-                icon: Icons.place_outlined,
-                title: 'Places & Locations',
-                subtitle: 'Explore Rwanda\'s beautiful places',
-              ),
-              _buildDivider(),
-              _buildFeatureItem(
-                icon: Icons.reviews_outlined,
-                title: 'Reviews & Ratings',
-                subtitle: 'Share your experiences with others',
-              ),
-              _buildDivider(),
-              _buildFeatureItem(
-                icon: Icons.favorite_outline,
-                title: 'Favorites',
-                subtitle: 'Save your favorite places and events',
-              ),
-              _buildDivider(),
-              _buildFeatureItem(
-                icon: Icons.card_membership_outlined,
-                title: 'Zoea Card',
-                subtitle: 'Digital membership and rewards',
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFeatureItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: context.primaryColorTheme.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              color: context.primaryColorTheme,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: context.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: context.bodySmall.copyWith(
-                    color: context.secondaryTextColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTeam() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Our Team',
-          style: context.titleMedium.copyWith(
-            fontWeight: FontWeight.w600,
-            color: context.primaryTextColor,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          decoration: BoxDecoration(
-            color: context.backgroundColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: context.dividerColor.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              _buildTeamMember(
-                name: 'Development Team',
-                role: 'Flutter & Backend Development',
-                description: 'Building amazing experiences',
-              ),
-              _buildDivider(),
-              _buildTeamMember(
-                name: 'Design Team',
-                role: 'UI/UX Design',
-                description: 'Creating beautiful interfaces',
-              ),
-              _buildDivider(),
-              _buildTeamMember(
-                name: 'Content Team',
-                role: 'Content & Localization',
-                description: 'Curating Rwanda\'s best experiences',
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTeamMember({
-    required String name,
-    required String role,
-    required String description,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: context.primaryColorTheme.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Icon(
-              Icons.people_outline,
-              color: context.primaryColorTheme,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: context.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  role,
-                  style: context.bodySmall.copyWith(
-                    color: context.primaryColorTheme,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  description,
-                  style: context.bodySmall.copyWith(
-                    color: context.secondaryTextColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildLegal() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,7 +362,8 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               _buildLegalItem(
                 icon: Icons.copyright_outlined,
                 title: 'Copyright',
-                subtitle: '© 2024 Zoea. All rights reserved.',
+                subtitle:
+                    '© ${DateTime.now().year} Zoea Africa. All rights reserved.',
                 onTap: () => _showLegalDialog('Copyright', _getCopyright()),
               ),
             ],
@@ -590,22 +452,22 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               _buildSocialItem(
                 icon: Icons.email_outlined,
                 title: 'Email',
-                subtitle: 'contact@zoea.rw',
-                onTap: () => _showContactDialog('Email', 'Send us an email at contact@zoea.rw'),
+                subtitle: _contactEmail,
+                onTap: _launchEmail,
               ),
               _buildDivider(),
               _buildSocialItem(
                 icon: Icons.phone_outlined,
                 title: 'Phone',
-                subtitle: '+250 788 123 456',
-                onTap: () => _showContactDialog('Phone', 'Call us at +250 788 123 456'),
+                subtitle: '+250 796 889 900',
+                onTap: _launchPhone,
               ),
               _buildDivider(),
               _buildSocialItem(
                 icon: Icons.language_outlined,
                 title: 'Website',
-                subtitle: 'www.zoea.rw',
-                onTap: () => _showContactDialog('Website', 'Visit our website at www.zoea.rw'),
+                subtitle: 'www.zoea.africa',
+                onTap: _launchWebsite,
               ),
             ],
           ),
@@ -698,56 +560,6 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  void _showContactDialog(String title, String content) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          title,
-          style: context.titleMedium.copyWith(
-            color: context.primaryTextColor,
-          ),
-        ),
-        content: Text(
-          content,
-          style: context.bodyMedium.copyWith(
-            color: context.primaryTextColor,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: context.bodyMedium.copyWith(
-                color: context.secondaryTextColor,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Implement contact action
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('$title feature coming soon'),
-                  backgroundColor: context.primaryColorTheme,
-                ),
-              );
-            },
-            child: Text(
-              'Contact',
-              style: context.bodyMedium.copyWith(
-                color: context.primaryColorTheme,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   String _getPrivacyPolicy() {
     return '''
 Privacy Policy
@@ -770,7 +582,7 @@ We implement appropriate security measures to protect your personal information 
 You have the right to access, update, or delete your personal information. You can do this through your account settings or by contacting us.
 
 6. Contact Us
-If you have any questions about this Privacy Policy, please contact us at privacy@zoea.rw.
+If you have any questions about this Privacy Policy, please contact us at privacy@zoea.africa.
 ''';
   }
 
@@ -802,15 +614,16 @@ To the maximum extent permitted by law, we shall not be liable for any indirect,
 We reserve the right to modify these terms at any time. We will notify users of any material changes.
 
 8. Contact Information
-For questions about these Terms of Service, contact us at legal@zoea.rw.
+For questions about these Terms of Service, contact us at legal@zoea.africa.
 ''';
   }
 
   String _getCopyright() {
+    final year = DateTime.now().year;
     return '''
 Copyright Notice
 
-© 2024 Zoea. All rights reserved.
+© $year Zoea Africa. All rights reserved.
 
 This app and its contents are protected by copyright and other intellectual property laws.
 
@@ -819,7 +632,7 @@ You may not:
 - Reverse engineer or attempt to extract source code
 - Use the app for commercial purposes without authorization
 
-For licensing inquiries, contact us at legal@zoea.rw.
+For licensing inquiries, contact us at legal@zoea.africa.
 ''';
   }
 }

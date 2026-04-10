@@ -15,6 +15,7 @@ class AppUpdateCheckResult {
     required this.storeUrl,
     required this.dismissForDays,
     required this.policyFingerprint,
+    this.policyUpdatedAt,
   });
 
   final bool updateRequired;
@@ -24,8 +25,11 @@ class AppUpdateCheckResult {
   final String storeUrl;
   final int dismissForDays;
   final String policyFingerprint;
+  /// ISO-8601 from admin [mobile app update](https://admin.zoea.africa/dashboard/settings/mobile-app-update) policy save time.
+  final String? policyUpdatedAt;
 
   factory AppUpdateCheckResult.fromJson(Map<String, dynamic> json) {
+    final rawUpdated = json['policyUpdatedAt']?.toString().trim();
     return AppUpdateCheckResult(
       updateRequired: json['updateRequired'] == true,
       mode: json['mode']?.toString() ?? 'none',
@@ -36,6 +40,8 @@ class AppUpdateCheckResult {
           ? (json['dismissForDays'] as num).toInt().clamp(1, 365)
           : 7,
       policyFingerprint: json['policyFingerprint']?.toString() ?? '',
+      policyUpdatedAt:
+          (rawUpdated != null && rawUpdated.isNotEmpty) ? rawUpdated : null,
     );
   }
 }

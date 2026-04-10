@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -52,9 +53,13 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
       _inferredCountry = inferred['countryOfOrigin'] as String?;
       _inferredLanguage = inferred['language'] as String?;
       _inferredUserType = inferred['userType'] as UserType?;
-      
+
       // Pre-select inferred values
-      _selectedCountry ??= _inferredCountry;
+      if (AppConfig.countrySelectionLockedToRwanda) {
+        _selectedCountry = 'RW';
+      } else {
+        _selectedCountry ??= _inferredCountry;
+      }
       _selectedLanguage ??= _inferredLanguage;
       _selectedUserType ??= _inferredUserType;
     });
@@ -158,7 +163,10 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
             child: SingleChildScrollView(
               child: CountrySelector(
                 selectedCountry: _selectedCountry,
-                autoDetectedCountry: _inferredCountry,
+                autoDetectedCountry: AppConfig.countrySelectionLockedToRwanda
+                    ? null
+                    : _inferredCountry,
+                selectionLocked: AppConfig.countrySelectionLockedToRwanda,
                 onCountrySelected: (country) {
                   setState(() {
                     _selectedCountry = country;

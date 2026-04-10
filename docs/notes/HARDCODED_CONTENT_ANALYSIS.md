@@ -200,10 +200,10 @@ This document identifies all hardcoded content in the mobile app that should be 
 - `apps/public-mobile/lib/features/profile/screens/about_screen.dart` (lines 593-594)
 
 **Hardcoded Data**:
-- Email: `support@zoea.rw`, `support@zoea.africa`, `contact@zoea.rw`
-- Phone: `+250 788 123 456`
-- Privacy: `privacy@zoea.rw`
-- Legal: `legal@zoea.rw`
+- Email: `support@zoea.africa`, `contact@zoea.africa`
+- Phone: `+250 788 123 456` (update if changed)
+- Privacy: `privacy@zoea.africa`
+- Legal: `legal@zoea.africa`
 
 **Issue**: Inconsistent email addresses across files. Should be centralized.
 

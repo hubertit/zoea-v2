@@ -54,6 +54,10 @@ class AppConfig {
   static const int defaultPageSize = 20;
   static const int maxPageSize = 100;
 
+  /// When true, app region/country is fixed to Rwanda (profile + onboarding).
+  /// Phone login still uses the dial-code picker for international numbers.
+  static const bool countrySelectionLockedToRwanda = true;
+
   // Map Configuration (Rwanda coordinates)
   static const double defaultMapZoom = 12.0;
   static const double defaultMapLatitude = -1.9403; // Kigali coordinates

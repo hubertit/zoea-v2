@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/config/app_config.dart';
+import '../../../core/providers/package_info_provider.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -55,21 +57,38 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       _selectedCurrency = user.preferences?.currency ?? 'RWF';
       final langCode = user.preferences?.language ?? 'en';
       _selectedLanguage = _mapLanguageCodeToName(langCode);
-      _selectedCountry = user.countryName ?? _selectedCountry;
+      _selectedCountry = AppConfig.countrySelectionLockedToRwanda
+          ? 'Rwanda'
+          : (user.countryName ?? _selectedCountry);
       // Only update location from user if it hasn't been manually changed
       if (!_locationManuallyChanged) {
         _selectedLocation = user.cityName ?? _selectedLocation;
       }
     });
 
-    final countryId = user.countryId;
-    if (countryId != null && countryId.isNotEmpty) {
+    if (AppConfig.countrySelectionLockedToRwanda) {
       try {
         final countriesService = ref.read(countriesServiceProvider);
-        final persistedCountry = await countriesService.getCountryById(countryId);
-        await ref.read(selectedCountryProvider.notifier).selectCountry(persistedCountry);
+        final rwanda = await countriesService.getCountryByCode('RW');
+        if (rwanda != null) {
+          await ref.read(selectedCountryProvider.notifier).selectCountry(rwanda);
+        }
       } catch (_) {
         // Ignore provider sync failures; local labels are still shown.
+      }
+    } else {
+      final countryId = user.countryId;
+      if (countryId != null && countryId.isNotEmpty) {
+        try {
+          final countriesService = ref.read(countriesServiceProvider);
+          final persistedCountry =
+              await countriesService.getCountryById(countryId);
+          await ref
+              .read(selectedCountryProvider.notifier)
+              .selectCountry(persistedCountry);
+        } catch (_) {
+          // Ignore provider sync failures; local labels are still shown.
+        }
       }
     }
 
@@ -90,7 +109,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       final newCurrency = user.preferences?.currency ?? 'RWF';
       final langCode = user.preferences?.language ?? 'en';
       final newLanguage = _mapLanguageCodeToName(langCode);
-      final newCountry = user.countryName ?? 'Rwanda';
+      final newCountry = AppConfig.countrySelectionLockedToRwanda
+          ? 'Rwanda'
+          : (user.countryName ?? 'Rwanda');
 
       if (_selectedCurrency != newCurrency ||
           _selectedLanguage != newLanguage ||
@@ -112,36 +133,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   
   String _mapLanguageCodeToName(String code) {
     switch (code.toLowerCase()) {
-      case 'en':
-        return 'English';
-      case 'rw':
-      case 'kin':
-        return 'Kinyarwanda';
       case 'fr':
         return 'French';
+      case 'en':
+      case 'rw':
+      case 'kin':
       case 'sw':
-        return 'Swahili';
       default:
+        // Legacy rw/sw/unknown stored in API → treat as English until user picks French.
         return 'English';
     }
   }
   
   String _mapLanguageNameToCode(String name) {
     switch (name) {
-      case 'Kinyarwanda':
-        return 'rw';
-      case 'English':
-        return 'en';
       case 'French':
         return 'fr';
-      case 'Swahili':
-        return 'sw';
+      case 'English':
       default:
         return 'en';
     }
   }
   
   Widget _buildProfileContent() {
+    final packageInfo = ref.watch(packageInfoProvider);
+    final aboutSubtitle = packageInfo.maybeWhen(
+      data: (p) => 'Version ${p.version} (${p.buildNumber})',
+      orElse: () => 'App information',
+    );
 
     return Scaffold(
       backgroundColor: context.grey50,
@@ -193,14 +212,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   },
                 ),
                 _buildMenuItem(
-                  icon: Icons.email_outlined,
-                  title: 'Email & Phone',
-                  subtitle: 'Manage contact information',
-                  onTap: () {
-                    // TODO: Navigate to contact settings
-                  },
-                ),
-                _buildMenuItem(
                   icon: Icons.security_outlined,
                   title: 'Privacy & Security',
                   subtitle: 'Password and privacy settings',
@@ -226,10 +237,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 _buildMenuItem(
                   icon: Icons.public_outlined,
                   title: 'Country',
-                  subtitle: _selectedCountry,
-                  onTap: () {
-                    _showCountryBottomSheet(context);
-                  },
+                  subtitle: AppConfig.countrySelectionLockedToRwanda
+                      ? 'Rwanda'
+                      : _selectedCountry,
+                  onTap: AppConfig.countrySelectionLockedToRwanda
+                      ? null
+                      : () {
+                          _showCountryBottomSheet(context);
+                        },
+                  showTrailingChevron:
+                      !AppConfig.countrySelectionLockedToRwanda,
                 ),
                 _buildMenuItem(
                   icon: Icons.location_on_outlined,
@@ -283,7 +300,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   title: 'Reviews & Ratings',
                   subtitle: 'Your reviews and feedback',
                   onTap: () {
-                    context.go('/profile/reviews-ratings');
+                    context.go('/profile/reviews-written');
                   },
                 ),
               ],
@@ -304,7 +321,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 _buildMenuItem(
                   icon: Icons.info_outline,
                   title: 'About',
-                  subtitle: 'App version and information',
+                  subtitle: aboutSubtitle,
                   onTap: () {
                     context.go('/profile/about');
                   },
@@ -447,19 +464,37 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
+  int _coerceStatInt(dynamic v) {
+    if (v == null) return 0;
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    return 0;
+  }
+
   Widget _buildQuickStats() {
     final userStats = ref.watch(userStatsProvider);
     
     return userStats.when(
-      data: (stats) => Row(
-        children: [
+      data: (stats) {
+        final eventsCount = _coerceStatInt(
+          stats['eventsAttended'] ??
+              stats['eventBookings'] ??
+              stats['events'],
+        );
+        final visitedPlacesCount = _coerceStatInt(stats['visitedPlaces']);
+
+        return Row(
+          children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => context.go('/profile/events-attended'),
+              onTap: eventsCount > 0
+                  ? () => context.go('/profile/events-attended')
+                  : null,
+              behavior: HitTestBehavior.opaque,
               child: _buildStatCard(
                 icon: Icons.event,
                 title: 'Events',
-                value: '0', // Events not in stats yet
+                value: '$eventsCount',
                 subtitle: 'Attended',
               ),
             ),
@@ -467,11 +502,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: GestureDetector(
-              onTap: () => context.go('/profile/visited-places'),
+              onTap: visitedPlacesCount > 0
+                  ? () => context.go('/profile/visited-places')
+                  : null,
+              behavior: HitTestBehavior.opaque,
               child: _buildStatCard(
                 icon: Icons.place,
                 title: 'Places',
-                value: '${stats['visitedPlaces'] ?? 0}',
+                value: '$visitedPlacesCount',
                 subtitle: 'Visited',
               ),
             ),
@@ -488,8 +526,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
           ),
-        ],
-      ),
+          ],
+        );
+      },
       loading: () => Row(
         children: [
           Expanded(child: _buildStatCard(icon: Icons.event, title: 'Events', value: '...', subtitle: 'Attended')),
@@ -604,8 +643,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     required IconData icon,
     required String title,
     required String subtitle,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
     bool showBadge = false,
+    bool showTrailingChevron = true,
   }) {
     return InkWell(
       onTap: onTap,
@@ -670,11 +710,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: context.secondaryTextColor,
-              size: 20,
-            ),
+            if (showTrailingChevron)
+              Icon(
+                Icons.chevron_right,
+                color: context.secondaryTextColor,
+                size: 20,
+              ),
           ],
         ),
       ),
@@ -929,6 +970,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _showCountryBottomSheet(BuildContext context) {
+    if (AppConfig.countrySelectionLockedToRwanda) return;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1165,11 +1207,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             
-            // Language options
-            _buildLanguageOption('Kinyarwanda', 'Ikinyarwanda', _selectedLanguage == 'Kinyarwanda'),
+            // Language options (English and French only for now)
             _buildLanguageOption('English', 'English', _selectedLanguage == 'English'),
             _buildLanguageOption('French', 'Français', _selectedLanguage == 'French'),
-            _buildLanguageOption('Swahili', 'Kiswahili', _selectedLanguage == 'Swahili'),
             
             // Add bottom padding for safe area
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),

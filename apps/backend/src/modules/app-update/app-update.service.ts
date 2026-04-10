@@ -17,6 +17,8 @@ export type PublicUpdateCheckResult = {
   dismissForDays: number;
   /** Changes when admin edits policy; client uses to invalidate snooze */
   policyFingerprint: string;
+  /** When the mobile app update policy was last saved in admin (integration row updatedAt). */
+  policyUpdatedAt: string | null;
 };
 
 @Injectable()
@@ -82,22 +84,33 @@ export class AppUpdateService {
     };
   }
 
-  async getConfig(): Promise<MobileAppUpdateConfig> {
+  async getConfigWithMeta(): Promise<{
+    config: MobileAppUpdateConfig;
+    policyUpdatedAt: Date | null;
+  }> {
     const row = await this.prisma.integration.findUnique({
       where: { name: MOBILE_APP_UPDATE_INTEGRATION_NAME },
     });
+    const base = defaultMobileAppUpdateConfig();
     if (!row || !row.isActive) {
-      return defaultMobileAppUpdateConfig();
+      return { config: base, policyUpdatedAt: null };
     }
     const raw = row.config as Partial<MobileAppUpdateConfig> | null;
-    const base = defaultMobileAppUpdateConfig();
     if (!raw || typeof raw !== 'object') {
-      return base;
+      return { config: base, policyUpdatedAt: row.updatedAt };
     }
     return {
-      ios: this.coercePolicy(raw.ios, base.ios),
-      android: this.coercePolicy(raw.android, base.android),
+      config: {
+        ios: this.coercePolicy(raw.ios, base.ios),
+        android: this.coercePolicy(raw.android, base.android),
+      },
+      policyUpdatedAt: row.updatedAt,
     };
+  }
+
+  async getConfig(): Promise<MobileAppUpdateConfig> {
+    const { config } = await this.getConfigWithMeta();
+    return config;
   }
 
   private async ensureIntegrationRow() {
@@ -156,10 +169,11 @@ export class AppUpdateService {
   }
 
   async checkUpdate(platform: 'ios' | 'android', clientVersion: string, clientBuild: number): Promise<PublicUpdateCheckResult> {
-    const config = await this.getConfig();
+    const { config, policyUpdatedAt } = await this.getConfigWithMeta();
     const policy = platform === 'ios' ? config.ios : config.android;
 
     const fingerprint = `${policy.minVersion}|${policy.minBuild ?? ''}|${policy.mode}`;
+    const policyUpdatedAtIso = policyUpdatedAt ? policyUpdatedAt.toISOString() : null;
 
     const none: PublicUpdateCheckResult = {
       updateRequired: false,
@@ -169,6 +183,7 @@ export class AppUpdateService {
       storeUrl: '',
       dismissForDays: policy.dismissForDays,
       policyFingerprint: fingerprint,
+      policyUpdatedAt: policyUpdatedAtIso,
     };
 
     if (policy.mode === 'none') {
@@ -188,6 +203,7 @@ export class AppUpdateService {
       storeUrl: policy.storeUrl,
       dismissForDays: policy.dismissForDays,
       policyFingerprint: fingerprint,
+      policyUpdatedAt: policyUpdatedAtIso,
     };
   }
 }

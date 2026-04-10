@@ -43,20 +43,14 @@ class DataInferenceService {
     }
   }
 
-  /// Map device language code to our supported languages
+  /// Map device language code to app-supported languages (English and French only).
   String _mapLanguageCode(String code) {
     switch (code.toLowerCase()) {
-      case 'en':
-        return 'en';
-      case 'rw':
-      case 'kin':
-        return 'rw';
       case 'fr':
         return 'fr';
-      case 'sw':
-        return 'sw';
+      case 'en':
       default:
-        return 'en'; // Default to English
+        return 'en';
     }
   }
 

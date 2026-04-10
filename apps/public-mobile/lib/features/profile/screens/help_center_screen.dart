@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/providers/app_update_check_provider.dart';
+import '../../../core/providers/package_info_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
+import '../../../core/utils/app_build_metadata.dart';
 
 class HelpCenterScreen extends ConsumerStatefulWidget {
   const HelpCenterScreen({super.key});
@@ -14,7 +19,39 @@ class HelpCenterScreen extends ConsumerStatefulWidget {
 }
 
 class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
+  static const String _supportEmail = 'support@zoea.africa';
+  static const String _supportPhoneTel = '+250796889900';
+
   final TextEditingController _searchController = TextEditingController();
+
+  Future<void> _tryLaunchUri(Uri uri) async {
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Could not open link. Try again later.'),
+            backgroundColor: context.primaryColorTheme,
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Could not open link. Try again later.'),
+            backgroundColor: context.primaryColorTheme,
+          ),
+        );
+      }
+    }
+  }
+
+  void _launchSupportEmail() =>
+      _tryLaunchUri(Uri.parse('mailto:$_supportEmail'));
+
+  void _launchSupportPhone() =>
+      _tryLaunchUri(Uri(scheme: 'tel', path: _supportPhoneTel));
 
   @override
   void dispose() {
@@ -24,6 +61,15 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final packageInfo = ref.watch(packageInfoProvider);
+    final appUpdateCheck = ref.watch(appUpdateCheckProvider);
+    final locale = Localizations.localeOf(context);
+    final lastUpdated = lastUpdatedDisplayLabel(
+      policyUpdatedAtIso: appUpdateCheck.valueOrNull?.policyUpdatedAt,
+      fallback: 'Not specified',
+      intlLocale: locale.toLanguageTag(),
+    );
+
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -70,7 +116,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
             const SizedBox(height: 24),
             
             // App Information
-            _buildAppInformation(),
+            _buildAppInformation(packageInfo, lastUpdated),
             const SizedBox(height: 32),
           ],
         ),
@@ -346,15 +392,15 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
               _buildContactItem(
                 icon: Icons.email_outlined,
                 title: 'Email Support',
-                subtitle: 'support@zoea.rw',
-                onTap: () => _showContactDialog('Email Support', 'Send us an email at support@zoea.rw and we\'ll get back to you within 24 hours.'),
+                subtitle: _supportEmail,
+                onTap: _launchSupportEmail,
               ),
               _buildDivider(),
               _buildContactItem(
                 icon: Icons.phone_outlined,
                 title: 'Phone Support',
-                subtitle: '+250 788 123 456',
-                onTap: () => _showContactDialog('Phone Support', 'Call us at +250 788 123 456 for immediate assistance.'),
+                subtitle: '+250 796 889 900',
+                onTap: _launchSupportPhone,
               ),
             ],
           ),
@@ -543,7 +589,10 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  Widget _buildAppInformation() {
+  Widget _buildAppInformation(
+    AsyncValue<PackageInfo> packageInfo,
+    String lastUpdated,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -568,13 +617,31 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              _buildInfoRow('App Version', '1.0.0'),
-              _buildInfoRow('Build Number', '100'),
-              _buildInfoRow('Last Updated', 'December 2024'),
-              _buildInfoRow('Platform', 'Flutter'),
-            ],
+          child: packageInfo.when(
+            data: (p) => Column(
+              children: [
+                _buildInfoRow('App Version', p.version),
+                _buildInfoRow('Build Number', p.buildNumber),
+                _buildInfoRow('Last Updated', lastUpdated),
+                _buildInfoRow('Platform', describeRuntimePlatform()),
+              ],
+            ),
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Center(
+                child: SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+            error: (_, __) => Text(
+              'Could not load package info.',
+              style: context.bodyMedium.copyWith(
+                color: context.secondaryTextColor,
+              ),
+            ),
           ),
         ),
       ],

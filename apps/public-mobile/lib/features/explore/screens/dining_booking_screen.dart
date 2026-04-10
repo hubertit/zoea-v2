@@ -522,7 +522,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             onChanged: (value) => setState(() => _contactNumber = value),
             decoration: InputDecoration(
               labelText: 'Phone Number',
-              hintText: '+250 788 123 456',
+              hintText: '+250 796 889 900',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: context.grey300),

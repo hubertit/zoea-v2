@@ -17,12 +17,22 @@ class LanguageSelector extends StatelessWidget {
     required this.onLanguageSelected,
   });
 
-  final List<Map<String, String>> _languages = const [
+  static const List<Map<String, String>> _languages = [
     {'code': 'en', 'name': 'English', 'native': 'English'},
-    {'code': 'rw', 'name': 'Kinyarwanda', 'native': 'Ikinyarwanda'},
     {'code': 'fr', 'name': 'French', 'native': 'Français'},
-    {'code': 'sw', 'name': 'Swahili', 'native': 'Kiswahili'},
   ];
+
+  /// Map device / legacy codes to a supported app language (English or French only).
+  static String normalizeToSupportedCode(String? code) {
+    if (code == null) return 'en';
+    switch (code.toLowerCase()) {
+      case 'fr':
+        return 'fr';
+      case 'en':
+      default:
+        return 'en';
+    }
+  }
 
   String _getLanguageName(String code) {
     final language = _languages.firstWhere(
@@ -42,34 +52,25 @@ class LanguageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Show auto-detected language first if available
-    final languagesToShow = autoDetectedLanguage != null &&
-            !_languages.any((lang) => lang['code'] == autoDetectedLanguage)
-        ? [
-            {
-              'code': autoDetectedLanguage!,
-              'name': autoDetectedLanguage!,
-              'native': autoDetectedLanguage!
-            },
-            ..._languages
-          ]
-        : _languages;
+    final normalizedAuto = autoDetectedLanguage != null
+        ? normalizeToSupportedCode(autoDetectedLanguage)
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (autoDetectedLanguage != null && selectedLanguage == null)
+        if (normalizedAuto != null && selectedLanguage == null)
           Padding(
             padding: const EdgeInsets.only(bottom: AppTheme.spacing12),
-            child: _buildAutoDetectedCard(context),
+            child: _buildAutoDetectedCard(context, normalizedAuto),
           ),
         Wrap(
           spacing: AppTheme.spacing8,
           runSpacing: AppTheme.spacing8,
-          children: languagesToShow.map((lang) {
+          children: _languages.map((lang) {
             final code = lang['code']!;
             final isSelected = selectedLanguage == code;
-            final isAutoDetected = autoDetectedLanguage == code;
+            final isAutoDetected = normalizedAuto == code;
 
             return FilterChip(
               label: Column(
@@ -122,9 +123,7 @@ class LanguageSelector extends StatelessWidget {
     );
   }
 
-  Widget _buildAutoDetectedCard(BuildContext context) {
-    if (autoDetectedLanguage == null) return const SizedBox.shrink();
-
+  Widget _buildAutoDetectedCard(BuildContext context, String normalizedCode) {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing12),
       decoration: BoxDecoration(
@@ -145,7 +144,7 @@ class LanguageSelector extends StatelessWidget {
           const SizedBox(width: AppTheme.spacing8),
           Expanded(
             child: Text(
-              'We detected ${_getLanguageName(autoDetectedLanguage!)}',
+              'We suggest ${_getLanguageName(normalizedCode)}',
               style: context.bodySmall.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w500,

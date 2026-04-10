@@ -4,13 +4,18 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/reviews_provider.dart';
 
 class ReviewsWrittenScreen extends ConsumerStatefulWidget {
-  const ReviewsWrittenScreen({super.key});
+  const ReviewsWrittenScreen({
+    super.key,
+    this.appBarTitle = 'Reviews & Ratings',
+  });
+
+  /// Shown in the app bar (e.g. matches Profile → Reviews & Ratings).
+  final String appBarTitle;
 
   @override
   ConsumerState<ReviewsWrittenScreen> createState() => _ReviewsWrittenScreenState();
@@ -62,7 +67,7 @@ class _ReviewsWrittenScreenState extends ConsumerState<ReviewsWrittenScreen>
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Reviews Written',
+          widget.appBarTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -843,11 +848,11 @@ class _EditReviewBottomSheetState extends ConsumerState<_EditReviewBottomSheet> 
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: context.grey300!),
+                borderSide: BorderSide(color: context.grey300),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: context.grey300!),
+                borderSide: BorderSide(color: context.grey300),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),

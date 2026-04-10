@@ -17,20 +17,45 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _referralCodeController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
   bool _agreeToTerms = false;
+  bool _referralPrefilledFromQuery = false;
 
   @override
   void dispose() {
     _fullNameController.dispose();
     _emailController.dispose();
+    _referralCodeController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_referralPrefilledFromQuery) return;
+    final fromQuery =
+        GoRouterState.of(context).uri.queryParameters['ref']?.trim();
+    if (fromQuery != null && fromQuery.isNotEmpty) {
+      _referralCodeController.text = fromQuery;
+    }
+    _referralPrefilledFromQuery = true;
+  }
+
+  /// Pasted or typed code wins over query param (user may correct a bad link).
+  String? _effectiveReferralCode() {
+    final manual = _referralCodeController.text.trim();
+    if (manual.isNotEmpty) return manual;
+    final fromQuery =
+        GoRouterState.of(context).uri.queryParameters['ref']?.trim();
+    if (fromQuery != null && fromQuery.isNotEmpty) return fromQuery;
+    return null;
   }
 
   Future<void> _handleRegister() async {
@@ -51,14 +76,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      final refCode =
-          GoRouterState.of(context).uri.queryParameters['ref']?.trim();
+      final refCode = _effectiveReferralCode();
       final user = await authService.signUpWithEmail(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         fullName: _fullNameController.text.trim(),
-        referralCode:
-            (refCode != null && refCode.isNotEmpty) ? refCode : null,
+        referralCode: refCode,
       );
 
       if (user != null && mounted) {
@@ -131,7 +154,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     if (inviteRef != null && inviteRef.isNotEmpty) ...[
                       const SizedBox(height: AppTheme.spacing12),
                       Text(
-                        'You were invited — your referral code will be applied when you create your account.',
+                        'You opened an invite link — we added the code below. You can change or paste a different code from a text or chat.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: context.primaryColorTheme,
                               fontWeight: FontWeight.w600,
@@ -205,9 +228,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: AppTheme.spacing16),
-                
+
+                TextFormField(
+                  controller: _referralCodeController,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.characters,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    labelText: 'Invite code',
+                    hintText: 'Paste if you have one',
+                    prefixIcon: const Icon(Icons.card_giftcard_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
+                      borderSide: BorderSide(color: context.dividerColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
+                      borderSide: BorderSide(color: context.primaryColorTheme, width: 2),
+                    ),
+                  ),
+                  validator: (value) {
+                    final v = value?.trim() ?? '';
+                    if (v.isEmpty) return null;
+                    if (v.length > 20) {
+                      return 'Code is too long';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: AppTheme.spacing16),
+
                 // Password Field
                 TextFormField(
                   controller: _passwordController,
