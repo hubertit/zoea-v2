@@ -62,6 +62,43 @@ async function main() {
     },
   });
 
+  // Mista SMS (password reset, phone verification) — same storage pattern as OpenAI
+  const mistaSmsApiKey = (
+    process.env.MISTA_SMS_API_KEY ||
+    process.env.SMS_API_KEY ||
+    ''
+  ).trim();
+  const mistaSenderId = (process.env.MISTA_SMS_SENDER_ID || 'E-Notifier').trim();
+  if (!mistaSmsApiKey) {
+    console.warn(
+      '[seed-integrations] MISTA_SMS_API_KEY not provided - preserving existing mista_sms config/isActive (if any).',
+    );
+  }
+
+  await prisma.integration.upsert({
+    where: { name: 'mista_sms' },
+    update: mistaSmsApiKey
+      ? {
+          config: {
+            apiKey: mistaSmsApiKey,
+            senderId: mistaSenderId,
+          },
+          isActive: true,
+        }
+      : {},
+    create: {
+      name: 'mista_sms',
+      displayName: 'Mista SMS',
+      description:
+        'Mista bulk SMS (password reset, phone verification). Sender ID typically E-Notifier.',
+      isActive: mistaSmsApiKey !== '',
+      config: {
+        apiKey: mistaSmsApiKey,
+        senderId: mistaSenderId,
+      },
+    },
+  });
+
   // Visit Rwanda Events Integration
   await prisma.integration.upsert({
     where: { name: 'visit_rwanda' },

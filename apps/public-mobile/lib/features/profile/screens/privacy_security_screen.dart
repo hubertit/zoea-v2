@@ -1,12 +1,17 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
+import '../../../core/utils/phone_input_formatter.dart';
+import '../../../core/utils/phone_validator.dart';
 
 class PrivacySecurityScreen extends ConsumerStatefulWidget {
   const PrivacySecurityScreen({super.key});
@@ -218,12 +223,22 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
               _showEmailVerificationDialog();
             },
           ),
-          _buildActionTile(
-            icon: Icons.phone,
-            title: 'Phone Verification',
-            subtitle: 'Add and verify your phone number',
-            onTap: () {
-              _showPhoneVerificationDialog();
+          Consumer(
+            builder: (context, ref, _) {
+              final profile = ref.watch(currentUserProfileProvider);
+              final subtitle = profile.when(
+                data: (u) => u.phoneVerifiedAt != null
+                    ? 'Phone verified'
+                    : 'Add and verify your phone number',
+                loading: () => 'Add and verify your phone number',
+                error: (_, __) => 'Add and verify your phone number',
+              );
+              return _buildActionTile(
+                icon: Icons.phone,
+                title: 'Phone Verification',
+                subtitle: subtitle,
+                onTap: () => _showPhoneVerificationDialog(ref),
+              );
             },
           ),
           const SizedBox(height: 32),
@@ -808,61 +823,325 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
     );
   }
 
-  void _showPhoneVerificationDialog() {
-    showDialog(
+  Country _rwandaCountry() {
+    return Country(
+      phoneCode: '250',
+      countryCode: 'RW',
+      e164Sc: 0,
+      geographic: true,
+      level: 1,
+      name: 'Rwanda',
+      example: '250123456789',
+      displayName: 'Rwanda (RW) [+250]',
+      displayNameNoCountryCode: 'Rwanda (RW)',
+      e164Key: '250-RW-0',
+    );
+  }
+
+  String? _localPartFromStoredPhone(String? stored) {
+    if (stored == null || stored.isEmpty) return null;
+    final d = PhoneValidator.cleanPhoneNumber(stored);
+    if (d.length >= 12 && d.startsWith('250')) {
+      return d.substring(3);
+    }
+    if (d.length == 9 && d.startsWith('0')) {
+      return d.substring(1);
+    }
+    if (d.length == 9 && (d.startsWith('7') || d.startsWith('8'))) {
+      return d;
+    }
+    return d;
+  }
+
+  void _showPhoneVerificationDialog(WidgetRef ref) {
+    final phoneController = TextEditingController();
+    final codeController = TextEditingController();
+    final profile = ref.read(currentUserProfileProvider).valueOrNull;
+    final local = _localPartFromStoredPhone(profile?.phoneNumber);
+    if (local != null) {
+      phoneController.text = local;
+    }
+
+    var selectedCountry = _rwandaCountry();
+    var sending = false;
+    var verifying = false;
+    var codeSent = false;
+
+    showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: context.cardColor,
-        title: Text(
-          'Phone Verification',
-          style: context.titleMedium.copyWith(
-            color: context.primaryTextColor,
-          ),
-        ),
-        content: Text(
-          'Add and verify your phone number for enhanced security.',
-          style: context.bodyMedium.copyWith(
-            color: context.primaryTextColor,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: context.bodyMedium.copyWith(
-                color: context.secondaryTextColor,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            Future<void> sendCode() async {
+              final dialogMessenger = ScaffoldMessenger.of(dialogContext);
+              final digits = PhoneValidator.cleanPhoneNumber(
+                '${selectedCountry.phoneCode}${phoneController.text.trim()}',
+              );
+              if (digits.length < 9) {
+                dialogMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Enter a valid phone number',
+                      style: context.bodyMedium.copyWith(
+                        color: context.primaryTextColor,
+                      ),
+                    ),
+                    backgroundColor: context.primaryColorTheme,
+                  ),
+                );
+                return;
+              }
+              setState(() => sending = true);
+              try {
+                await ref.read(authServiceProvider).requestPhoneVerification(digits);
+                if (!dialogContext.mounted) return;
+                setState(() {
+                  sending = false;
+                  codeSent = true;
+                });
+                dialogMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'We sent a 6-digit code by SMS.',
+                      style: context.bodyMedium.copyWith(
+                        color: context.primaryTextColor,
+                      ),
+                    ),
+                    backgroundColor: context.successColor,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              } catch (e) {
+                if (dialogContext.mounted) {
+                  setState(() => sending = false);
+                }
+                if (!dialogContext.mounted) return;
+                dialogMessenger.showSnackBar(
+                  AppTheme.errorSnackBar(
+                    message: e.toString().replaceFirst('Exception: ', ''),
+                  ),
+                );
+              }
+            }
+
+            Future<void> verifyCode() async {
+              final dialogMessenger = ScaffoldMessenger.of(dialogContext);
+              final screenMessenger = ScaffoldMessenger.of(this.context);
+              final digits = PhoneValidator.cleanPhoneNumber(
+                '${selectedCountry.phoneCode}${phoneController.text.trim()}',
+              );
+              final code = codeController.text.trim();
+              if (code.length != 6) {
+                dialogMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Enter the 6-digit code',
+                      style: context.bodyMedium.copyWith(
+                        color: context.primaryTextColor,
+                      ),
+                    ),
+                    backgroundColor: context.primaryColorTheme,
+                  ),
+                );
+                return;
+              }
+              setState(() => verifying = true);
+              try {
+                await ref.read(authServiceProvider).verifyPhone(digits, code);
+                await ref.read(authServiceProvider).getCurrentUser();
+                ref.invalidate(currentUserProfileProvider);
+                if (!dialogContext.mounted) return;
+                Navigator.of(dialogContext).pop();
+                if (!mounted) return;
+                screenMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Phone number verified',
+                      style: this.context.bodyMedium.copyWith(
+                        color: this.context.primaryTextColor,
+                      ),
+                    ),
+                    backgroundColor: this.context.successColor,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              } catch (e) {
+                if (dialogContext.mounted) {
+                  setState(() => verifying = false);
+                }
+                if (!dialogContext.mounted) return;
+                dialogMessenger.showSnackBar(
+                  AppTheme.errorSnackBar(
+                    message: e.toString().replaceFirst('Exception: ', ''),
+                  ),
+                );
+              }
+            }
+
+            void pickCountry() {
+              showCountryPicker(
+                context: context,
+                showPhoneCode: true,
+                onSelect: (c) {
+                  setState(() => selectedCountry = c);
+                },
+              );
+            }
+
+            return AlertDialog(
+              backgroundColor: context.cardColor,
+              title: Text(
+                'Phone Verification',
+                style: context.titleMedium.copyWith(
+                  color: context.primaryTextColor,
+                ),
               ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Navigate to phone verification
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Phone verification feature coming soon!',
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'We will send a code to confirm this number.',
+                      style: context.bodyMedium.copyWith(
+                        color: context.primaryTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: pickCountry,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: context.dividerColor),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '+${selectedCountry.phoneCode}',
+                              style: context.bodyMedium.copyWith(
+                                color: context.primaryTextColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: phoneController,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              PhoneInputFormatter(),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            style: context.bodyMedium.copyWith(
+                              color: context.primaryTextColor,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: 'Mobile number',
+                              labelStyle: context.bodySmall.copyWith(
+                                color: context.secondaryTextColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (codeSent) ...[
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: codeController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 6,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        style: context.bodyMedium.copyWith(
+                          color: context.primaryTextColor,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: '6-digit code',
+                          counterText: '',
+                          labelStyle: context.bodySmall.copyWith(
+                            color: context.secondaryTextColor,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: sending || verifying
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(),
+                  child: Text(
+                    'Cancel',
                     style: context.bodyMedium.copyWith(
-                      color: context.primaryTextColor,
+                      color: context.secondaryTextColor,
                     ),
                   ),
-                  backgroundColor: context.primaryColorTheme,
-                  behavior: SnackBarBehavior.floating,
                 ),
-              );
-            },
-            child: Text(
-              'Continue',
-              style: context.bodyMedium.copyWith(
-                color: context.primaryColorTheme,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+                if (!codeSent)
+                  TextButton(
+                    onPressed: sending ? null : sendCode,
+                    child: sending
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: context.primaryColorTheme,
+                            ),
+                          )
+                        : Text(
+                            'Send code',
+                            style: context.bodyMedium.copyWith(
+                              color: context.primaryColorTheme,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                  )
+                else
+                  TextButton(
+                    onPressed: verifying ? null : verifyCode,
+                    child: verifying
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: context.primaryColorTheme,
+                            ),
+                          )
+                        : Text(
+                            'Verify',
+                            style: context.bodyMedium.copyWith(
+                              color: context.primaryColorTheme,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      phoneController.dispose();
+      codeController.dispose();
+    });
   }
 
   void _showDownloadDataDialog() {

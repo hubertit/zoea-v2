@@ -16,6 +16,8 @@ class User {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isVerified;
+  /// Set when phone ownership was confirmed via SMS OTP.
+  final DateTime? phoneVerifiedAt;
   final UserRole role;
   final UserPreferences? preferences;
 
@@ -32,6 +34,7 @@ class User {
     required this.createdAt,
     required this.updatedAt,
     this.isVerified = false,
+    this.phoneVerifiedAt,
     this.role = UserRole.explorer,
     this.preferences,
   });
@@ -51,6 +54,7 @@ class User {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isVerified': isVerified,
+      'phoneVerifiedAt': phoneVerifiedAt?.toIso8601String(),
       'role': role.name,
       'preferences': preferences?.toJson(),
     };
@@ -75,6 +79,9 @@ class User {
           ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
           : DateTime.now(),
       isVerified: json['isVerified'] ?? false,
+      phoneVerifiedAt: json['phoneVerifiedAt'] != null
+          ? DateTime.tryParse(json['phoneVerifiedAt'].toString())
+          : null,
       role: _parseRole(json['role']),
       preferences: json['preferences'] != null
           ? UserPreferences.fromJson(json['preferences'])

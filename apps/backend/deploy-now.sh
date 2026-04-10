@@ -83,10 +83,12 @@ set -e
 cd ~/zoea-backend
 echo "Starting containers (prebuilt image, no remote build)..."
 if docker compose version >/dev/null 2>&1; then
+  docker compose run --rm -T api npx prisma migrate deploy
   docker compose up -d --no-build
 else
   # docker-compose 1.29 + OCI images: recreate hits KeyError 'ContainerConfig'
   docker ps -aq --filter name=zoea-api | xargs -r docker rm -f 2>/dev/null || true
+  docker-compose run --rm api npx prisma migrate deploy
   docker-compose up -d --no-build
 fi
 sleep 8
@@ -100,12 +102,16 @@ else
   deploy_ssh "$PRIMARY_SERVER" bash -s <<REMOTE
 set -e
 cd ~/zoea-backend
-echo "Building and starting containers..."
+echo "Building image, applying DB migrations (additive only), then starting containers..."
 if docker compose version >/dev/null 2>&1; then
-  docker compose up -d --build
+  docker compose build api
+  docker compose run --rm -T api npx prisma migrate deploy
+  docker compose up -d
 else
   docker ps -aq --filter name=zoea-api | xargs -r docker rm -f 2>/dev/null || true
-  docker-compose up -d --build
+  docker-compose build api
+  docker-compose run --rm api npx prisma migrate deploy
+  docker-compose up -d
 fi
 sleep 8
 if docker compose version >/dev/null 2>&1; then
@@ -139,9 +145,13 @@ else
 set -e
 cd ~/zoea-backend
 if docker compose version >/dev/null 2>&1; then
+  docker compose build api
+  docker compose run --rm -T api npx prisma migrate deploy
   docker compose up -d ${COMPOSE_UP_EXTRA}
 else
   docker ps -aq --filter name=zoea-api | xargs -r docker rm -f 2>/dev/null || true
+  docker-compose build api
+  docker-compose run --rm api npx prisma migrate deploy
   docker-compose up -d ${COMPOSE_UP_EXTRA}
 fi
 sleep 8

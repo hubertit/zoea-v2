@@ -460,6 +460,11 @@ class AuthService {
       }
     }
 
+    DateTime? phoneVerifiedAt;
+    if (data['phoneVerifiedAt'] != null) {
+      phoneVerifiedAt = DateTime.tryParse(data['phoneVerifiedAt'].toString());
+    }
+
     return User(
       id: data['id']?.toString() ?? '',
       email: data['email']?.toString() ?? '',
@@ -469,6 +474,7 @@ class AuthService {
       createdAt: createdAt,
       updatedAt: updatedAt,
       isVerified: data['isVerified'] == true,
+      phoneVerifiedAt: phoneVerifiedAt,
       role: role,
       preferences: UserPreferences(
         language: data['preferredLanguage']?.toString() ?? 
@@ -526,6 +532,51 @@ class AuthService {
     } catch (e) {
       if (e is DioException) {
         final errorMessage = e.response?.data?['message'] ?? 'Invalid or expired reset code';
+        throw Exception(errorMessage);
+      }
+      throw Exception('An error occurred. Please try again.');
+    }
+  }
+
+  /// Request SMS OTP to verify phone (authenticated).
+  Future<Map<String, dynamic>> requestPhoneVerification(String phoneDigits) async {
+    try {
+      final response = await _dio.post(
+        '${AppConfig.authEndpoint}/phone/verification/request',
+        data: {'phoneNumber': phoneDigits},
+      );
+      return response.data is Map<String, dynamic>
+          ? response.data as Map<String, dynamic>
+          : {'success': true, 'data': response.data};
+    } catch (e) {
+      if (e is DioException) {
+        final errorMessage = e.response?.data?['message'] ??
+            e.response?.data?.toString() ??
+            'Failed to send verification code';
+        throw Exception(errorMessage);
+      }
+      throw Exception('An error occurred. Please try again.');
+    }
+  }
+
+  /// Confirm phone with SMS OTP (authenticated).
+  Future<Map<String, dynamic>> verifyPhone(String phoneDigits, String code) async {
+    try {
+      final response = await _dio.post(
+        '${AppConfig.authEndpoint}/phone/verification/verify',
+        data: {
+          'phoneNumber': phoneDigits,
+          'code': code,
+        },
+      );
+      return response.data is Map<String, dynamic>
+          ? response.data as Map<String, dynamic>
+          : {'success': true, 'data': response.data};
+    } catch (e) {
+      if (e is DioException) {
+        final errorMessage = e.response?.data?['message'] ??
+            e.response?.data?.toString() ??
+            'Verification failed';
         throw Exception(errorMessage);
       }
       throw Exception('An error occurred. Please try again.');

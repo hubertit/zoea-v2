@@ -1,7 +1,25 @@
-import { Controller, Post, Get, Body, UseGuards, Request, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, RefreshTokenDto, RequestPasswordResetDto, VerifyResetCodeDto, ResetPasswordDto } from './dto/auth.dto';
+import {
+  RegisterDto,
+  LoginDto,
+  RefreshTokenDto,
+  RequestPasswordResetDto,
+  VerifyResetCodeDto,
+  ResetPasswordDto,
+  RequestPhoneVerificationDto,
+  VerifyPhoneVerificationDto,
+} from './dto/auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Auth')
@@ -128,20 +146,22 @@ export class AuthController {
 
   @Post('password/reset/request')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Request password reset',
-    description: 'Sends a reset code to the user\'s email or phone. Currently uses placeholder code "0000". SMS and email notifications will be implemented later.'
+    description:
+      'Persists a 6-digit code and queues SMS to the account phone (Mista). Responds immediately; SMS is sent in the background to avoid gateway timeouts.',
   })
   @ApiBody({ type: RequestPasswordResetDto })
   @ApiResponse({ 
     status: 200, 
-    description: 'Reset code sent successfully (if account exists)',
+    description: 'Reset code issued (if account exists)',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'If the account exists, a reset code has been sent.' },
-        code: { type: 'string', example: '0000', description: 'Only returned in development mode' }
+        code: { type: 'string', example: '123456', description: 'Only returned in development mode' },
+        smsQueued: { type: 'boolean', example: true, description: 'True when SMS was queued for this account phone' },
       }
     }
   })
@@ -195,6 +215,38 @@ export class AuthController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @Post('phone/verification/request')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Request phone verification code',
+    description: 'Sends a 6-digit OTP via SMS to the given number (must not belong to another user).',
+  })
+  @ApiBody({ type: RequestPhoneVerificationDto })
+  async requestPhoneVerification(
+    @Request() req: { user: { id: string } },
+    @Body() dto: RequestPhoneVerificationDto,
+  ) {
+    return this.authService.requestPhoneVerification(req.user.id, dto);
+  }
+
+  @Post('phone/verification/verify')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Verify phone with OTP',
+    description: 'Sets phoneNumber and phoneVerifiedAt when the code is valid.',
+  })
+  @ApiBody({ type: VerifyPhoneVerificationDto })
+  async verifyPhoneVerification(
+    @Request() req: { user: { id: string } },
+    @Body() dto: VerifyPhoneVerificationDto,
+  ) {
+    return this.authService.verifyPhoneVerification(req.user.id, dto);
   }
 }
 

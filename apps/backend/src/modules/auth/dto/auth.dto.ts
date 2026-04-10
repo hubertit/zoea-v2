@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsOptional, MinLength, MaxLength } from 'class-validator';
+import { IsEmail, IsString, IsOptional, MinLength, MaxLength, Length } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -70,8 +70,8 @@ export class VerifyResetCodeDto {
   identifier: string;
 
   @ApiProperty({ 
-    description: 'Reset code sent to email/phone',
-    example: '0000' 
+    description: 'Reset code sent by SMS',
+    example: '123456' 
   })
   @IsString()
   code: string;
@@ -87,7 +87,7 @@ export class ResetPasswordDto {
 
   @ApiProperty({ 
     description: 'Reset code sent to email/phone',
-    example: '0000' 
+    example: '123456' 
   })
   @IsString()
   code: string;
@@ -100,5 +100,22 @@ export class ResetPasswordDto {
   @IsString()
   @MinLength(6)
   newPassword: string;
+}
+
+export class RequestPhoneVerificationDto {
+  @ApiProperty({ description: 'International digits, e.g. 250788123456', example: '250788123456' })
+  @IsString()
+  phoneNumber: string;
+}
+
+export class VerifyPhoneVerificationDto {
+  @ApiProperty({ example: '250788123456' })
+  @IsString()
+  phoneNumber: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsString()
+  @Length(6, 6)
+  code: string;
 }
 

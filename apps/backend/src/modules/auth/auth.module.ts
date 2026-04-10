@@ -6,9 +6,11 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ReferralsModule } from '../referrals/referrals.module';
+import { CommonModule } from '../../common/common.module';
 
 @Module({
   imports: [
+    CommonModule,
     ReferralsModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({

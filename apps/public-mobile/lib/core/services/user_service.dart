@@ -601,6 +601,11 @@ class UserService {
                                  notificationPrefs?['email'] ?? 
                                  true;
 
+    DateTime? phoneVerifiedAt;
+    if (data['phoneVerifiedAt'] != null) {
+      phoneVerifiedAt = DateTime.tryParse(data['phoneVerifiedAt'].toString());
+    }
+
     return User(
       id: data['id']?.toString() ?? '',
       email: data['email']?.toString() ?? '',
@@ -614,6 +619,7 @@ class UserService {
       createdAt: createdAt,
       updatedAt: updatedAt,
       isVerified: data['isVerified'] == true,
+      phoneVerifiedAt: phoneVerifiedAt,
       role: role,
       preferences: UserPreferences(
         language: data['preferredLanguage']?.toString() ?? 
