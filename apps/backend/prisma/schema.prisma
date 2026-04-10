@@ -2178,13 +2178,33 @@ model promotion_uses {
   users           User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model referral_program_rules {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name            String    @db.VarChar(100)
+  /// Points granted to the referrer when a referred user completes signup (phase 1).
+  referrer_points Int       @map("referrer_points")
+  /// Welcome points granted to the referee on signup when a valid code was applied.
+  referee_points  Int       @map("referee_points")
+  effective_from  DateTime  @default(now()) @map("effective_from") @db.Timestamptz(6)
+  effective_to    DateTime? @map("effective_to") @db.Timestamptz(6)
+  is_active       Boolean   @default(true) @map("is_active")
+  created_at      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updated_at      DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([is_active, effective_from, effective_to], map: "idx_referral_program_rules_active_window")
+  @@map("referral_program_rules")
+}
+
 model referral_codes {
   id                   String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   user_id              String      @unique @db.Uuid
   code                 String      @unique @db.VarChar(20)
   total_referrals      Int?        @default(0)
   successful_referrals Int?        @default(0)
-  total_earnings       Decimal?    @default(0) @db.Decimal(12, 2)
+  /// Denormalized: sum of credited referral points for this inviter (updated by app logic).
+  total_points_earned  Int?        @default(0) @map("total_points_earned")
+  /// Denormalized: sum of points in pending rewards for this inviter.
+  pending_points       Int?        @default(0) @map("pending_points")
   is_active            Boolean?    @default(true)
   created_at           DateTime?   @default(now()) @db.Timestamptz(6)
   users                User        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -2196,12 +2216,15 @@ model referral_rewards {
   referral_id String                  @db.Uuid
   user_id     String                  @db.Uuid
   reward_type String                  @db.VarChar(50)
-  amount      Decimal                 @db.Decimal(10, 2)
+  /// Points for this reward row (replaces monetary amount for new logic).
+  points      Int                     @default(0)
+  /// Legacy monetary fields; optional for migration — prefer [points] going forward.
+  amount      Decimal?                @db.Decimal(10, 2)
   currency    String?                 @default("RWF") @db.VarChar(3)
   status      referral_reward_status? @default(pending)
-  credited_at DateTime?               @db.Timestamptz(6)
-  expires_at  DateTime?               @db.Timestamptz(6)
-  created_at  DateTime?               @default(now()) @db.Timestamptz(6)
+  credited_at DateTime?               @map("credited_at") @db.Timestamptz(6)
+  expires_at  DateTime?               @map("expires_at") @db.Timestamptz(6)
+  created_at  DateTime?               @default(now()) @map("created_at") @db.Timestamptz(6)
   referrals   referrals               @relation(fields: [referral_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users       User                    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
