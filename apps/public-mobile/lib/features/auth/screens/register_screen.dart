@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/providers/referral_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -50,13 +51,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
+      final refCode =
+          GoRouterState.of(context).uri.queryParameters['ref']?.trim();
       final user = await authService.signUpWithEmail(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         fullName: _fullNameController.text.trim(),
+        referralCode:
+            (refCode != null && refCode.isNotEmpty) ? refCode : null,
       );
 
       if (user != null && mounted) {
+        ref.invalidate(referralSummaryProvider);
         context.go('/explore');
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -85,6 +91,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final inviteRef =
+        GoRouterState.of(context).uri.queryParameters['ref']?.trim();
+
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -119,6 +128,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    if (inviteRef != null && inviteRef.isNotEmpty) ...[
+                      const SizedBox(height: AppTheme.spacing12),
+                      Text(
+                        'You were invited — your referral code will be applied when you create your account.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: context.primaryColorTheme,
+                              fontWeight: FontWeight.w600,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ],
                 ),
                 

@@ -53,6 +53,13 @@ extension ThemeColors on BuildContext {
   
   /// Get primary color that's visible in both light and dark modes
   Color get primaryColorTheme => AppTheme.getPrimaryColor(this);
+
+  /// Solid primary from [ColorScheme] (fills for buttons, badges). Prefer this
+  /// over [primaryColorTheme] for backgrounds when foreground uses [onPrimaryColor].
+  Color get primaryFillColor => Theme.of(this).colorScheme.primary;
+
+  /// Foreground color on [primaryFillColor] (icons/text on filled primary controls).
+  Color get onPrimaryColor => Theme.of(this).colorScheme.onPrimary;
   
   /// Check if current theme is dark
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;

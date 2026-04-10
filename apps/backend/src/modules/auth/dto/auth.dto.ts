@@ -1,4 +1,5 @@
-import { IsEmail, IsString, IsOptional, MinLength } from 'class-validator';
+import { IsEmail, IsString, IsOptional, MinLength, MaxLength } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class RegisterDto {
@@ -21,6 +22,18 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   fullName?: string;
+
+  @ApiPropertyOptional({
+    description: 'Optional referral code from a friend; applied if valid (signup only).',
+    example: 'ZOEAXYZ1',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase().slice(0, 20) : value,
+  )
+  referralCode?: string;
 }
 
 export class LoginDto {

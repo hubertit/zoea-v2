@@ -291,16 +291,22 @@ class AuthService {
     required String password,
     required String fullName,
     String? phoneNumber,
+    String? referralCode,
   }) async {
     try {
+      final data = <String, dynamic>{
+        'email': email,
+        'phoneNumber': phoneNumber != null ? PhoneValidator.cleanPhoneNumber(phoneNumber) : null,
+        'password': password,
+        'fullName': fullName,
+      };
+      final code = referralCode?.trim();
+      if (code != null && code.isNotEmpty) {
+        data['referralCode'] = code.toUpperCase();
+      }
       final response = await _dio.post(
         '${AppConfig.authEndpoint}/register',
-        data: {
-          'email': email,
-          'phoneNumber': phoneNumber != null ? PhoneValidator.cleanPhoneNumber(phoneNumber) : null,
-          'password': password,
-          'fullName': fullName,
-        },
+        data: data,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

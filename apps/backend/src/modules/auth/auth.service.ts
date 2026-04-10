@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RegisterDto, LoginDto, RequestPasswordResetDto, VerifyResetCodeDto, ResetPasswordDto } from './dto/auth.dto';
+import { ReferralsService } from '../referrals/referrals.service';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private referralsService: ReferralsService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -54,9 +56,20 @@ export class AuthService {
       // Generate tokens
       const tokens = await this.generateTokens(user.id, user.email);
 
+      let referralApplied = false;
+      try {
+        referralApplied = await this.referralsService.applyReferralOnSignup(
+          user.id,
+          dto.referralCode,
+        );
+      } catch (referralErr) {
+        console.error('Referral apply failed (non-fatal):', referralErr);
+      }
+
       return {
         user,
         ...tokens,
+        referralApplied,
       };
     } catch (error) {
       console.error('Register error:', error);

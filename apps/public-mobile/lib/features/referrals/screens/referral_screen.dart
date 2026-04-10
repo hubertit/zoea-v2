@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../core/providers/referral_provider.dart';
+import '../../../core/services/referral_service.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 
-class ReferralScreen extends ConsumerStatefulWidget {
+class ReferralScreen extends ConsumerWidget {
   const ReferralScreen({super.key});
 
-  @override
-  ConsumerState<ReferralScreen> createState() => _ReferralScreenState();
-}
+  static final _pointsFmt = NumberFormat('#,###');
 
-class _ReferralScreenState extends ConsumerState<ReferralScreen> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final programAsync = ref.watch(referralProgramRuleProvider);
+    final summaryAsync = ref.watch(referralSummaryProvider);
+
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -41,31 +45,96 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hero Section
-            _buildHeroSection(),
+            _buildHeroSection(context),
             const SizedBox(height: 32),
-            
-            // Referral Code Section
-            _buildReferralCodeSection(),
+            ..._referralCodeBlocks(context, summaryAsync),
+            _buildHowItWorksSection(context),
             const SizedBox(height: 32),
-            
-            // How it Works Section
-            _buildHowItWorksSection(),
+            _buildRewardsSection(context, programAsync),
             const SizedBox(height: 32),
-            
-            // Rewards Section
-            _buildRewardsSection(),
-            const SizedBox(height: 32),
-            
-            // Referral Stats
-            _buildReferralStats(),
+            _buildReferralStats(context, summaryAsync),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeroSection() {
+  List<Widget> _referralCodeBlocks(
+    BuildContext context,
+    AsyncValue<ReferralSummary?> async,
+  ) {
+    return async.when(
+      data: (summary) {
+        if (summary == null) {
+          return [
+            _buildSignInForCodeCard(context),
+            const SizedBox(height: 32),
+          ];
+        }
+        return [
+          _buildReferralCodeSection(context, summary),
+          const SizedBox(height: 32),
+        ];
+      },
+      loading: () => [
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 24),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+        const SizedBox(height: 32),
+      ],
+      error: (_, __) => [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Text(
+            'Could not load your referral code. Pull to retry or sign in again.',
+            style: context.bodyMedium.copyWith(color: context.errorColor),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignInForCodeCard(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Your Referral Code',
+          style: context.headlineSmall.copyWith(
+            fontWeight: FontWeight.w600,
+            color: context.primaryTextColor,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.grey50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: context.grey200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Sign in to see your personal code and track points.',
+                style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+              ),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => context.push('/login'),
+                child: const Text('Sign in'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeroSection(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -100,7 +169,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Share your referral code and earn rewards for every friend who joins Zoea',
+            'Share your referral code and earn points when friends join Zoea',
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -111,7 +180,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     );
   }
 
-  Widget _buildReferralCodeSection() {
+  Widget _buildReferralCodeSection(BuildContext context, ReferralSummary summary) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -137,7 +206,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'ZOEAFRIEND',
+                      summary.code,
                       style: context.headlineMedium.copyWith(
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2,
@@ -154,13 +223,14 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  // TODO: Copy to clipboard
+              IconButton.filled(
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: summary.code));
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Referral code copied to clipboard',
+                        'Referral code copied',
                         style: context.bodyMedium.copyWith(
                           color: context.primaryTextColor,
                         ),
@@ -170,10 +240,10 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
                     ),
                   );
                 },
-                icon: Icon(Icons.copy, color: context.primaryTextColor),
+                icon: const Icon(Icons.copy),
                 style: IconButton.styleFrom(
-                  backgroundColor: context.primaryColorTheme,
-                  foregroundColor: Colors.white,
+                  backgroundColor: context.primaryFillColor,
+                  foregroundColor: context.onPrimaryColor,
                 ),
               ),
             ],
@@ -184,22 +254,15 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () async {
-              const referralCode = 'ZOEAFRIEND';
-              const shareText = 'Join me on Zoea Africa and discover amazing places in Rwanda! Use my referral code: $referralCode to get started!';
-              const shareUrl = 'https://zoea.africa?ref=$referralCode';
-              
-              await SharePlus.instance.share(ShareParams(text: '$shareText\n$shareUrl'));
+              const message =
+                  'Join me on Zoea Africa and discover amazing places in Rwanda!';
+              await SharePlus.instance.share(
+                ShareParams(text: '$message\n${summary.shareUrl}'),
+              );
             },
-            icon: Icon(Icons.share, color: context.primaryTextColor),
-            label: Text(
-              'Share Referral Code',
-              style: context.bodyMedium.copyWith(
-                color: context.primaryTextColor,
-              ),
-            ),
+            icon: const Icon(Icons.share),
+            label: const Text('Share Referral Code'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: context.primaryColorTheme,
-              foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
           ),
@@ -208,7 +271,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     );
   }
 
-  Widget _buildHowItWorksSection() {
+  Widget _buildHowItWorksSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,31 +284,33 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
         ),
         const SizedBox(height: 16),
         _buildStepCard(
-          step: '1',
+          context,
           title: 'Share Your Code',
-          description: 'Send your referral code to friends via social media, email, or text',
+          description:
+              'Send your referral code to friends via social media, email, or text',
           icon: Icons.share,
         ),
         const SizedBox(height: 12),
         _buildStepCard(
-          step: '2',
+          context,
           title: 'Friend Signs Up',
-          description: 'Your friend uses your code when creating their Zoea account',
+          description: 'Your friend creates their Zoea account using your code',
           icon: Icons.person_add,
         ),
         const SizedBox(height: 12),
         _buildStepCard(
-          step: '3',
-          title: 'Earn Rewards',
-          description: 'You both get rewards when they complete their first booking',
+          context,
+          title: 'Earn Points',
+          description:
+              'You both get points when they sign up (shown as pending until credited)',
           icon: Icons.card_giftcard,
         ),
       ],
     );
   }
 
-  Widget _buildStepCard({
-    required String step,
+  Widget _buildStepCard(
+    BuildContext context, {
     required String title,
     required String description,
     required IconData icon,
@@ -258,30 +323,19 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
         border: Border.all(color: context.grey200),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 32,
-            height: 32,
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: context.primaryColorTheme,
-              borderRadius: BorderRadius.circular(16),
+              color: context.primaryFillColor,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
-              child: Text(
-                step,
-                style: TextStyle(
-                  color: context.primaryTextColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
+            child: Icon(
+              icon,
+              color: context.onPrimaryColor,
+              size: 22,
             ),
-          ),
-          const SizedBox(width: 16),
-          Icon(
-            icon,
-            color: context.primaryColorTheme,
-            size: 24,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -310,7 +364,10 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     );
   }
 
-  Widget _buildRewardsSection() {
+  Widget _buildRewardsSection(
+    BuildContext context,
+    AsyncValue<ReferralProgramRule?> programAsync,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -322,37 +379,53 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildRewardCard(
-                title: 'For You',
-                amount: '500',
-                currency: 'RWF',
-                description: 'When friend joins',
-                color: context.primaryColorTheme,
-              ),
+        programAsync.when(
+          data: (rule) {
+            final you = rule?.referrerPoints ?? 0;
+            final friend = rule?.refereePoints ?? 0;
+            return Row(
+              children: [
+                Expanded(
+                  child: _buildRewardCard(
+                    context,
+                    title: 'For You',
+                    points: you,
+                    description: 'When friend joins',
+                    color: context.primaryColorTheme,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildRewardCard(
+                    context,
+                    title: 'For Friend',
+                    points: friend,
+                    description: 'Welcome bonus',
+                    color: context.successColor,
+                  ),
+                ),
+              ],
+            );
+          },
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: CircularProgressIndicator(),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildRewardCard(
-                title: 'For Friend',
-                amount: '300',
-                currency: 'RWF',
-                description: 'Welcome bonus',
-                color: context.successColor,
-              ),
-            ),
-          ],
+          ),
+          error: (_, __) => Text(
+            'Could not load reward amounts.',
+            style: context.bodySmall.copyWith(color: context.secondaryTextColor),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildRewardCard({
+  Widget _buildRewardCard(
+    BuildContext context, {
     required String title,
-    required String amount,
-    required String currency,
+    required int points,
     required String description,
     required Color color,
   }) {
@@ -377,7 +450,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '$amount $currency',
+            points > 0 ? '${_pointsFmt.format(points)} pts' : '—',
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: color,
@@ -395,7 +468,10 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     );
   }
 
-  Widget _buildReferralStats() {
+  Widget _buildReferralStats(
+    BuildContext context,
+    AsyncValue<ReferralSummary?> summaryAsync,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -407,49 +483,63 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: context.cardColor,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: context.grey200),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatItem(
-                label: 'Total Referrals',
-                value: '12',
-                icon: Icons.people,
+        summaryAsync.when(
+          data: (summary) {
+            if (summary == null) {
+              return const SizedBox.shrink();
+            }
+            final s = summary.stats;
+            return Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.cardColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: context.grey200),
               ),
-              Container(
-                width: 1,
-                height: 40,
-                color: context.grey300,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatItem(
+                    context,
+                    label: 'Total Referrals',
+                    value: '${s.totalReferrals}',
+                    icon: Icons.people,
+                  ),
+                  Container(
+                    width: 1,
+                    height: 40,
+                    color: context.grey300,
+                  ),
+                  _buildStatItem(
+                    context,
+                    label: 'Points earned',
+                    value: '${_pointsFmt.format(s.totalPointsEarned)} pts',
+                    icon: Icons.workspace_premium,
+                  ),
+                  Container(
+                    width: 1,
+                    height: 40,
+                    color: context.grey300,
+                  ),
+                  _buildStatItem(
+                    context,
+                    label: 'Pending',
+                    value: '${_pointsFmt.format(s.pendingPoints)} pts',
+                    icon: Icons.schedule,
+                  ),
+                ],
               ),
-              _buildStatItem(
-                label: 'Earned Rewards',
-                value: '6,000 RWF',
-                icon: Icons.monetization_on,
-              ),
-              Container(
-                width: 1,
-                height: 40,
-                color: context.grey300,
-              ),
-              _buildStatItem(
-                label: 'Pending',
-                value: '3',
-                icon: Icons.schedule,
-              ),
-            ],
-          ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
         ),
       ],
     );
   }
 
-  Widget _buildStatItem({
+  Widget _buildStatItem(
+    BuildContext context, {
     required String label,
     required String value,
     required IconData icon,
@@ -468,6 +558,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
             fontWeight: FontWeight.w700,
             color: context.primaryTextColor,
           ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 4),
         Text(

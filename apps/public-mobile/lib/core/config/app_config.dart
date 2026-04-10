@@ -32,6 +32,7 @@ class AppConfig {
   static const String menusEndpoint = '/menus';
   static const String cartEndpoint = '/cart';
   static const String ordersEndpoint = '/orders';
+  static const String referralsEndpoint = '/referrals';
 
   // Cache Keys
   static const String authTokenKey = 'auth_token';
