@@ -213,8 +213,8 @@ export class ListingsController {
     summary: 'Create a new listing',
     description: 'Create a new listing for a merchant. The listing will be created in draft status and must be submitted for review before becoming active. Requires merchant authentication.'
   })
-  async create(@Body() data: CreateListingDto) {
-    return this.listingsService.create(data.merchantId, data);
+  async create(@Request() req: { user: { id: string } }, @Body() data: CreateListingDto) {
+    return this.listingsService.create(data.merchantId, data, req.user.id);
   }
 
   @Put(':id')
@@ -225,8 +225,12 @@ export class ListingsController {
     description: 'Update an existing listing. Only the listing owner (merchant) can update their listings. Requires merchant authentication.'
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
-  async update(@Param('id') id: string, @Body() data: UpdateListingDto) {
-    return this.listingsService.update(id, data.merchantId, data);
+  async update(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() data: UpdateListingDto,
+  ) {
+    return this.listingsService.update(id, data.merchantId, data, req.user.id);
   }
 
   @Post(':id/submit')
@@ -237,8 +241,12 @@ export class ListingsController {
     description: 'Submit a draft listing for admin review. The listing status will change from draft to pending_review. Only draft listings can be submitted.'
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
-  async submitForReview(@Param('id') id: string, @Body() data: SubmitListingDto) {
-    return this.listingsService.submitForReview(id, data.merchantId);
+  async submitForReview(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() data: SubmitListingDto,
+  ) {
+    return this.listingsService.submitForReview(id, data.merchantId, req.user.id);
   }
 
   @Delete(':id')
@@ -249,8 +257,12 @@ export class ListingsController {
     description: 'Soft delete a listing by setting deletedAt timestamp. The listing will no longer appear in public listings but data is preserved. Requires merchant authentication (or admin).'
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
-  async delete(@Param('id') id: string, @Body('merchantId') merchantId?: string) {
-    return this.listingsService.delete(id, merchantId);
+  async delete(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body('merchantId') merchantId?: string,
+  ) {
+    return this.listingsService.delete(id, merchantId, req.user.id);
   }
 
   // ============ IMAGES ============
@@ -262,8 +274,12 @@ export class ListingsController {
     description: 'Add an image to a listing. The image must be uploaded first via the media endpoint to get a mediaId. If isPrimary is true, this image becomes the primary image and all others are set to non-primary. Requires merchant authentication.'
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
-  async addImage(@Param('id') id: string, @Body() data: AddListingImageDto) {
-    return this.listingsService.addImage(id, data.merchantId, data);
+  async addImage(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() data: AddListingImageDto,
+  ) {
+    return this.listingsService.addImage(id, data.merchantId, data, req.user.id);
   }
 
   @Delete(':id/images/:imageId')
@@ -275,8 +291,13 @@ export class ListingsController {
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
   @ApiParam({ name: 'imageId', description: 'Listing image UUID' })
-  async removeImage(@Param('id') id: string, @Param('imageId') imageId: string, @Body('merchantId') merchantId: string) {
-    return this.listingsService.removeImage(id, imageId, merchantId);
+  async removeImage(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Param('imageId') imageId: string,
+    @Body('merchantId') merchantId: string,
+  ) {
+    return this.listingsService.removeImage(id, imageId, merchantId, req.user.id);
   }
 
   @Put(':id/images/reorder')
@@ -287,8 +308,12 @@ export class ListingsController {
     description: 'Change the display order of listing images by providing an array of image IDs in the desired order. The first image in the array becomes the primary image. Requires merchant authentication.'
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
-  async reorderImages(@Param('id') id: string, @Body() data: ReorderImagesDto) {
-    return this.listingsService.reorderImages(id, data.merchantId, data.imageIds);
+  async reorderImages(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() data: ReorderImagesDto,
+  ) {
+    return this.listingsService.reorderImages(id, data.merchantId, data.imageIds, req.user.id);
   }
 
   // ============ AMENITIES ============
@@ -300,8 +325,12 @@ export class ListingsController {
     description: 'Replace all amenities for a listing with the provided list. Existing amenities are removed and replaced with the new set. Provide an array of amenity UUIDs. Requires merchant authentication.'
   })
   @ApiParam({ name: 'id', description: 'Listing UUID' })
-  async setAmenities(@Param('id') id: string, @Body() data: SetAmenitiesDto) {
-    return this.listingsService.setAmenities(id, data.merchantId, data.amenityIds);
+  async setAmenities(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() data: SetAmenitiesDto,
+  ) {
+    return this.listingsService.setAmenities(id, data.merchantId, data.amenityIds, req.user.id);
   }
 
   // ============ ROOM TYPES ============

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../../common/guards/roles.guard';
@@ -31,50 +31,70 @@ export class AdminListingsController {
 
   @Post()
   @ApiOperation({ summary: 'Create listing on behalf of merchant' })
-  async create(@Body() dto: AdminCreateListingDto) {
-    return this.adminListingsService.createListing(dto);
+  async create(@Request() req: { user: { id: string } }, @Body() dto: AdminCreateListingDto) {
+    return this.adminListingsService.createListing(dto, req.user.id);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update listing content' })
-  async update(@Param('id') id: string, @Body() dto: AdminUpdateListingDto) {
-    return this.adminListingsService.updateListing(id, dto);
+  async update(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() dto: AdminUpdateListingDto,
+  ) {
+    return this.adminListingsService.updateListing(id, dto, req.user.id);
   }
 
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update listing moderation/feature state' })
-  async updateStatus(@Param('id') id: string, @Body() dto: AdminUpdateListingStatusDto) {
-    return this.adminListingsService.updateListingStatus(id, dto);
+  async updateStatus(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() dto: AdminUpdateListingStatusDto,
+  ) {
+    return this.adminListingsService.updateListingStatus(id, dto, req.user.id);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Soft delete listing' })
-  async delete(@Param('id') id: string) {
-    return this.adminListingsService.deleteListing(id);
+  async delete(@Request() req: { user: { id: string } }, @Param('id') id: string) {
+    return this.adminListingsService.deleteListing(id, req.user.id);
   }
 
   @Patch(':id/restore')
   @ApiOperation({ summary: 'Restore soft deleted listing' })
-  async restore(@Param('id') id: string) {
-    return this.adminListingsService.restoreListing(id);
+  async restore(@Request() req: { user: { id: string } }, @Param('id') id: string) {
+    return this.adminListingsService.restoreListing(id, req.user.id);
   }
 
   @Post(':id/images')
   @ApiOperation({ summary: 'Add listing image (media must be uploaded first)' })
-  async addImage(@Param('id') id: string, @Body() dto: AdminAddListingImageDto) {
-    return this.adminListingsService.addListingImage(id, dto);
+  async addImage(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() dto: AdminAddListingImageDto,
+  ) {
+    return this.adminListingsService.addListingImage(id, dto, req.user.id);
   }
 
   @Delete(':id/images/:imageId')
   @ApiOperation({ summary: 'Remove a listing image' })
-  async removeImage(@Param('id') id: string, @Param('imageId') imageId: string) {
-    return this.adminListingsService.removeListingImage(id, imageId);
+  async removeImage(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Param('imageId') imageId: string,
+  ) {
+    return this.adminListingsService.removeListingImage(id, imageId, req.user.id);
   }
 
   @Patch(':id/images/primary')
   @ApiOperation({ summary: 'Set primary listing image' })
-  async setPrimaryImage(@Param('id') id: string, @Body() dto: AdminSetPrimaryListingImageDto) {
-    return this.adminListingsService.setPrimaryListingImage(id, dto.imageId);
+  async setPrimaryImage(
+    @Request() req: { user: { id: string } },
+    @Param('id') id: string,
+    @Body() dto: AdminSetPrimaryListingImageDto,
+  ) {
+    return this.adminListingsService.setPrimaryListingImage(id, dto.imageId, req.user.id);
   }
 }
 

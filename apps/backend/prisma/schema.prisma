@@ -142,6 +142,7 @@ model User {
   zoeaCard                                                          ZoeaCard?
   assistantConversations                                            AssistantConversation[]
   itineraries                                                       Itinerary[]
+  listingsUpdated                                                   Listing[]                   @relation("ListingUpdatedByUser")
 
   @@index([email], map: "idx_users_email")
   @@index([phoneNumber], map: "idx_users_phone")
@@ -409,6 +410,8 @@ model Listing {
   metaDescription            String?                      @map("meta_description")
   createdAt                  DateTime?                    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                  DateTime?                    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  /// Last user who changed this listing via merchant or admin APIs (not incremented by view-count-only updates).
+  updatedById                String?                      @map("updated_by") @db.Uuid
   deletedAt                  DateTime?                    @map("deleted_at") @db.Timestamptz(6)
   legacyId                   Int?                         @map("legacy_id")
   /// Google Places `place_id` when listing was created via Places scraper (dedupe).
@@ -427,6 +430,7 @@ model Listing {
   country                    Country?                     @relation(fields: [countryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   district                   District?                    @relation(fields: [districtId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   merchant                   MerchantProfile?             @relation(fields: [merchantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy                  User?                        @relation("ListingUpdatedByUser", fields: [updatedById], references: [id], onDelete: SetNull, onUpdate: NoAction)
   notifications              Notification[]
   recentlyViewed             RecentlyViewed[]
   reservation_date_overrides reservation_date_overrides[]
@@ -444,6 +448,7 @@ model Listing {
   @@index([countryId], map: "idx_listings_country")
   @@index([location], map: "idx_listings_location", type: Gist)
   @@index([legacyId], map: "idx_listings_legacy_id")
+  @@index([updatedById], map: "idx_listings_updated_by")
   @@map("listings")
 }
 

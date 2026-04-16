@@ -447,7 +447,6 @@ class BookingsService {
     required int guestCount,
     int? adults,
     int? children,
-    int? infants,
     String? fullName,
     String? contactNumber,
     String? email,
@@ -471,7 +470,6 @@ class BookingsService {
 
       if (adults != null) data['adults'] = adults;
       if (children != null) data['children'] = children;
-      if (infants != null) data['infants'] = infants;
       if (pickupLocation != null && pickupLocation.isNotEmpty) {
         data['pickupLocation'] = pickupLocation;
       }
