@@ -59,18 +59,27 @@ class BookingConfirmationScreen extends ConsumerWidget {
     final totalAmount = _parseNumericValue(booking['totalAmount']) ?? 0.0;
     final currency = booking['currency'] as String? ?? 'RWF';
     
-    // Get listing information
     final listing = booking['listing'] as Map<String, dynamic>?;
-    final listingName = listing?['name'] as String? ?? 'Unknown';
+    final event = booking['event'] as Map<String, dynamic>?;
+    final tour = booking['tour'] as Map<String, dynamic>?;
+
+    final listingName = (listing?['name'] as String?) ??
+        (tour?['name'] as String?) ??
+        (event?['name'] as String?) ??
+        'Booking Item';
+
     final listingAddress = listing?['address'] as String?;
     final city = listing?['city'] as Map<String, dynamic>?;
     final cityName = city?['name'] as String?;
+    final eventLocation = event?['venueName'] as String? ?? event?['locationName'] as String?;
+    final tourLocation = tour?['startLocationName'] as String?;
     final location = listingAddress != null && cityName != null
         ? '$listingAddress, $cityName'
-        : listingAddress ?? cityName ?? 'Location not specified';
-    
-    // Get images
-    final images = listing?['images'] as List?;
+        : listingAddress ?? cityName ?? tourLocation ?? eventLocation ?? 'Location not specified';
+
+    final images = (listing?['images'] as List?) ??
+        (tour?['images'] as List?) ??
+        (event?['attachments'] as List?);
     Map<String, dynamic>? primaryImage;
     if (images != null && images.isNotEmpty) {
       final firstImage = images[0] as Map<String, dynamic>?;
@@ -296,6 +305,12 @@ class BookingConfirmationScreen extends ConsumerWidget {
   }
 
   Widget _buildBookingDetailsCard(BuildContext context, Map<String, dynamic> booking, String bookingType) {
+    final hasTourDate = booking['tourSchedule']?['date'] != null;
+    final hasTourTime = booking['tourSchedule']?['startTime'] != null;
+    final hasGuestCount = booking['guestCount'] != null;
+    final hasSpecialRequests = booking['specialRequests'] != null &&
+        (booking['specialRequests'] as String).isNotEmpty;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -356,14 +371,43 @@ class BookingConfirmationScreen extends ConsumerWidget {
                 'Party Size',
                 '${booking['partySize']}',
               ),
+          ] else if (bookingType == 'tour') ...[
+            if (hasTourDate)
+              _buildInfoRow(
+                context,
+                'Date',
+                _formatDate(booking['tourSchedule']['date'] as String),
+              ),
+            if (hasTourDate && (hasTourTime || hasGuestCount || hasSpecialRequests))
+              const SizedBox(height: 12),
+            if (hasTourTime)
+              _buildInfoRow(
+                context,
+                'Time',
+                _formatTime(booking['tourSchedule']['startTime'] as String),
+              ),
+            if (hasTourTime && (hasGuestCount || hasSpecialRequests))
+              const SizedBox(height: 12),
+            if (hasGuestCount)
+              _buildInfoRow(
+                context,
+                'Guests',
+                '${booking['guestCount']}',
+              ),
           ],
-          if (booking['specialRequests'] != null &&
-              (booking['specialRequests'] as String).isNotEmpty) ...[
+          if (hasSpecialRequests) ...[
             const SizedBox(height: 12),
             _buildInfoRow(
               context,
               'Special Requests',
               booking['specialRequests'] as String,
+            ),
+          ] else if (bookingType == 'tour' && !hasTourDate && !hasTourTime && !hasGuestCount) ...[
+            Text(
+              'Tour confirmation details will appear here once available.',
+              style: context.bodyMedium.copyWith(
+                color: context.secondaryTextColor,
+              ),
             ),
           ],
         ],
@@ -522,8 +566,8 @@ class BookingConfirmationScreen extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 120,
+        Expanded(
+          flex: 3,
           child: Text(
             '$label:',
             style: context.bodyMedium.copyWith(
@@ -532,6 +576,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
           ),
         ),
         Expanded(
+          flex: 5,
           child: Text(
             value,
             style: context.bodyMedium.copyWith(
@@ -600,11 +645,18 @@ class BookingConfirmationScreen extends ConsumerWidget {
 
   String _formatTime(String timeString) {
     try {
+      if (timeString.contains('T')) {
+        final dateTime = DateTime.tryParse(timeString);
+        if (dateTime != null) {
+          return DateFormat('h:mm a').format(dateTime.toLocal());
+        }
+      }
+
       // Handle 24-hour format (e.g., "19:00")
       if (timeString.contains(':')) {
         final parts = timeString.split(':');
         final hour = int.parse(parts[0]);
-        final minute = parts[1];
+        final minute = parts[1].replaceAll(RegExp(r'[^0-9].*$'), '');
         final period = hour >= 12 ? 'PM' : 'AM';
         final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
         return '$displayHour:${minute.padLeft(2, '0')} $period';

@@ -75,11 +75,19 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
       _trackBookingAttempt();
       _prefillUserData();
       if (_selectedTourId != null) {
+        _loadSelectedTour();
         _loadTourSchedules();
       } else {
         _loadTours();
       }
     });
+  }
+
+  double _toSafeDouble(dynamic value, {double fallback = 0.0}) {
+    if (value == null) return fallback;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? fallback;
+    return fallback;
   }
 
   void _trackBookingAttempt() {
@@ -189,6 +197,30 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
       });
     }
   }
+
+  Future<void> _loadSelectedTour() async {
+    if (_selectedTourId == null) return;
+
+    try {
+      final dio = await AppConfig.authenticatedDioInstance();
+      final response = await dio.get('${AppConfig.toursEndpoint}/$_selectedTourId');
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final tour = data is Map<String, dynamic>
+            ? data
+            : (data['data'] as Map<String, dynamic>? ?? <String, dynamic>{});
+
+        if (mounted && tour.isNotEmpty) {
+          setState(() {
+            _selectedTour = tour;
+          });
+        }
+      }
+    } catch (_) {
+      // Keep booking flow usable; UI falls back to passed-in widget fields.
+    }
+  }
   
   @override
   void dispose() {
@@ -200,10 +232,11 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   int get _totalGuests => _adults + _children + _infants;
+  int get _payingGuests => _adults + _children;
   double get _basePrice {
     if (_selectedTour == null) return 0.0;
-    final pricePerPerson = (_selectedTour!['pricePerPerson'] ?? 0).toDouble();
-    return pricePerPerson * _totalGuests;
+    final pricePerPerson = _toSafeDouble(_selectedTour!['pricePerPerson']);
+    return pricePerPerson * _payingGuests;
   }
   
   double get _totalPrice => _basePrice; // Can add discounts, taxes later
@@ -287,8 +320,8 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         _selectedTour?['city']?['name'] ?? 
         'Location';
     final tourRating = widget.tourRating ?? 
-        (_selectedTour?['rating']?.toDouble() ?? 0.0);
-    final pricePerPerson = _selectedTour?['pricePerPerson']?.toDouble() ?? 0.0;
+        _toSafeDouble(_selectedTour?['rating']);
+    final pricePerPerson = _toSafeDouble(_selectedTour?['pricePerPerson']);
     final currency = _selectedTour?['currency'] ?? 'RWF';
 
     return Container(
@@ -426,7 +459,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             return RadioListTile<String>(
               title: Text(tour['name'] ?? 'Tour'),
               subtitle: Text(
-                '${PriceFormatter.formatFull((tour['pricePerPerson'] ?? 0).toDouble(), currency: tour['currency'] ?? 'RWF')}/person',
+                '${PriceFormatter.formatFull(_toSafeDouble(tour['pricePerPerson']), currency: tour['currency'] ?? 'RWF')}/person',
               ),
               value: tour['id'] as String,
               groupValue: _selectedTourId,
@@ -741,7 +774,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                 ),
               ),
               Text(
-                PriceFormatter.formatFull(((_selectedTour?['pricePerPerson']?.toDouble() ?? 0) * _adults), currency: currency),
+                PriceFormatter.formatFull((_toSafeDouble(_selectedTour?['pricePerPerson']) * _adults), currency: currency),
                 style: context.bodyMedium.copyWith(
                   color: context.primaryTextColor,
                 ),
@@ -760,7 +793,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                   ),
                 ),
                 Text(
-                  PriceFormatter.formatFull(((_selectedTour?['pricePerPerson']?.toDouble() ?? 0) * _children), currency: currency),
+                  PriceFormatter.formatFull((_toSafeDouble(_selectedTour?['pricePerPerson']) * _children), currency: currency),
                   style: context.bodyMedium.copyWith(
                     color: context.primaryTextColor,
                   ),
@@ -925,10 +958,9 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         listingId: widget.listingId, // Optional - tours don't always have listings
         tourId: _selectedTourId!,
         tourScheduleId: _selectedScheduleId!,
-        guestCount: _totalGuests,
+        guestCount: _payingGuests,
         adults: _adults,
         children: _children,
-        infants: _infants,
         fullName: _fullName,
         contactNumber: _contactNumber,
         email: _email.isNotEmpty ? _email : null,
@@ -937,10 +969,17 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
       );
 
       if (mounted) {
-        context.pushReplacement(
-          '/booking-confirmation',
-          extra: booking,
-        );
+        final bookingId = booking['id'] as String?;
+        if (bookingId != null && bookingId.isNotEmpty) {
+          context.pushReplacement('/booking-confirmation/$bookingId');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Booking created, but confirmation ID is missing.'),
+              backgroundColor: context.errorColor,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
