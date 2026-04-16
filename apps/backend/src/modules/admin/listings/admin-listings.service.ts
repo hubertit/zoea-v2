@@ -11,6 +11,13 @@ import { AdminAddListingImageDto } from './dto/listing-image.dto';
 export class AdminListingsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private async markListingUpdatedBy(listingId: string, userId: string) {
+    await this.prisma.listing.update({
+      where: { id: listingId },
+      data: { updatedById: userId },
+    });
+  }
+
   async listListings(dto: AdminListListingsDto) {
     const page = dto.page ?? 1;
     const limit = dto.limit ?? 20;
@@ -76,6 +83,8 @@ export class AdminListingsService {
           bookingCount: true,
           createdAt: true,
           updatedAt: true,
+          updatedById: true,
+          updatedBy: { select: { id: true, fullName: true, email: true } },
         },
       }),
       this.prisma.listing.count({ where }),
@@ -129,6 +138,7 @@ export class AdminListingsService {
         amenities: { include: { amenity: true } },
         tags: { include: { tag: true } },
         _count: { select: { bookings: true, reviews: true, favorites: true } },
+        updatedBy: { select: { id: true, fullName: true, email: true } },
       },
     });
 
@@ -139,7 +149,7 @@ export class AdminListingsService {
     return listing;
   }
 
-  async updateListingStatus(id: string, dto: AdminUpdateListingStatusDto) {
+  async updateListingStatus(id: string, dto: AdminUpdateListingStatusDto, adminUserId: string) {
     const listing = await this.prisma.listing.findUnique({ where: { id } });
     if (!listing) throw new NotFoundException('Listing not found');
 
@@ -163,7 +173,7 @@ export class AdminListingsService {
 
     const updated = await this.prisma.listing.update({
       where: { id },
-      data,
+      data: { ...data, updatedById: adminUserId },
       select: {
         id: true,
         status: true,
@@ -172,13 +182,14 @@ export class AdminListingsService {
         isBlocked: true,
         metaDescription: true,
         updatedAt: true,
+        updatedById: true,
       },
     });
 
     return updated;
   }
 
-  async createListing(dto: AdminCreateListingDto) {
+  async createListing(dto: AdminCreateListingDto, adminUserId: string) {
     const slug = dto.slug || `${dto.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now().toString(36)}`;
 
     // Build location if coordinates provided
@@ -218,6 +229,7 @@ export class AdminListingsService {
         isFeatured: dto.isFeatured ?? false,
         isVerified: dto.isVerified ?? false,
         status: dto.status ?? 'active',
+        updatedById: adminUserId,
         ...locationData,
       },
       select: {
@@ -234,7 +246,7 @@ export class AdminListingsService {
     return this.getListingById(created.id);
   }
 
-  async updateListing(id: string, dto: AdminUpdateListingDto) {
+  async updateListing(id: string, dto: AdminUpdateListingDto, adminUserId: string) {
     await this.ensureListingExists(id);
 
     // Build location update if coordinates provided
@@ -282,6 +294,7 @@ export class AdminListingsService {
         isVerified: dto.isVerified,
         status: dto.status,
         ...locationUpdate,
+        updatedById: adminUserId,
       },
       select: { id: true },
     });
@@ -293,20 +306,20 @@ export class AdminListingsService {
     return this.getListingById(updated.id);
   }
 
-  async deleteListing(id: string) {
+  async deleteListing(id: string, adminUserId: string) {
     await this.ensureListingExists(id);
     return this.prisma.listing.update({
       where: { id },
-      data: { deletedAt: new Date() },
+      data: { deletedAt: new Date(), updatedById: adminUserId },
       select: { id: true, deletedAt: true },
     });
   }
 
-  async restoreListing(id: string) {
+  async restoreListing(id: string, adminUserId: string) {
     await this.ensureListingExists(id);
     return this.prisma.listing.update({
       where: { id },
-      data: { deletedAt: null },
+      data: { deletedAt: null, updatedById: adminUserId },
       select: { id: true, deletedAt: true },
     });
   }
@@ -346,7 +359,7 @@ export class AdminListingsService {
   }
 
   /** Admin: attach uploaded media to listing (no merchant ownership check). */
-  async addListingImage(listingId: string, dto: AdminAddListingImageDto) {
+  async addListingImage(listingId: string, dto: AdminAddListingImageDto, adminUserId: string) {
     await this.ensureListingExists(listingId);
 
     const count = await this.prisma.listingImage.count({ where: { listingId } });
@@ -358,7 +371,7 @@ export class AdminListingsService {
       });
     }
 
-    return this.prisma.listingImage.create({
+    const row = await this.prisma.listingImage.create({
       data: {
         listingId,
         mediaId: dto.mediaId,
@@ -368,10 +381,12 @@ export class AdminListingsService {
       },
       include: { media: true },
     });
+    await this.markListingUpdatedBy(listingId, adminUserId);
+    return row;
   }
 
   /** Admin: remove a listing image by listing_images.id */
-  async removeListingImage(listingId: string, imageId: string) {
+  async removeListingImage(listingId: string, imageId: string, adminUserId: string) {
     await this.ensureListingExists(listingId);
     const row = await this.prisma.listingImage.findFirst({
       where: { id: imageId, listingId },
@@ -380,11 +395,12 @@ export class AdminListingsService {
       throw new NotFoundException('Listing image not found');
     }
     await this.prisma.listingImage.delete({ where: { id: imageId } });
+    await this.markListingUpdatedBy(listingId, adminUserId);
     return { success: true };
   }
 
   /** Admin: set primary image (listing_images.id) */
-  async setPrimaryListingImage(listingId: string, imageId: string) {
+  async setPrimaryListingImage(listingId: string, imageId: string, adminUserId: string) {
     await this.ensureListingExists(listingId);
     const row = await this.prisma.listingImage.findFirst({
       where: { id: imageId, listingId },
@@ -400,6 +416,7 @@ export class AdminListingsService {
       where: { id: imageId },
       data: { isPrimary: true, sortOrder: 0 },
     });
+    await this.markListingUpdatedBy(listingId, adminUserId);
     return this.getListingById(listingId);
   }
 }

@@ -156,6 +156,7 @@ export class MerchantsService {
         roomTypes: { where: { isActive: true }, orderBy: { basePrice: 'asc' } },
         restaurantTables: { where: { isActive: true }, orderBy: { tableNumber: 'asc' } },
         _count: { select: { bookings: true, reviews: true, favorites: true } },
+        updatedBy: { select: { id: true, fullName: true, email: true } },
       },
     });
 
@@ -208,6 +209,7 @@ export class MerchantsService {
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,
         status: 'draft',
+        updatedById: userId,
         ...locationData,
       },
       include: {
@@ -263,6 +265,7 @@ export class MerchantsService {
         ...updateData,
         ...(categoryId !== undefined && { categoryId: categoryId || null }),
         ...(typeToSet !== undefined && { type: typeToSet }),
+        updatedById: userId,
       },
       include: {
         category: { select: { id: true, name: true } },
@@ -304,7 +307,7 @@ export class MerchantsService {
 
     await this.prisma.listing.update({
       where: { id: listingId },
-      data: { deletedAt: new Date() },
+      data: { deletedAt: new Date(), updatedById: userId },
     });
 
     return { success: true };
@@ -322,7 +325,7 @@ export class MerchantsService {
 
     return this.prisma.listing.update({
       where: { id: listingId },
-      data: { status: 'pending_review' },
+      data: { status: 'pending_review', updatedById: userId },
     });
   }
 
@@ -348,7 +351,7 @@ export class MerchantsService {
       });
     }
 
-    return this.prisma.listingImage.create({
+    const row = await this.prisma.listingImage.create({
       data: {
         listingId,
         mediaId: data.mediaId,
@@ -358,6 +361,11 @@ export class MerchantsService {
       },
       include: { media: true },
     });
+    await this.prisma.listing.update({
+      where: { id: listingId },
+      data: { updatedById: userId },
+    });
+    return row;
   }
 
   async removeListingImage(userId: string, businessId: string, listingId: string, imageId: string) {
@@ -373,6 +381,10 @@ export class MerchantsService {
     }
 
     await this.prisma.listingImage.delete({ where: { id: imageId } });
+    await this.prisma.listing.update({
+      where: { id: listingId },
+      data: { updatedById: userId },
+    });
     return { success: true };
   }
 

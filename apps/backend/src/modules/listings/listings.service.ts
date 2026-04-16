@@ -290,7 +290,17 @@ export class ListingsService {
     return this.findAll({ ...params, merchantId });
   }
 
-  async create(merchantId: string, data: {
+  /** Sets last human editor (does not clear on view-only counter bumps). */
+  private async markListingUpdatedBy(listingId: string, userId: string) {
+    await this.prisma.listing.update({
+      where: { id: listingId },
+      data: { updatedById: userId },
+    });
+  }
+
+  async create(
+    merchantId: string,
+    data: {
     name: string;
     slug?: string;
     description?: string;
@@ -316,7 +326,9 @@ export class ListingsService {
     metaTitle?: string;
     metaDescription?: string;
     acceptsBookings?: boolean;
-  }) {
+    },
+    updatedById: string,
+  ) {
     // Generate slug if not provided
     const slug = data.slug || this.generateSlug(data.name);
 
@@ -365,6 +377,7 @@ export class ListingsService {
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,
         acceptsBookings: data.acceptsBookings ?? false,
+        updatedById,
         ...locationData,
       },
       include: {
@@ -377,7 +390,10 @@ export class ListingsService {
     return listing;
   }
 
-  async update(id: string, merchantId: string, data: Partial<{
+  async update(
+    id: string,
+    merchantId: string,
+    data: Partial<{
     name: string;
     slug: string;
     description: string;
@@ -400,7 +416,9 @@ export class ListingsService {
     metaTitle: string;
     metaDescription: string;
     acceptsBookings: boolean;
-  }>) {
+  }>,
+    updatedById: string,
+  ) {
     const listing = await this.prisma.listing.findUnique({ where: { id } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
@@ -425,11 +443,12 @@ export class ListingsService {
         ...(categoryId !== undefined && { categoryId: categoryId || null }),
         ...typeFromCategory,
         priceUnit: data.priceUnit as any,
+        updatedById,
       },
     });
   }
 
-  async submitForReview(id: string, merchantId: string) {
+  async submitForReview(id: string, merchantId: string, updatedById: string) {
     const listing = await this.prisma.listing.findUnique({ where: { id } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
@@ -437,23 +456,28 @@ export class ListingsService {
 
     return this.prisma.listing.update({
       where: { id },
-      data: { status: 'pending_review' },
+      data: { status: 'pending_review', updatedById },
     });
   }
 
-  async delete(id: string, merchantId?: string) {
+  async delete(id: string, merchantId: string | undefined, updatedById: string) {
     const listing = await this.prisma.listing.findUnique({ where: { id } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (merchantId && listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
 
     return this.prisma.listing.update({
       where: { id },
-      data: { deletedAt: new Date() },
+      data: { deletedAt: new Date(), updatedById },
     });
   }
 
   // ============ IMAGES ============
-  async addImage(listingId: string, merchantId: string, data: { mediaId: string; isPrimary?: boolean; caption?: string }) {
+  async addImage(
+    listingId: string,
+    merchantId: string,
+    data: { mediaId: string; isPrimary?: boolean; caption?: string },
+    updatedById: string,
+  ) {
     const listing = await this.prisma.listing.findUnique({ where: { id: listingId } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
@@ -467,7 +491,7 @@ export class ListingsService {
       });
     }
 
-    return this.prisma.listingImage.create({
+    const created = await this.prisma.listingImage.create({
       data: {
         listingId,
         mediaId: data.mediaId,
@@ -477,18 +501,31 @@ export class ListingsService {
       },
       include: { media: true },
     });
+    await this.markListingUpdatedBy(listingId, updatedById);
+    return created;
   }
 
-  async removeImage(listingId: string, imageId: string, merchantId: string) {
+  async removeImage(
+    listingId: string,
+    imageId: string,
+    merchantId: string,
+    updatedById: string,
+  ) {
     const listing = await this.prisma.listing.findUnique({ where: { id: listingId } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
 
     await this.prisma.listingImage.delete({ where: { id: imageId } });
+    await this.markListingUpdatedBy(listingId, updatedById);
     return { success: true };
   }
 
-  async reorderImages(listingId: string, merchantId: string, imageIds: string[]) {
+  async reorderImages(
+    listingId: string,
+    merchantId: string,
+    imageIds: string[],
+    updatedById: string,
+  ) {
     const listing = await this.prisma.listing.findUnique({ where: { id: listingId } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
@@ -502,11 +539,17 @@ export class ListingsService {
       )
     );
 
+    await this.markListingUpdatedBy(listingId, updatedById);
     return { success: true };
   }
 
   // ============ AMENITIES ============
-  async setAmenities(listingId: string, merchantId: string, amenityIds: string[]) {
+  async setAmenities(
+    listingId: string,
+    merchantId: string,
+    amenityIds: string[],
+    updatedById: string,
+  ) {
     const listing = await this.prisma.listing.findUnique({ where: { id: listingId } });
     if (!listing) throw new NotFoundException('Listing not found');
     if (listing.merchantId !== merchantId) throw new ForbiddenException('Not authorized');
@@ -518,6 +561,8 @@ export class ListingsService {
         data: amenityIds.map(amenityId => ({ listingId, amenityId })),
       });
     }
+
+    await this.markListingUpdatedBy(listingId, updatedById);
 
     return this.prisma.listing.findUnique({
       where: { id: listingId },
