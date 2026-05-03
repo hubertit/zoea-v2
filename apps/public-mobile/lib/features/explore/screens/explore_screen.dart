@@ -27,7 +27,6 @@ import '../../../core/constants/assets.dart';
 import '../../../core/config/app_config.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/utils/price_formatter.dart';
-import '../../../core/utils/weekday_localization.dart';
 import '../../../core/utils/category_localization.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
@@ -1224,12 +1223,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   Widget _buildCategoryCardFromApi(Map<String, dynamic> category) {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context);
-    final resolved =
-        localizedCategoryName(category, locale).trim();
-    final slug = category['slug'] as String? ?? '';
-    final name = resolved.isNotEmpty
-        ? resolved
-        : homeExploreCategoryTitleForSlug(l10n, slug);
+    final name = localizedExploreParentCategoryName(category, locale, l10n);
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 
@@ -1949,7 +1943,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   }
 
   Widget _buildBottomSheetCategoryCardFromApi(Map<String, dynamic> category) {
-    final name = category['name'] as String? ?? AppLocalizations.of(context)!.exploreCategoryFallback;
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+    final name = localizedExploreParentCategoryName(category, locale, l10n);
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 

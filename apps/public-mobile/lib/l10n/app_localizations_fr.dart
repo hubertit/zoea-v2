@@ -4270,6 +4270,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exploreHomeCategoryShopping => 'Shopping';
 
   @override
+  String get exploreHomeCategoryAttractions => 'Attractions';
+
+  @override
+  String get exploreHomeCategorySports => 'Sports';
+
+  @override
+  String get exploreHomeCategoryTransport => 'Transport';
+
+  @override
+  String get exploreHomeCategoryServices => 'Services';
+
+  @override
+  String get exploreHomeCategoryKids => 'Enfants';
+
+  @override
+  String get exploreHomeCategoryRealEstate => 'Immobilier';
+
+  @override
+  String get exploreHomeCategoryHiking => 'Randonnée';
+
+  @override
+  String get exploreHomeCategoryNationalParks => 'Parcs nationaux';
+
+  @override
+  String get exploreHomeCategoryMuseums => 'Musées';
+
+  @override
   String get placeDetailOpeningHoursTitle => 'Heures d’ouverture';
 
   @override

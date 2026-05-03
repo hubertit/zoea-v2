@@ -33,22 +33,3 @@ String localizeOpeningHoursTime(AppLocalizations l10n, String time) {
   }
   return time;
 }
-
-String homeExploreCategoryTitleForSlug(AppLocalizations l10n, String slug) {
-  switch (slug) {
-    case 'events':
-      return l10n.exploreHomeCategoryEvents;
-    case 'dining':
-      return l10n.exploreHomeCategoryDining;
-    case 'experiences':
-      return l10n.exploreHomeCategoryExperiences;
-    case 'nightlife':
-      return l10n.exploreHomeCategoryNightlife;
-    case 'accommodation':
-      return l10n.exploreHomeCategoryAccommodation;
-    case 'shopping':
-      return l10n.exploreHomeCategoryShopping;
-    default:
-      return l10n.exploreCategoryFallback;
-  }
-}

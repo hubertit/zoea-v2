@@ -7622,6 +7622,60 @@ abstract class AppLocalizations {
   /// **'Shopping'**
   String get exploreHomeCategoryShopping;
 
+  /// No description provided for @exploreHomeCategoryAttractions.
+  ///
+  /// In en, this message translates to:
+  /// **'Attractions'**
+  String get exploreHomeCategoryAttractions;
+
+  /// No description provided for @exploreHomeCategorySports.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports'**
+  String get exploreHomeCategorySports;
+
+  /// No description provided for @exploreHomeCategoryTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get exploreHomeCategoryTransport;
+
+  /// No description provided for @exploreHomeCategoryServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get exploreHomeCategoryServices;
+
+  /// No description provided for @exploreHomeCategoryKids.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids'**
+  String get exploreHomeCategoryKids;
+
+  /// No description provided for @exploreHomeCategoryRealEstate.
+  ///
+  /// In en, this message translates to:
+  /// **'Real Estate'**
+  String get exploreHomeCategoryRealEstate;
+
+  /// No description provided for @exploreHomeCategoryHiking.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiking'**
+  String get exploreHomeCategoryHiking;
+
+  /// No description provided for @exploreHomeCategoryNationalParks.
+  ///
+  /// In en, this message translates to:
+  /// **'National Parks'**
+  String get exploreHomeCategoryNationalParks;
+
+  /// No description provided for @exploreHomeCategoryMuseums.
+  ///
+  /// In en, this message translates to:
+  /// **'Museums'**
+  String get exploreHomeCategoryMuseums;
+
   /// No description provided for @placeDetailOpeningHoursTitle.
   ///
   /// In en, this message translates to:
