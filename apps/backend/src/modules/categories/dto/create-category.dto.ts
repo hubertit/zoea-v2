@@ -6,6 +6,11 @@ export class CreateCategoryDto {
   @IsString()
   name: string;
 
+  @ApiPropertyOptional({ description: 'French display name (optional)' })
+  @IsString()
+  @IsOptional()
+  nameFr?: string;
+
   @ApiProperty({ description: 'Category slug (unique identifier)' })
   @IsString()
   slug: string;

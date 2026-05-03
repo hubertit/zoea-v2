@@ -7,6 +7,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 class NearMeListScreen extends ConsumerWidget {
   const NearMeListScreen({super.key});
@@ -113,8 +114,15 @@ class _NearMeCard extends StatelessWidget {
 
     final name = listing['name'] ?? 'Unknown';
     final address = listing['address'] ?? listing['city']?['name'] ?? '';
-    final category =
-        listing['category']?['name'] ?? listing['type'] ?? 'Place';
+    final catRaw = listing['category'];
+    late final String category;
+    if (catRaw is Map<String, dynamic>) {
+      final locCat =
+          localizedCategoryName(catRaw, Localizations.localeOf(context)).trim();
+      category = locCat.isNotEmpty ? locCat : (listing['type'] ?? 'Place');
+    } else {
+      category = listing['type'] ?? 'Place';
+    }
     final id = listing['id'] ?? '';
 
     return GestureDetector(

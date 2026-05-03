@@ -683,10 +683,8 @@ class _ListingDetailRouter extends ConsumerWidget {
         // Check if this is an accommodation listing
         final category = listing['category'] as Map<String, dynamic>?;
         final categorySlug = category?['slug'] as String?;
-        final categoryName = category?['name'] as String?;
 
-        final isAccommodation = categorySlug == 'accommodation' ||
-            categoryName?.toLowerCase() == 'accommodation';
+        final isAccommodation = categorySlug == 'accommodation';
 
         if (isAccommodation) {
           // Redirect to accommodation detail screen

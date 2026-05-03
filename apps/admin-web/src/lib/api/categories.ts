@@ -3,6 +3,8 @@ import apiClient from './client';
 export interface Category {
   id: string;
   name: string;
+  /** French display label for mobile/web when locale is fr (optional). */
+  nameFr?: string | null;
   slug: string;
   parentId?: string | null;
   icon?: string | null;
@@ -29,6 +31,7 @@ export interface ListCategoriesParams {
 
 export interface CreateCategoryParams {
   name: string;
+  nameFr?: string;
   slug: string;
   parentId?: string;
   icon?: string;
@@ -39,6 +42,7 @@ export interface CreateCategoryParams {
 
 export interface UpdateCategoryParams {
   name?: string;
+  nameFr?: string;
   slug?: string;
   parentId?: string | null;
   icon?: string;

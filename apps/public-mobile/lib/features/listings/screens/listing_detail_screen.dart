@@ -22,6 +22,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
 import '../../../core/utils/price_formatter.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 /// Helper class to hold shop tabs data
 class _ShopTabsData {
@@ -615,14 +616,16 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
     
     // Extract category and type
     final category = listing['category'] as Map<String, dynamic>?;
-    final categoryName = category?['name'] as String?;
+    final categoryLabel = category != null
+        ? localizedCategoryName(category, Localizations.localeOf(context))
+        : '';
     final listingType = listing['type'] as String?;
     
     // Generate description if missing
     final displayDescription = description.isNotEmpty
         ? description
-        : categoryName != null
-            ? 'Experience ${categoryName.toLowerCase()}${listingType != null ? ' - $listingType' : ''} in ${cityName.isNotEmpty ? cityName : countryName.isNotEmpty ? countryName : 'Rwanda'}.'
+        : categoryLabel.isNotEmpty
+            ? 'Experience ${categoryLabel.toLowerCase()}${listingType != null ? ' - $listingType' : ''} in ${cityName.isNotEmpty ? cityName : countryName.isNotEmpty ? countryName : 'Rwanda'}.'
             : '';
 
     return SingleChildScrollView(

@@ -28,6 +28,7 @@ import '../../../core/config/app_config.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../core/utils/weekday_localization.dart';
+import '../../../core/utils/category_localization.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -1173,18 +1174,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   /// [CategoryPlacesScreen] which loads listings by category id (resolved from slug).
   void _navigateExploreCategoryTap(BuildContext context, Map<String, dynamic> category) {
     final slug = category['slug'] as String? ?? '';
-    final name = category['name'] as String? ?? '';
     final navOverride = category['_homeNav'] as String?;
 
-    if (navOverride == HomeCategoryNav.stay.name ||
-        slug == 'accommodation' ||
-        name.toLowerCase() == 'accommodation') {
+    // Routing uses slug only so localized labels never break deep links.
+    if (navOverride == HomeCategoryNav.stay.name || slug == 'accommodation') {
       context.go('/accommodation');
       return;
     }
-    if (navOverride == HomeCategoryNav.events.name ||
-        slug == 'events' ||
-        name.toLowerCase() == 'events') {
+    if (navOverride == HomeCategoryNav.events.name || slug == 'events') {
       context.go('/events');
       return;
     }
@@ -1192,7 +1189,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
       context.push('/category/$slug');
       return;
     }
-    context.push('/category/${name.toLowerCase().replaceAll(' ', '-')}');
+    final fallbackLabel =
+        localizedCategoryName(category, Localizations.localeOf(context));
+    context.push(
+        '/category/${fallbackLabel.toLowerCase().replaceAll(' ', '-')}');
   }
 
   IconData _getIconForCategory(String? iconName) {
@@ -1223,10 +1223,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
 
   Widget _buildCategoryCardFromApi(Map<String, dynamic> category) {
     final l10n = AppLocalizations.of(context)!;
-    final rawName = (category['name'] as String?)?.trim();
+    final locale = Localizations.localeOf(context);
+    final resolved =
+        localizedCategoryName(category, locale).trim();
     final slug = category['slug'] as String? ?? '';
-    final name = (rawName != null && rawName.isNotEmpty)
-        ? rawName
+    final name = resolved.isNotEmpty
+        ? resolved
         : homeExploreCategoryTitleForSlug(l10n, slug);
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);

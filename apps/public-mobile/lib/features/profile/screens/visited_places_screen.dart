@@ -9,6 +9,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/content_views_provider.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 class VisitedPlacesScreen extends ConsumerStatefulWidget {
   const VisitedPlacesScreen({super.key});
@@ -282,7 +283,16 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
     final rating = (content['rating'] as num?)?.toDouble() ?? 0.0;
     final reviewCount = content['reviewCount'] as int? ?? 0;
     final category = content['category'] as Map<String, dynamic>?;
-    final categoryName = category?['name'] as String? ?? AppLocalizations.of(context)!.contentTypePlaceLabel;
+    final categoryLabelApp =
+        AppLocalizations.of(context)!.contentTypePlaceLabel;
+    var categoryName = categoryLabelApp;
+    if (category != null) {
+      final loc = localizedCategoryName(
+        category,
+        Localizations.localeOf(context),
+      ).trim();
+      if (loc.isNotEmpty) categoryName = loc;
+    }
 
     // Get first image URL
     String? imageUrl;

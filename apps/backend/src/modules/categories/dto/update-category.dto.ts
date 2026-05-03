@@ -7,6 +7,11 @@ export class UpdateCategoryDto {
   @IsOptional()
   name?: string;
 
+  @ApiPropertyOptional({ description: 'French display name (optional); omit to leave unchanged' })
+  @IsString()
+  @IsOptional()
+  nameFr?: string;
+
   @ApiPropertyOptional({ description: 'Category slug (unique identifier)' })
   @IsString()
   @IsOptional()

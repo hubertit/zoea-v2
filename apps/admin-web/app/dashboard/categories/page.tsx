@@ -24,6 +24,7 @@ export default function CategoriesPage() {
 
   const [formData, setFormData] = useState({
     name: '',
+    nameFr: '',
     slug: '',
     parentId: '',
     description: '',
@@ -62,6 +63,7 @@ export default function CategoriesPage() {
     try {
       await CategoriesAPI.createCategory({
         name: formData.name.trim(),
+        nameFr: formData.nameFr.trim() || undefined,
         slug: formData.slug.trim(),
         parentId: formData.parentId || undefined,
         description: formData.description.trim() || undefined,
@@ -73,6 +75,7 @@ export default function CategoriesPage() {
       setCreateModalOpen(false);
       setFormData({
         name: '',
+        nameFr: '',
         slug: '',
         parentId: '',
         description: '',
@@ -114,6 +117,7 @@ export default function CategoriesPage() {
     return flatFromTree.filter(
       (cat) =>
         cat.name.toLowerCase().includes(q) ||
+        (cat.nameFr && cat.nameFr.toLowerCase().includes(q)) ||
         cat.slug.toLowerCase().includes(q) ||
         (cat.description && cat.description.toLowerCase().includes(q)),
     );
@@ -295,6 +299,12 @@ export default function CategoriesPage() {
             required
           />
           <Input
+            label="Name (French)"
+            value={formData.nameFr}
+            onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
+            placeholder="Optional — shown when app locale is French"
+          />
+          <Input
             label="Slug"
             value={formData.slug}
             onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
@@ -348,6 +358,7 @@ export default function CategoriesPage() {
                 setCreateModalOpen(false);
                 setFormData({
                   name: '',
+                  nameFr: '',
                   slug: '',
                   parentId: '',
                   description: '',

@@ -150,7 +150,7 @@ export class ListingsService {
         skip,
         take: limit,
         include: {
-          category: { select: { id: true, name: true, slug: true, icon: true } },
+          category: { select: { id: true, name: true, nameFr: true, slug: true, icon: true } },
           city: { select: { id: true, name: true, slug: true } },
           country: { select: { id: true, name: true, code: true } },
           images: { include: { media: true }, orderBy: { sortOrder: 'asc' } },
@@ -241,7 +241,7 @@ export class ListingsService {
       },
       take: limit,
       include: {
-        category: { select: { id: true, name: true, icon: true } },
+        category: { select: { id: true, name: true, nameFr: true, icon: true } },
         city: { select: { id: true, name: true } },
         images: { include: { media: true }, take: 1, where: { isPrimary: true } },
       },
@@ -276,7 +276,7 @@ export class ListingsService {
         }),
       },
       include: {
-        category: { select: { id: true, name: true, icon: true } },
+        category: { select: { id: true, name: true, nameFr: true, icon: true } },
         city: { select: { id: true, name: true } },
         images: { include: { media: true }, take: 1, where: { isPrimary: true } },
       },

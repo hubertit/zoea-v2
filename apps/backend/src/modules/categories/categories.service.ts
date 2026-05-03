@@ -77,6 +77,7 @@ export class CategoriesService {
             select: {
               id: true,
               name: true,
+              nameFr: true,
               slug: true,
             },
           },
@@ -172,6 +173,7 @@ export class CategoriesService {
   async create(data: {
     name: string;
     slug: string;
+    nameFr?: string;
     parentId?: string;
     icon?: string;
     description?: string;
@@ -191,6 +193,8 @@ export class CategoriesService {
       data: {
         name: data.name,
         slug: data.slug,
+        ...(data.nameFr !== undefined &&
+          data.nameFr.trim() !== '' && { nameFr: data.nameFr.trim() }),
         parentId: data.parentId,
         icon: data.icon,
         description: data.description,
@@ -208,6 +212,7 @@ export class CategoriesService {
   async update(id: string, data: {
     name?: string;
     slug?: string;
+    nameFr?: string;
     parentId?: string | null;
     icon?: string;
     description?: string;
@@ -239,6 +244,9 @@ export class CategoriesService {
       data: {
         ...(data.name && { name: data.name }),
         ...(data.slug && { slug: data.slug }),
+        ...(data.nameFr !== undefined && {
+          nameFr: data.nameFr.trim() === '' ? null : data.nameFr.trim(),
+        }),
         ...(data.parentId !== undefined && { parentId: data.parentId }),
         ...(data.icon !== undefined && { icon: data.icon }),
         ...(data.description !== undefined && { description: data.description }),

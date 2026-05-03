@@ -14,6 +14,7 @@ import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 class DiningScreen extends ConsumerStatefulWidget {
   const DiningScreen({super.key});
@@ -164,7 +165,10 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
     return categoryAsync.when(
       data: (categoryData) {
         _diningCategoryId = categoryData['id'] as String?;
-        _diningCategoryName = categoryData['name'] as String?;
+        _diningCategoryName = localizedCategoryName(
+          Map<String, dynamic>.from(categoryData),
+          Localizations.localeOf(context),
+        );
 
         // Set initial selected category to dining category for "All" tab
         if (_selectedCategoryId == null) {
@@ -301,9 +305,15 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                       Tab(text: loc.stayTabAll),
                       Tab(text: loc.shopSortPopular),
                       ..._subcategories.map((subcategory) {
-                        final name =
-                            subcategory['name'] as String? ?? 'Unknown';
-                        return Tab(text: name);
+                        final label = localizedCategoryName(
+                          Map<String, dynamic>.from(subcategory),
+                          Localizations.localeOf(context),
+                        );
+                        return Tab(
+                          text: label.isNotEmpty
+                              ? label
+                              : loc.exploreListingUnknown,
+                        );
                       }),
                     ],
                   ),
@@ -550,6 +560,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
   }
 
   Widget _buildRegularListingCard(Map<String, dynamic> listing) {
+    final loc = AppLocalizations.of(context)!;
     final listingId = listing['id'] as String? ?? '';
     final name = listing['name'] as String? ?? 'Unknown';
 
@@ -616,11 +627,17 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
         : '';
 
     // Extract subcategory name if in "All" tab (show subcategory badge)
-    String displayCategory = _diningCategoryName ?? 'Dining';
+    String displayCategory =
+        _diningCategoryName ?? loc.diningCategoryFallbackName;
     if (_selectedTabIndex == 0 && listing['category'] != null) {
       final categoryData = listing['category'];
       if (categoryData is Map<String, dynamic>) {
-        displayCategory = categoryData['name'] as String? ?? displayCategory;
+        final localized = localizedCategoryName(
+          categoryData,
+          Localizations.localeOf(context),
+        );
+        displayCategory =
+            localized.isNotEmpty ? localized : displayCategory;
       }
     }
 

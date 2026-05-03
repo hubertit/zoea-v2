@@ -8,6 +8,7 @@ import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 /// One top-level category tab: label + every category id in that subtree (root and descendants).
 class _RecommendationRootTab {
@@ -38,17 +39,20 @@ Set<String> _collectDescendantCategoryIds(Map<String, dynamic> node) {
 /// Root slugs excluded from Recommendations tabs (e.g. events live elsewhere in the app).
 const _recommendationsExcludedRootSlugs = {'events'};
 
-List<_RecommendationRootTab> _rootTabsFromCategoryTree(List<Map<String, dynamic>> roots) {
+List<_RecommendationRootTab> _rootTabsFromCategoryTree(
+  List<Map<String, dynamic>> roots,
+  Locale locale,
+) {
   final out = <_RecommendationRootTab>[];
   for (final r in roots) {
     if (r['isActive'] == false) continue;
     final slug = (r['slug'] as String?)?.trim().toLowerCase() ?? '';
     if (slug.isNotEmpty && _recommendationsExcludedRootSlugs.contains(slug)) continue;
-    final name = (r['name'] as String?)?.trim();
-    if (name == null || name.isEmpty) continue;
+    final display = localizedCategoryName(r, locale).trim();
+    if (display.isEmpty) continue;
     final ids = _collectDescendantCategoryIds(r);
     if (ids.isEmpty) continue;
-    out.add(_RecommendationRootTab(name: name, descendantIds: ids));
+    out.add(_RecommendationRootTab(name: display, descendantIds: ids));
   }
   return out;
 }
@@ -107,7 +111,10 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
         ),
       ),
       error: (_, __) => _buildScaffoldWithTabs(context, const []),
-      data: (roots) => _buildScaffoldWithTabs(context, _rootTabsFromCategoryTree(roots)),
+      data: (roots) => _buildScaffoldWithTabs(
+            context,
+            _rootTabsFromCategoryTree(roots, Localizations.localeOf(context)),
+          ),
     );
   }
 
@@ -322,9 +329,15 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
         ? 'From ${_formatPrice(minPrice, currency)}'
         : '';
 
-    final category = listing['category']?['name'] as String? ??
-        listing['type'] as String? ??
-        'Place';
+    final catMap = listing['category'];
+    late final String category;
+    if (catMap is Map<String, dynamic>) {
+      final locCat = localizedCategoryName(catMap, Localizations.localeOf(context)).trim();
+      category =
+          locCat.isNotEmpty ? locCat : (listing['type'] as String? ?? 'Place');
+    } else {
+      category = listing['type'] as String? ?? 'Place';
+    }
 
     final id = listing['id'] as String? ?? '';
 

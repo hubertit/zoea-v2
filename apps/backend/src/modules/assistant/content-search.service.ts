@@ -252,7 +252,7 @@ export class ContentSearchService {
     const take = Math.ceil(limit / 4);
     const include = {
       city: { select: { name: true } },
-      category: { select: { name: true } },
+      category: { select: { name: true, nameFr: true } },
       images: { include: { media: true }, take: 1, where: { isPrimary: true } },
     };
     const orderBy = [{ isFeatured: 'desc' as const }, { rating: 'desc' as const }];

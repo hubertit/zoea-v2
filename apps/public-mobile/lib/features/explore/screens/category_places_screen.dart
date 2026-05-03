@@ -15,6 +15,7 @@ import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 class CategoryPlacesScreen extends ConsumerStatefulWidget {
   final String category; // This is the slug
@@ -152,14 +153,9 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     });
   }
 
-  bool _isAccommodationCategory(String? categoryName, String? categorySlug) {
-    if (categoryName == null && categorySlug == null) return false;
-    final name = (categoryName ?? '').toLowerCase();
-    final slug = (categorySlug ?? widget.category).toLowerCase();
-    return name.contains('hotel') ||
-        name.contains('accommodation') ||
-        slug.contains('hotel') ||
-        slug.contains('accommodation');
+  bool _isAccommodationCategory(String? apiCategorySlug, String routeSlug) {
+    final slug = (apiCategorySlug ?? routeSlug).toLowerCase();
+    return slug.contains('hotel') || slug.contains('accommodation');
   }
 
   @override
@@ -169,7 +165,14 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     return categoryAsync.when(
       data: (categoryData) {
         final categoryId = categoryData['id'] as String?;
-        final categoryName = categoryData['name'] as String?;
+        final categorySlugApi = categoryData['slug'] as String?;
+        final localizedTitle = localizedCategoryName(
+          Map<String, dynamic>.from(categoryData),
+          Localizations.localeOf(context),
+        );
+        final categoryDisplayName = localizedTitle.isNotEmpty
+            ? localizedTitle
+            : (categoryData['name'] as String? ?? '');
         if (categoryId == null) {
           return Scaffold(
             backgroundColor: context.grey50,
@@ -192,7 +195,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
         return childrenAsync.when(
           data: (children) {
             final isAccommodation =
-                _isAccommodationCategory(categoryName, widget.category);
+                _isAccommodationCategory(categorySlugApi, widget.category);
             final sig = '$categoryId|${children.map((c) => c['id']).join(',')}';
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -200,7 +203,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
               if (_tabsInitSignature != sig) {
                 setState(() {
                   _categoryId = categoryId;
-                  _categoryName = categoryName;
+                  _categoryName = categoryDisplayName;
                   _currentParentCategoryId = categoryId;
                   _isAccommodation = isAccommodation;
                   _initializeTabs(children);
@@ -318,11 +321,18 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           }
                         },
                         tabs: [
-                          const Tab(text: 'All'),
+                          Tab(text: AppLocalizations.of(context)!.stayTabAll),
                           ..._subcategories.map((subcategory) {
-                            final name =
-                                subcategory['name'] as String? ?? 'Unknown';
-                            return Tab(text: name);
+                            final label = localizedCategoryName(
+                              Map<String, dynamic>.from(subcategory),
+                              Localizations.localeOf(context),
+                            );
+                            return Tab(
+                              text: label.isNotEmpty
+                                  ? label
+                                  : AppLocalizations.of(context)!
+                                      .exploreListingUnknown,
+                            );
                           }),
                         ],
                       ),
@@ -357,7 +367,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 color: context.primaryTextColor,
               ),
               title: Text(
-                categoryName ?? widget.category,
+                widget.category,
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -377,7 +387,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 color: context.primaryTextColor,
               ),
               title: Text(
-                categoryName ?? widget.category,
+                widget.category,
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -586,7 +596,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No ${_categoryName?.toLowerCase() ?? widget.category} found',
+                  'No ${_categoryName ?? widget.category} found',
                   style: context.headlineSmall.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -709,7 +719,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No ${_categoryName?.toLowerCase() ?? widget.category} found',
+                  'No ${_categoryName ?? widget.category} found',
                   style: context.headlineSmall.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -915,7 +925,12 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     if (showSubcategoryBadge && listing['category'] != null) {
       final categoryData = listing['category'];
       if (categoryData is Map<String, dynamic>) {
-        displayCategory = categoryData['name'] as String? ?? displayCategory;
+        final locName = localizedCategoryName(
+          categoryData,
+          Localizations.localeOf(context),
+        );
+        displayCategory =
+            locName.isNotEmpty ? locName : displayCategory;
       }
     }
 
@@ -1061,7 +1076,11 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
     if (showSubcategoryBadge && listing['category'] != null) {
       final categoryData = listing['category'];
       if (categoryData is Map<String, dynamic>) {
-        subcategoryName = categoryData['name'] as String?;
+        final locName = localizedCategoryName(
+          categoryData,
+          Localizations.localeOf(context),
+        );
+        subcategoryName = locName.isNotEmpty ? locName : null;
       }
     }
 

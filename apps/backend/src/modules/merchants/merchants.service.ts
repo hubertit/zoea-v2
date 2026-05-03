@@ -126,7 +126,7 @@ export class MerchantsService {
         skip,
         take: limit,
         include: {
-          category: { select: { id: true, name: true } },
+          category: { select: { id: true, name: true, nameFr: true } },
           city: { select: { id: true, name: true } },
           images: { include: { media: true }, orderBy: { sortOrder: 'asc' }, take: 5 },
           _count: { select: { bookings: true, reviews: true } },
@@ -213,7 +213,7 @@ export class MerchantsService {
         ...locationData,
       },
       include: {
-        category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, nameFr: true } },
         city: { select: { id: true, name: true } },
       },
     });
@@ -268,7 +268,7 @@ export class MerchantsService {
         updatedById: userId,
       },
       include: {
-        category: { select: { id: true, name: true } },
+        category: { select: { id: true, name: true, nameFr: true } },
         city: { select: { id: true, name: true } },
       },
     });

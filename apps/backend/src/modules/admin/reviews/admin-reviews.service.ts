@@ -73,7 +73,7 @@ export class AdminReviewsService {
               id: true,
               name: true,
               type: true,
-              category: { select: { id: true, name: true, slug: true } },
+              category: { select: { id: true, name: true, nameFr: true, slug: true } },
             },
           },
           event: {
@@ -87,7 +87,7 @@ export class AdminReviewsService {
             select: {
               id: true,
               name: true,
-              category: { select: { id: true, name: true, slug: true } },
+              category: { select: { id: true, name: true, nameFr: true, slug: true } },
             },
           },
           booking: { select: { id: true, bookingNumber: true } },

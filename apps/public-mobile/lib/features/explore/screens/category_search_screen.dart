@@ -8,6 +8,7 @@ import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/category_localization.dart';
 
 class CategorySearchScreen extends ConsumerStatefulWidget {
   final String category;
@@ -185,12 +186,18 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
         if (children != null && children.isNotEmpty) {
           for (var child in children) {
             final childMap = child as Map<String, dynamic>;
-            final name = childMap['name'] as String? ?? '';
+            final canonical = childMap['name'] as String? ?? '';
             final id = childMap['id'] as String?;
-            if (name.isNotEmpty && id != null) {
+            if (canonical.isNotEmpty && id != null) {
+              final locLabel = localizedCategoryName(
+                childMap,
+                Localizations.localeOf(context),
+              );
+              final label =
+                  locLabel.isNotEmpty ? locLabel : canonical;
               subCategories.add({
-                'label': name,
-                'value': name,
+                'label': label,
+                'value': canonical,
                 'id': id,
               });
             }
@@ -458,7 +465,9 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     final reviews = (listing['reviews'] as List?)?.length ?? 0;
     final priceRange = listing['priceRange'] as String?;
     final category = listing['category'] as Map<String, dynamic>?;
-    final categoryName = category?['name'] as String? ?? '';
+    final categoryName = category != null
+        ? localizedCategoryName(category, Localizations.localeOf(context))
+        : '';
     final id = listing['id'] as String? ?? '';
     final isFavorite = listing['isFavorite'] as bool? ?? false;
     

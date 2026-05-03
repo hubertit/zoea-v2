@@ -69,7 +69,7 @@ export class ToursService {
         skip,
         take: limit,
         include: {
-          category: { select: { id: true, name: true, slug: true } },
+          category: { select: { id: true, name: true, nameFr: true, slug: true } },
           city: { select: { id: true, name: true } },
           country: { select: { id: true, name: true } },
           operator: { select: { id: true, companyName: true, isVerified: true, averageRating: true } },
@@ -377,7 +377,7 @@ export class ToursService {
         skip,
         take: limit,
         include: {
-          category: { select: { id: true, name: true } },
+          category: { select: { id: true, name: true, nameFr: true } },
           city: { select: { id: true, name: true } },
           country: { select: { id: true, name: true } },
           images: { include: { media: true }, take: 1, where: { isPrimary: true } },

@@ -33,6 +33,7 @@ export default function CategoryDetailPage() {
 
   const [formData, setFormData] = useState({
     name: '',
+    nameFr: '',
     slug: '',
     parentId: '',
     description: '',
@@ -63,6 +64,7 @@ export default function CategoryDetailPage() {
         setCategories(allCategories);
         setFormData({
           name: categoryData.name || '',
+          nameFr: categoryData.nameFr || '',
           slug: categoryData.slug || '',
           parentId: categoryData.parentId || '',
           description: categoryData.description || '',
@@ -93,6 +95,7 @@ export default function CategoryDetailPage() {
     try {
       await CategoriesAPI.updateCategory(categoryId, {
         name: formData.name.trim(),
+        nameFr: formData.nameFr.trim(),
         slug: formData.slug.trim(),
         parentId: formData.parentId || null,
         description: formData.description.trim() || undefined,
@@ -210,6 +213,11 @@ export default function CategoryDetailPage() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name (French)</label>
+              <p className="text-sm text-gray-900">{category.nameFr?.trim() ? category.nameFr : '—'}</p>
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
               <p className="text-sm text-gray-900">{category.slug || 'N/A'}</p>
             </div>
@@ -304,6 +312,7 @@ export default function CategoryDetailPage() {
           setEditModalOpen(false);
           setFormData({
             name: category.name || '',
+            nameFr: category.nameFr || '',
             slug: category.slug || '',
             parentId: category.parentId || '',
             description: category.description || '',
@@ -321,6 +330,12 @@ export default function CategoryDetailPage() {
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Category name"
             required
+          />
+          <Input
+            label="Name (French)"
+            value={formData.nameFr}
+            onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
+            placeholder="Optional — app locale French"
           />
           <Input
             label="Slug"
@@ -376,6 +391,7 @@ export default function CategoryDetailPage() {
                 setEditModalOpen(false);
                 setFormData({
                   name: category.name || '',
+                  nameFr: category.nameFr || '',
                   slug: category.slug || '',
                   parentId: category.parentId || '',
                   description: category.description || '',
