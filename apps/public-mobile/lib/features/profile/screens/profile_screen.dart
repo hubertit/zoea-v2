@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/package_info_provider.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/providers/locale_provider.dart';
 import '../../../core/providers/user_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/country_provider.dart';
@@ -24,7 +26,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String _selectedCurrency = 'RWF';
   String _selectedCountry = 'Rwanda';
   String _selectedLocation = 'Kigali';
-  String _selectedLanguage = 'English';
+  String _selectedLanguageCode = 'en';
   
   // Track if location was manually changed in this session to avoid overwriting
   bool _locationManuallyChanged = false;
@@ -56,7 +58,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     setState(() {
       _selectedCurrency = user.preferences?.currency ?? 'RWF';
       final langCode = user.preferences?.language ?? 'en';
-      _selectedLanguage = _mapLanguageCodeToName(langCode);
+      _selectedLanguageCode = _normalizeLanguageCode(langCode);
       _selectedCountry = AppConfig.countrySelectionLockedToRwanda
           ? 'Rwanda'
           : (user.countryName ?? _selectedCountry);
@@ -108,19 +110,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (user != null) {
       final newCurrency = user.preferences?.currency ?? 'RWF';
       final langCode = user.preferences?.language ?? 'en';
-      final newLanguage = _mapLanguageCodeToName(langCode);
+      final newLanguageCode = _normalizeLanguageCode(langCode);
       final newCountry = AppConfig.countrySelectionLockedToRwanda
           ? 'Rwanda'
           : (user.countryName ?? 'Rwanda');
 
       if (_selectedCurrency != newCurrency ||
-          _selectedLanguage != newLanguage ||
+          _selectedLanguageCode != newLanguageCode ||
           _selectedCountry != newCountry) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             setState(() {
               _selectedCurrency = newCurrency;
-              _selectedLanguage = newLanguage;
+              _selectedLanguageCode = newLanguageCode;
               _selectedCountry = newCountry;
             });
           }
@@ -131,42 +133,38 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return _buildProfileContent();
   }
   
-  String _mapLanguageCodeToName(String code) {
+  String _normalizeLanguageCode(String code) {
     switch (code.toLowerCase()) {
       case 'fr':
-        return 'French';
+        return 'fr';
       case 'en':
       case 'rw':
       case 'kin':
       case 'sw':
       default:
-        // Legacy rw/sw/unknown stored in API → treat as English until user picks French.
-        return 'English';
-    }
-  }
-  
-  String _mapLanguageNameToCode(String name) {
-    switch (name) {
-      case 'French':
-        return 'fr';
-      case 'English':
-      default:
         return 'en';
     }
   }
+
+  String _languageSubtitle(AppLocalizations l10n) {
+    return _selectedLanguageCode == 'fr'
+        ? l10n.languageOptionFrench
+        : l10n.languageOptionEnglish;
+  }
   
   Widget _buildProfileContent() {
+    final l10n = AppLocalizations.of(context)!;
     final packageInfo = ref.watch(packageInfoProvider);
     final aboutSubtitle = packageInfo.maybeWhen(
-      data: (p) => 'Version ${p.version} (${p.buildNumber})',
-      orElse: () => 'App information',
+      data: (p) => l10n.profileAboutSubtitle(p.version, p.buildNumber),
+      orElse: () => l10n.profileAppInformation,
     );
 
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
         title: Text(
-          'Profile',
+          l10n.profileTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -187,17 +185,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 32),
             
             // Quick Stats
-            _buildQuickStats(),
+            _buildQuickStats(l10n),
             const SizedBox(height: 32),
             
             // Menu Sections
             _buildMenuSection(
-              title: 'Account',
+              title: l10n.profileSectionAccount,
               items: [
                 _buildMenuItem(
                   icon: Icons.notifications_outlined,
-                  title: 'Notifications',
-                  subtitle: 'Manage your notifications',
+                  title: l10n.profileNotificationsTitle,
+                  subtitle: l10n.profileNotificationsSubtitle,
                   onTap: () {
                     context.push('/notifications');
                   },
@@ -205,16 +203,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 _buildMenuItem(
                   icon: Icons.person_outline,
-                  title: 'Edit Profile',
-                  subtitle: 'Update your personal information',
+                  title: l10n.profileEditTitle,
+                  subtitle: l10n.profileEditSubtitle,
                   onTap: () {
                     context.go('/profile/edit');
                   },
                 ),
                 _buildMenuItem(
                   icon: Icons.security_outlined,
-                  title: 'Privacy & Security',
-                  subtitle: 'Password and privacy settings',
+                  title: l10n.profilePrivacyTitle,
+                  subtitle: l10n.profilePrivacySubtitle,
                   onTap: () {
                     context.go('/profile/privacy-security');
                   },
@@ -224,11 +222,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 24),
             
             _buildMenuSection(
-              title: 'Preferences',
+              title: l10n.profileSectionPreferences,
               items: [
                 _buildMenuItem(
                   icon: Icons.attach_money_outlined,
-                  title: 'Currency',
+                  title: l10n.profileCurrencyTitle,
                   subtitle: _selectedCurrency,
                   onTap: () {
                     _showCurrencyBottomSheet(context);
@@ -236,9 +234,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 _buildMenuItem(
                   icon: Icons.public_outlined,
-                  title: 'Country',
+                  title: l10n.profileCountryTitle,
                   subtitle: AppConfig.countrySelectionLockedToRwanda
-                      ? 'Rwanda'
+                      ? l10n.profileCountryRwanda
                       : _selectedCountry,
                   onTap: AppConfig.countrySelectionLockedToRwanda
                       ? null
@@ -250,7 +248,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 _buildMenuItem(
                   icon: Icons.location_on_outlined,
-                  title: 'Location',
+                  title: l10n.profileLocationTitle,
                   subtitle: _selectedLocation,
                   onTap: () {
                     _showLocationBottomSheet(context);
@@ -258,8 +256,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 _buildMenuItem(
                   icon: Icons.language_outlined,
-                  title: 'Language',
-                  subtitle: _selectedLanguage,
+                  title: l10n.profileLanguageTitle,
+                  subtitle: _languageSubtitle(l10n),
                   onTap: () {
                     _showLanguageBottomSheet(context);
                   },
@@ -269,36 +267,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 24),
             
             _buildMenuSection(
-              title: 'Appearance',
+              title: l10n.profileSectionAppearance,
               items: [
-                _buildThemeSwitcher(),
+                _buildThemeSwitcher(l10n),
               ],
             ),
             const SizedBox(height: 24),
             
             _buildMenuSection(
-              title: 'Travel & Activities',
+              title: l10n.profileSectionTravel,
               items: [
                 _buildMenuItem(
                   icon: Icons.history,
-                  title: 'My Bookings',
-                  subtitle: 'View your reservations',
+                  title: l10n.profileMyBookingsTitle,
+                  subtitle: l10n.profileMyBookingsSubtitle,
                   onTap: () {
                     context.go('/profile/my-bookings');
                   },
                 ),
                 _buildMenuItem(
                   icon: Icons.favorite_outline,
-                  title: 'Favorites',
-                  subtitle: 'Your saved places and events',
+                  title: l10n.profileFavoritesTitle,
+                  subtitle: l10n.profileFavoritesSubtitle,
                   onTap: () {
                     context.go('/profile/favorites');
                   },
                 ),
                 _buildMenuItem(
                   icon: Icons.reviews_outlined,
-                  title: 'Reviews & Ratings',
-                  subtitle: 'Your reviews and feedback',
+                  title: l10n.profileReviewsTitle,
+                  subtitle: l10n.profileReviewsSubtitle,
                   onTap: () {
                     context.go('/profile/reviews-written');
                   },
@@ -308,19 +306,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 24),
             
             _buildMenuSection(
-              title: 'Support',
+              title: l10n.profileSectionSupport,
               items: [
                 _buildMenuItem(
                   icon: Icons.help_outline,
-                  title: 'Help Center',
-                  subtitle: 'Get help and support',
+                  title: l10n.profileHelpTitle,
+                  subtitle: l10n.profileHelpSubtitle,
                   onTap: () {
                     context.go('/profile/help-center');
                   },
                 ),
                 _buildMenuItem(
                   icon: Icons.info_outline,
-                  title: 'About',
+                  title: l10n.profileAboutMenuTitle,
                   subtitle: aboutSubtitle,
                   onTap: () {
                     context.go('/profile/about');
@@ -328,8 +326,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 _buildMenuItem(
                   icon: Icons.logout,
-                  title: 'Sign Out',
-                  subtitle: 'Sign out of your account',
+                  title: l10n.profileSignOutTitle,
+                  subtitle: l10n.profileSignOutSubtitle,
                   onTap: () {
                     _showSignOutDialog(context);
                   },
@@ -353,7 +351,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: context.isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+            color: context.isDarkMode ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -370,7 +368,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               gradient: LinearGradient(
                 colors: [
                   context.primaryColorTheme,
-                  context.primaryColorTheme.withOpacity(0.8),
+                  context.primaryColorTheme.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -433,11 +431,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: context.primaryColorTheme.withOpacity(0.1),
+                      color: context.primaryColorTheme.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'Verified Traveler',
+                      AppLocalizations.of(context)!.profileVerifiedTraveler,
                       style: context.labelSmall.copyWith(
                         color: context.primaryColorTheme,
                         fontWeight: FontWeight.w500,
@@ -471,7 +469,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return 0;
   }
 
-  Widget _buildQuickStats() {
+  Widget _buildQuickStats(AppLocalizations l10n) {
     final userStats = ref.watch(userStatsProvider);
     
     return userStats.when(
@@ -493,9 +491,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               behavior: HitTestBehavior.opaque,
               child: _buildStatCard(
                 icon: Icons.event,
-                title: 'Events',
+                title: l10n.profileStatEvents,
                 value: '$eventsCount',
-                subtitle: 'Attended',
+                subtitle: l10n.profileStatAttended,
               ),
             ),
           ),
@@ -508,9 +506,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               behavior: HitTestBehavior.opaque,
               child: _buildStatCard(
                 icon: Icons.place,
-                title: 'Places',
+                title: l10n.profileStatPlaces,
                 value: '$visitedPlacesCount',
-                subtitle: 'Visited',
+                subtitle: l10n.profileStatVisited,
               ),
             ),
           ),
@@ -520,9 +518,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               onTap: () => context.go('/profile/reviews-written'),
               child: _buildStatCard(
                 icon: Icons.star,
-                title: 'Reviews',
+                title: l10n.profileStatReviews,
                 value: '${stats['reviews'] ?? 0}',
-                subtitle: 'Written',
+                subtitle: l10n.profileStatWritten,
               ),
             ),
           ),
@@ -531,20 +529,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       },
       loading: () => Row(
         children: [
-          Expanded(child: _buildStatCard(icon: Icons.event, title: 'Events', value: '...', subtitle: 'Attended')),
+          Expanded(child: _buildStatCard(icon: Icons.event, title: l10n.profileStatEvents, value: '...', subtitle: l10n.profileStatAttended)),
           const SizedBox(width: 12),
-          Expanded(child: _buildStatCard(icon: Icons.place, title: 'Places', value: '...', subtitle: 'Visited')),
+          Expanded(child: _buildStatCard(icon: Icons.place, title: l10n.profileStatPlaces, value: '...', subtitle: l10n.profileStatVisited)),
           const SizedBox(width: 12),
-          Expanded(child: _buildStatCard(icon: Icons.star, title: 'Reviews', value: '...', subtitle: 'Written')),
+          Expanded(child: _buildStatCard(icon: Icons.star, title: l10n.profileStatReviews, value: '...', subtitle: l10n.profileStatWritten)),
         ],
       ),
       error: (_, __) => Row(
         children: [
-          Expanded(child: _buildStatCard(icon: Icons.event, title: 'Events', value: '0', subtitle: 'Attended')),
+          Expanded(child: _buildStatCard(icon: Icons.event, title: l10n.profileStatEvents, value: '0', subtitle: l10n.profileStatAttended)),
           const SizedBox(width: 12),
-          Expanded(child: _buildStatCard(icon: Icons.place, title: 'Places', value: '0', subtitle: 'Visited')),
+          Expanded(child: _buildStatCard(icon: Icons.place, title: l10n.profileStatPlaces, value: '0', subtitle: l10n.profileStatVisited)),
           const SizedBox(width: 12),
-          Expanded(child: _buildStatCard(icon: Icons.star, title: 'Reviews', value: '0', subtitle: 'Written')),
+          Expanded(child: _buildStatCard(icon: Icons.star, title: l10n.profileStatReviews, value: '0', subtitle: l10n.profileStatWritten)),
         ],
       ),
     );
@@ -563,7 +561,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: context.isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+            color: context.isDarkMode ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -624,7 +622,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: context.isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+                color: context.isDarkMode ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -660,7 +658,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: context.primaryColorTheme.withOpacity(0.1),
+                    color: context.primaryColorTheme.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -722,7 +720,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildThemeSwitcher() {
+  Widget _buildThemeSwitcher(AppLocalizations l10n) {
     final themeMode = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);
     
@@ -736,7 +734,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: context.primaryColorTheme.withOpacity(0.1),
+                  color: context.primaryColorTheme.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -751,7 +749,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Theme',
+                      l10n.profileThemeLabel,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w500,
                         color: context.primaryTextColor,
@@ -760,10 +758,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     const SizedBox(height: 2),
                     Text(
                       themeMode == ThemeMode.dark 
-                          ? 'Dark Mode' 
+                          ? l10n.profileThemeDark
                           : themeMode == ThemeMode.light 
-                              ? 'Light Mode' 
-                              : 'System Default',
+                              ? l10n.profileThemeLight
+                              : l10n.profileThemeSystem,
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -790,21 +788,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   themeMode: ThemeMode.light,
                   currentMode: themeMode,
                   icon: Icons.light_mode,
-                  label: 'Light',
+                  label: l10n.appearanceLight,
                   onTap: () => themeNotifier.setTheme(ThemeMode.light),
                 ),
                 _buildThemeOption(
                   themeMode: ThemeMode.dark,
                   currentMode: themeMode,
                   icon: Icons.dark_mode,
-                  label: 'Dark',
+                  label: l10n.appearanceDark,
                   onTap: () => themeNotifier.setTheme(ThemeMode.dark),
                 ),
                 _buildThemeOption(
                   themeMode: ThemeMode.system,
                   currentMode: themeMode,
                   icon: Icons.brightness_auto,
-                  label: 'System',
+                  label: l10n.appearanceSystem,
                   onTap: () => themeNotifier.setTheme(ThemeMode.system),
                 ),
               ],
@@ -871,18 +869,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _showSignOutDialog(BuildContext context) {
+    final rootL10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: context.cardColor,
         title: Text(
-          'Sign Out',
+          rootL10n.signOutDialogTitle,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
         ),
         content: Text(
-          'Are you sure you want to sign out?',
+          rootL10n.signOutDialogMessage,
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -891,7 +890,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              rootL10n.authCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -909,7 +908,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               }
             },
             child: Text(
-              'Sign Out',
+              rootL10n.signOutDialogConfirm,
               style: context.bodyMedium.copyWith(
                 color: context.errorColor,
                 fontWeight: FontWeight.w500,
@@ -1174,6 +1173,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _showLanguageBottomSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1199,7 +1199,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             
             // Title
             Text(
-              'Select Language',
+              l10n.profileSelectLanguage,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -1207,9 +1207,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             
-            // Language options (English and French only for now)
-            _buildLanguageOption('English', 'English', _selectedLanguage == 'English'),
-            _buildLanguageOption('French', 'Français', _selectedLanguage == 'French'),
+            _buildLanguageOption('en', l10n, _selectedLanguageCode == 'en'),
+            _buildLanguageOption('fr', l10n, _selectedLanguageCode == 'fr'),
             
             // Add bottom padding for safe area
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
@@ -1223,7 +1222,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: isSelected ? context.primaryColorTheme.withOpacity(0.1) : context.cardColor,
+        color: isSelected ? context.primaryColorTheme.withValues(alpha: 0.1) : context.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected ? context.primaryColorTheme : context.grey200,
@@ -1260,12 +1259,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             final userService = ref.read(userServiceProvider);
             await userService.updatePreferences(currency: code);
             if (mounted) {
-              _showFeedbackSnackBar('Currency changed to $code', isSuccess: true);
+              final l10n = AppLocalizations.of(context)!;
+              _showFeedbackSnackBar(l10n.profileCurrencyChanged(code), isSuccess: true);
             }
           } catch (e) {
             if (mounted) {
+              final l10n = AppLocalizations.of(context)!;
               _showFeedbackSnackBar(
-                'Failed to update currency: ${e.toString().replaceFirst('Exception: ', '')}',
+                l10n.profileCurrencyUpdateFailed(
+                  e.toString().replaceFirst('Exception: ', ''),
+                ),
                 isError: true,
               );
             }
@@ -1284,7 +1287,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: isSelected ? context.primaryColorTheme.withOpacity(0.1) : context.cardColor,
+        color: isSelected ? context.primaryColorTheme.withValues(alpha: 0.1) : context.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected ? context.primaryColorTheme : context.grey200,
@@ -1335,8 +1338,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               
               if (mounted) {
                 Navigator.pop(context);
+                final l10n = AppLocalizations.of(context)!;
                 _showFeedbackSnackBar(
-                  'Country changed to $name. Content will be filtered accordingly.',
+                  l10n.profileCountryChanged(name),
                   isSuccess: true,
                 );
               }
@@ -1344,8 +1348,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           } catch (e) {
             if (mounted) {
               Navigator.pop(context);
+              final l10n = AppLocalizations.of(context)!;
               _showFeedbackSnackBar(
-                'Failed to change country. Please try again.',
+                l10n.profileCountryChangeFailed,
                 isError: true,
               );
             }
@@ -1426,7 +1431,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: isSelected ? context.primaryColorTheme.withOpacity(0.1) : context.cardColor,
+        color: isSelected ? context.primaryColorTheme.withValues(alpha: 0.1) : context.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected ? context.primaryColorTheme : context.grey200,
@@ -1464,7 +1469,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Navigator.pop(context);
 
           if (cityId == null || countryId == null) {
-            _showFeedbackSnackBar('Location changed to $name', isSuccess: true);
+            final l10n = AppLocalizations.of(context)!;
+            _showFeedbackSnackBar(l10n.profileLocationChanged(name), isSuccess: true);
             return;
           }
 
@@ -1475,10 +1481,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             try {
               await ref.read(authServiceProvider).getCurrentUser();
             } catch (_) {}
-            _showFeedbackSnackBar('Location changed to $name', isSuccess: true);
+            if (!mounted) return;
+            final l10nOk = AppLocalizations.of(context)!;
+            _showFeedbackSnackBar(l10nOk.profileLocationChanged(name), isSuccess: true);
           } catch (e) {
+            if (!mounted) return;
+            final l10nErr = AppLocalizations.of(context)!;
             _showFeedbackSnackBar(
-              'Failed to save location: ${e.toString().replaceFirst('Exception: ', '')}',
+              l10nErr.profileLocationSaveFailed(
+                e.toString().replaceFirst('Exception: ', ''),
+              ),
               isError: true,
             );
           }
@@ -1487,11 +1499,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildLanguageOption(String name, String nativeName, bool isSelected) {
+  Widget _buildLanguageOption(String code, AppLocalizations l10n, bool isSelected) {
+    final title =
+        code == 'fr' ? l10n.languageOptionFrench : l10n.languageOptionEnglish;
+    final native = code == 'fr'
+        ? l10n.languageNativeNameFrench
+        : l10n.languageNativeNameEnglish;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: isSelected ? context.primaryColorTheme.withOpacity(0.1) : context.cardColor,
+        color: isSelected ? context.primaryColorTheme.withValues(alpha: 0.1) : context.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected ? context.primaryColorTheme : context.grey200,
@@ -1500,14 +1518,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ),
       child: ListTile(
         title: Text(
-          name,
+          title,
           style: context.bodyMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: isSelected ? context.primaryColorTheme : context.primaryTextColor,
           ),
         ),
         subtitle: Text(
-          nativeName,
+          native,
           style: context.bodySmall.copyWith(
             color: isSelected ? context.primaryColorTheme : context.secondaryTextColor,
           ),
@@ -1519,25 +1537,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ) : null,
         onTap: () async {
           Navigator.pop(context);
+          await ref.read(localeProvider.notifier).setLanguageCode(code);
+          if (!mounted) return;
           setState(() {
-            _selectedLanguage = name;
+            _selectedLanguageCode = code;
           });
-          
-          // Update preferences in API
-          try {
-            final userService = ref.read(userServiceProvider);
-            final langCode = _mapLanguageNameToCode(name);
-            await userService.updatePreferences(language: langCode);
-            if (mounted) {
-              _showFeedbackSnackBar('Language changed to $name', isSuccess: true);
+
+          final loggedIn = ref.read(isLoggedInProvider);
+          final l10nMsg = AppLocalizations.of(context)!;
+          final label =
+              code == 'fr' ? l10nMsg.languageOptionFrench : l10nMsg.languageOptionEnglish;
+
+          if (loggedIn) {
+            try {
+              final userService = ref.read(userServiceProvider);
+              await userService.updatePreferences(language: code);
+              if (mounted) {
+                _showFeedbackSnackBar(
+                  l10nMsg.profileLanguageChanged(label),
+                  isSuccess: true,
+                );
+              }
+            } catch (e) {
+              if (mounted) {
+                _showFeedbackSnackBar(
+                  l10nMsg.profileLanguageUpdateFailed(
+                    e.toString().replaceFirst('Exception: ', ''),
+                  ),
+                  isError: true,
+                );
+              }
             }
-          } catch (e) {
-            if (mounted) {
-              _showFeedbackSnackBar(
-                'Failed to update language: ${e.toString().replaceFirst('Exception: ', '')}',
-                isError: true,
-              );
-            }
+          } else {
+            _showFeedbackSnackBar(
+              l10nMsg.profileLanguageChanged(label),
+              isSuccess: true,
+            );
           }
         },
       ),

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'l10n/app_localizations.dart';
 import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/providers/auth_provider.dart';
+import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/providers/user_data_collection_provider.dart';
 import 'core/providers/health_check_provider.dart';
 import 'core/widgets/app_update_layer.dart';
+import 'core/models/user.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'core/services/push_notification_service.dart';
@@ -80,6 +84,24 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    ref.listenManual<AsyncValue<User?>>(authProvider, (previous, next) {
+      next.whenData((user) {
+        final lang = user?.preferences?.language;
+        if (lang != null && lang.isNotEmpty) {
+          ref.read(localeProvider.notifier).applyLanguageCode(lang);
+        }
+      });
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authProvider).whenData((user) {
+        final lang = user?.preferences?.language;
+        if (lang != null && lang.isNotEmpty) {
+          ref.read(localeProvider.notifier).applyLanguageCode(lang);
+        }
+      });
+    });
   }
 
   @override
@@ -119,12 +141,23 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeProvider);
-    
+    final locale = ref.watch(localeProvider);
+
     return MaterialApp.router(
       title: AppConfig.appName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
+      locale: locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localeResolutionCallback: (deviceLocale, supported) {
+        if (deviceLocale == null) return const Locale('en');
+        for (final loc in supported) {
+          if (loc.languageCode == deviceLocale.languageCode) return loc;
+        }
+        return const Locale('en');
+      },
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {

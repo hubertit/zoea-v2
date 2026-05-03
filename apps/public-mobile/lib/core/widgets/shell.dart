@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../l10n/app_localizations.dart';
 import '../theme/theme_extensions.dart';
 import '../theme/text_theme_extensions.dart';
 import '../providers/health_check_provider.dart';
@@ -45,6 +46,7 @@ class _ShellState extends ConsumerState<Shell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final location = GoRouterState.of(context).uri.toString();
     
     // Listen to connectivity state changes
@@ -145,30 +147,30 @@ class _ShellState extends ConsumerState<Shell> {
           color: context.secondaryTextColor,
         ),
         items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore),
-            label: 'Explore',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.explore_outlined),
+            activeIcon: const Icon(Icons.explore),
+            label: l10n.shellTabExplore,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.event_outlined),
-            activeIcon: Icon(Icons.event),
-            label: 'Events',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.event_outlined),
+            activeIcon: const Icon(Icons.event),
+            label: l10n.shellTabEvents,
           ),
           BottomNavigationBarItem(
             icon: _AnimatedAskZoeaIcon(isActive: currentIndex == 2),
             activeIcon: const Icon(Icons.smart_toy),
-            label: 'Ask Zoea',
+            label: l10n.shellTabAskZoea,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.hotel_outlined),
-            activeIcon: Icon(Icons.hotel),
-            label: 'Stay',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.hotel_outlined),
+            activeIcon: const Icon(Icons.hotel),
+            label: l10n.shellTabStay,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.book_online_outlined),
-            activeIcon: Icon(Icons.book_online),
-            label: 'Bookings',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.book_online_outlined),
+            activeIcon: const Icon(Icons.book_online),
+            label: l10n.shellTabBookings,
           ),
         ],
         onTap: (index) {
@@ -193,8 +195,8 @@ class _ShellState extends ConsumerState<Shell> {
               if (!isLoggedIn) {
                 AuthPromptDialog.show(
                   context: context,
-                  title: 'Sign In Required',
-                  message: 'Please sign in to view your bookings and reservations.',
+                  title: l10n.authPromptBookingsTitle,
+                  message: l10n.authPromptBookingsMessage,
                   returnPath: '/my-bookings',
                   icon: Icons.book_online,
                 );
@@ -209,14 +211,15 @@ class _ShellState extends ConsumerState<Shell> {
   }
 
   Widget _buildNoInternetBanner(ConnectivityState connectivityState) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: context.errorColor.withOpacity(0.95),
+        color: context.errorColor.withValues(alpha: 0.95),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -238,7 +241,7 @@ class _ShellState extends ConsumerState<Shell> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'No Internet Connection',
+                    l10n.shellNoInternetTitle,
                     style: context.bodyMedium.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -246,9 +249,9 @@ class _ShellState extends ConsumerState<Shell> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Check your WiFi or mobile data connection',
+                    l10n.shellNoInternetSubtitle,
                     style: context.bodySmall.copyWith(
-                      color: Colors.white.withOpacity(0.95),
+                      color: Colors.white.withValues(alpha: 0.95),
                     ),
                   ),
                 ],
@@ -262,12 +265,12 @@ class _ShellState extends ConsumerState<Shell> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Retry'),
+              child: Text(l10n.shellRetry),
             ),
           ],
         ),
@@ -276,14 +279,15 @@ class _ShellState extends ConsumerState<Shell> {
   }
 
   Widget _buildBackendOfflineBanner(BackendHealthState healthState) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.9),
+        color: Colors.orange.withValues(alpha: 0.9),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -305,7 +309,7 @@ class _ShellState extends ConsumerState<Shell> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Service Issue',
+                    l10n.shellServiceIssueTitle,
                     style: context.bodyMedium.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -313,9 +317,9 @@ class _ShellState extends ConsumerState<Shell> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Having trouble connecting to our servers',
+                    l10n.shellServiceIssueSubtitle,
                     style: context.bodySmall.copyWith(
-                      color: Colors.white.withOpacity(0.95),
+                      color: Colors.white.withValues(alpha: 0.95),
                     ),
                   ),
                 ],
@@ -329,12 +333,12 @@ class _ShellState extends ConsumerState<Shell> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Retry'),
+              child: Text(l10n.shellRetry),
             ),
           ],
         ),
@@ -344,7 +348,8 @@ class _ShellState extends ConsumerState<Shell> {
 
   void _showNoInternetWarning(ConnectivityState state) {
     if (!mounted) return;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -353,7 +358,7 @@ class _ShellState extends ConsumerState<Shell> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'No internet connection. Please check your network settings.',
+                l10n.shellSnackNoInternet,
                 style: context.bodySmall.copyWith(color: Colors.white),
               ),
             ),
@@ -371,7 +376,8 @@ class _ShellState extends ConsumerState<Shell> {
 
   void _showInternetRestoredMessage() {
     if (!mounted) return;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -380,7 +386,7 @@ class _ShellState extends ConsumerState<Shell> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Internet connection restored!',
+                l10n.shellSnackInternetRestored,
                 style: context.bodySmall.copyWith(color: Colors.white),
               ),
             ),
@@ -398,7 +404,8 @@ class _ShellState extends ConsumerState<Shell> {
 
   void _showBackendOfflineWarning() {
     if (!mounted) return;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -407,7 +414,7 @@ class _ShellState extends ConsumerState<Shell> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Service temporarily unavailable. Retrying...',
+                l10n.shellSnackServiceUnavailable,
                 style: context.bodySmall.copyWith(color: Colors.white),
               ),
             ),
@@ -425,7 +432,8 @@ class _ShellState extends ConsumerState<Shell> {
 
   void _showBackOnlineMessage() {
     if (!mounted) return;
-    
+    final l10n = AppLocalizations.of(context)!;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -434,7 +442,7 @@ class _ShellState extends ConsumerState<Shell> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Back online! Connection restored.',
+                l10n.shellSnackBackOnline,
                 style: context.bodySmall.copyWith(color: Colors.white),
               ),
             ),

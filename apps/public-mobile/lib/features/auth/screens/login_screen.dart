@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:country_picker/country_picker.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -131,18 +132,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // Use replace to prevent going back to login/splash
         context.go('/explore');
       } else if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: 'Login failed. Please check your credentials.',
+            message: l10n.loginFailed,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         final errorMessage = e.toString().replaceFirst('Exception: ', '');
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: errorMessage.isNotEmpty ? errorMessage : 'An error occurred. Please try again.',
+            message: errorMessage.isNotEmpty ? errorMessage : l10n.loginErrorGeneric,
           ),
         );
       }
@@ -168,12 +171,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         final errorMessage = e.toString().replaceFirst('Exception: ', '');
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
             message: errorMessage.isNotEmpty
                 ? errorMessage
-                : 'Google sign-in failed. Please try again.',
+                : l10n.loginGoogleFailed,
           ),
         );
       }
@@ -188,6 +192,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       body: SafeArea(
@@ -208,7 +213,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: AppTheme.spacing24),
                   Text(
-                    'Welcome Back',
+                    l10n.loginWelcomeBack,
                     style: context.displaySmall.copyWith(
                       color: context.primaryTextColor,
                     ),
@@ -216,7 +221,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: AppTheme.spacing8),
                   Text(
-                    'Sign in to continue',
+                    l10n.loginSignInToContinue,
                     style: context.bodyLarge.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -267,7 +272,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ),
                                   const SizedBox(width: AppTheme.spacing8),
                                   Text(
-                                    'Phone',
+                                    l10n.loginTabPhone,
                                     style: context.bodyMedium.copyWith(
                                       color: _isPhoneLogin 
                                           ? (context.isDarkMode ? Colors.white : context.primaryTextColor)
@@ -312,7 +317,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ),
                                   const SizedBox(width: AppTheme.spacing8),
                                   Text(
-                                    'Email',
+                                    l10n.loginTabEmail,
                                     style: context.bodyMedium.copyWith(
                                       color: !_isPhoneLogin 
                                           ? (context.isDarkMode ? Colors.white : context.primaryTextColor)
@@ -340,8 +345,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        labelText: 'Email Address',
-                        hintText: 'your.email@example.com',
+                        labelText: l10n.loginEmailAddress,
+                        hintText: l10n.loginEmailHint,
                         prefixIcon: const Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -357,10 +362,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email address';
+                          return l10n.loginValidationEmailRequired;
                         }
                         if (!value.contains('@')) {
-                          return 'Please enter a valid email address';
+                          return l10n.loginValidationEmailInvalid;
                         }
                         return null;
                       },
@@ -422,7 +427,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 PhoneInputFormatter(),
                               ],
                               decoration: InputDecoration(
-                                labelText: 'Phone Number',
+                                labelText: l10n.loginPhoneNumber,
                                 prefixIcon: const Icon(Icons.phone_outlined),
                                 hintText: '780 123 456',
                                 hintStyle: context.bodySmall.copyWith(color: context.secondaryTextColor),
@@ -453,8 +458,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.visiblePassword,
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Enter your password',
+                      labelText: l10n.loginPassword,
+                      hintText: l10n.loginPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -482,10 +487,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return l10n.loginValidationPasswordRequired;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return l10n.loginValidationPasswordShort;
                       }
                       return null;
                     },
@@ -501,7 +506,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       style: TextButton.styleFrom(
                         foregroundColor: context.primaryColorTheme,
                       ),
-                      child: const Text('Forgot Password?'),
+                      child: Text(l10n.loginForgotPassword),
                     ),
                   ),
                   const SizedBox(height: AppTheme.spacing24),
@@ -526,7 +531,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : const Text('Sign In'),
+                          : Text(l10n.loginSignInButton),
                     ),
                   ),
                   if (AppConfig.enableSocialLogin) ...[
@@ -539,7 +544,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             horizontal: AppTheme.spacing12,
                           ),
                           child: Text(
-                            'or',
+                            l10n.loginOr,
                             style: context.bodySmall.copyWith(
                               color: context.secondaryTextColor,
                             ),
@@ -589,7 +594,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ),
                                   const SizedBox(width: AppTheme.spacing8),
                                   Text(
-                                    'Continue with Google',
+                                    l10n.loginContinueWithGoogle,
                                     style: context.bodyLarge.copyWith(
                                       color: context.primaryTextColor,
                                       fontWeight: FontWeight.w600,
@@ -625,7 +630,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           const SizedBox(width: AppTheme.spacing8),
                           Text(
-                            'Browse as Guest',
+                            l10n.loginBrowseAsGuest,
                             style: context.bodyLarge.copyWith(
                               color: context.primaryTextColor,
                               fontWeight: FontWeight.w600,
@@ -642,7 +647,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Don\'t have an account?',
+                        l10n.loginDontHaveAccount,
                         style: context.bodyMedium.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -654,7 +659,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: TextButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                         ),
-                        child: const Text('Sign Up'),
+                        child: Text(l10n.loginSignUp),
                       ),
                     ],
                   ),

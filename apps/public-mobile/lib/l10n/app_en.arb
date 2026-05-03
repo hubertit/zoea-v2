@@ -1,0 +1,155 @@
+{
+  "@@locale": "en",
+  "appTitle": "Zoea",
+
+  "shellTabExplore": "Explore",
+  "shellTabEvents": "Events",
+  "shellTabAskZoea": "Ask Zoea",
+  "shellTabStay": "Stay",
+  "shellTabBookings": "Bookings",
+  "shellNoInternetTitle": "No Internet Connection",
+  "shellNoInternetSubtitle": "Check your WiFi or mobile data connection",
+  "shellRetry": "Retry",
+  "shellServiceIssueTitle": "Service Issue",
+  "shellServiceIssueSubtitle": "Having trouble connecting to our servers",
+  "shellSnackNoInternet": "No internet connection. Please check your network settings.",
+  "shellSnackInternetRestored": "Internet connection restored!",
+  "shellSnackServiceUnavailable": "Service temporarily unavailable. Retrying...",
+  "shellSnackBackOnline": "Back online! Connection restored.",
+
+  "authPromptBookingsTitle": "Sign In Required",
+  "authPromptBookingsMessage": "Please sign in to view your bookings and reservations.",
+  "authCancel": "Cancel",
+  "signIn": "Sign In",
+
+  "loginWelcomeBack": "Welcome Back",
+  "loginSignInToContinue": "Sign in to continue",
+  "loginTabPhone": "Phone",
+  "loginTabEmail": "Email",
+  "loginPhoneNumber": "Phone Number",
+  "loginPassword": "Password",
+  "loginPasswordHint": "Enter your password",
+  "loginForgotPassword": "Forgot Password?",
+  "loginSignInButton": "Sign In",
+  "loginOr": "or",
+  "loginContinueWithGoogle": "Continue with Google",
+  "loginBrowseAsGuest": "Browse as Guest",
+  "loginDontHaveAccount": "Don't have an account?",
+  "loginSignUp": "Sign Up",
+  "loginFailed": "Login failed. Please check your credentials.",
+  "loginErrorGeneric": "An error occurred. Please try again.",
+  "loginGoogleFailed": "Google sign-in failed. Please try again.",
+  "loginEmailAddress": "Email Address",
+  "loginEmailHint": "your.email@example.com",
+  "loginValidationEmailRequired": "Please enter your email address",
+  "loginValidationEmailInvalid": "Please enter a valid email address",
+  "loginValidationPasswordRequired": "Please enter your password",
+  "loginValidationPasswordShort": "Password must be at least 6 characters",
+
+  "profileTitle": "Profile",
+  "profileAppInformation": "App information",
+  "profileSectionAccount": "Account",
+  "profileNotificationsTitle": "Notifications",
+  "profileNotificationsSubtitle": "Manage your notifications",
+  "profileEditTitle": "Edit Profile",
+  "profileEditSubtitle": "Update your personal information",
+  "profilePrivacyTitle": "Privacy & Security",
+  "profilePrivacySubtitle": "Password and privacy settings",
+  "profileSectionPreferences": "Preferences",
+  "profileCurrencyTitle": "Currency",
+  "profileCountryTitle": "Country",
+  "profileCountryRwanda": "Rwanda",
+  "profileLocationTitle": "Location",
+  "profileLanguageTitle": "Language",
+  "profileSectionAppearance": "Appearance",
+  "profileThemeLabel": "Theme",
+  "profileThemeDark": "Dark Mode",
+  "profileThemeLight": "Light Mode",
+  "profileThemeSystem": "System Default",
+  "appearanceLight": "Light",
+  "appearanceDark": "Dark",
+  "appearanceSystem": "System",
+  "profileSectionTravel": "Travel & Activities",
+  "profileMyBookingsTitle": "My Bookings",
+  "profileMyBookingsSubtitle": "View your reservations",
+  "profileFavoritesTitle": "Favorites",
+  "profileFavoritesSubtitle": "Your saved places and events",
+  "profileReviewsTitle": "Reviews & Ratings",
+  "profileReviewsSubtitle": "Your reviews and feedback",
+  "profileSectionSupport": "Support",
+  "profileHelpTitle": "Help Center",
+  "profileHelpSubtitle": "Get help and support",
+  "profileAboutMenuTitle": "About",
+  "profileAboutSubtitle": "Version {version} ({buildNumber})",
+  "@profileAboutSubtitle": {
+    "placeholders": {
+      "version": {"type": "String"},
+      "buildNumber": {"type": "String"}
+    }
+  },
+  "profileSignOutTitle": "Sign Out",
+  "profileSignOutSubtitle": "Sign out of your account",
+  "profileStatEvents": "Events",
+  "profileStatPlaces": "Places",
+  "profileStatReviews": "Reviews",
+  "profileStatAttended": "Attended",
+  "profileStatVisited": "Visited",
+  "profileStatWritten": "Written",
+  "profileVerifiedTraveler": "Verified Traveler",
+
+  "profileSelectLanguage": "Select Language",
+  "languageOptionEnglish": "English",
+  "languageOptionFrench": "French",
+  "languageNativeNameEnglish": "English",
+  "languageNativeNameFrench": "Français",
+
+  "profileLanguageChanged": "Language changed to {languageName}",
+  "@profileLanguageChanged": {
+    "placeholders": {
+      "languageName": {"type": "String"}
+    }
+  },
+  "profileLanguageUpdateFailed": "Failed to update language: {error}",
+  "@profileLanguageUpdateFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "profileCurrencyChanged": "Currency changed to {code}",
+  "@profileCurrencyChanged": {
+    "placeholders": {
+      "code": {"type": "String"}
+    }
+  },
+  "profileCurrencyUpdateFailed": "Failed to update currency: {error}",
+  "@profileCurrencyUpdateFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "profileCountryChanged": "Country changed to {name}. Content will be filtered accordingly.",
+  "@profileCountryChanged": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "profileCountryChangeFailed": "Failed to change country. Please try again.",
+  "profileLocationChanged": "Location changed to {name}",
+  "@profileLocationChanged": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "profileLocationSaveFailed": "Failed to save location: {error}",
+  "@profileLocationSaveFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "profileSelectCity": "Select city",
+
+  "signOutDialogTitle": "Sign Out",
+  "signOutDialogMessage": "Are you sure you want to sign out?",
+  "signOutDialogConfirm": "Sign Out"
+}

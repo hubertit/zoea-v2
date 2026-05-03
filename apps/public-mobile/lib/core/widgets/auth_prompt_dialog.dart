@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_extensions.dart';
 import '../theme/text_theme_extensions.dart';
@@ -38,6 +39,7 @@ class AuthPromptDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Compute a readable text color for the Sign In button background.
     final primary = context.primaryColorTheme;
     final isPrimaryDark =
@@ -58,7 +60,7 @@ class AuthPromptDialog extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppTheme.spacing16),
                 decoration: BoxDecoration(
-                  color: context.primaryColorTheme.withOpacity(0.1),
+                  color: context.primaryColorTheme.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -101,7 +103,7 @@ class AuthPromptDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing16),
                     ),
                     child: Text(
-                      'Cancel',
+                      l10n.authCancel,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                         fontWeight: FontWeight.w600,
@@ -130,7 +132,7 @@ class AuthPromptDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing16),
                     ),
                     child: Text(
-                      'Sign In',
+                      l10n.signIn,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: signInTextColor, // Avoid inheriting a conflicting text color
