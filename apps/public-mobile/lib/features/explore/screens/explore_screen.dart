@@ -27,6 +27,7 @@ import '../../../core/constants/assets.dart';
 import '../../../core/config/app_config.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../core/utils/weekday_localization.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -1221,8 +1222,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   }
 
   Widget _buildCategoryCardFromApi(Map<String, dynamic> category) {
-    final name = category['name'] as String? ??
-        AppLocalizations.of(context)!.exploreCategoryFallback;
+    final l10n = AppLocalizations.of(context)!;
+    final rawName = (category['name'] as String?)?.trim();
+    final slug = category['slug'] as String? ?? '';
+    final name = (rawName != null && rawName.isNotEmpty)
+        ? rawName
+        : homeExploreCategoryTitleForSlug(l10n, slug);
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 

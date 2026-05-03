@@ -6662,6 +6662,18 @@ abstract class AppLocalizations {
   /// **'Search events, places, experiences…'**
   String get searchScreenGlobalHint;
 
+  /// No description provided for @searchClearHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search history'**
+  String get searchClearHistoryTitle;
+
+  /// No description provided for @searchClearHistoryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all your search history?'**
+  String get searchClearHistoryBody;
+
   /// No description provided for @listingReviewComposerHint.
   ///
   /// In en, this message translates to:
@@ -7309,6 +7321,810 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This helps us show you relevant content'**
   String get onboardingUserTypeSubtitle;
+
+  /// No description provided for @commonComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get commonComplete;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get commonSave;
+
+  /// No description provided for @phoneValidationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your phone number'**
+  String get phoneValidationRequired;
+
+  /// No description provided for @phoneValidationInternationalInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get phoneValidationInternationalInvalid;
+
+  /// No description provided for @phoneValidationRwandanInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid Rwandan phone number (07xxxxxxxx or 08xxxxxxxx)'**
+  String get phoneValidationRwandanInvalid;
+
+  /// No description provided for @exploreFilterLabelMinPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Min price'**
+  String get exploreFilterLabelMinPrice;
+
+  /// No description provided for @exploreFilterLabelMaxPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Max price'**
+  String get exploreFilterLabelMaxPrice;
+
+  /// No description provided for @profileEditInterestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Interests'**
+  String get profileEditInterestsTitle;
+
+  /// No description provided for @profileEditInterestsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply'**
+  String get profileEditInterestsSubtitle;
+
+  /// No description provided for @profileEditUnsavedChangesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes. Are you sure you want to leave?'**
+  String get profileEditUnsavedChangesBody;
+
+  /// No description provided for @profileEditDiscard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get profileEditDiscard;
+
+  /// No description provided for @profileEditPersonalInfoSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal information'**
+  String get profileEditPersonalInfoSectionTitle;
+
+  /// No description provided for @profileEditHintFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get profileEditHintFullName;
+
+  /// No description provided for @profileEditValidationFullNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your full name'**
+  String get profileEditValidationFullNameRequired;
+
+  /// No description provided for @profileEditHintEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address'**
+  String get profileEditHintEmail;
+
+  /// No description provided for @profileEditValidationEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email address'**
+  String get profileEditValidationEmailRequired;
+
+  /// No description provided for @profileEditHintPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number'**
+  String get profileEditHintPhone;
+
+  /// No description provided for @profileEditValidationPhoneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your phone number'**
+  String get profileEditValidationPhoneRequired;
+
+  /// No description provided for @profileEditTabBasicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic info'**
+  String get profileEditTabBasicInfo;
+
+  /// No description provided for @profileEditTabPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get profileEditTabPreferences;
+
+  /// No description provided for @profileVisitedPlacesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Places visited'**
+  String get profileVisitedPlacesTitle;
+
+  /// No description provided for @profileVisitedTabAllPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'All places'**
+  String get profileVisitedTabAllPlaces;
+
+  /// No description provided for @profileVisitedTabThisYear.
+  ///
+  /// In en, this message translates to:
+  /// **'This year'**
+  String get profileVisitedTabThisYear;
+
+  /// No description provided for @profileVisitedTabListingsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Listings only'**
+  String get profileVisitedTabListingsOnly;
+
+  /// No description provided for @profileVisitedStatusViewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Viewed'**
+  String get profileVisitedStatusViewed;
+
+  /// No description provided for @profileVisitedDateLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Viewed on {date}'**
+  String profileVisitedDateLine(String date);
+
+  /// No description provided for @profileVisitedEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No places visited yet'**
+  String get profileVisitedEmptyTitle;
+
+  /// No description provided for @profileVisitedEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start exploring Rwanda to build your visited places collection.'**
+  String get profileVisitedEmptySubtitle;
+
+  /// No description provided for @profileVisitedExploreButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore places'**
+  String get profileVisitedExploreButton;
+
+  /// No description provided for @profileUnknownLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown location'**
+  String get profileUnknownLocation;
+
+  /// No description provided for @profileEventsAttendedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Events attended'**
+  String get profileEventsAttendedTitle;
+
+  /// No description provided for @eventsAttendedTabAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All events'**
+  String get eventsAttendedTabAll;
+
+  /// No description provided for @eventsAttendedTabThisYear.
+  ///
+  /// In en, this message translates to:
+  /// **'This year'**
+  String get eventsAttendedTabThisYear;
+
+  /// No description provided for @eventsAttendedTabFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get eventsAttendedTabFavorites;
+
+  /// No description provided for @eventsAttendedEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No events attended yet'**
+  String get eventsAttendedEmptyTitle;
+
+  /// No description provided for @eventsAttendedEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start exploring events to build your attendance history.'**
+  String get eventsAttendedEmptySubtitle;
+
+  /// No description provided for @eventsAttendedExploreButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore events'**
+  String get eventsAttendedExploreButton;
+
+  /// No description provided for @eventsAttendedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Attended'**
+  String get eventsAttendedBadge;
+
+  /// No description provided for @exploreHomeCategoryEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get exploreHomeCategoryEvents;
+
+  /// No description provided for @exploreHomeCategoryDining.
+  ///
+  /// In en, this message translates to:
+  /// **'Dining'**
+  String get exploreHomeCategoryDining;
+
+  /// No description provided for @exploreHomeCategoryExperiences.
+  ///
+  /// In en, this message translates to:
+  /// **'Experiences'**
+  String get exploreHomeCategoryExperiences;
+
+  /// No description provided for @exploreHomeCategoryNightlife.
+  ///
+  /// In en, this message translates to:
+  /// **'Nightlife'**
+  String get exploreHomeCategoryNightlife;
+
+  /// No description provided for @exploreHomeCategoryAccommodation.
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation'**
+  String get exploreHomeCategoryAccommodation;
+
+  /// No description provided for @exploreHomeCategoryShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get exploreHomeCategoryShopping;
+
+  /// No description provided for @placeDetailOpeningHoursTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get placeDetailOpeningHoursTitle;
+
+  /// No description provided for @placeDetailAboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get placeDetailAboutTitle;
+
+  /// No description provided for @placeDetailFeaturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Features'**
+  String get placeDetailFeaturesTitle;
+
+  /// No description provided for @placeDetailNoPhotosExtended.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos available for this place'**
+  String get placeDetailNoPhotosExtended;
+
+  /// No description provided for @placeDetailNoMenuForPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'No menu available for this place'**
+  String get placeDetailNoMenuForPlace;
+
+  /// No description provided for @listingNoPhotosShort.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos available'**
+  String get listingNoPhotosShort;
+
+  /// No description provided for @listingHoursClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get listingHoursClosed;
+
+  /// No description provided for @weekdayMonday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get weekdayMonday;
+
+  /// No description provided for @weekdayTuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get weekdayTuesday;
+
+  /// No description provided for @weekdayWednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get weekdayWednesday;
+
+  /// No description provided for @weekdayThursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get weekdayThursday;
+
+  /// No description provided for @weekdayFriday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get weekdayFriday;
+
+  /// No description provided for @weekdaySaturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get weekdaySaturday;
+
+  /// No description provided for @weekdaySunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get weekdaySunday;
+
+  /// No description provided for @itineraryDaysCountLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String itineraryDaysCountLine(int count);
+
+  /// No description provided for @itineraryItemsCountLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String itineraryItemsCountLine(int count);
+
+  /// No description provided for @reviewHelpfulCountLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 person found this helpful} other{{count} people found this helpful}}'**
+  String reviewHelpfulCountLine(int count);
+
+  /// No description provided for @reviewTimeWeeksAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week ago} other{{count} weeks ago}}'**
+  String reviewTimeWeeksAgo(int count);
+
+  /// No description provided for @reviewTimeMonthsAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month ago} other{{count} months ago}}'**
+  String reviewTimeMonthsAgo(int count);
+
+  /// No description provided for @reviewTimeYearsAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year ago} other{{count} years ago}}'**
+  String reviewTimeYearsAgo(int count);
+
+  /// No description provided for @listingReviewExperienceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your experience?'**
+  String get listingReviewExperienceTitle;
+
+  /// No description provided for @listingReviewExperienceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about your experience'**
+  String get listingReviewExperienceSubtitle;
+
+  /// No description provided for @listingAnonymousUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous'**
+  String get listingAnonymousUser;
+
+  /// No description provided for @stayDefaultRoomLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get stayDefaultRoomLabel;
+
+  /// No description provided for @stayDefaultAmenityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amenity'**
+  String get stayDefaultAmenityLabel;
+
+  /// No description provided for @contentTypeEventLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Event'**
+  String get contentTypeEventLabel;
+
+  /// No description provided for @contentTypePlaceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get contentTypePlaceLabel;
+
+  /// No description provided for @contentTypeTourLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tour'**
+  String get contentTypeTourLabel;
+
+  /// No description provided for @itineraryFallbackItemPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get itineraryFallbackItemPlace;
+
+  /// No description provided for @itineraryFallbackItemEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Event'**
+  String get itineraryFallbackItemEvent;
+
+  /// No description provided for @itineraryFallbackItemTour.
+  ///
+  /// In en, this message translates to:
+  /// **'Tour'**
+  String get itineraryFallbackItemTour;
+
+  /// No description provided for @itineraryFallbackItemCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom item'**
+  String get itineraryFallbackItemCustom;
+
+  /// No description provided for @onboardingCountryHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you from?'**
+  String get onboardingCountryHeadline;
+
+  /// No description provided for @onboardingCountrySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us personalize your experience'**
+  String get onboardingCountrySubtitle;
+
+  /// No description provided for @onboardingVisitRwandaHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'What brings you to Rwanda?'**
+  String get onboardingVisitRwandaHeadline;
+
+  /// No description provided for @onboardingVisitRwandaSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your primary purpose'**
+  String get onboardingVisitRwandaSubtitle;
+
+  /// No description provided for @onboardingLanguageHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'What language do you prefer?'**
+  String get onboardingLanguageHeadline;
+
+  /// No description provided for @onboardingLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this anytime in settings'**
+  String get onboardingLanguageSubtitle;
+
+  /// No description provided for @onboardingConsentHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve'**
+  String get onboardingConsentHeadline;
+
+  /// No description provided for @onboardingConsentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow analytics to help us personalize your experience'**
+  String get onboardingConsentSubtitle;
+
+  /// No description provided for @onboardingConsentCheckboxLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to share analytics data to improve recommendations'**
+  String get onboardingConsentCheckboxLabel;
+
+  /// No description provided for @onboardingSettingsFootnote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this anytime in settings'**
+  String get onboardingSettingsFootnote;
+
+  /// No description provided for @progressivePromptTitleWithDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us personalize Zoea (10 sec)'**
+  String get progressivePromptTitleWithDuration;
+
+  /// No description provided for @progressivePromptTitleDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us personalize Zoea'**
+  String get progressivePromptTitleDefault;
+
+  /// No description provided for @progressiveQuestionAgeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your age range?'**
+  String get progressiveQuestionAgeRange;
+
+  /// No description provided for @progressiveQuestionGender.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your gender?'**
+  String get progressiveQuestionGender;
+
+  /// No description provided for @progressiveQuestionLengthOfStay.
+  ///
+  /// In en, this message translates to:
+  /// **'How long are you staying?'**
+  String get progressiveQuestionLengthOfStay;
+
+  /// No description provided for @progressiveQuestionInterests.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you interested in?'**
+  String get progressiveQuestionInterests;
+
+  /// No description provided for @progressiveQuestionTravelParty.
+  ///
+  /// In en, this message translates to:
+  /// **'Who are you traveling with?'**
+  String get progressiveQuestionTravelParty;
+
+  /// No description provided for @profileSaveChangesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get profileSaveChangesButton;
+
+  /// No description provided for @profileCompletionPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is used only to personalize your experience. You can update or remove it anytime.'**
+  String get profileCompletionPrivacyNote;
+
+  /// No description provided for @profileCompletionSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile completion'**
+  String get profileCompletionSectionTitle;
+
+  /// No description provided for @profileCompletionSubtitleRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your profile to get better recommendations'**
+  String get profileCompletionSubtitleRecommendations;
+
+  /// No description provided for @tourBookingScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book tour'**
+  String get tourBookingScreenTitle;
+
+  /// No description provided for @tourBookingPerPersonSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'/person'**
+  String get tourBookingPerPersonSuffix;
+
+  /// No description provided for @tourBookingSelectTourTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select tour'**
+  String get tourBookingSelectTourTitle;
+
+  /// No description provided for @tourBookingSelectDateTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date & time'**
+  String get tourBookingSelectDateTimeTitle;
+
+  /// No description provided for @tourBookingNoSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'No available schedules'**
+  String get tourBookingNoSchedules;
+
+  /// No description provided for @tourBookingScheduleSubtitleWithTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time: {time} · Spots: {spots} available'**
+  String tourBookingScheduleSubtitleWithTime(String time, int spots);
+
+  /// No description provided for @tourBookingScheduleSubtitleSpotsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Spots: {spots} available'**
+  String tourBookingScheduleSubtitleSpotsOnly(int spots);
+
+  /// No description provided for @tourBookingNumberOfGuestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of guests'**
+  String get tourBookingNumberOfGuestsTitle;
+
+  /// No description provided for @tourBookingGuestAdults.
+  ///
+  /// In en, this message translates to:
+  /// **'Adults'**
+  String get tourBookingGuestAdults;
+
+  /// No description provided for @tourBookingGuestChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get tourBookingGuestChildren;
+
+  /// No description provided for @tourBookingGuestInfants.
+  ///
+  /// In en, this message translates to:
+  /// **'Infants'**
+  String get tourBookingGuestInfants;
+
+  /// No description provided for @tourBookingContactSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact information'**
+  String get tourBookingContactSectionTitle;
+
+  /// No description provided for @tourBookingPickupLocationOptionalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup location (optional)'**
+  String get tourBookingPickupLocationOptionalTitle;
+
+  /// No description provided for @tourBookingSpecialRequestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Special requests'**
+  String get tourBookingSpecialRequestsTitle;
+
+  /// No description provided for @tourBookingPriceBreakdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Price breakdown'**
+  String get tourBookingPriceBreakdownTitle;
+
+  /// No description provided for @tourBookingPriceLineAdults.
+  ///
+  /// In en, this message translates to:
+  /// **'Adults ({count}×)'**
+  String tourBookingPriceLineAdults(int count);
+
+  /// No description provided for @tourBookingPriceLineChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Children ({count}×)'**
+  String tourBookingPriceLineChildren(int count);
+
+  /// No description provided for @tourBookingPriceLineInfants.
+  ///
+  /// In en, this message translates to:
+  /// **'Infants ({count}×)'**
+  String tourBookingPriceLineInfants(int count);
+
+  /// No description provided for @tourBookingPriceLineFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get tourBookingPriceLineFree;
+
+  /// No description provided for @tourBookingPriceLineTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get tourBookingPriceLineTotal;
+
+  /// No description provided for @tourBookingLocationDefaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get tourBookingLocationDefaultLabel;
+
+  /// No description provided for @tourPackagesScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tour packages'**
+  String get tourPackagesScreenTitle;
+
+  /// No description provided for @reviewsViewPlaceAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View place'**
+  String get reviewsViewPlaceAction;
+
+  /// No description provided for @placeDetailMapViewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get placeDetailMapViewAction;
+
+  /// No description provided for @itineraryFormButtonCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create itinerary'**
+  String get itineraryFormButtonCreate;
+
+  /// No description provided for @itineraryFormButtonUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update itinerary'**
+  String get itineraryFormButtonUpdate;
+
+  /// No description provided for @itineraryUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Itinerary updated successfully'**
+  String get itineraryUpdatedSuccess;
+
+  /// No description provided for @itineraryCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Itinerary created successfully'**
+  String get itineraryCreatedSuccess;
+
+  /// No description provided for @itineraryAddItemsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add places, events, or tours to your itinerary'**
+  String get itineraryAddItemsHint;
+
+  /// No description provided for @itinerarySharedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared'**
+  String get itinerarySharedBadge;
+
+  /// No description provided for @shopCartUnknownItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown item'**
+  String get shopCartUnknownItem;
+
+  /// No description provided for @listingDetailHoursClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get listingDetailHoursClosed;
+
+  /// No description provided for @diningCategoryFallbackName.
+  ///
+  /// In en, this message translates to:
+  /// **'Dining'**
+  String get diningCategoryFallbackName;
+
+  /// No description provided for @bookingFallbackRestaurantName.
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant'**
+  String get bookingFallbackRestaurantName;
+
+  /// No description provided for @aboutLegalCopyrightBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Copyright Notice\n\n© {year} Zoea Africa. All rights reserved.\n\nThis app and its contents are protected by copyright and other intellectual property laws.\n\nYou may not:\n- Copy, modify, or distribute the app without permission\n- Reverse engineer or attempt to extract source code\n- Use the app for commercial purposes without authorization\n\nFor licensing inquiries, contact us at legal@zoea.africa.'**
+  String aboutLegalCopyrightBody(int year);
+
+  /// No description provided for @aboutLegalPrivacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy\n\nLast updated: December 2024\n\n1. Information We Collect\nWe collect information you provide directly to us, such as when you create an account, make a booking, or contact us for support.\n\n2. How We Use Your Information\nWe use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.\n\n3. Information Sharing\nWe do not sell, trade, or otherwise transfer your personal information to third parties without your consent.\n\n4. Data Security\nWe implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.\n\n5. Your Rights\nYou have the right to access, update, or delete your personal information. You can do this through your account settings or by contacting us.\n\n6. Contact Us\nIf you have any questions about this Privacy Policy, please contact us at privacy@zoea.africa.'**
+  String get aboutLegalPrivacyBody;
+
+  /// No description provided for @aboutLegalTermsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service\n\nLast updated: December 2024\n\n1. Acceptance of Terms\nBy using our app, you agree to be bound by these Terms of Service.\n\n2. Use of the App\nYou may use our app for lawful purposes only. You agree not to use the app in any way that could damage, disable, or impair the app.\n\n3. User Accounts\nYou are responsible for maintaining the confidentiality of your account and password.\n\n4. Bookings and Payments\nAll bookings are subject to availability. Payment terms are as specified at the time of booking.\n\n5. Cancellation Policy\nCancellation policies vary by event and are specified at the time of booking.\n\n6. Limitation of Liability\nTo the maximum extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages.\n\n7. Changes to Terms\nWe reserve the right to modify these terms at any time. We will notify users of any material changes.\n\n8. Contact Information\nFor questions about these Terms of Service, contact us at legal@zoea.africa.'**
+  String get aboutLegalTermsBody;
 }
 
 class _AppLocalizationsDelegate

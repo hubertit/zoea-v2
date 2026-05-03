@@ -93,7 +93,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
     }).where((url) => url.isNotEmpty).toList();
   }
 
-  String _extractLocation(Map<String, dynamic> listing) {
+  String _extractLocation(Map<String, dynamic> listing, AppLocalizations l10n) {
     final address = listing['address'] as String? ?? '';
     final city = listing['city'] as Map<String, dynamic>?;
     final cityName = city?['name'] as String? ?? '';
@@ -107,7 +107,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
     } else if (countryName.isNotEmpty) {
       return countryName;
     }
-    return 'Location not available';
+    return l10n.stayLocationUnavailable;
   }
 
   double _extractRating(Map<String, dynamic> listing) {
@@ -209,7 +209,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load accommodation',
+                AppLocalizations.of(context)!.stayDetailLoadFailed,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -383,9 +383,10 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                       ),
                       padding: EdgeInsets.zero,
                       onPressed: () async {
+                        final l10n = AppLocalizations.of(context)!;
                         final listingAsync = ref.read(listingByIdProvider(widget.accommodationId));
                         listingAsync.whenData((listing) async {
-                          final name = listing['name'] as String? ?? 'Accommodation';
+                          final name = listing['name'] as String? ?? l10n.stayListingFallback;
                           final address = listing['address'] as String? ?? '';
                           final city = listing['city'] as Map<String, dynamic>?;
                           final cityName = city?['name'] as String? ?? '';
@@ -393,7 +394,9 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                               ? '$address${cityName.isNotEmpty ? ', $cityName' : ''}'
                               : cityName;
                           
-                          final shareText = 'Check out $name${location.isNotEmpty ? ' in $location' : ''} on Zoea!';
+                          final shareText = location.isNotEmpty
+                              ? l10n.listingShareOnZoeaInLocation(name, location)
+                              : l10n.listingShareOnZoea(name);
                           final shareUrl = '${AppConfig.apiBaseUrl.replaceAll('/api', '')}/accommodation/${widget.accommodationId}';
                           
                           await SharePlus.instance.share(ShareParams(text: '$shareText\n$shareUrl'));
@@ -437,8 +440,8 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                           // Show login prompt for guests
                           AuthPromptDialog.show(
                             context: context,
-                            title: 'Sign In to Save Favorites',
-                            message: 'Create an account or sign in to save your favorite accommodations and access them anytime.',
+                            title: AppLocalizations.of(context)!.exploreFavoriteSignInTitle,
+                            message: AppLocalizations.of(context)!.stayFavoriteSignInMessage,
                             returnPath: '/accommodation/${widget.accommodationId}',
                             icon: Icons.favorite,
                           );
@@ -475,9 +478,9 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                             if (errorText.contains('Unauthorized')) {
                               AuthPromptDialog.show(
                                 context: context,
-                                title: 'Sign In to Save Favorites',
+                                title: AppLocalizations.of(context)!.exploreFavoriteSessionTitle,
                                 message:
-                                    'Your session has expired. Please sign in again to save favorites.',
+                                    AppLocalizations.of(context)!.exploreFavoriteSessionMessage,
                                 returnPath:
                                     '/accommodation/${widget.accommodationId}',
                                 icon: Icons.favorite,
@@ -506,10 +509,11 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
   }
 
   Widget _buildAccommodationInfo(Map<String, dynamic> listing) {
-    final name = listing['name'] as String? ?? 'Accommodation';
+    final l10n = AppLocalizations.of(context)!;
+    final name = listing['name'] as String? ?? l10n.stayListingFallback;
     final rating = _extractRating(listing);
     final reviewCount = _extractReviewCount(listing);
-    final location = _extractLocation(listing);
+    final location = _extractLocation(listing, l10n);
     final quickAmenities = _extractQuickAmenities(listing);
 
     return Container(
@@ -604,6 +608,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
   }
 
   Widget _buildTabBar() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: context.cardColor,
       child: TabBar(
@@ -622,12 +627,12 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
         unselectedLabelStyle: context.bodyMedium.copyWith(
           color: context.secondaryTextColor,
         ),
-        tabs: const [
-          Tab(text: 'Overview'),
-          Tab(text: 'Rooms'),
-          Tab(text: 'Amenities'),
-          Tab(text: 'Reviews'),
-          Tab(text: 'Photos'),
+        tabs: [
+          Tab(text: l10n.stayDetailTabOverview),
+          Tab(text: l10n.stayDetailTabRooms),
+          Tab(text: l10n.stayDetailTabAmenities),
+          Tab(text: l10n.stayDetailTabReviews),
+          Tab(text: l10n.stayDetailTabPhotos),
         ],
       ),
     );
@@ -651,13 +656,14 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
   }
 
   Widget _buildOverviewTab(Map<String, dynamic> accommodation) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About this place',
+            l10n.stayDetailAboutTitle,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -673,7 +679,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
           ),
           const SizedBox(height: 20),
           Text(
-            'Check-in & Check-out',
+            l10n.stayDetailCheckInOutSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -687,7 +693,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Check-in',
+                      l10n.stayCheckIn,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.primaryTextColor,
@@ -707,7 +713,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Check-out',
+                      l10n.stayDetailCheckOutLabel,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.primaryTextColor,
@@ -726,7 +732,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
           ),
           const SizedBox(height: 24),
           Text(
-            'Booking Policies',
+            l10n.stayDetailBookingPoliciesSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -735,43 +741,43 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
           const SizedBox(height: 16),
           _buildPolicyCard(
             icon: Icons.cancel_outlined,
-            title: 'Cancellation',
-            description: 'Free cancellation until 24 hours before check-in',
+            title: l10n.stayPolicyCancellationTitle,
+            description: l10n.stayPolicyCancellationBody,
             color: AppTheme.successColor,
           ),
           const SizedBox(height: 12),
           _buildPolicyCard(
             icon: Icons.money_off,
-            title: 'Refund Policy',
-            description: 'Full refund if cancelled 24+ hours before check-in',
+            title: l10n.stayPolicyRefundTitle,
+            description: l10n.stayPolicyRefundBody,
             color: context.primaryColorTheme,
           ),
           const SizedBox(height: 12),
           _buildPolicyCard(
             icon: Icons.pets,
-            title: 'Pet Policy',
-            description: 'Pets allowed with additional fee of RWF 15,000 per night',
+            title: l10n.stayPolicyPetTitle,
+            description: l10n.stayPolicyPetBody,
             color: context.secondaryTextColor,
           ),
           const SizedBox(height: 12),
           _buildPolicyCard(
             icon: Icons.smoking_rooms,
-            title: 'Smoking Policy',
-            description: 'Non-smoking property. Smoking allowed in designated areas only',
+            title: l10n.stayPolicySmokingTitle,
+            description: l10n.stayPolicySmokingBody,
             color: context.errorColor,
           ),
           const SizedBox(height: 12),
           _buildPolicyCard(
             icon: Icons.child_care,
-            title: 'Children Policy',
-            description: 'Children of all ages welcome. Extra beds available on request',
+            title: l10n.stayPolicyChildrenTitle,
+            description: l10n.stayPolicyChildrenBody,
             color: context.primaryColorTheme,
           ),
           const SizedBox(height: 12),
           _buildPolicyCard(
             icon: Icons.credit_card,
-            title: 'Payment Policy',
-            description: 'Credit card required for booking. Payment due at check-in',
+            title: l10n.stayPolicyPaymentTitle,
+            description: l10n.stayPolicyPaymentBody,
             color: context.secondaryTextColor,
           ),
         ],
@@ -835,6 +841,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
   }
 
   Widget _buildRoomsTab(Map<String, dynamic> listing) {
+    final l10n = AppLocalizations.of(context)!;
     final roomTypes = listing['roomTypes'] as List? ?? [];
     
     return GestureDetector(
@@ -852,7 +859,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Available Rooms',
+              l10n.stayDetailAvailableRooms,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -891,7 +898,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                   ),
                   child: Center(
                     child: Text(
-                      'No room types available',
+                      l10n.stayDetailNoRoomTypes,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -906,6 +913,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
   }
 
   Widget _buildAmenitiesTab(Map<String, dynamic> listing) {
+    final l10n = AppLocalizations.of(context)!;
     final amenities = listing['amenities'] as List? ?? [];
     
     return SingleChildScrollView(
@@ -914,7 +922,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Amenities',
+            l10n.stayDetailAmenitiesSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -965,7 +973,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
               ),
               child: Center(
                 child: Text(
-                  'No amenities listed',
+                  l10n.stayDetailNoAmenitiesListed,
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -1037,6 +1045,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
     return reviewsAsync.when(
       data: (reviewsData) {
         final reviews = reviewsData['data'] as List? ?? [];
+        final l10n = AppLocalizations.of(context)!;
         
         return Stack(
           children: [
@@ -1065,7 +1074,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
               Row(
                 children: [
                   Text(
-                    'Reviews',
+                    l10n.stayDetailTabReviews,
                     style: context.headlineSmall.copyWith(
                       fontWeight: FontWeight.w600,
                       color: context.primaryTextColor,
@@ -1073,7 +1082,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                   ),
                   const Spacer(),
                   Text(
-                    '$reviewCount reviews',
+                    l10n.stayDetailReviewsCountLine(reviewCount),
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -1095,14 +1104,14 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No reviews yet',
+                          l10n.stayDetailNoReviewsYet,
                           style: context.headlineSmall.copyWith(
                             color: context.secondaryTextColor,
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Be the first to review this place!',
+                          l10n.stayDetailBeFirstToReview,
                           style: context.bodyMedium.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -1117,8 +1126,8 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                               // Show login prompt for guests
                               AuthPromptDialog.show(
                                 context: context,
-                                title: 'Sign In to Write Review',
-                                message: 'Create an account or sign in to share your experience and help other travelers.',
+                                title: AppLocalizations.of(context)!.listingDetailReviewSignInTitle,
+                                message: AppLocalizations.of(context)!.listingDetailReviewSignInMessage,
                                 returnPath: '/accommodation/${widget.accommodationId}',
                                 icon: Icons.rate_review,
                               );
@@ -1274,7 +1283,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
-            'Failed to load reviews: ${error.toString()}',
+            AppLocalizations.of(context)!.stayDetailReviewsLoadFailed(error.toString()),
             style: context.bodyMedium.copyWith(
               color: context.errorColor,
             ),
@@ -1408,8 +1417,8 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                   // Show login prompt for guests
                   AuthPromptDialog.show(
                     context: context,
-                    title: 'Sign In to Book',
-                    message: 'Create an account or sign in to complete your booking and manage your reservations.',
+                    title: AppLocalizations.of(context)!.stayBookSignInTitle,
+                    message: AppLocalizations.of(context)!.stayBookSignInMessage,
                     returnPath: '/accommodation/${widget.accommodationId}',
                     icon: Icons.hotel,
                   );
@@ -1870,7 +1879,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
             controller: _reviewController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Share your thoughts about this place...',
+              hintText: AppLocalizations.of(context)!.listingReviewComposerHint,
               hintStyle: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),

@@ -64,6 +64,7 @@ class _ReviewsWrittenScreenState extends ConsumerState<ReviewsWrittenScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -91,7 +92,7 @@ class _ReviewsWrittenScreenState extends ConsumerState<ReviewsWrittenScreen>
                   controller: _searchController,
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Search reviews...',
+                    hintText: l10n.reviewsWrittenSearchHint,
                     hintStyle: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -761,6 +762,7 @@ class _EditReviewBottomSheetState extends ConsumerState<_EditReviewBottomSheet> 
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: context.backgroundColor,
@@ -843,7 +845,7 @@ class _EditReviewBottomSheetState extends ConsumerState<_EditReviewBottomSheet> 
             controller: _reviewController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Share your thoughts about this place...',
+              hintText: l10n.listingReviewComposerHint,
               hintStyle: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),

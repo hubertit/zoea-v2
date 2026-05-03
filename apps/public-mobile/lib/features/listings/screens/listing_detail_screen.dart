@@ -794,7 +794,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 AppTheme.errorSnackBar(
-                                  message: 'Could not open website: $website',
+                                  message: AppLocalizations.of(context)!
+                                      .listingDetailCouldNotOpenWebsite(website),
                                 ),
                               );
                             }
@@ -2194,7 +2195,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             AppTheme.errorSnackBar(
-                              message: 'Could not make phone call to $contactPhone',
+                              message: AppLocalizations.of(context)!
+                                  .listingDetailCouldNotCallPhone(contactPhone),
                             ),
                           );
                         }
@@ -2347,7 +2349,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
               color: context.primaryTextColor,
             ),
             decoration: InputDecoration(
-              hintText: 'Share your thoughts about this place...',
+              hintText: AppLocalizations.of(context)!.listingReviewComposerHint,
               hintStyle: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),

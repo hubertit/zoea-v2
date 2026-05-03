@@ -13,6 +13,7 @@ import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/utils/weekday_localization.dart';
 
 class PlaceDetailScreen extends ConsumerStatefulWidget {
   final String placeId;
@@ -168,6 +169,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                             ),
                             padding: EdgeInsets.zero,
                             onPressed: () {
+                              final l10n = AppLocalizations.of(context)!;
                               // Check if user is logged in
                               final isLoggedIn = ref.read(isLoggedInProvider);
                               
@@ -175,8 +177,8 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                                 // Show login prompt for guests
                                 AuthPromptDialog.show(
                                   context: context,
-                                  title: 'Sign In to Save Favorites',
-                                  message: 'Create an account or sign in to save your favorite places and access them anytime.',
+                                  title: l10n.exploreFavoriteSignInTitle,
+                                  message: l10n.exploreFavoriteSignInMessage,
                                   returnPath: '/places/${widget.placeId}',
                                   icon: Icons.favorite,
                                 );
@@ -206,6 +208,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                             ),
                             padding: EdgeInsets.zero,
                             onPressed: () {
+                              final l10n = AppLocalizations.of(context)!;
                               // Check if user is logged in
                               final isLoggedIn = ref.read(isLoggedInProvider);
                               
@@ -213,8 +216,8 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                                 // Show login prompt for guests
                                 AuthPromptDialog.show(
                                   context: context,
-                                  title: 'Sign In to Write Review',
-                                  message: 'Create an account or sign in to share your experience and help other travelers.',
+                                  title: l10n.listingDetailReviewSignInTitle,
+                                  message: l10n.listingDetailReviewSignInMessage,
                                   returnPath: '/places/${widget.placeId}',
                                   icon: Icons.rate_review,
                                 );
@@ -436,6 +439,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () {
+                    final l10n = AppLocalizations.of(context)!;
                     // Check if user is logged in
                     final isLoggedIn = ref.read(isLoggedInProvider);
                     
@@ -443,8 +447,8 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                       // Show login prompt for guests
                       AuthPromptDialog.show(
                         context: context,
-                        title: 'Sign In to Reserve',
-                        message: 'Create an account or sign in to reserve a table and manage your dining reservations.',
+                        title: l10n.diningReserveSignInTitle,
+                        message: l10n.diningReserveSignInMessage,
                         returnPath: '/places/${widget.placeId}',
                         icon: Icons.restaurant,
                       );
@@ -500,13 +504,14 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
   }
 
   Widget _buildOverviewTab(Map<String, dynamic> place) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About',
+            l10n.placeDetailAboutTitle,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -522,7 +527,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
           ),
           const SizedBox(height: 24),
           Text(
-            'Features',
+            l10n.placeDetailFeaturesTitle,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -554,7 +559,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
           ),
           const SizedBox(height: 24),
           Text(
-            'Opening Hours',
+            l10n.placeDetailOpeningHoursTitle,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -568,7 +573,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                   SizedBox(
                     width: 80,
                     child: Text(
-                      hours['day'],
+                      localizeEnglishWeekday(l10n, hours['day'] as String),
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w500,
                         color: context.primaryTextColor,
@@ -576,7 +581,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                     ),
                   ),
                   Text(
-                    hours['time'],
+                    localizeOpeningHoursTime(l10n, hours['time'] as String),
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -591,13 +596,14 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
   }
 
   Widget _buildMenuTab(Map<String, dynamic> place) {
+    final l10n = AppLocalizations.of(context)!;
     final menuData = place['menu'];
     if (menuData == null) {
       return Center(
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text(
-            'No menu available for this place',
+            l10n.placeDetailNoMenuForPlace,
             style: TextStyle(
               fontSize: 16,
               color: context.grey400,
@@ -831,6 +837,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
   }
 
   Widget _buildPhotosTab(Map<String, dynamic> place) {
+    final l10n = AppLocalizations.of(context)!;
     final photos = place['photos'] as List<String>? ?? [];
     
     if (photos.isEmpty) {
@@ -838,7 +845,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text(
-            'No photos available for this place',
+            l10n.placeDetailNoPhotosExtended,
             style: TextStyle(
               fontSize: 16,
               color: context.grey400,
@@ -1839,7 +1846,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
             controller: _reviewController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Share your thoughts about this place...',
+              hintText: AppLocalizations.of(context)!.listingReviewComposerHint,
               hintStyle: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -1965,7 +1972,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           content: Text(AppLocalizations.of(context)!.commonThankYouReview),
           backgroundColor: AppTheme.successColor,
           action: SnackBarAction(
-            label: 'View',
+            label: AppLocalizations.of(context)!.placeDetailMapViewAction,
             textColor: Colors.white,
             onPressed: () {
               // Close bottom sheet first

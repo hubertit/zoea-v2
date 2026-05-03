@@ -1,3 +1,5 @@
+import '../../l10n/app_localizations.dart';
+
 class Cart {
   final String id;
   final String? userId;
@@ -151,7 +153,15 @@ class CartItem {
     } else if (menuItem != null) {
       return menuItem!['name'] as String;
     }
-    return 'Unknown Item';
+    return '';
+  }
+
+  String resolvedItemName(AppLocalizations l10n) {
+    final n = itemName;
+    if (n.isEmpty) {
+      return l10n.shopCartUnknownItem;
+    }
+    return n;
   }
 
   String? get itemImage {

@@ -52,6 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _showCountryPicker() {
+    final l10n = AppLocalizations.of(context)!;
     showCountryPicker(
       context: context,
       showPhoneCode: true,
@@ -70,8 +71,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           topRight: Radius.circular(20.0),
         ),
         inputDecoration: InputDecoration(
-          labelText: 'Search',
-          hintText: 'Start typing to search',
+          labelText: l10n.commonSearch,
+          hintText: l10n.countryPickerSearchHint,
           prefixIcon: Icon(Icons.search, color: context.secondaryTextColor),
           filled: true,
           fillColor: context.backgroundColor,
@@ -429,7 +430,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               decoration: InputDecoration(
                                 labelText: l10n.loginPhoneNumber,
                                 prefixIcon: const Icon(Icons.phone_outlined),
-                                hintText: '780 123 456',
+                                hintText: l10n.authPhoneNumberExample,
                                 hintStyle: context.bodySmall.copyWith(color: context.secondaryTextColor),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -443,7 +444,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   borderSide: BorderSide(color: context.primaryColorTheme, width: 2),
                                 ),
                               ),
-                              validator: PhoneValidator.validateInternationalPhone,
+                              validator: (v) => PhoneValidator.validateInternationalPhone(
+                                v,
+                                AppLocalizations.of(context)!,
+                              ),
                             ),
                           ),
                         ],

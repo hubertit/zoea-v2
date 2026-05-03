@@ -28,6 +28,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final itineraryAsync = ref.watch(itineraryByIdProvider(widget.itineraryId));
 
     return Scaffold(
@@ -38,8 +39,8 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
             itinerary.title,
             style: context.titleLarge,
           ),
-          loading: () => Text(AppLocalizations.of(context)!.itineraryDetailTitle),
-          error: (_, __) => Text(AppLocalizations.of(context)!.itineraryDetailTitle),
+          loading: () => Text(l10n.itineraryDetailTitle),
+          error: (_, __) => Text(l10n.itineraryDetailTitle),
         ),
         backgroundColor: context.backgroundColor,
         elevation: 0,
@@ -60,7 +61,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                   ref.invalidate(itineraryByIdProvider(widget.itineraryId));
                 });
               },
-              tooltip: 'Edit',
+              tooltip: l10n.itineraryDetailEditTooltip,
             ),
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),
@@ -75,7 +76,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                     )
                   : const Icon(Icons.share),
               onPressed: () => _shareItinerary(itinerary),
-              tooltip: 'Share',
+              tooltip: l10n.itineraryDetailShareTooltip,
             ),
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),
@@ -127,8 +128,8 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
   }
 
   Widget _buildItineraryContent(Itinerary itinerary) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
-    final timeFormat = DateFormat('h:mm a');
     final sortedItems = itinerary.sortedItems;
 
     return RefreshIndicator(
@@ -232,7 +233,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        '${itinerary.daysCount} ${itinerary.daysCount == 1 ? 'day' : 'days'}',
+                        l10n.itineraryDaysCountLine(itinerary.daysCount),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -315,6 +316,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
   }
 
   Widget _buildItemCard(ItineraryItem item, int index) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -347,7 +349,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _getItemName(item),
+                      _getItemName(item, l10n),
                       style: context.bodyLarge.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -487,16 +489,16 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
     );
   }
 
-  String _getItemName(ItineraryItem item) {
+  String _getItemName(ItineraryItem item, AppLocalizations l10n) {
     switch (item.type) {
       case ItineraryItemType.listing:
-        return item.metadata?['name'] ?? 'Place';
+        return item.metadata?['name'] ?? l10n.itineraryFallbackItemPlace;
       case ItineraryItemType.event:
-        return item.metadata?['name'] ?? 'Event';
+        return item.metadata?['name'] ?? l10n.itineraryFallbackItemEvent;
       case ItineraryItemType.tour:
-        return item.metadata?['name'] ?? 'Tour';
+        return item.metadata?['name'] ?? l10n.itineraryFallbackItemTour;
       case ItineraryItemType.custom:
-        return item.customName ?? 'Custom Item';
+        return item.customName ?? l10n.itineraryFallbackItemCustom;
     }
   }
 

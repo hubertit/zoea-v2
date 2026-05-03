@@ -165,7 +165,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           ),
         ),
         content: Text(
-          'You have unsaved changes. Are you sure you want to leave?',
+          AppLocalizations.of(context)!.profileEditUnsavedChangesBody,
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -177,7 +177,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.commonCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -186,7 +186,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
-              'Discard',
+              AppLocalizations.of(context)!.profileEditDiscard,
               style: context.bodyMedium.copyWith(
                 color: context.errorColor,
                 fontWeight: FontWeight.w600,
@@ -224,11 +224,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
       });
     }
 
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Edit Profile',
+          loc.profileEditTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -258,7 +259,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           TextButton(
             onPressed: (_isLoading || _isSaving) ? null : _saveAll,
             child: Text(
-              'Save',
+              loc.commonSave,
               style: context.bodyMedium.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w600,
@@ -284,9 +285,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
               fontWeight: FontWeight.w600,
             ),
             unselectedLabelStyle: context.bodyMedium,
-            tabs: const [
-              Tab(text: 'Basic Info'),
-              Tab(text: 'Preferences'),
+            tabs: [
+              Tab(text: loc.profileEditTabBasicInfo),
+              Tab(text: loc.profileEditTabPreferences),
             ],
           ),
           
@@ -296,7 +297,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
               controller: _tabController,
               physics: const BouncingScrollPhysics(), // Smooth scrolling animation
               children: [
-                _buildBasicInfoTab(),
+                _buildBasicInfoTab(loc),
                 _buildPreferencesTab(),
               ],
             ),
@@ -370,23 +371,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
     );
   }
 
-  Widget _buildBasicInfoTab() {
+  Widget _buildBasicInfoTab(AppLocalizations l10n) {
     return Form(
       key: _formKey,
       child: ListView(
         padding: const EdgeInsets.all(12),
         children: [
           // Personal Information
-          _buildSectionHeader('Personal Information'),
+          _buildSectionHeader(l10n.profileEditPersonalInfoSectionTitle),
           const SizedBox(height: 16),
           _buildTextField(
             controller: _nameController,
-            label: 'Full Name',
-            hint: 'Enter your full name',
+            label: l10n.registerFullName,
+            hint: l10n.profileEditHintFullName,
             icon: Icons.person,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your full name';
+                return l10n.profileEditValidationFullNameRequired;
               }
               return null;
             },
@@ -394,16 +395,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           const SizedBox(height: 16),
           _buildTextField(
             controller: _emailController,
-            label: 'Email Address',
-            hint: 'Enter your email address',
+            label: l10n.loginEmailAddress,
+            hint: l10n.profileEditHintEmail,
             icon: Icons.email,
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your email address';
+                return l10n.profileEditValidationEmailRequired;
               }
               if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                return 'Please enter a valid email address';
+                return l10n.loginValidationEmailInvalid;
               }
               return null;
             },
@@ -411,13 +412,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           const SizedBox(height: 16),
           _buildTextField(
             controller: _phoneController,
-            label: 'Phone Number',
-            hint: 'Enter your phone number',
+            label: l10n.loginPhoneNumber,
+            hint: l10n.profileEditHintPhone,
             icon: Icons.phone,
             keyboardType: TextInputType.phone,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your phone number';
+                return l10n.profileEditValidationPhoneRequired;
               }
               return null;
             },
@@ -430,6 +431,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
 
   Widget _buildPreferencesTab() {
     final user = ref.watch(currentUserProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppTheme.spacing24),
@@ -438,8 +440,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
         children: [
           // Age Range
           _buildPreferencesSection(
-            title: 'Age Range',
-            subtitle: 'Help us personalize content for you',
+            title: l10n.udcFieldAgeRangeTitle,
+            subtitle: l10n.udcFieldAgeRangeSubtitle,
             isComplete: _selectedAgeRange != null,
             child: AgeRangeSelector(
               selectedRange: _selectedAgeRange,
@@ -454,8 +456,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
 
           // Gender
           _buildPreferencesSection(
-            title: 'Gender',
-            subtitle: 'Optional - helps with personalization',
+            title: l10n.udcFieldGenderTitle,
+            subtitle: l10n.udcFieldGenderSubtitle,
             isComplete: _selectedGender != null,
             child: GenderSelector(
               selectedGender: _selectedGender,
@@ -471,8 +473,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           // Length of Stay (only for visitors)
           if (user?.preferences?.userType == UserType.visitor) ...[
             _buildPreferencesSection(
-              title: 'Length of Stay',
-              subtitle: 'How long are you staying in Rwanda?',
+              title: l10n.udcFieldLengthOfStayTitle,
+              subtitle: l10n.udcFieldLengthOfStaySubtitle,
               isComplete: _selectedLengthOfStay != null,
               child: LengthOfStaySelector(
                 selectedLength: _selectedLengthOfStay,
@@ -488,8 +490,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
 
           // Interests
           _buildPreferencesSection(
-            title: 'Interests',
-            subtitle: 'Select all that apply',
+            title: l10n.profileEditInterestsTitle,
+            subtitle: l10n.profileEditInterestsSubtitle,
             isComplete: _selectedInterests.isNotEmpty,
             child: InterestsChips(
               selectedInterests: _selectedInterests,
@@ -504,8 +506,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
 
           // Travel Party
           _buildPreferencesSection(
-            title: 'Travel Party',
-            subtitle: 'Who are you traveling with?',
+            title: l10n.udcFieldTravelPartyTitle,
+            subtitle: l10n.udcFieldTravelPartySubtitle,
             isComplete: _selectedTravelParty != null,
             child: TravelPartySelector(
               selectedParty: _selectedTravelParty,
@@ -676,6 +678,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
     });
 
     try {
+      final l10n = AppLocalizations.of(context)!;
       final userService = ref.read(userServiceProvider);
       final currentUser = ref.read(currentUserProvider);
       
@@ -706,7 +709,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               AppTheme.errorSnackBar(
-                message: 'Password is required to update email address.',
+                message: l10n.profileEditPasswordRequiredForEmail,
               ),
             );
           }
@@ -782,7 +785,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.successSnackBar(
-            message: 'Profile updated successfully!',
+            message: l10n.commonProfileUpdatedSuccess,
           ),
         );
         
@@ -796,12 +799,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         final errorMessage = e.toString().replaceFirst('Exception: ', '');
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
             message: errorMessage.isNotEmpty 
                 ? errorMessage 
-                : 'Failed to update profile. Please try again.',
+                : l10n.profileUpdateFailedGeneric,
           ),
         );
       }
@@ -823,10 +827,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
       context: context,
       barrierDismissible: false,
       builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
+        builder: (context, setDialogState) {
+          final dlgL10n = AppLocalizations.of(context)!;
+          return AlertDialog(
           backgroundColor: context.backgroundColor,
           title: Text(
-            'Enter Password',
+            dlgL10n.profileEnterPasswordDialogTitle,
             style: context.titleLarge.copyWith(
               color: context.primaryTextColor,
             ),
@@ -835,7 +841,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Please enter your current password to update your email address.',
+                dlgL10n.profileEnterPasswordDialogBody,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -846,8 +852,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                 obscureText: obscurePassword,
                 enabled: !isLoading,
                 decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
+                  labelText: dlgL10n.loginPassword,
+                  hintText: dlgL10n.loginPasswordHint,
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -873,7 +879,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
             TextButton(
               onPressed: isLoading ? null : () => Navigator.of(context).pop(),
               child: Text(
-                'Cancel',
+                dlgL10n.authCancel,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -885,7 +891,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                 if (password.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     AppTheme.errorSnackBar(
-                      message: 'Please enter your password',
+                      message: dlgL10n.profileEditPleaseEnterPassword,
                     ),
                   );
                   return;
@@ -915,10 +921,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : Text(AppLocalizations.of(context)!.editProfileConfirm),
+                  : Text(dlgL10n.editProfileConfirm),
             ),
           ],
-        ),
+        );
+        },
       ),
     );
   }

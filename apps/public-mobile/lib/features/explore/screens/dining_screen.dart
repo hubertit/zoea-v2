@@ -642,13 +642,13 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
         context.push('/listing/$listingId');
       },
       onFavorite: () async {
+        final l10n = AppLocalizations.of(context)!;
         final isLoggedIn = ref.read(isLoggedInProvider);
         if (!isLoggedIn) {
           AuthPromptDialog.show(
             context: context,
-            title: 'Sign In to Save Favorites',
-            message:
-                'Create an account or sign in to save your favorite places and access them anytime.',
+            title: l10n.exploreFavoriteSignInTitle,
+            message: l10n.exploreFavoriteSignInMessage,
             icon: Icons.favorite,
           );
           return;
@@ -679,9 +679,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           if (context.mounted && errorText.contains('Unauthorized')) {
             AuthPromptDialog.show(
               context: context,
-              title: 'Sign In to Save Favorites',
-              message:
-                  'Your session has expired. Please sign in again to save favorites.',
+              title: l10n.exploreFavoriteSessionTitle,
+              message: l10n.exploreFavoriteSessionMessage,
               icon: Icons.favorite,
             );
             return;
@@ -690,8 +689,9 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               AppTheme.errorSnackBar(
-                message:
-                    'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+                message: l10n.commonFavoriteUpdateFailed(
+                  errorText.replaceFirst('Exception: ', ''),
+                ),
               ),
             );
           }
@@ -849,7 +849,9 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
       ),
       isScrollControlled: true,
       builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Padding(
+        builder: (context, setModalState) {
+          final loc = AppLocalizations.of(context)!;
+          return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
@@ -925,7 +927,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
 
                 // Price Range
                 Text(
-                  'Price Range',
+                  loc.categorySectionPriceRange,
                   style: context.titleMedium.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -938,8 +940,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                         controller: minPriceController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          labelText: 'Min Price',
-                          hintText: '0',
+                          labelText: loc.exploreFilterLabelMinPrice,
+                          hintText: loc.exploreFilterBudgetHintMin,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: context.grey300),
@@ -969,8 +971,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                         controller: maxPriceController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          labelText: 'Max Price',
-                          hintText: 'No limit',
+                          labelText: loc.exploreFilterLabelMaxPrice,
+                          hintText: loc.exploreFilterBudgetHintNoLimit,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: context.grey300),
@@ -1089,7 +1091,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
               ],
             ),
           ),
-        ),
+        );
+        },
       ),
     );
   }

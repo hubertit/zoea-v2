@@ -7,6 +7,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/search_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   final String? initialQuery;
@@ -86,6 +87,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -103,7 +105,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           controller: _searchController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Search events, places, experiences...',
+            hintText: l10n.searchScreenGlobalHint,
             hintStyle: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -414,6 +416,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildSearchResultCard(Map<String, dynamic> result) {
+    final l10n = AppLocalizations.of(context)!;
     // Extract image URL from API response structure
     String? imageUrl;
     if (result['images'] != null && result['images'] is List && (result['images'] as List).isNotEmpty) {
@@ -430,7 +433,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }
 
     // Extract name/title
-    final name = result['name'] ?? result['title'] ?? 'Unknown';
+    final name = result['name'] ?? result['title'] ?? l10n.exploreListingUnknown;
     
     // Extract location/address
     final location = result['address'] ?? 
@@ -452,13 +455,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     String typeLabel;
     if (resultType == 'event' || result['event'] != null) {
       typeIcon = Icons.event;
-      typeLabel = 'Event';
+      typeLabel = l10n.contentTypeEventLabel;
     } else if (resultType == 'tour') {
       typeIcon = Icons.explore;
-      typeLabel = 'Tour';
+      typeLabel = l10n.contentTypeTourLabel;
     } else {
       typeIcon = Icons.place;
-      typeLabel = 'Place';
+      typeLabel = l10n.contentTypePlaceLabel;
     }
 
     return Container(
@@ -696,18 +699,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Clear Search History',
+          AppLocalizations.of(context)!.searchClearHistoryTitle,
           style: context.titleMedium,
         ),
         content: Text(
-          'Are you sure you want to clear all your search history?',
+          AppLocalizations.of(context)!.searchClearHistoryBody,
           style: context.bodyMedium,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.commonCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -719,7 +722,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               await _clearSearchHistory();
             },
             child: Text(
-              'Clear',
+              AppLocalizations.of(context)!.commonClear,
               style: context.bodyMedium.copyWith(
                 color: context.errorColor,
                 fontWeight: FontWeight.w600,

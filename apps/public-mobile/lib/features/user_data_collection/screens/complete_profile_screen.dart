@@ -57,6 +57,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
+    final l10n = AppLocalizations.of(context)!;
     final completionPercentage = user?.preferences?.profileCompletionPercentage ?? 0;
 
     return Scaffold(
@@ -78,13 +79,13 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Progress indicator
-                  _buildProgressSection(completionPercentage),
+                  _buildProgressSection(completionPercentage, l10n),
                   const SizedBox(height: AppTheme.spacing32),
 
                   // Age Range
                   _buildSection(
-                    title: 'Age Range',
-                    subtitle: 'Help us personalize content for you',
+                    title: l10n.udcFieldAgeRangeTitle,
+                    subtitle: l10n.udcFieldAgeRangeSubtitle,
                     isComplete: _selectedAgeRange != null,
                     child: AgeRangeSelector(
                       selectedRange: _selectedAgeRange,
@@ -99,8 +100,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
                   // Gender
                   _buildSection(
-                    title: 'Gender',
-                    subtitle: 'Optional - helps with personalization',
+                    title: l10n.udcFieldGenderTitle,
+                    subtitle: l10n.udcFieldGenderSubtitle,
                     isComplete: _selectedGender != null,
                     child: GenderSelector(
                       selectedGender: _selectedGender,
@@ -116,8 +117,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                   // Length of Stay (only for visitors)
                   if (user?.preferences?.userType == UserType.visitor) ...[
                     _buildSection(
-                      title: 'Length of Stay',
-                      subtitle: 'How long are you staying in Rwanda?',
+                      title: l10n.udcFieldLengthOfStayTitle,
+                      subtitle: l10n.udcFieldLengthOfStaySubtitle,
                       isComplete: _selectedLengthOfStay != null,
                       child: LengthOfStaySelector(
                         selectedLength: _selectedLengthOfStay,
@@ -133,8 +134,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
                   // Interests
                   _buildSection(
-                    title: 'Interests',
-                    subtitle: 'Select all that apply',
+                    title: l10n.udcFieldInterestsTitle,
+                    subtitle: l10n.udcFieldInterestsSubtitle,
                     isComplete: _selectedInterests.isNotEmpty,
                     child: InterestsChips(
                       selectedInterests: _selectedInterests,
@@ -149,8 +150,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
                   // Travel Party
                   _buildSection(
-                    title: 'Travel Party',
-                    subtitle: 'Who are you traveling with?',
+                    title: l10n.udcFieldTravelPartyTitle,
+                    subtitle: l10n.udcFieldTravelPartySubtitle,
                     isComplete: _selectedTravelParty != null,
                     child: TravelPartySelector(
                       selectedParty: _selectedTravelParty,
@@ -192,7 +193,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                               ),
                             )
                           : Text(
-                              'Save Changes',
+                              l10n.profileSaveChangesButton,
                               style: context.labelLarge.copyWith(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               ),
@@ -218,7 +219,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         const SizedBox(width: AppTheme.spacing12),
                         Expanded(
                           child: Text(
-                            'Your data is used only to personalize your experience. You can update or remove it anytime.',
+                            l10n.profileCompletionPrivacyNote,
                             style: context.bodySmall.copyWith(
                               color: context.secondaryTextColor,
                             ),
@@ -233,7 +234,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     );
   }
 
-  Widget _buildProgressSection(int percentage) {
+  Widget _buildProgressSection(int percentage, AppLocalizations l10n) {
     return Builder(
       builder: (context) => Container(
         padding: const EdgeInsets.all(AppTheme.spacing20),
@@ -252,7 +253,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Profile Completion',
+                  l10n.profileCompletionSectionTitle,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -278,7 +279,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
             ),
             const SizedBox(height: AppTheme.spacing8),
             Text(
-              'Complete your profile to get better recommendations',
+              l10n.profileCompletionSubtitleRecommendations,
               style: context.bodySmall.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -399,7 +400,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.successSnackBar(
-            message: 'Profile updated successfully!',
+            message: AppLocalizations.of(context)!.commonProfileUpdatedSuccess,
           ),
         );
         Navigator.of(context).pop();
@@ -408,7 +409,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: 'Failed to save. Please try again.',
+            message: AppLocalizations.of(context)!.commonSaveFailedTryAgain,
           ),
         );
       }

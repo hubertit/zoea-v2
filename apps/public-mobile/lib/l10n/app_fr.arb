@@ -1548,6 +1548,8 @@
   },
   "listingDetailCouldNotCallPhone": "Impossible d’appeler le numéro : {phone}",
   "searchScreenGlobalHint": "Rechercher des événements, lieux, expériences…",
+  "searchClearHistoryTitle": "Effacer l’historique de recherche",
+  "searchClearHistoryBody": "Voulez-vous vraiment effacer tout l’historique de recherche ?",
   "listingReviewComposerHint": "Partagez votre avis sur ce lieu…",
   "exploreFilterBudgetHintMin": "0",
   "tourBookingPickupHint": "Lieu de prise en charge, ou laissez vide pour la valeur par défaut",
@@ -1683,5 +1685,210 @@
   "stayDetailTabReviews": "Avis",
   "stayDetailTabPhotos": "Photos",
   "onboardingUserTypeHeadline": "Résident(e) ou visiteur(se) ?",
-  "onboardingUserTypeSubtitle": "Cela nous aide à vous proposer du contenu adapté"
+  "onboardingUserTypeSubtitle": "Cela nous aide à vous proposer du contenu adapté",
+  "commonComplete": "Terminer",
+  "commonSave": "Enregistrer",
+  "phoneValidationRequired": "Veuillez saisir votre numéro de téléphone",
+  "phoneValidationInternationalInvalid": "Veuillez saisir un numéro de téléphone valide",
+  "phoneValidationRwandanInvalid": "Veuillez saisir un numéro rwandais valide (07xxxxxxxx ou 08xxxxxxxx)",
+  "exploreFilterLabelMinPrice": "Prix min",
+  "exploreFilterLabelMaxPrice": "Prix max",
+  "profileEditInterestsTitle": "Centres d’intérêt",
+  "profileEditInterestsSubtitle": "Sélectionnez tout ce qui s’applique",
+  "profileEditUnsavedChangesBody": "Vous avez des modifications non enregistrées. Quitter quand même ?",
+  "profileEditDiscard": "Abandonner",
+  "profileEditPersonalInfoSectionTitle": "Informations personnelles",
+  "profileEditHintFullName": "Saisissez votre nom complet",
+  "profileEditValidationFullNameRequired": "Veuillez saisir votre nom complet",
+  "profileEditHintEmail": "Saisissez votre adresse e-mail",
+  "profileEditValidationEmailRequired": "Veuillez saisir votre adresse e-mail",
+  "profileEditHintPhone": "Saisissez votre numéro de téléphone",
+  "profileEditValidationPhoneRequired": "Veuillez saisir votre numéro de téléphone",
+  "profileEditTabBasicInfo": "Infos de base",
+  "profileEditTabPreferences": "Préférences",
+  "profileVisitedPlacesTitle": "Lieux visités",
+  "profileVisitedTabAllPlaces": "Tous les lieux",
+  "profileVisitedTabThisYear": "Cette année",
+  "profileVisitedTabListingsOnly": "Annonces uniquement",
+  "profileVisitedStatusViewed": "Consulté",
+  "@profileVisitedDateLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "profileVisitedDateLine": "Consulté le {date}",
+  "profileVisitedEmptyTitle": "Aucun lieu visité pour l’instant",
+  "profileVisitedEmptySubtitle": "Explorez le Rwanda pour constituer votre liste de lieux visités.",
+  "profileVisitedExploreButton": "Explorer les lieux",
+  "profileUnknownLocation": "Lieu inconnu",
+  "profileEventsAttendedTitle": "Événements assistés",
+  "eventsAttendedTabAll": "Tous les événements",
+  "eventsAttendedTabThisYear": "Cette année",
+  "eventsAttendedTabFavorites": "Favoris",
+  "eventsAttendedEmptyTitle": "Aucun événement assisté pour l’instant",
+  "eventsAttendedEmptySubtitle": "Explorez des événements pour constituer votre historique.",
+  "eventsAttendedExploreButton": "Explorer les événements",
+  "eventsAttendedBadge": "Assisté",
+  "exploreHomeCategoryEvents": "Événements",
+  "exploreHomeCategoryDining": "Restauration",
+  "exploreHomeCategoryExperiences": "Expériences",
+  "exploreHomeCategoryNightlife": "Vie nocturne",
+  "exploreHomeCategoryAccommodation": "Hébergement",
+  "exploreHomeCategoryShopping": "Shopping",
+  "placeDetailOpeningHoursTitle": "Heures d’ouverture",
+  "placeDetailAboutTitle": "À propos",
+  "placeDetailFeaturesTitle": "Points forts",
+  "placeDetailNoPhotosExtended": "Aucune photo disponible pour ce lieu",
+  "placeDetailNoMenuForPlace": "Aucun menu disponible pour ce lieu",
+  "listingNoPhotosShort": "Aucune photo disponible",
+  "listingHoursClosed": "Fermé",
+  "weekdayMonday": "Lundi",
+  "weekdayTuesday": "Mardi",
+  "weekdayWednesday": "Mercredi",
+  "weekdayThursday": "Jeudi",
+  "weekdayFriday": "Vendredi",
+  "weekdaySaturday": "Samedi",
+  "weekdaySunday": "Dimanche",
+  "@itineraryDaysCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itineraryDaysCountLine": "{count, plural, =1{1 jour} other{{count} jours}}",
+  "@itineraryItemsCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itineraryItemsCountLine": "{count, plural, =1{1 élément} other{{count} éléments}}",
+  "@reviewHelpfulCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewHelpfulCountLine": "{count, plural, =1{1 personne a trouvé cela utile} other{{count} personnes ont trouvé cela utile}}",
+  "@reviewTimeWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeWeeksAgo": "{count, plural, =1{Il y a 1 semaine} other{Il y a {count} semaines}}",
+  "@reviewTimeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeMonthsAgo": "{count, plural, =1{Il y a 1 mois} other{Il y a {count} mois}}",
+  "@reviewTimeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeYearsAgo": "{count, plural, =1{Il y a 1 an} other{Il y a {count} ans}}",
+  "listingReviewExperienceTitle": "Comment s’est passée votre expérience ?",
+  "listingReviewExperienceSubtitle": "Parlez-nous de votre expérience",
+  "listingAnonymousUser": "Anonyme",
+  "stayDefaultRoomLabel": "Chambre",
+  "stayDefaultAmenityLabel": "Équipement",
+  "contentTypeEventLabel": "Événement",
+  "contentTypePlaceLabel": "Lieu",
+  "contentTypeTourLabel": "Circuit",
+  "itineraryFallbackItemPlace": "Lieu",
+  "itineraryFallbackItemEvent": "Événement",
+  "itineraryFallbackItemTour": "Circuit",
+  "itineraryFallbackItemCustom": "Élément personnalisé",
+  "onboardingCountryHeadline": "D’où venez-vous ?",
+  "onboardingCountrySubtitle": "Aidez-nous à personnaliser votre expérience",
+  "onboardingVisitRwandaHeadline": "Qu’est-ce qui vous amène au Rwanda ?",
+  "onboardingVisitRwandaSubtitle": "Sélectionnez votre objectif principal",
+  "onboardingLanguageHeadline": "Quelle langue préférez-vous ?",
+  "onboardingLanguageSubtitle": "Vous pourrez modifier ce choix à tout moment dans les paramètres",
+  "onboardingConsentHeadline": "Aidez-nous à nous améliorer",
+  "onboardingConsentSubtitle": "Autorisez l’analyse pour nous aider à personnaliser votre expérience",
+  "onboardingConsentCheckboxLabel": "J’accepte de partager des données d’analyse pour améliorer les recommandations",
+  "onboardingSettingsFootnote": "Vous pourrez modifier ce choix à tout moment dans les paramètres",
+  "progressivePromptTitleWithDuration": "Personnalisons Zoea (10 sec)",
+  "progressivePromptTitleDefault": "Personnalisons Zoea",
+  "progressiveQuestionAgeRange": "Quelle est votre tranche d’âge ?",
+  "progressiveQuestionGender": "Quel est votre genre ?",
+  "progressiveQuestionLengthOfStay": "Combien de temps restez-vous ?",
+  "progressiveQuestionInterests": "Qu’est-ce qui vous intéresse ?",
+  "progressiveQuestionTravelParty": "Avec qui voyagez-vous ?",
+  "profileSaveChangesButton": "Enregistrer les modifications",
+  "profileCompletionPrivacyNote": "Vos données servent uniquement à personnaliser votre expérience. Vous pouvez les mettre à jour ou les supprimer à tout moment.",
+  "profileCompletionSectionTitle": "Complétion du profil",
+  "profileCompletionSubtitleRecommendations": "Complétez votre profil pour de meilleures recommandations",
+  "tourBookingScreenTitle": "Réserver un circuit",
+  "tourBookingPerPersonSuffix": "/personne",
+  "tourBookingSelectTourTitle": "Choisir un circuit",
+  "tourBookingSelectDateTimeTitle": "Choisir la date et l’heure",
+  "tourBookingNoSchedules": "Aucun créneau disponible",
+  "@tourBookingScheduleSubtitleWithTime": {
+    "placeholders": {
+      "time": {"type": "String"},
+      "spots": {"type": "int"}
+    }
+  },
+  "tourBookingScheduleSubtitleWithTime": "Heure : {time} · Places : {spots} disponibles",
+  "@tourBookingScheduleSubtitleSpotsOnly": {
+    "placeholders": {
+      "spots": {"type": "int"}
+    }
+  },
+  "tourBookingScheduleSubtitleSpotsOnly": "Places : {spots} disponibles",
+  "tourBookingNumberOfGuestsTitle": "Nombre de voyageurs",
+  "tourBookingGuestAdults": "Adultes",
+  "tourBookingGuestChildren": "Enfants",
+  "tourBookingGuestInfants": "Bébés",
+  "tourBookingContactSectionTitle": "Coordonnées",
+  "tourBookingPickupLocationOptionalTitle": "Lieu de prise en charge (facultatif)",
+  "tourBookingSpecialRequestsTitle": "Demandes particulières",
+  "tourBookingPriceBreakdownTitle": "Détail du prix",
+  "@tourBookingPriceLineAdults": {"placeholders": {"count": {"type": "int"}}},
+  "tourBookingPriceLineAdults": "Adultes ({count}×)",
+  "@tourBookingPriceLineChildren": {"placeholders": {"count": {"type": "int"}}},
+  "tourBookingPriceLineChildren": "Enfants ({count}×)",
+  "@tourBookingPriceLineInfants": {"placeholders": {"count": {"type": "int"}}},
+  "tourBookingPriceLineInfants": "Bébés ({count}×)",
+  "tourBookingPriceLineFree": "Gratuit",
+  "tourBookingPriceLineTotal": "Total",
+  "tourBookingLocationDefaultLabel": "Lieu",
+  "tourPackagesScreenTitle": "Forfaits circuits",
+  "reviewsViewPlaceAction": "Voir le lieu",
+  "placeDetailMapViewAction": "Voir",
+  "itineraryFormButtonCreate": "Créer l’itinéraire",
+  "itineraryFormButtonUpdate": "Mettre à jour l’itinéraire",
+  "itineraryUpdatedSuccess": "Itinéraire mis à jour",
+  "itineraryCreatedSuccess": "Itinéraire créé",
+  "itineraryAddItemsHint": "Ajoutez des lieux, événements ou circuits à votre itinéraire",
+  "itinerarySharedBadge": "Partagé",
+  "shopCartUnknownItem": "Article inconnu",
+  "listingDetailHoursClosed": "Fermé",
+  "diningCategoryFallbackName": "Restauration",
+  "bookingFallbackRestaurantName": "Restaurant",
+  "@aboutLegalCopyrightBody": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "aboutLegalCopyrightBody": "Avis sur les droits d'auteur\n\n\u00a9 {year} Zoea Africa. Tous droits r\u00e9serv\u00e9s.\n\nL'application et son contenu sont prot\u00e9g\u00e9s par le droit d'auteur et d'autres lois sur la propri\u00e9t\u00e9 intellectuelle.\n\nVous ne pouvez pas :\n- copier, modifier ou distribuer l'application sans autorisation ;\n- proc\u00e9der \u00e0 de l'ing\u00e9nierie inverse ou tenter d'extraire le code source ;\n- utiliser l'application \u00e0 des fins commerciales sans autorisation.\n\nPour toute question de licence, contactez-nous \u00e0 legal@zoea.africa.",
+  "aboutLegalPrivacyBody": "Politique de confidentialit\u00e9\n\nDerni\u00e8re mise \u00e0 jour : d\u00e9cembre 2024\n\n1. Informations que nous collectons\nNous collectons les informations que vous nous fournissez directement, par exemple lorsque vous cr\u00e9ez un compte, effectuez une r\u00e9servation ou nous contactez pour une assistance.\n\n2. Utilisation de vos informations\nNous utilisons les informations collect\u00e9es pour fournir, maintenir et am\u00e9liorer nos services, traiter les transactions et communiquer avec vous.\n\n3. Partage des informations\nNous ne vendons, n'\u00e9changeons ni ne transf\u00e9rons vos donn\u00e9es personnelles \u00e0 des tiers sans votre consentement.\n\n4. S\u00e9curit\u00e9 des donn\u00e9es\nNous mettons en \u0153uvre des mesures de s\u00e9curit\u00e9 appropri\u00e9es pour prot\u00e9ger vos donn\u00e9es personnelles contre l'acc\u00e8s, la modification, la divulgation ou la destruction non autoris\u00e9s.\n\n5. Vos droits\nVous pouvez acc\u00e9der \u00e0 vos donn\u00e9es personnelles, les mettre \u00e0 jour ou les supprimer. Vous pouvez le faire via les param\u00e8tres du compte ou en nous contactant.\n\n6. Nous contacter\nPour toute question concernant cette politique, \u00e9crivez-nous \u00e0 privacy@zoea.africa.",
+  "aboutLegalTermsBody": "Conditions d'utilisation\n\nDerni\u00e8re mise \u00e0 jour : d\u00e9cembre 2024\n\n1. Acceptation des conditions\nEn utilisant l'application, vous acceptez d'\u00eatre li\u00e9(e) par les pr\u00e9sentes conditions d'utilisation.\n\n2. Utilisation de l'application\nVous ne pouvez utiliser l'application qu'\u00e0 des fins licites. Vous acceptez de ne pas l'utiliser d'une mani\u00e8re susceptible d'endommager, de d\u00e9sactiver ou d'alt\u00e9rer l'application.\n\n3. Comptes utilisateurs\nVous \u00eates responsable de la confidentialit\u00e9 de votre compte et de votre mot de passe.\n\n4. R\u00e9servations et paiements\nToutes les r\u00e9servations sont soumises \u00e0 disponibilit\u00e9. Les conditions de paiement sont celles indiqu\u00e9es au moment de la r\u00e9servation.\n\n5. Politique d'annulation\nLes politiques d'annulation varient selon l'\u00e9v\u00e9nement et sont pr\u00e9cis\u00e9es au moment de la r\u00e9servation.\n\n6. Limitation de responsabilit\u00e9\nDans la mesure maximale permise par la loi, nous d\u00e9clinons toute responsabilit\u00e9 pour les dommages indirects, accessoires ou cons\u00e9cutifs.\n\n7. Modifications des conditions\nNous pouvons modifier ces conditions \u00e0 tout moment. Nous informerons les utilisateurs en cas de changement important.\n\n8. Coordonn\u00e9es\nPour toute question sur ces conditions, contactez-nous \u00e0 legal@zoea.africa."
+
 }

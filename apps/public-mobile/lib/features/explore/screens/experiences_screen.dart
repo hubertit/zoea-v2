@@ -274,12 +274,13 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         context.push('/tour/$id');
       },
       onFavorite: () async {
+        final l10n = AppLocalizations.of(context)!;
         final isLoggedIn = ref.read(isLoggedInProvider);
         if (!isLoggedIn) {
           AuthPromptDialog.show(
             context: context,
-            title: 'Sign In to Save Favorites',
-            message: 'Create an account or sign in to save your favorite tours and access them anytime.',
+            title: l10n.exploreFavoriteSignInTitle,
+            message: l10n.tourFavoriteSignInMessage,
             returnPath: '/tour/$id',
             icon: Icons.favorite,
           );
@@ -302,8 +303,8 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           if (errorText.contains('Unauthorized')) {
             AuthPromptDialog.show(
               context: context,
-              title: 'Sign In to Save Favorites',
-              message: 'Your session has expired. Please sign in again to save favorites.',
+              title: l10n.exploreFavoriteSessionTitle,
+              message: l10n.exploreFavoriteSessionMessage,
               returnPath: '/tour/$id',
               icon: Icons.favorite,
             );
@@ -312,7 +313,9 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
 
           ScaffoldMessenger.of(context).showSnackBar(
             AppTheme.errorSnackBar(
-              message: 'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+              message: l10n.commonFavoriteUpdateFailed(
+                errorText.replaceFirst('Exception: ', ''),
+              ),
             ),
           );
         }

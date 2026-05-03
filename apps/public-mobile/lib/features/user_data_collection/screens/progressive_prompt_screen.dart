@@ -38,35 +38,31 @@ class _ProgressivePromptScreenState
   List<String> _selectedInterests = [];
   TravelParty? _selectedTravelParty;
 
-  String get _title {
+  String _title(AppLocalizations l10n) {
     switch (widget.promptType) {
       case 'age':
-        return 'Help us personalize Zoea (10 sec)';
       case 'gender':
-        return 'Help us personalize Zoea (10 sec)';
       case 'lengthOfStay':
-        return 'Help us personalize Zoea (10 sec)';
       case 'interests':
-        return 'Help us personalize Zoea (10 sec)';
       case 'travelParty':
-        return 'Help us personalize Zoea (10 sec)';
+        return l10n.progressivePromptTitleWithDuration;
       default:
-        return 'Help us personalize Zoea';
+        return l10n.progressivePromptTitleDefault;
     }
   }
 
-  String get _question {
+  String _question(AppLocalizations l10n) {
     switch (widget.promptType) {
       case 'age':
-        return 'What\'s your age range?';
+        return l10n.progressiveQuestionAgeRange;
       case 'gender':
-        return 'What\'s your gender?';
+        return l10n.progressiveQuestionGender;
       case 'lengthOfStay':
-        return 'How long are you staying?';
+        return l10n.progressiveQuestionLengthOfStay;
       case 'interests':
-        return 'What are you interested in?';
+        return l10n.progressiveQuestionInterests;
       case 'travelParty':
-        return 'Who are you traveling with?';
+        return l10n.progressiveQuestionTravelParty;
       default:
         return '';
     }
@@ -91,6 +87,7 @@ class _ProgressivePromptScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: context.backgroundColor,
@@ -124,7 +121,7 @@ class _ProgressivePromptScreenState
 
             // Title
             Text(
-              _title,
+              _title(l10n),
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -134,7 +131,7 @@ class _ProgressivePromptScreenState
 
             // Question
             Text(
-              _question,
+              _question(l10n),
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -186,7 +183,7 @@ class _ProgressivePromptScreenState
                             ),
                           )
                         : Text(
-                            'Save',
+                            l10n.commonSave,
                             style: context.labelLarge.copyWith(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
@@ -302,7 +299,7 @@ class _ProgressivePromptScreenState
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.successSnackBar(
-            message: 'Thanks for helping us personalize your experience!',
+            message: AppLocalizations.of(context)!.progressivePromptThanks,
           ),
         );
       }
@@ -310,7 +307,7 @@ class _ProgressivePromptScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: 'Failed to save. Please try again.',
+            message: AppLocalizations.of(context)!.commonSaveFailedTryAgain,
           ),
         );
         setState(() {

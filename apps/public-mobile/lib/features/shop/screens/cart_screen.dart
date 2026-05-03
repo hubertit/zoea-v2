@@ -160,7 +160,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.itemName,
+                      item.resolvedItemName(l10n),
                       style: context.bodyLarge.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.primaryTextColor,

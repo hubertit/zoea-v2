@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -18,6 +19,7 @@ class TravelPartySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -27,7 +29,7 @@ class TravelPartySelector extends StatelessWidget {
                 context: context,
                 party: TravelParty.solo,
                 icon: Icons.person,
-                label: 'Solo',
+                label: l10n.udcTravelPartySolo,
                 emoji: '👤',
               ),
             ),
@@ -37,7 +39,7 @@ class TravelPartySelector extends StatelessWidget {
                 context: context,
                 party: TravelParty.couple,
                 icon: Icons.favorite,
-                label: 'Couple',
+                label: l10n.udcTravelPartyCouple,
                 emoji: '👥',
               ),
             ),
@@ -51,7 +53,7 @@ class TravelPartySelector extends StatelessWidget {
                 context: context,
                 party: TravelParty.family,
                 icon: Icons.family_restroom,
-                label: 'Family',
+                label: l10n.udcTravelPartyFamily,
                 emoji: '👨‍👩‍👧',
               ),
             ),
@@ -61,7 +63,7 @@ class TravelPartySelector extends StatelessWidget {
                 context: context,
                 party: TravelParty.group,
                 icon: Icons.groups,
-                label: 'Group',
+                label: l10n.udcTravelPartyGroup,
                 emoji: '👥👥',
               ),
             ),

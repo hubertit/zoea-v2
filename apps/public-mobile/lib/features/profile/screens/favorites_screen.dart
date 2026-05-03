@@ -342,7 +342,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    isEvent ? 'Event' : 'Place',
+                    isEvent
+                        ? AppLocalizations.of(context)!.contentTypeEventLabel
+                        : AppLocalizations.of(context)!.contentTypePlaceLabel,
                     style: context.labelSmall.copyWith(
                       color: isEvent ? context.primaryColorTheme : context.successColor,
                       fontWeight: FontWeight.w500,
@@ -890,7 +892,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
     final address = listing['address'] as String? ??
         (listing['city'] is Map ? (listing['city'] as Map)['name'] as String? : null) ??
         l10n.exploreListingUnknown;
-    final category = listing['type'] ?? 'Place';
+    final category = listing['type'] ?? l10n.contentTypePlaceLabel;
     
     // Extract image URL
     String? imageUrl;

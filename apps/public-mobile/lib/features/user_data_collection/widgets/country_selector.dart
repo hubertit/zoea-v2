@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -48,6 +49,7 @@ class CountrySelector extends StatelessWidget {
   /// Show country picker bottom sheet
   void _showCountryPicker(BuildContext context) {
     if (selectionLocked) return;
+    final l10n = AppLocalizations.of(context)!;
     showCountryPicker(
       context: context,
       showPhoneCode: false, // We don't need phone codes for country of origin
@@ -64,8 +66,8 @@ class CountrySelector extends StatelessWidget {
           color: context.primaryTextColor,
         ),
         inputDecoration: InputDecoration(
-          labelText: 'Search country',
-          hintText: 'Start typing to search',
+          labelText: l10n.commonSearch,
+          hintText: l10n.countryPickerSearchHint,
           prefixIcon: Icon(Icons.search, color: context.secondaryTextColor),
           filled: true,
           fillColor: context.backgroundColor,

@@ -1691,6 +1691,8 @@
   },
   "listingDetailCouldNotCallPhone": "Could not make phone call to {phone}",
   "searchScreenGlobalHint": "Search events, places, experiences…",
+  "searchClearHistoryTitle": "Clear search history",
+  "searchClearHistoryBody": "Are you sure you want to clear all your search history?",
   "listingReviewComposerHint": "Share your thoughts about this place…",
   "exploreFilterBudgetHintMin": "0",
   "tourBookingPickupHint": "Enter pickup location or leave blank for default",
@@ -1826,5 +1828,210 @@
   "stayDetailTabReviews": "Reviews",
   "stayDetailTabPhotos": "Photos",
   "onboardingUserTypeHeadline": "Are you a resident or visitor?",
-  "onboardingUserTypeSubtitle": "This helps us show you relevant content"
+  "onboardingUserTypeSubtitle": "This helps us show you relevant content",
+  "commonComplete": "Complete",
+  "commonSave": "Save",
+  "phoneValidationRequired": "Please enter your phone number",
+  "phoneValidationInternationalInvalid": "Please enter a valid phone number",
+  "phoneValidationRwandanInvalid": "Please enter a valid Rwandan phone number (07xxxxxxxx or 08xxxxxxxx)",
+  "exploreFilterLabelMinPrice": "Min price",
+  "exploreFilterLabelMaxPrice": "Max price",
+  "profileEditInterestsTitle": "Interests",
+  "profileEditInterestsSubtitle": "Select all that apply",
+  "profileEditUnsavedChangesBody": "You have unsaved changes. Are you sure you want to leave?",
+  "profileEditDiscard": "Discard",
+  "profileEditPersonalInfoSectionTitle": "Personal information",
+  "profileEditHintFullName": "Enter your full name",
+  "profileEditValidationFullNameRequired": "Please enter your full name",
+  "profileEditHintEmail": "Enter your email address",
+  "profileEditValidationEmailRequired": "Please enter your email address",
+  "profileEditHintPhone": "Enter your phone number",
+  "profileEditValidationPhoneRequired": "Please enter your phone number",
+  "profileEditTabBasicInfo": "Basic info",
+  "profileEditTabPreferences": "Preferences",
+  "profileVisitedPlacesTitle": "Places visited",
+  "profileVisitedTabAllPlaces": "All places",
+  "profileVisitedTabThisYear": "This year",
+  "profileVisitedTabListingsOnly": "Listings only",
+  "profileVisitedStatusViewed": "Viewed",
+  "@profileVisitedDateLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "profileVisitedDateLine": "Viewed on {date}",
+  "profileVisitedEmptyTitle": "No places visited yet",
+  "profileVisitedEmptySubtitle": "Start exploring Rwanda to build your visited places collection.",
+  "profileVisitedExploreButton": "Explore places",
+  "profileUnknownLocation": "Unknown location",
+  "profileEventsAttendedTitle": "Events attended",
+  "eventsAttendedTabAll": "All events",
+  "eventsAttendedTabThisYear": "This year",
+  "eventsAttendedTabFavorites": "Favorites",
+  "eventsAttendedEmptyTitle": "No events attended yet",
+  "eventsAttendedEmptySubtitle": "Start exploring events to build your attendance history.",
+  "eventsAttendedExploreButton": "Explore events",
+  "eventsAttendedBadge": "Attended",
+  "exploreHomeCategoryEvents": "Events",
+  "exploreHomeCategoryDining": "Dining",
+  "exploreHomeCategoryExperiences": "Experiences",
+  "exploreHomeCategoryNightlife": "Nightlife",
+  "exploreHomeCategoryAccommodation": "Accommodation",
+  "exploreHomeCategoryShopping": "Shopping",
+  "placeDetailOpeningHoursTitle": "Opening hours",
+  "placeDetailAboutTitle": "About",
+  "placeDetailFeaturesTitle": "Features",
+  "placeDetailNoPhotosExtended": "No photos available for this place",
+  "placeDetailNoMenuForPlace": "No menu available for this place",
+  "listingNoPhotosShort": "No photos available",
+  "listingHoursClosed": "Closed",
+  "weekdayMonday": "Monday",
+  "weekdayTuesday": "Tuesday",
+  "weekdayWednesday": "Wednesday",
+  "weekdayThursday": "Thursday",
+  "weekdayFriday": "Friday",
+  "weekdaySaturday": "Saturday",
+  "weekdaySunday": "Sunday",
+  "@itineraryDaysCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itineraryDaysCountLine": "{count, plural, =1{1 day} other{{count} days}}",
+  "@itineraryItemsCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itineraryItemsCountLine": "{count, plural, =1{1 item} other{{count} items}}",
+  "@reviewHelpfulCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewHelpfulCountLine": "{count, plural, =1{1 person found this helpful} other{{count} people found this helpful}}",
+  "@reviewTimeWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeWeeksAgo": "{count, plural, =1{1 week ago} other{{count} weeks ago}}",
+  "@reviewTimeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeMonthsAgo": "{count, plural, =1{1 month ago} other{{count} months ago}}",
+  "@reviewTimeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeYearsAgo": "{count, plural, =1{1 year ago} other{{count} years ago}}",
+  "listingReviewExperienceTitle": "How was your experience?",
+  "listingReviewExperienceSubtitle": "Tell us about your experience",
+  "listingAnonymousUser": "Anonymous",
+  "stayDefaultRoomLabel": "Room",
+  "stayDefaultAmenityLabel": "Amenity",
+  "contentTypeEventLabel": "Event",
+  "contentTypePlaceLabel": "Place",
+  "contentTypeTourLabel": "Tour",
+  "itineraryFallbackItemPlace": "Place",
+  "itineraryFallbackItemEvent": "Event",
+  "itineraryFallbackItemTour": "Tour",
+  "itineraryFallbackItemCustom": "Custom item",
+  "onboardingCountryHeadline": "Where are you from?",
+  "onboardingCountrySubtitle": "Help us personalize your experience",
+  "onboardingVisitRwandaHeadline": "What brings you to Rwanda?",
+  "onboardingVisitRwandaSubtitle": "Select your primary purpose",
+  "onboardingLanguageHeadline": "What language do you prefer?",
+  "onboardingLanguageSubtitle": "You can change this anytime in settings",
+  "onboardingConsentHeadline": "Help us improve",
+  "onboardingConsentSubtitle": "Allow analytics to help us personalize your experience",
+  "onboardingConsentCheckboxLabel": "I agree to share analytics data to improve recommendations",
+  "onboardingSettingsFootnote": "You can change this anytime in settings",
+  "progressivePromptTitleWithDuration": "Help us personalize Zoea (10 sec)",
+  "progressivePromptTitleDefault": "Help us personalize Zoea",
+  "progressiveQuestionAgeRange": "What's your age range?",
+  "progressiveQuestionGender": "What's your gender?",
+  "progressiveQuestionLengthOfStay": "How long are you staying?",
+  "progressiveQuestionInterests": "What are you interested in?",
+  "progressiveQuestionTravelParty": "Who are you traveling with?",
+  "profileSaveChangesButton": "Save changes",
+  "profileCompletionPrivacyNote": "Your data is used only to personalize your experience. You can update or remove it anytime.",
+  "profileCompletionSectionTitle": "Profile completion",
+  "profileCompletionSubtitleRecommendations": "Complete your profile to get better recommendations",
+  "tourBookingScreenTitle": "Book tour",
+  "tourBookingPerPersonSuffix": "/person",
+  "tourBookingSelectTourTitle": "Select tour",
+  "tourBookingSelectDateTimeTitle": "Select date & time",
+  "tourBookingNoSchedules": "No available schedules",
+  "@tourBookingScheduleSubtitleWithTime": {
+    "placeholders": {
+      "time": {"type": "String"},
+      "spots": {"type": "int"}
+    }
+  },
+  "tourBookingScheduleSubtitleWithTime": "Time: {time} · Spots: {spots} available",
+  "@tourBookingScheduleSubtitleSpotsOnly": {
+    "placeholders": {
+      "spots": {"type": "int"}
+    }
+  },
+  "tourBookingScheduleSubtitleSpotsOnly": "Spots: {spots} available",
+  "tourBookingNumberOfGuestsTitle": "Number of guests",
+  "tourBookingGuestAdults": "Adults",
+  "tourBookingGuestChildren": "Children",
+  "tourBookingGuestInfants": "Infants",
+  "tourBookingContactSectionTitle": "Contact information",
+  "tourBookingPickupLocationOptionalTitle": "Pickup location (optional)",
+  "tourBookingSpecialRequestsTitle": "Special requests",
+  "tourBookingPriceBreakdownTitle": "Price breakdown",
+  "@tourBookingPriceLineAdults": {"placeholders": {"count": {"type": "int"}}},
+  "tourBookingPriceLineAdults": "Adults ({count}×)",
+  "@tourBookingPriceLineChildren": {"placeholders": {"count": {"type": "int"}}},
+  "tourBookingPriceLineChildren": "Children ({count}×)",
+  "@tourBookingPriceLineInfants": {"placeholders": {"count": {"type": "int"}}},
+  "tourBookingPriceLineInfants": "Infants ({count}×)",
+  "tourBookingPriceLineFree": "Free",
+  "tourBookingPriceLineTotal": "Total",
+  "tourBookingLocationDefaultLabel": "Location",
+  "tourPackagesScreenTitle": "Tour packages",
+  "reviewsViewPlaceAction": "View place",
+  "placeDetailMapViewAction": "View",
+  "itineraryFormButtonCreate": "Create itinerary",
+  "itineraryFormButtonUpdate": "Update itinerary",
+  "itineraryUpdatedSuccess": "Itinerary updated successfully",
+  "itineraryCreatedSuccess": "Itinerary created successfully",
+  "itineraryAddItemsHint": "Add places, events, or tours to your itinerary",
+  "itinerarySharedBadge": "Shared",
+  "shopCartUnknownItem": "Unknown item",
+  "listingDetailHoursClosed": "Closed",
+  "diningCategoryFallbackName": "Dining",
+  "bookingFallbackRestaurantName": "Restaurant",
+  "@aboutLegalCopyrightBody": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "aboutLegalCopyrightBody": "Copyright Notice\n\n\u00a9 {year} Zoea Africa. All rights reserved.\n\nThis app and its contents are protected by copyright and other intellectual property laws.\n\nYou may not:\n- Copy, modify, or distribute the app without permission\n- Reverse engineer or attempt to extract source code\n- Use the app for commercial purposes without authorization\n\nFor licensing inquiries, contact us at legal@zoea.africa.",
+  "aboutLegalPrivacyBody": "Privacy Policy\n\nLast updated: December 2024\n\n1. Information We Collect\nWe collect information you provide directly to us, such as when you create an account, make a booking, or contact us for support.\n\n2. How We Use Your Information\nWe use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.\n\n3. Information Sharing\nWe do not sell, trade, or otherwise transfer your personal information to third parties without your consent.\n\n4. Data Security\nWe implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.\n\n5. Your Rights\nYou have the right to access, update, or delete your personal information. You can do this through your account settings or by contacting us.\n\n6. Contact Us\nIf you have any questions about this Privacy Policy, please contact us at privacy@zoea.africa.",
+  "aboutLegalTermsBody": "Terms of Service\n\nLast updated: December 2024\n\n1. Acceptance of Terms\nBy using our app, you agree to be bound by these Terms of Service.\n\n2. Use of the App\nYou may use our app for lawful purposes only. You agree not to use the app in any way that could damage, disable, or impair the app.\n\n3. User Accounts\nYou are responsible for maintaining the confidentiality of your account and password.\n\n4. Bookings and Payments\nAll bookings are subject to availability. Payment terms are as specified at the time of booking.\n\n5. Cancellation Policy\nCancellation policies vary by event and are specified at the time of booking.\n\n6. Limitation of Liability\nTo the maximum extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages.\n\n7. Changes to Terms\nWe reserve the right to modify these terms at any time. We will notify users of any material changes.\n\n8. Contact Information\nFor questions about these Terms of Service, contact us at legal@zoea.africa."
+
 }

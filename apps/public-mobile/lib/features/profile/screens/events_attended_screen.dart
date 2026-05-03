@@ -34,11 +34,12 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Events Attended',
+          l10n.profileEventsAttendedTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -80,10 +81,10 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
           ),
           tabAlignment: TabAlignment.start,
           isScrollable: true,
-          tabs: const [
-            Tab(text: 'All Events'),
-            Tab(text: 'This Year'),
-            Tab(text: 'Favorites'),
+          tabs: [
+            Tab(text: l10n.eventsAttendedTabAll),
+            Tab(text: l10n.eventsAttendedTabThisYear),
+            Tab(text: l10n.eventsAttendedTabFavorites),
           ],
         ),
       ),
@@ -135,7 +136,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
           ),
           const SizedBox(height: 24),
           Text(
-            'No Events Attended',
+            AppLocalizations.of(context)!.eventsAttendedEmptyTitle,
             style: context.titleLarge.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -143,7 +144,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            'Start exploring events to build your\nattendance history',
+            AppLocalizations.of(context)!.eventsAttendedEmptySubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -161,7 +162,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
               ),
             ),
             child: Text(
-              'Explore Events',
+              AppLocalizations.of(context)!.eventsAttendedExploreButton,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -243,7 +244,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Attended',
+                          AppLocalizations.of(context)!.eventsAttendedBadge,
                           style: context.labelSmall.copyWith(
                             color: context.primaryTextColor,
                             fontWeight: FontWeight.w600,

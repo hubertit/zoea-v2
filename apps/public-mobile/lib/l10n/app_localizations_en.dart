@@ -3698,6 +3698,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchScreenGlobalHint => 'Search events, places, experiences…';
 
   @override
+  String get searchClearHistoryTitle => 'Clear search history';
+
+  @override
+  String get searchClearHistoryBody =>
+      'Are you sure you want to clear all your search history?';
+
+  @override
   String get listingReviewComposerHint =>
       'Share your thoughts about this place…';
 
@@ -4051,4 +4058,488 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardingUserTypeSubtitle =>
       'This helps us show you relevant content';
+
+  @override
+  String get commonComplete => 'Complete';
+
+  @override
+  String get commonSave => 'Save';
+
+  @override
+  String get phoneValidationRequired => 'Please enter your phone number';
+
+  @override
+  String get phoneValidationInternationalInvalid =>
+      'Please enter a valid phone number';
+
+  @override
+  String get phoneValidationRwandanInvalid =>
+      'Please enter a valid Rwandan phone number (07xxxxxxxx or 08xxxxxxxx)';
+
+  @override
+  String get exploreFilterLabelMinPrice => 'Min price';
+
+  @override
+  String get exploreFilterLabelMaxPrice => 'Max price';
+
+  @override
+  String get profileEditInterestsTitle => 'Interests';
+
+  @override
+  String get profileEditInterestsSubtitle => 'Select all that apply';
+
+  @override
+  String get profileEditUnsavedChangesBody =>
+      'You have unsaved changes. Are you sure you want to leave?';
+
+  @override
+  String get profileEditDiscard => 'Discard';
+
+  @override
+  String get profileEditPersonalInfoSectionTitle => 'Personal information';
+
+  @override
+  String get profileEditHintFullName => 'Enter your full name';
+
+  @override
+  String get profileEditValidationFullNameRequired =>
+      'Please enter your full name';
+
+  @override
+  String get profileEditHintEmail => 'Enter your email address';
+
+  @override
+  String get profileEditValidationEmailRequired =>
+      'Please enter your email address';
+
+  @override
+  String get profileEditHintPhone => 'Enter your phone number';
+
+  @override
+  String get profileEditValidationPhoneRequired =>
+      'Please enter your phone number';
+
+  @override
+  String get profileEditTabBasicInfo => 'Basic info';
+
+  @override
+  String get profileEditTabPreferences => 'Preferences';
+
+  @override
+  String get profileVisitedPlacesTitle => 'Places visited';
+
+  @override
+  String get profileVisitedTabAllPlaces => 'All places';
+
+  @override
+  String get profileVisitedTabThisYear => 'This year';
+
+  @override
+  String get profileVisitedTabListingsOnly => 'Listings only';
+
+  @override
+  String get profileVisitedStatusViewed => 'Viewed';
+
+  @override
+  String profileVisitedDateLine(String date) {
+    return 'Viewed on $date';
+  }
+
+  @override
+  String get profileVisitedEmptyTitle => 'No places visited yet';
+
+  @override
+  String get profileVisitedEmptySubtitle =>
+      'Start exploring Rwanda to build your visited places collection.';
+
+  @override
+  String get profileVisitedExploreButton => 'Explore places';
+
+  @override
+  String get profileUnknownLocation => 'Unknown location';
+
+  @override
+  String get profileEventsAttendedTitle => 'Events attended';
+
+  @override
+  String get eventsAttendedTabAll => 'All events';
+
+  @override
+  String get eventsAttendedTabThisYear => 'This year';
+
+  @override
+  String get eventsAttendedTabFavorites => 'Favorites';
+
+  @override
+  String get eventsAttendedEmptyTitle => 'No events attended yet';
+
+  @override
+  String get eventsAttendedEmptySubtitle =>
+      'Start exploring events to build your attendance history.';
+
+  @override
+  String get eventsAttendedExploreButton => 'Explore events';
+
+  @override
+  String get eventsAttendedBadge => 'Attended';
+
+  @override
+  String get exploreHomeCategoryEvents => 'Events';
+
+  @override
+  String get exploreHomeCategoryDining => 'Dining';
+
+  @override
+  String get exploreHomeCategoryExperiences => 'Experiences';
+
+  @override
+  String get exploreHomeCategoryNightlife => 'Nightlife';
+
+  @override
+  String get exploreHomeCategoryAccommodation => 'Accommodation';
+
+  @override
+  String get exploreHomeCategoryShopping => 'Shopping';
+
+  @override
+  String get placeDetailOpeningHoursTitle => 'Opening hours';
+
+  @override
+  String get placeDetailAboutTitle => 'About';
+
+  @override
+  String get placeDetailFeaturesTitle => 'Features';
+
+  @override
+  String get placeDetailNoPhotosExtended =>
+      'No photos available for this place';
+
+  @override
+  String get placeDetailNoMenuForPlace => 'No menu available for this place';
+
+  @override
+  String get listingNoPhotosShort => 'No photos available';
+
+  @override
+  String get listingHoursClosed => 'Closed';
+
+  @override
+  String get weekdayMonday => 'Monday';
+
+  @override
+  String get weekdayTuesday => 'Tuesday';
+
+  @override
+  String get weekdayWednesday => 'Wednesday';
+
+  @override
+  String get weekdayThursday => 'Thursday';
+
+  @override
+  String get weekdayFriday => 'Friday';
+
+  @override
+  String get weekdaySaturday => 'Saturday';
+
+  @override
+  String get weekdaySunday => 'Sunday';
+
+  @override
+  String itineraryDaysCountLine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String itineraryItemsCountLine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewHelpfulCountLine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people found this helpful',
+      one: '1 person found this helpful',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewTimeWeeksAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks ago',
+      one: '1 week ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewTimeMonthsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months ago',
+      one: '1 month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewTimeYearsAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years ago',
+      one: '1 year ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get listingReviewExperienceTitle => 'How was your experience?';
+
+  @override
+  String get listingReviewExperienceSubtitle => 'Tell us about your experience';
+
+  @override
+  String get listingAnonymousUser => 'Anonymous';
+
+  @override
+  String get stayDefaultRoomLabel => 'Room';
+
+  @override
+  String get stayDefaultAmenityLabel => 'Amenity';
+
+  @override
+  String get contentTypeEventLabel => 'Event';
+
+  @override
+  String get contentTypePlaceLabel => 'Place';
+
+  @override
+  String get contentTypeTourLabel => 'Tour';
+
+  @override
+  String get itineraryFallbackItemPlace => 'Place';
+
+  @override
+  String get itineraryFallbackItemEvent => 'Event';
+
+  @override
+  String get itineraryFallbackItemTour => 'Tour';
+
+  @override
+  String get itineraryFallbackItemCustom => 'Custom item';
+
+  @override
+  String get onboardingCountryHeadline => 'Where are you from?';
+
+  @override
+  String get onboardingCountrySubtitle => 'Help us personalize your experience';
+
+  @override
+  String get onboardingVisitRwandaHeadline => 'What brings you to Rwanda?';
+
+  @override
+  String get onboardingVisitRwandaSubtitle => 'Select your primary purpose';
+
+  @override
+  String get onboardingLanguageHeadline => 'What language do you prefer?';
+
+  @override
+  String get onboardingLanguageSubtitle =>
+      'You can change this anytime in settings';
+
+  @override
+  String get onboardingConsentHeadline => 'Help us improve';
+
+  @override
+  String get onboardingConsentSubtitle =>
+      'Allow analytics to help us personalize your experience';
+
+  @override
+  String get onboardingConsentCheckboxLabel =>
+      'I agree to share analytics data to improve recommendations';
+
+  @override
+  String get onboardingSettingsFootnote =>
+      'You can change this anytime in settings';
+
+  @override
+  String get progressivePromptTitleWithDuration =>
+      'Help us personalize Zoea (10 sec)';
+
+  @override
+  String get progressivePromptTitleDefault => 'Help us personalize Zoea';
+
+  @override
+  String get progressiveQuestionAgeRange => 'What\'s your age range?';
+
+  @override
+  String get progressiveQuestionGender => 'What\'s your gender?';
+
+  @override
+  String get progressiveQuestionLengthOfStay => 'How long are you staying?';
+
+  @override
+  String get progressiveQuestionInterests => 'What are you interested in?';
+
+  @override
+  String get progressiveQuestionTravelParty => 'Who are you traveling with?';
+
+  @override
+  String get profileSaveChangesButton => 'Save changes';
+
+  @override
+  String get profileCompletionPrivacyNote =>
+      'Your data is used only to personalize your experience. You can update or remove it anytime.';
+
+  @override
+  String get profileCompletionSectionTitle => 'Profile completion';
+
+  @override
+  String get profileCompletionSubtitleRecommendations =>
+      'Complete your profile to get better recommendations';
+
+  @override
+  String get tourBookingScreenTitle => 'Book tour';
+
+  @override
+  String get tourBookingPerPersonSuffix => '/person';
+
+  @override
+  String get tourBookingSelectTourTitle => 'Select tour';
+
+  @override
+  String get tourBookingSelectDateTimeTitle => 'Select date & time';
+
+  @override
+  String get tourBookingNoSchedules => 'No available schedules';
+
+  @override
+  String tourBookingScheduleSubtitleWithTime(String time, int spots) {
+    return 'Time: $time · Spots: $spots available';
+  }
+
+  @override
+  String tourBookingScheduleSubtitleSpotsOnly(int spots) {
+    return 'Spots: $spots available';
+  }
+
+  @override
+  String get tourBookingNumberOfGuestsTitle => 'Number of guests';
+
+  @override
+  String get tourBookingGuestAdults => 'Adults';
+
+  @override
+  String get tourBookingGuestChildren => 'Children';
+
+  @override
+  String get tourBookingGuestInfants => 'Infants';
+
+  @override
+  String get tourBookingContactSectionTitle => 'Contact information';
+
+  @override
+  String get tourBookingPickupLocationOptionalTitle =>
+      'Pickup location (optional)';
+
+  @override
+  String get tourBookingSpecialRequestsTitle => 'Special requests';
+
+  @override
+  String get tourBookingPriceBreakdownTitle => 'Price breakdown';
+
+  @override
+  String tourBookingPriceLineAdults(int count) {
+    return 'Adults ($count×)';
+  }
+
+  @override
+  String tourBookingPriceLineChildren(int count) {
+    return 'Children ($count×)';
+  }
+
+  @override
+  String tourBookingPriceLineInfants(int count) {
+    return 'Infants ($count×)';
+  }
+
+  @override
+  String get tourBookingPriceLineFree => 'Free';
+
+  @override
+  String get tourBookingPriceLineTotal => 'Total';
+
+  @override
+  String get tourBookingLocationDefaultLabel => 'Location';
+
+  @override
+  String get tourPackagesScreenTitle => 'Tour packages';
+
+  @override
+  String get reviewsViewPlaceAction => 'View place';
+
+  @override
+  String get placeDetailMapViewAction => 'View';
+
+  @override
+  String get itineraryFormButtonCreate => 'Create itinerary';
+
+  @override
+  String get itineraryFormButtonUpdate => 'Update itinerary';
+
+  @override
+  String get itineraryUpdatedSuccess => 'Itinerary updated successfully';
+
+  @override
+  String get itineraryCreatedSuccess => 'Itinerary created successfully';
+
+  @override
+  String get itineraryAddItemsHint =>
+      'Add places, events, or tours to your itinerary';
+
+  @override
+  String get itinerarySharedBadge => 'Shared';
+
+  @override
+  String get shopCartUnknownItem => 'Unknown item';
+
+  @override
+  String get listingDetailHoursClosed => 'Closed';
+
+  @override
+  String get diningCategoryFallbackName => 'Dining';
+
+  @override
+  String get bookingFallbackRestaurantName => 'Restaurant';
+
+  @override
+  String aboutLegalCopyrightBody(int year) {
+    return 'Copyright Notice\n\n© $year Zoea Africa. All rights reserved.\n\nThis app and its contents are protected by copyright and other intellectual property laws.\n\nYou may not:\n- Copy, modify, or distribute the app without permission\n- Reverse engineer or attempt to extract source code\n- Use the app for commercial purposes without authorization\n\nFor licensing inquiries, contact us at legal@zoea.africa.';
+  }
+
+  @override
+  String get aboutLegalPrivacyBody =>
+      'Privacy Policy\n\nLast updated: December 2024\n\n1. Information We Collect\nWe collect information you provide directly to us, such as when you create an account, make a booking, or contact us for support.\n\n2. How We Use Your Information\nWe use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.\n\n3. Information Sharing\nWe do not sell, trade, or otherwise transfer your personal information to third parties without your consent.\n\n4. Data Security\nWe implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.\n\n5. Your Rights\nYou have the right to access, update, or delete your personal information. You can do this through your account settings or by contacting us.\n\n6. Contact Us\nIf you have any questions about this Privacy Policy, please contact us at privacy@zoea.africa.';
+
+  @override
+  String get aboutLegalTermsBody =>
+      'Terms of Service\n\nLast updated: December 2024\n\n1. Acceptance of Terms\nBy using our app, you agree to be bound by these Terms of Service.\n\n2. Use of the App\nYou may use our app for lawful purposes only. You agree not to use the app in any way that could damage, disable, or impair the app.\n\n3. User Accounts\nYou are responsible for maintaining the confidentiality of your account and password.\n\n4. Bookings and Payments\nAll bookings are subject to availability. Payment terms are as specified at the time of booking.\n\n5. Cancellation Policy\nCancellation policies vary by event and are specified at the time of booking.\n\n6. Limitation of Liability\nTo the maximum extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages.\n\n7. Changes to Terms\nWe reserve the right to modify these terms at any time. We will notify users of any material changes.\n\n8. Contact Information\nFor questions about these Terms of Service, contact us at legal@zoea.africa.';
 }

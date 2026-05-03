@@ -352,21 +352,24 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                 icon: Icons.privacy_tip_outlined,
                 title: l10n.aboutPrivacyPolicyTitle,
                 subtitle: l10n.aboutPrivacyPolicySubtitle,
-                onTap: () => _showLegalDialog(l10n.aboutPrivacyPolicyTitle, _getPrivacyPolicy()),
+                onTap: () => _showLegalDialog(l10n.aboutPrivacyPolicyTitle, l10n.aboutLegalPrivacyBody),
               ),
               _buildDivider(),
               _buildLegalItem(
                 icon: Icons.description_outlined,
                 title: l10n.aboutTermsOfServiceTitle,
                 subtitle: l10n.aboutTermsOfServiceSubtitle,
-                onTap: () => _showLegalDialog(l10n.aboutTermsOfServiceTitle, _getTermsOfService()),
+                onTap: () => _showLegalDialog(l10n.aboutTermsOfServiceTitle, l10n.aboutLegalTermsBody),
               ),
               _buildDivider(),
               _buildLegalItem(
                 icon: Icons.copyright_outlined,
                 title: l10n.aboutCopyrightTitle,
                 subtitle: l10n.aboutCopyrightCardSubtitle(DateTime.now().year),
-                onTap: () => _showLegalDialog(l10n.aboutCopyrightTitle, _getCopyright()),
+                onTap: () => _showLegalDialog(
+                  l10n.aboutCopyrightTitle,
+                  l10n.aboutLegalCopyrightBody(DateTime.now().year),
+                ),
               ),
             ],
           ),
@@ -562,79 +565,4 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  String _getPrivacyPolicy() {
-    return '''
-Privacy Policy
-
-Last updated: December 2024
-
-1. Information We Collect
-We collect information you provide directly to us, such as when you create an account, make a booking, or contact us for support.
-
-2. How We Use Your Information
-We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.
-
-3. Information Sharing
-We do not sell, trade, or otherwise transfer your personal information to third parties without your consent.
-
-4. Data Security
-We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.
-
-5. Your Rights
-You have the right to access, update, or delete your personal information. You can do this through your account settings or by contacting us.
-
-6. Contact Us
-If you have any questions about this Privacy Policy, please contact us at privacy@zoea.africa.
-''';
-  }
-
-  String _getTermsOfService() {
-    return '''
-Terms of Service
-
-Last updated: December 2024
-
-1. Acceptance of Terms
-By using our app, you agree to be bound by these Terms of Service.
-
-2. Use of the App
-You may use our app for lawful purposes only. You agree not to use the app in any way that could damage, disable, or impair the app.
-
-3. User Accounts
-You are responsible for maintaining the confidentiality of your account and password.
-
-4. Bookings and Payments
-All bookings are subject to availability. Payment terms are as specified at the time of booking.
-
-5. Cancellation Policy
-Cancellation policies vary by event and are specified at the time of booking.
-
-6. Limitation of Liability
-To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages.
-
-7. Changes to Terms
-We reserve the right to modify these terms at any time. We will notify users of any material changes.
-
-8. Contact Information
-For questions about these Terms of Service, contact us at legal@zoea.africa.
-''';
-  }
-
-  String _getCopyright() {
-    final year = DateTime.now().year;
-    return '''
-Copyright Notice
-
-© $year Zoea Africa. All rights reserved.
-
-This app and its contents are protected by copyright and other intellectual property laws.
-
-You may not:
-- Copy, modify, or distribute the app without permission
-- Reverse engineer or attempt to extract source code
-- Use the app for commercial purposes without authorization
-
-For licensing inquiries, contact us at legal@zoea.africa.
-''';
-  }
 }

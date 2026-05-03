@@ -249,7 +249,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.itemName,
+                        item.resolvedItemName(l10n),
                         style: context.bodyMedium.copyWith(
                           fontWeight: FontWeight.w500,
                           color: context.primaryTextColor,

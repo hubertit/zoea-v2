@@ -20,11 +20,12 @@ class ItinerariesScreen extends ConsumerStatefulWidget {
 class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'My Itineraries',
+          l10n.itinerariesMyScreenTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -43,7 +44,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
             onPressed: () {
               context.push('/itineraries/create');
             },
-            tooltip: 'Create Itinerary',
+            tooltip: l10n.itinerariesFabCreateTooltip,
           ),
         ],
       ),
@@ -124,6 +125,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
   }
 
   Widget _buildItineraryCard(Itinerary itinerary) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM d, yyyy');
     final daysCount = itinerary.daysCount;
     final itemsCount = itinerary.items.length;
@@ -197,7 +199,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Shared',
+                            l10n.itinerarySharedBadge,
                             style: context.bodySmall.copyWith(
                               color: context.primaryColorTheme,
                               fontWeight: FontWeight.w500,
@@ -231,7 +233,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    '$daysCount ${daysCount == 1 ? 'day' : 'days'}',
+                    l10n.itineraryDaysCountLine(daysCount),
                     style: context.bodySmall.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -272,7 +274,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '$itemsCount ${itemsCount == 1 ? 'item' : 'items'}',
+                      l10n.itineraryItemsCountLine(itemsCount),
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),

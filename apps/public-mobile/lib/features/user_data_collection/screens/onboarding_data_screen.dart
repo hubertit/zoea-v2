@@ -131,6 +131,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
   }
 
   Widget _buildCountryStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppTheme.spacing24),
       child: Column(
@@ -147,14 +148,14 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
           ),
           const SizedBox(height: AppTheme.spacing24),
           Text(
-            'Where are you from?',
+            l10n.onboardingCountryHeadline,
             style: context.displayMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            'Help us personalize your experience',
+            l10n.onboardingCountrySubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -182,6 +183,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
   }
 
   Widget _buildUserTypeStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppTheme.spacing24),
       child: Column(
@@ -198,14 +200,14 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
           ),
           const SizedBox(height: AppTheme.spacing24),
           Text(
-            'Are you a resident or visitor?',
+            l10n.onboardingUserTypeHeadline,
             style: context.displayMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            'This helps us show you relevant content',
+            l10n.onboardingUserTypeSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -218,15 +220,15 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
                 _buildUserTypeCard(
                   type: UserType.resident,
                   icon: Icons.home,
-                  title: 'Resident',
-                  subtitle: 'I live in Rwanda',
+                  title: l10n.onboardingAudienceResidentTitle,
+                  subtitle: l10n.onboardingAudienceResidentSubtitle,
                 ),
                 const SizedBox(height: AppTheme.spacing16),
                 _buildUserTypeCard(
                   type: UserType.visitor,
                   icon: Icons.flight,
-                  title: 'Visitor',
-                  subtitle: 'I\'m visiting Rwanda',
+                  title: l10n.onboardingAudienceVisitorTitle,
+                  subtitle: l10n.onboardingAudienceVisitorSubtitle,
                 ),
               ],
             ),
@@ -314,6 +316,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
   }
 
   Widget _buildVisitPurposeStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppTheme.spacing24),
       child: Column(
@@ -330,14 +333,14 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
           ),
           const SizedBox(height: AppTheme.spacing24),
           Text(
-            'What brings you to Rwanda?',
+            l10n.onboardingVisitRwandaHeadline,
             style: context.displayMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            'Select your primary purpose',
+            l10n.onboardingVisitRwandaSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -361,6 +364,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
   }
 
   Widget _buildLanguageStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppTheme.spacing24),
       child: Column(
@@ -377,14 +381,14 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
           ),
           const SizedBox(height: AppTheme.spacing24),
           Text(
-            'What language do you prefer?',
+            l10n.onboardingLanguageHeadline,
             style: context.displayMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            'You can change this anytime in settings',
+            l10n.onboardingLanguageSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -409,6 +413,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
   }
 
   Widget _buildConsentStep() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppTheme.spacing24),
       child: Column(
@@ -425,14 +430,14 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
           ),
           const SizedBox(height: AppTheme.spacing24),
           Text(
-            'Help us improve',
+            l10n.onboardingConsentHeadline,
             style: context.displayMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            'Allow analytics to help us personalize your experience',
+            l10n.onboardingConsentSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -461,7 +466,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
                 ),
                 Expanded(
                   child: Text(
-                    'I agree to share analytics data to improve recommendations',
+                    l10n.onboardingConsentCheckboxLabel,
                     style: context.bodyMedium,
                   ),
                 ),
@@ -470,7 +475,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
           ),
           const SizedBox(height: AppTheme.spacing16),
           Text(
-            'You can change this anytime in settings',
+            l10n.onboardingSettingsFootnote,
             style: context.bodySmall.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -481,6 +486,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
   }
 
   Widget _buildBottomSection() {
+    final l10n = AppLocalizations.of(context)!;
     final canContinue = _canContinueCurrentStep();
 
     return Padding(
@@ -516,7 +522,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
                       ),
                     )
                   : Text(
-                      _currentStep == 4 ? 'Complete' : 'Continue',
+                      _currentStep == 4 ? l10n.commonComplete : l10n.commonContinue,
                       style: context.labelLarge.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
@@ -616,7 +622,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: 'Failed to save data. Please try again.',
+            message: AppLocalizations.of(context)!.commonFailedSaveDataTryAgain,
           ),
         );
         setState(() {

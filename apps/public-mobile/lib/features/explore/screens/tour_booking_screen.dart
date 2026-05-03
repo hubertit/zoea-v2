@@ -244,6 +244,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -258,7 +259,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
           ),
         ),
         title: Text(
-          'Book Tour',
+          l10n.tourBookingScreenTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -311,7 +312,8 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildTourInfoCard() {
-    final tourName = widget.tourName ?? _selectedTour?['name'] ?? 'Tour';
+    final l10n = AppLocalizations.of(context)!;
+    final tourName = widget.tourName ?? _selectedTour?['name'] ?? l10n.contentTypeTourLabel;
     final tourImage = widget.tourImage ?? 
         (_selectedTour?['images'] != null && (_selectedTour!['images'] as List).isNotEmpty
             ? (_selectedTour!['images'][0]['media']?['url'] ?? '')
@@ -319,7 +321,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
     final tourLocation = widget.tourLocation ?? 
         _selectedTour?['startLocationName'] ?? 
         _selectedTour?['city']?['name'] ?? 
-        'Location';
+        l10n.tourBookingLocationDefaultLabel;
     final tourRating = widget.tourRating ?? 
         _toSafeDouble(_selectedTour?['rating']);
     final pricePerPerson = _toSafeDouble(_selectedTour?['pricePerPerson']);
@@ -423,7 +425,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                       const SizedBox(width: 8),
                     ],
                     Text(
-                      '${PriceFormatter.formatFull(pricePerPerson, currency: currency)}/person',
+                      '${PriceFormatter.formatFull(pricePerPerson, currency: currency)}${l10n.tourBookingPerPersonSuffix}',
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -439,6 +441,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildTourSelection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -449,7 +452,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Select Tour',
+            l10n.tourBookingSelectTourTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -458,9 +461,9 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
           const SizedBox(height: 16),
           ..._tours.map((tour) {
             return RadioListTile<String>(
-              title: Text(tour['name'] ?? 'Tour'),
+              title: Text(tour['name'] ?? l10n.contentTypeTourLabel),
               subtitle: Text(
-                '${PriceFormatter.formatFull(_toSafeDouble(tour['pricePerPerson']), currency: tour['currency'] ?? 'RWF')}/person',
+                '${PriceFormatter.formatFull(_toSafeDouble(tour['pricePerPerson']), currency: tour['currency'] ?? 'RWF')}${l10n.tourBookingPerPersonSuffix}',
               ),
               value: tour['id'] as String,
               groupValue: _selectedTourId,
@@ -481,6 +484,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildScheduleSelection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -491,7 +495,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Select Date & Time',
+            l10n.tourBookingSelectDateTimeTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -502,7 +506,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             Center(child: CircularProgressIndicator(color: context.primaryColorTheme))
           else if (_schedules.isEmpty)
             Text(
-              'No available schedules',
+              l10n.tourBookingNoSchedules,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -518,9 +522,9 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
               return RadioListTile<String>(
                 title: Text(DateFormat('MMM dd, yyyy').format(date)),
                 subtitle: Text(
-                  startTime != null 
-                      ? 'Time: $startTime | Spots: $remaining available'
-                      : 'Spots: $remaining available',
+                  startTime != null
+                      ? l10n.tourBookingScheduleSubtitleWithTime(startTime, remaining)
+                      : l10n.tourBookingScheduleSubtitleSpotsOnly(remaining),
                 ),
                 value: schedule['id'] as String,
                 groupValue: _selectedScheduleId,
@@ -540,6 +544,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildGuestSelection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -550,22 +555,22 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Number of Guests',
+            l10n.tourBookingNumberOfGuestsTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
             ),
           ),
           const SizedBox(height: 16),
-          _buildGuestCounter('Adults', _adults, (value) {
+          _buildGuestCounter(l10n.tourBookingGuestAdults, _adults, (value) {
             setState(() => _adults = value);
           }, min: 1),
           const SizedBox(height: 12),
-          _buildGuestCounter('Children', _children, (value) {
+          _buildGuestCounter(l10n.tourBookingGuestChildren, _children, (value) {
             setState(() => _children = value);
           }),
           const SizedBox(height: 12),
-          _buildGuestCounter('Infants', _infants, (value) {
+          _buildGuestCounter(l10n.tourBookingGuestInfants, _infants, (value) {
             setState(() => _infants = value);
           }),
         ],
@@ -621,6 +626,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildContactSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -631,7 +637,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Contact Information',
+            l10n.tourBookingContactSectionTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -642,8 +648,8 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             controller: _fullNameController,
             onChanged: (value) => setState(() => _fullName = value),
             decoration: InputDecoration(
-              labelText: 'Full Name',
-              hintText: 'John Doe',
+              labelText: l10n.registerFullName,
+              hintText: l10n.diningFlowFullNameHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -654,8 +660,8 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             controller: _contactNumberController,
             onChanged: (value) => setState(() => _contactNumber = value),
             decoration: InputDecoration(
-              labelText: 'Phone Number',
-              hintText: '+250 796 889 900',
+              labelText: l10n.loginPhoneNumber,
+              hintText: l10n.diningFlowPhoneHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -667,8 +673,8 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             onChanged: (value) => setState(() => _email = value),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              labelText: 'Email Address',
-              hintText: 'your.email@example.com',
+              labelText: l10n.loginEmailAddress,
+              hintText: l10n.loginEmailHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -680,6 +686,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildPickupLocationSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -690,7 +697,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Pickup Location (Optional)',
+            l10n.tourBookingPickupLocationOptionalTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -701,7 +708,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             controller: _pickupLocationController,
             onChanged: (value) => setState(() => _pickupLocation = value),
             decoration: InputDecoration(
-              hintText: 'Enter pickup location or leave blank for default',
+              hintText: l10n.tourBookingPickupHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -713,6 +720,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildSpecialRequests() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -723,7 +731,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Special Requests',
+            l10n.tourBookingSpecialRequestsTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -734,7 +742,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             onChanged: (value) => setState(() => _specialRequests = value),
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'Any special requirements, dietary preferences, etc.',
+              hintText: l10n.tourBookingSpecialRequirementsHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -746,6 +754,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildPriceBreakdown() {
+    final l10n = AppLocalizations.of(context)!;
     final currency = _selectedTour?['currency'] ?? 'RWF';
     
     return Container(
@@ -758,7 +767,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Price Breakdown',
+            l10n.tourBookingPriceBreakdownTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -769,7 +778,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Adults (${_adults}x)',
+                l10n.tourBookingPriceLineAdults(_adults),
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -788,7 +797,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Children (${_children}x)',
+                  l10n.tourBookingPriceLineChildren(_children),
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -808,13 +817,13 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Infants (${_infants}x)',
+                  l10n.tourBookingPriceLineInfants(_infants),
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
                 ),
                 Text(
-                  'Free',
+                  l10n.tourBookingPriceLineFree,
                   style: context.bodyMedium.copyWith(
                     color: context.primaryTextColor,
                   ),
@@ -827,7 +836,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total',
+                l10n.tourBookingPriceLineTotal,
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.w700,
                   color: context.primaryTextColor,
@@ -848,6 +857,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
   }
 
   Widget _buildBottomBar() {
+    final l10n = AppLocalizations.of(context)!;
     final canBook = _selectedTourId != null &&
         _selectedScheduleId != null &&
         _totalGuests > 0 &&
@@ -876,7 +886,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total',
+                  l10n.tourBookingPriceLineTotal,
                   style: context.titleLarge.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -915,7 +925,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
                         ),
                       )
                     : Text(
-                        'Book Tour',
+                        l10n.tourBookingScreenTitle,
                         style: context.titleMedium.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,

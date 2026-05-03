@@ -260,10 +260,10 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                   
                   if (!isLoggedIn) {
                     // Show login prompt for guests
-                    AuthPromptDialog.show(
-                      context: context,
-                      title: 'Sign In to Save Favorites',
-                      message: 'Create an account or sign in to save your favorite tours and access them anytime.',
+                      AuthPromptDialog.show(
+                        context: context,
+                        title: AppLocalizations.of(context)!.exploreFavoriteSignInTitle,
+                        message: AppLocalizations.of(context)!.tourFavoriteSignInMessage,
                       returnPath: '/tours/${widget.tourId}',
                       icon: Icons.favorite,
                     );
@@ -694,10 +694,10 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
               
               if (!isLoggedIn) {
                 // Show login prompt for guests
-                AuthPromptDialog.show(
-                  context: context,
-                  title: 'Sign In to Book',
-                  message: 'Create an account or sign in to complete your tour booking and manage your reservations.',
+                  AuthPromptDialog.show(
+                    context: context,
+                    title: AppLocalizations.of(context)!.tourBookSignInTitle,
+                    message: AppLocalizations.of(context)!.tourBookSignInMessage,
                   returnPath: '/tours/${widget.tourId}',
                   icon: Icons.tour,
                 );

@@ -61,12 +61,13 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.itinerary != null;
+    final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          isEditing ? 'Edit Itinerary' : 'Create Itinerary',
+          isEditing ? l10n.itineraryEditScreenTitle : l10n.itineraryCreateScreenTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -84,7 +85,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             IconButton(
               icon: const Icon(Icons.delete_outline),
               onPressed: _showDeleteDialog,
-              tooltip: 'Delete Itinerary',
+              tooltip: l10n.itineraryCreateDeleteTooltip,
             ),
         ],
       ),
@@ -97,8 +98,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'Title',
-                hintText: 'e.g., My Rwanda Adventure',
+                labelText: l10n.itineraryFieldTitleLabel,
+                hintText: l10n.itineraryCreateNameHint,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -106,7 +107,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a title';
+                  return l10n.itineraryValidationTitleRequired;
                 }
                 return null;
               },
@@ -117,8 +118,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             TextFormField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: 'Description (Optional)',
-                hintText: 'Tell us about your trip...',
+                labelText: l10n.itineraryFieldDescriptionOptionalLabel,
+                hintText: l10n.itineraryCreateDescriptionHint,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -136,7 +137,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
                     onTap: () => _selectDate(context, isStartDate: true),
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'Start Date',
+                        labelText: l10n.itineraryFieldStartDateLabel,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -155,7 +156,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
                     onTap: () => _selectDate(context, isStartDate: false),
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'End Date',
+                        labelText: l10n.itineraryFieldEndDateLabel,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -176,8 +177,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             TextFormField(
               controller: _locationController,
               decoration: InputDecoration(
-                labelText: 'Location (Optional)',
-                hintText: 'e.g., Kigali, Rwanda',
+                labelText: l10n.itineraryFieldLocationOptionalLabel,
+                hintText: l10n.itineraryCreateStartLocationHint,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -250,7 +251,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Add places, events, or tours to your itinerary',
+                        l10n.itineraryAddItemsHint,
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -290,7 +291,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
                       ),
                     )
                   : Text(
-                      isEditing ? 'Update Itinerary' : 'Create Itinerary',
+                      isEditing ? l10n.itineraryFormButtonUpdate : l10n.itineraryFormButtonCreate,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -305,6 +306,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
   }
 
   Widget _buildItemCard(ItineraryItem item, int index) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -327,7 +329,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _getItemName(item),
+                  _getItemName(item, l10n),
                   style: context.bodyMedium.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -361,16 +363,16 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
     );
   }
 
-  String _getItemName(ItineraryItem item) {
+  String _getItemName(ItineraryItem item, AppLocalizations l10n) {
     switch (item.type) {
       case ItineraryItemType.listing:
-        return item.metadata?['name'] ?? 'Place';
+        return item.metadata?['name'] ?? l10n.itineraryFallbackItemPlace;
       case ItineraryItemType.event:
-        return item.metadata?['name'] ?? 'Event';
+        return item.metadata?['name'] ?? l10n.itineraryFallbackItemEvent;
       case ItineraryItemType.tour:
-        return item.metadata?['name'] ?? 'Tour';
+        return item.metadata?['name'] ?? l10n.itineraryFallbackItemTour;
       case ItineraryItemType.custom:
-        return item.customName ?? 'Custom Item';
+        return item.customName ?? l10n.itineraryFallbackItemCustom;
     }
   }
 
@@ -586,9 +588,9 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              widget.itinerary != null 
-                  ? 'Itinerary updated successfully' 
-                  : 'Itinerary created successfully',
+              widget.itinerary != null
+                  ? AppLocalizations.of(context)!.itineraryUpdatedSuccess
+                  : AppLocalizations.of(context)!.itineraryCreatedSuccess,
             ),
             backgroundColor: Colors.green,
           ),
@@ -696,32 +698,33 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.itineraryAddCustomTitle),
+      title: Text(l10n.itineraryAddCustomTitle),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'e.g., Coffee Break',
+              decoration: InputDecoration(
+                labelText: l10n.itineraryFieldNameLabel,
+                hintText: l10n.itineraryStopTitleHint,
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description (Optional)',
+              decoration: InputDecoration(
+                labelText: l10n.itineraryFieldDescriptionOptionalLabel,
               ),
               maxLines: 2,
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Location (Optional)',
+              decoration: InputDecoration(
+                labelText: l10n.itineraryFieldLocationOptionalLabel,
               ),
             ),
             const SizedBox(height: 12),
@@ -744,18 +747,18 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
                 }
               },
               child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Time',
-                  prefixIcon: Icon(Icons.access_time),
+                decoration: InputDecoration(
+                  labelText: l10n.itineraryFieldTimeLabel,
+                  prefixIcon: const Icon(Icons.access_time),
                 ),
                 child: Text(DateFormat('h:mm a').format(_startTime)),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
-              decoration: const InputDecoration(
-                labelText: 'Duration (minutes, optional)',
-                hintText: 'e.g., 60',
+              decoration: InputDecoration(
+                labelText: l10n.itineraryFieldDurationOptionalLabel,
+                hintText: l10n.itineraryStopDurationHint,
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -768,7 +771,7 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(AppLocalizations.of(context)!.commonCancel),
+          child: Text(l10n.commonCancel),
         ),
         ElevatedButton(
           onPressed: () {
@@ -797,7 +800,7 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
             widget.onSave(item);
             Navigator.pop(context);
           },
-          child: Text(AppLocalizations.of(context)!.commonAdd),
+          child: Text(l10n.commonAdd),
         ),
       ],
     );

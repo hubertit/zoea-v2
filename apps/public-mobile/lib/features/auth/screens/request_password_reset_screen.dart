@@ -401,7 +401,10 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                                 borderSide: BorderSide(color: context.primaryColorTheme, width: 2),
                               ),
                             ),
-                            validator: PhoneValidator.validateInternationalPhone,
+                            validator: (v) => PhoneValidator.validateInternationalPhone(
+                              v,
+                              AppLocalizations.of(context)!,
+                            ),
                           ),
                         ),
                       ],

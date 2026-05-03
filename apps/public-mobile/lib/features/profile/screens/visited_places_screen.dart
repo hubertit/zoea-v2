@@ -47,11 +47,12 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Places Visited',
+          l10n.profileVisitedPlacesTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -93,10 +94,10 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
           ),
           tabAlignment: TabAlignment.start,
           isScrollable: true,
-          tabs: const [
-            Tab(text: 'All Places'),
-            Tab(text: 'This Year'),
-            Tab(text: 'Listings Only'),
+          tabs: [
+            Tab(text: l10n.profileVisitedTabAllPlaces),
+            Tab(text: l10n.profileVisitedTabThisYear),
+            Tab(text: l10n.profileVisitedTabListingsOnly),
           ],
         ),
       ),
@@ -227,14 +228,14 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
           ),
           const SizedBox(height: 24),
           Text(
-            'No Places Visited',
+            AppLocalizations.of(context)!.profileVisitedEmptyTitle,
             style: context.titleLarge.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Start exploring Rwanda to build your\nvisited places collection',
+            AppLocalizations.of(context)!.profileVisitedEmptySubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -252,7 +253,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
               ),
             ),
             child: Text(
-              'Explore Places',
+              AppLocalizations.of(context)!.profileVisitedExploreButton,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -275,13 +276,13 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
     }
 
     final contentId = content['id'] as String?;
-    final contentName = content['name'] as String? ?? 'Unknown';
+    final contentName = content['name'] as String? ?? AppLocalizations.of(context)!.exploreListingUnknown;
     final contentImages = content['images'] as List<dynamic>? ?? [];
-    final contentLocation = _getContentLocation(content);
+    final contentLocation = _getContentLocation(content, AppLocalizations.of(context)!);
     final rating = (content['rating'] as num?)?.toDouble() ?? 0.0;
     final reviewCount = content['reviewCount'] as int? ?? 0;
     final category = content['category'] as Map<String, dynamic>?;
-    final categoryName = category?['name'] as String? ?? 'Place';
+    final categoryName = category?['name'] as String? ?? AppLocalizations.of(context)!.contentTypePlaceLabel;
 
     // Get first image URL
     String? imageUrl;
@@ -366,7 +367,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Viewed',
+                          AppLocalizations.of(context)!.profileVisitedStatusViewed,
                           style: context.labelSmall.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -447,7 +448,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Viewed on ${dateFormat.format(visitDate)}',
+                        AppLocalizations.of(context)!.profileVisitedDateLine(dateFormat.format(visitDate)),
                         style: context.bodyMedium.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -473,7 +474,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '($reviewCount ${reviewCount == 1 ? 'review' : 'reviews'})',
+                        AppLocalizations.of(context)!.listingReviewsCountParen(reviewCount),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -533,9 +534,9 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
     );
   }
 
-  String _getContentLocation(Map<String, dynamic> content) {
+  String _getContentLocation(Map<String, dynamic> content, AppLocalizations l10n) {
     final location = content['location'] as Map<String, dynamic>?;
-    if (location == null) return 'Unknown location';
+    if (location == null) return l10n.profileUnknownLocation;
     
     final address = location['address'] as String?;
     final city = location['city'] as Map<String, dynamic>?;
@@ -549,6 +550,6 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
       return address;
     }
     
-    return 'Unknown location';
+    return l10n.profileUnknownLocation;
   }
 }

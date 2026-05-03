@@ -81,7 +81,7 @@ List<Map<String, dynamic>> homeExploreCategoriesFromApi(
     }
     return <String, dynamic>{
       'slug': tile.slug,
-      'name': tile.defaultName,
+      'name': '',
       'icon': tile.iconName,
       'isActive': true,
       'sortOrder': 0,
