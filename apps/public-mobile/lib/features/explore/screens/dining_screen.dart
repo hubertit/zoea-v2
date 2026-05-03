@@ -185,6 +185,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           });
         }
 
+        final loc = AppLocalizations.of(context)!;
+
         return Scaffold(
           backgroundColor: context.grey50,
           appBar: AppBar(
@@ -200,7 +202,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
               ),
             ),
             title: Text(
-              _diningCategoryName ?? 'Dining',
+              _diningCategoryName ?? loc.diningCategoryFallbackName,
               style: context.headlineMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -296,8 +298,8 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                       }
                     },
                     tabs: [
-                      const Tab(text: 'All'),
-                      const Tab(text: 'Popular'),
+                      Tab(text: loc.stayTabAll),
+                      Tab(text: loc.shopSortPopular),
                       ..._subcategories.map((subcategory) {
                         final name =
                             subcategory['name'] as String? ?? 'Unknown';
@@ -866,7 +868,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Filter Dining',
+                      loc.diningFilterSheetTitle,
                       style: context.headlineSmall.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -881,7 +883,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
 
                 // Minimum Rating
                 Text(
-                  'Minimum Rating',
+                  loc.stayMinimumRating,
                   style: context.titleMedium.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -892,7 +894,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   runSpacing: 8,
                   children: [
                     _buildRatingChip(
-                      '4.0+ Stars',
+                      loc.categoryRatingStars40,
                       4.0,
                       tempMinRating,
                       (value) {
@@ -902,7 +904,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                       },
                     ),
                     _buildRatingChip(
-                      '4.5+ Stars',
+                      loc.categoryRatingStars45,
                       4.5,
                       tempMinRating,
                       (value) {
@@ -912,7 +914,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                       },
                     ),
                     _buildRatingChip(
-                      '5.0 Stars',
+                      loc.categoryRatingStars50,
                       5.0,
                       tempMinRating,
                       (value) {
@@ -1003,14 +1005,14 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                 // Featured Only
                 CheckboxListTile(
                   title: Text(
-                    'Featured Only',
+                    loc.listingFeaturedOnlyTitle,
                     style: context.bodyMedium.copyWith(
                       fontWeight: FontWeight.w500,
                       color: context.primaryTextColor,
                     ),
                   ),
                   subtitle: Text(
-                    'Show only featured listings',
+                    loc.listingFeaturedOnlySubtitle,
                     style: context.bodySmall.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -1125,148 +1127,152 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       isScrollControlled: true,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Sort Dining',
-                      style: context.headlineSmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Sort Options
-                _buildSortOption('Popular', 'popular', tempSortBy, (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption(
-                    'Rating (High to Low)', 'rating_desc', tempSortBy, (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption(
-                    'Rating (Low to High)', 'rating_asc', tempSortBy, (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption('Price (Low to High)', 'price_asc', tempSortBy,
-                    (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption(
-                    'Price (High to Low)', 'price_desc', tempSortBy, (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption('Name (A to Z)', 'name_asc', tempSortBy,
-                    (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption('Name (Z to A)', 'name_desc', tempSortBy,
-                    (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption('Newest First', 'createdAt_desc', tempSortBy,
-                    (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-                _buildSortOption('Oldest First', 'createdAt_asc', tempSortBy,
-                    (value) {
-                  setModalState(() {
-                    tempSortBy = tempSortBy == value ? null : value;
-                  });
-                }),
-
-                // Action buttons
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          setModalState(() {
-                            tempSortBy = null;
-                          });
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: context.primaryColorTheme,
-                          side: BorderSide(color: context.primaryColorTheme),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+      builder: (context) {
+        final loc = AppLocalizations.of(context)!;
+        return StatefulBuilder(
+          builder: (context, setModalState) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        loc.diningSortSheetTitle,
+                        style: context.headlineSmall.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
-                        child: Text(AppLocalizations.of(context)!.commonClear),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _sortBy = tempSortBy;
-                            _currentPage = 1; // Reset to first page
-                          });
-                          Navigator.pop(context);
-                          ref.invalidate(
-                            listingsProvider(
-                              ListingsParams(
-                                page: 1,
-                                limit: _pageSize,
-                                category: _categoryIdForListings,
-                                rating: _minRating,
-                                minPrice: _minPrice,
-                                maxPrice: _maxPrice,
-                                isFeatured: _isFeatured,
-                                sortBy: _sortBy,
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Sort Options
+                  _buildSortOption(loc.shopSortPopular, 'popular', tempSortBy,
+                      (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.staySortRatingHighLow, 'rating_desc',
+                      tempSortBy, (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.staySortRatingLowHigh, 'rating_asc',
+                      tempSortBy, (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.staySortPriceLowHigh, 'price_asc',
+                      tempSortBy, (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.staySortPriceHighLow, 'price_desc',
+                      tempSortBy, (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.shopSortNameAz, 'name_asc', tempSortBy,
+                      (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.shopSortNameZa, 'name_desc', tempSortBy,
+                      (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.shopSortNewest, 'createdAt_desc',
+                      tempSortBy, (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+                  _buildSortOption(loc.listingSortOldestFirst, 'createdAt_asc',
+                      tempSortBy, (value) {
+                    setModalState(() {
+                      tempSortBy = tempSortBy == value ? null : value;
+                    });
+                  }),
+
+                  // Action buttons
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            setModalState(() {
+                              tempSortBy = null;
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: context.primaryColorTheme,
+                            side: BorderSide(color: context.primaryColorTheme),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: Text(loc.commonClear),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _sortBy = tempSortBy;
+                              _currentPage = 1; // Reset to first page
+                            });
+                            Navigator.pop(context);
+                            ref.invalidate(
+                              listingsProvider(
+                                ListingsParams(
+                                  page: 1,
+                                  limit: _pageSize,
+                                  category: _categoryIdForListings,
+                                  rating: _minRating,
+                                  minPrice: _minPrice,
+                                  maxPrice: _maxPrice,
+                                  isFeatured: _isFeatured,
+                                  sortBy: _sortBy,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: Text(loc.exploreApplySort),
                         ),
-                        child: Text(AppLocalizations.of(context)!.exploreApplySort),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

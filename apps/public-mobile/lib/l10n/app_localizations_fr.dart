@@ -1134,6 +1134,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get staySortRatingHighLow => 'Note : décroissante';
 
   @override
+  String get staySortRatingLowHigh => 'Note : croissante';
+
+  @override
   String get staySortDistance => 'Distance';
 
   @override
@@ -3633,6 +3636,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String myBookingsBookAgainPrompt(String name) {
     return 'Souhaitez-vous réserver à nouveau « $name » ?';
   }
+
+  @override
+  String get diningFilterSheetTitle => 'Filtrer la restauration';
+
+  @override
+  String get diningSortSheetTitle => 'Trier la restauration';
+
+  @override
+  String get listingFeaturedOnlyTitle => 'En vedette uniquement';
+
+  @override
+  String get listingFeaturedOnlySubtitle =>
+      'Afficher uniquement les annonces en vedette';
+
+  @override
+  String get listingSortOldestFirst => 'Plus anciennes en premier';
 
   @override
   String get diningFlowBookTableTitle => 'Réserver une table';

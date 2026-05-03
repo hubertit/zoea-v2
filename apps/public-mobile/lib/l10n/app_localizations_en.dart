@@ -1126,6 +1126,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get staySortRatingHighLow => 'Rating: high to low';
 
   @override
+  String get staySortRatingLowHigh => 'Rating: low to high';
+
+  @override
   String get staySortDistance => 'Distance';
 
   @override
@@ -3593,6 +3596,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String myBookingsBookAgainPrompt(String name) {
     return 'Would you like to book \"$name\" again?';
   }
+
+  @override
+  String get diningFilterSheetTitle => 'Filter dining';
+
+  @override
+  String get diningSortSheetTitle => 'Sort dining';
+
+  @override
+  String get listingFeaturedOnlyTitle => 'Featured only';
+
+  @override
+  String get listingFeaturedOnlySubtitle => 'Show only featured listings';
+
+  @override
+  String get listingSortOldestFirst => 'Oldest first';
 
   @override
   String get diningFlowBookTableTitle => 'Book table';

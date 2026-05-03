@@ -2144,6 +2144,12 @@ abstract class AppLocalizations {
   /// **'Rating: high to low'**
   String get staySortRatingHighLow;
 
+  /// No description provided for @staySortRatingLowHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating: low to high'**
+  String get staySortRatingLowHigh;
+
   /// No description provided for @staySortDistance.
   ///
   /// In en, this message translates to:
@@ -6487,6 +6493,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Would you like to book \"{name}\" again?'**
   String myBookingsBookAgainPrompt(String name);
+
+  /// No description provided for @diningFilterSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter dining'**
+  String get diningFilterSheetTitle;
+
+  /// No description provided for @diningSortSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort dining'**
+  String get diningSortSheetTitle;
+
+  /// No description provided for @listingFeaturedOnlyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured only'**
+  String get listingFeaturedOnlyTitle;
+
+  /// No description provided for @listingFeaturedOnlySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show only featured listings'**
+  String get listingFeaturedOnlySubtitle;
+
+  /// No description provided for @listingSortOldestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get listingSortOldestFirst;
 
   /// No description provided for @diningFlowBookTableTitle.
   ///
