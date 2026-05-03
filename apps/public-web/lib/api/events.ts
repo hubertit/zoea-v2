@@ -1,10 +1,4 @@
 import axios from 'axios';
-import {
-  INCLUDE_LACREOLA_EVENTS,
-  buildLaCreolaEvents,
-  findLaCreolaEvent,
-  filterLaCreolaForSearch,
-} from '@/lib/data/lacreola-events';
 
 export interface Event {
   id: number;
@@ -128,11 +122,6 @@ function transformEvent(apiEvent: any): Event {
   };
 }
 
-function mergeLaCreola(events: Event[]): Event[] {
-  if (!INCLUDE_LACREOLA_EVENTS) return events;
-  return [...buildLaCreolaEvents(), ...events];
-}
-
 export const eventsApi = {
   async getAll(params?: {
     page?: number;
@@ -142,16 +131,11 @@ export const eventsApi = {
     const response = await eventsClient.get<EventsResponse>('/explore-events', { params });
     return {
       ...response.data.data,
-      events: mergeLaCreola(response.data.data.events.map(transformEvent)),
+      events: response.data.data.events.map(transformEvent),
     };
   },
 
   async getById(id: string): Promise<Event> {
-    const numericId = Number(id);
-    if (Number.isFinite(numericId)) {
-      const local = findLaCreolaEvent(numericId);
-      if (local) return local;
-    }
     const response = await eventsClient.get<any>(`/explore-events/${id}`);
     return transformEvent(response.data);
   },
@@ -161,12 +145,9 @@ export const eventsApi = {
       params: { search: query },
     });
     const apiEvents = response.data.data.events.map(transformEvent);
-    const laCreolaMatches = INCLUDE_LACREOLA_EVENTS
-      ? filterLaCreolaForSearch(buildLaCreolaEvents(), query)
-      : [];
     return {
       ...response.data.data,
-      events: [...laCreolaMatches, ...apiEvents],
+      events: apiEvents,
     };
   },
 };
