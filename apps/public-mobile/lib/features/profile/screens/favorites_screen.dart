@@ -420,10 +420,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                         onPressed: () {
                           _showRemoveFavoriteDialog(item);
                         },
-                        icon: const Icon(Icons.favorite, size: 18),
+                        icon: Icon(Icons.favorite, size: 18),
                         label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: context.primaryTextColor,
+                          foregroundColor: Theme.of(context).colorScheme.onError,
                           backgroundColor: context.errorColor,
                           side: BorderSide(color: context.errorColor),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -557,10 +557,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                         onPressed: () {
                           _showRemoveFavoriteDialog(event);
                         },
-                        icon: const Icon(Icons.favorite, size: 18),
+                        icon: Icon(Icons.favorite, size: 18),
                         label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: context.primaryTextColor,
+                          foregroundColor: Theme.of(context).colorScheme.onError,
                           backgroundColor: context.errorColor,
                           side: BorderSide(color: context.errorColor),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -694,10 +694,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                         onPressed: () {
                           _showRemoveFavoriteDialog(place);
                         },
-                        icon: const Icon(Icons.favorite, size: 18),
+                        icon: Icon(Icons.favorite, size: 18),
                         label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: context.primaryTextColor,
+                          foregroundColor: Theme.of(context).colorScheme.onError,
                           backgroundColor: context.errorColor,
                           side: BorderSide(color: context.errorColor),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -860,10 +860,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                         onPressed: () {
                           _showRemoveFavoriteDialogFromApi(favorite);
                         },
-                        icon: const Icon(Icons.favorite, size: 18),
+                        icon: Icon(Icons.favorite, size: 18),
                         label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: context.primaryTextColor,
+                          foregroundColor: Theme.of(context).colorScheme.onError,
                           backgroundColor: context.errorColor,
                           side: BorderSide(color: context.errorColor),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -1020,10 +1020,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                         onPressed: () {
                           _showRemoveFavoriteDialogFromApi(favorite);
                         },
-                        icon: const Icon(Icons.favorite, size: 18),
+                        icon: Icon(Icons.favorite, size: 18),
                         label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: context.primaryTextColor,
+                          foregroundColor: Theme.of(context).colorScheme.onError,
                           backgroundColor: context.errorColor,
                           side: BorderSide(color: context.errorColor),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
