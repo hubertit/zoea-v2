@@ -137,19 +137,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     switch (code.toLowerCase()) {
       case 'fr':
         return 'fr';
+      case 'sw':
+        return 'sw';
       case 'en':
       case 'rw':
       case 'kin':
-      case 'sw':
       default:
         return 'en';
     }
   }
 
   String _languageSubtitle(AppLocalizations l10n) {
-    return _selectedLanguageCode == 'fr'
-        ? l10n.languageOptionFrench
-        : l10n.languageOptionEnglish;
+    switch (_selectedLanguageCode) {
+      case 'fr':
+        return l10n.languageOptionFrench;
+      case 'sw':
+        return l10n.languageOptionSwahili;
+      default:
+        return l10n.languageOptionEnglish;
+    }
   }
   
   Widget _buildProfileContent() {
@@ -974,7 +980,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: context.grey50,
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -995,7 +1003,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             
             // Title
             Text(
-              'Select Country',
+              l10n.profileSelectCountrySheetTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -1017,7 +1025,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
-                      'Failed to load countries. Please try again.',
+                      l10n.profileCountriesLoadError,
                       style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
                     ),
                   );
@@ -1028,7 +1036,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
-                      'No countries available.',
+                      l10n.profileCountriesEmpty,
                       style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
                     ),
                   );
@@ -1057,7 +1065,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         ),
-      ),
+    );
+      },
     );
   }
 
@@ -1070,7 +1079,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: context.grey50,
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1091,7 +1102,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             
             // Title
             Text(
-              'Select Location',
+              l10n.profileSelectLocationSheetTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -1103,7 +1114,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
-                  'Select a country first to load locations.',
+                  l10n.profileSelectCountryFirstForLocations,
                   style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
                 ),
               )
@@ -1122,7 +1133,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        'Failed to load locations. Please try again.',
+                        l10n.profileLocationsLoadError,
                         style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
                       ),
                     );
@@ -1137,7 +1148,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        'No locations available for $countryName.',
+                        l10n.profileLocationsEmptyForCountry(countryName),
                         style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
                       ),
                     );
@@ -1152,7 +1163,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           final desc = city['description']?.toString();
                           return _buildLocationOption(
                             cityName,
-                            (desc != null && desc.isNotEmpty) ? desc : 'City in $countryName',
+                            (desc != null && desc.isNotEmpty)
+                                ? desc
+                                : l10n.profileCityInCountryDescription(countryName),
                             _selectedLocation == cityName,
                             cityId: city['id']?.toString(),
                             countryId: countryId,
@@ -1168,7 +1181,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         ),
-      ),
+    );
+      },
     );
   }
 
@@ -1209,6 +1223,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             
             _buildLanguageOption('en', l10n, _selectedLanguageCode == 'en'),
             _buildLanguageOption('fr', l10n, _selectedLanguageCode == 'fr'),
+            _buildLanguageOption('sw', l10n, _selectedLanguageCode == 'sw'),
             
             // Add bottom padding for safe area
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
@@ -1332,7 +1347,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
               setState(() {
                 _selectedCountry = name;
-                _selectedLocation = 'Select city';
+                _selectedLocation = AppLocalizations.of(context)!.profileSelectCity;
                 _locationManuallyChanged = true;
               });
               
@@ -1500,11 +1515,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildLanguageOption(String code, AppLocalizations l10n, bool isSelected) {
-    final title =
-        code == 'fr' ? l10n.languageOptionFrench : l10n.languageOptionEnglish;
-    final native = code == 'fr'
-        ? l10n.languageNativeNameFrench
-        : l10n.languageNativeNameEnglish;
+    final title = switch (code) {
+      'fr' => l10n.languageOptionFrench,
+      'sw' => l10n.languageOptionSwahili,
+      _ => l10n.languageOptionEnglish,
+    };
+    final native = switch (code) {
+      'fr' => l10n.languageNativeNameFrench,
+      'sw' => l10n.languageNativeNameSwahili,
+      _ => l10n.languageNativeNameEnglish,
+    };
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -1545,8 +1565,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
           final loggedIn = ref.read(isLoggedInProvider);
           final l10nMsg = AppLocalizations.of(context)!;
-          final label =
-              code == 'fr' ? l10nMsg.languageOptionFrench : l10nMsg.languageOptionEnglish;
+          final label = switch (code) {
+            'fr' => l10nMsg.languageOptionFrench,
+            'sw' => l10nMsg.languageOptionSwahili,
+            _ => l10nMsg.languageOptionEnglish,
+          };
 
           if (loggedIn) {
             try {

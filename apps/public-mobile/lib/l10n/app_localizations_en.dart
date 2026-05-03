@@ -285,10 +285,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageOptionFrench => 'French';
 
   @override
+  String get languageOptionSwahili => 'Swahili';
+
+  @override
   String get languageNativeNameEnglish => 'English';
 
   @override
   String get languageNativeNameFrench => 'Français';
+
+  @override
+  String get languageNativeNameSwahili => 'Kiswahili';
 
   @override
   String profileLanguageChanged(String languageName) {
@@ -318,6 +324,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get profileCountryChangeFailed =>
       'Failed to change country. Please try again.';
+
+  @override
+  String get profileSelectCountrySheetTitle => 'Select country';
+
+  @override
+  String get profileCountriesLoadError =>
+      'Failed to load countries. Please try again.';
+
+  @override
+  String get profileCountriesEmpty => 'No countries available.';
+
+  @override
+  String get profileSelectCountryFirstForLocations =>
+      'Select a country first to load locations.';
+
+  @override
+  String get profileLocationsLoadError =>
+      'Failed to load locations. Please try again.';
+
+  @override
+  String profileLocationsEmptyForCountry(String countryName) {
+    return 'No locations available for $countryName.';
+  }
+
+  @override
+  String profileCityInCountryDescription(String countryName) {
+    return 'City in $countryName';
+  }
+
+  @override
+  String get profileSelectLocationSheetTitle => 'Select location';
 
   @override
   String profileLocationChanged(String name) {
@@ -2026,6 +2063,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryErrorCategory => 'Failed to load category';
 
   @override
+  String get categoryErrorSubcategories => 'Failed to load subcategories';
+
+  @override
   String categoryEmptyPrompt(String categoryName) {
     return 'Search for $categoryName';
   }
@@ -2036,6 +2076,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get categoryEmptyTryDifferentKeywords =>
       'Try different keywords or categories';
+
+  @override
+  String get categoryPlacesEmptySubtitle => 'Check back later for new listings';
+
+  @override
+  String get exploreNightlifeEmptyTitle => 'No nightlife venues found';
+
+  @override
+  String get exploreNightlifeFilterSheetTitle => 'Filter nightlife';
+
+  @override
+  String get exploreNightlifeSortSheetTitle => 'Sort nightlife';
+
+  @override
+  String get exploreDiningEmptyTitle => 'No dining options found';
+
+  @override
+  String get exploreRecommendationsEmptyTitle => 'No recommendations found';
+
+  @override
+  String get exploreRecommendationsEmptySubtitleSoon =>
+      'Check back later for new recommendations';
+
+  @override
+  String get exploreRecommendationsEmptySubtitleCategory =>
+      'No featured places in this category yet — try All or Explore';
+
+  @override
+  String get exploreRecommendationsFilterSheetTitle => 'Filter recommendations';
+
+  @override
+  String get exploreNightlifeEmptySubtitle => 'Check back later for new venues';
+
+  @override
+  String get exploreDiningEmptySubtitle =>
+      'Check back later for new dining options';
+
+  @override
+  String get exploreRecommendationsLoadFailed =>
+      'Failed to load recommendations';
 
   @override
   String get categorySearchSuggestionsDining =>
@@ -3516,6 +3596,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourDetailLoadError => 'Failed to load tour details';
 
   @override
+  String get tourDetailPricePerPersonLabel => 'Price per person';
+
+  @override
+  String tourDetailGroupSizeLabel(String min, String max) {
+    return 'Group: $min-$max people';
+  }
+
+  @override
+  String get tourDetailAboutTitle => 'About this tour';
+
+  @override
+  String get tourDetailIncludedTitle => 'What\'s included';
+
+  @override
+  String get tourDetailNotIncludedTitle => 'What\'s not included';
+
+  @override
+  String get tourDetailRequirementsTitle => 'Requirements';
+
+  @override
+  String get tourDetailLanguagesTitle => 'Available languages';
+
+  @override
   String get listingDetailLoadFailed => 'Failed to load listing';
 
   @override
@@ -3716,11 +3819,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchScreenGlobalHint => 'Search events, places, experiences…';
 
   @override
+  String get searchScreenNoRecentSearches => 'No recent searches';
+
+  @override
+  String get searchScreenSignInForHistory =>
+      'Sign in to see your search history';
+
+  @override
+  String get searchScreenFailedLoadRecent => 'Failed to load recent searches';
+
+  @override
+  String get searchScreenNoPopularSearches => 'No popular searches available';
+
+  @override
+  String get searchScreenFailedLoadPopular => 'Failed to load popular searches';
+
+  @override
+  String get searchScreenTryDifferentKeywords =>
+      'Try searching with different keywords';
+
+  @override
+  String get searchScreenSearchFailed => 'Search failed';
+
+  @override
+  String get searchScreenHistoryCleared => 'Search history cleared';
+
+  @override
+  String searchScreenHistoryClearFailed(String error) {
+    return 'Failed to clear search history: $error';
+  }
+
+  @override
+  String get searchScreenPopularSearchesSectionTitle => 'Popular searches';
+
+  @override
+  String get searchScreenRecentSearchesSectionTitle => 'Recent searches';
+
+  @override
   String get searchClearHistoryTitle => 'Clear search history';
 
   @override
   String get searchClearHistoryBody =>
       'Are you sure you want to clear all your search history?';
+
+  @override
+  String get listingDetailWriteReviewTitle => 'Write a review';
+
+  @override
+  String get listingSubmitReviewButton => 'Submit review';
 
   @override
   String get listingReviewComposerHint =>
@@ -3950,10 +4096,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stayDetailNoAmenitiesListed => 'No amenities listed';
 
   @override
+  String get listingAmenitiesInfoSoon =>
+      'Amenities information will be available soon';
+
+  @override
   String get stayDetailNoReviewsYet => 'No reviews yet';
 
   @override
   String get stayDetailBeFirstToReview => 'Be the first to review this place!';
+
+  @override
+  String get listingReviewsTabLoadFailed => 'Failed to load reviews';
+
+  @override
+  String get listingProductsTabLoadFailed => 'Failed to load products';
+
+  @override
+  String get listingServicesTabLoadFailed => 'Failed to load services';
+
+  @override
+  String listingMenusCountAvailable(int count) {
+    return '$count menus available';
+  }
 
   @override
   String stayDetailReviewsLoadFailed(String error) {

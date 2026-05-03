@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_sw.dart';
 
 // ignore_for_file: type=lint
 
@@ -95,7 +96,8 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('fr')
+    Locale('fr'),
+    Locale('sw')
   ];
 
   /// No description provided for @appTitle.
@@ -632,6 +634,12 @@ abstract class AppLocalizations {
   /// **'French'**
   String get languageOptionFrench;
 
+  /// No description provided for @languageOptionSwahili.
+  ///
+  /// In en, this message translates to:
+  /// **'Swahili'**
+  String get languageOptionSwahili;
+
   /// No description provided for @languageNativeNameEnglish.
   ///
   /// In en, this message translates to:
@@ -643,6 +651,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Français'**
   String get languageNativeNameFrench;
+
+  /// No description provided for @languageNativeNameSwahili.
+  ///
+  /// In en, this message translates to:
+  /// **'Kiswahili'**
+  String get languageNativeNameSwahili;
 
   /// No description provided for @profileLanguageChanged.
   ///
@@ -679,6 +693,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to change country. Please try again.'**
   String get profileCountryChangeFailed;
+
+  /// No description provided for @profileSelectCountrySheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select country'**
+  String get profileSelectCountrySheetTitle;
+
+  /// No description provided for @profileCountriesLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load countries. Please try again.'**
+  String get profileCountriesLoadError;
+
+  /// No description provided for @profileCountriesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No countries available.'**
+  String get profileCountriesEmpty;
+
+  /// No description provided for @profileSelectCountryFirstForLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a country first to load locations.'**
+  String get profileSelectCountryFirstForLocations;
+
+  /// No description provided for @profileLocationsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load locations. Please try again.'**
+  String get profileLocationsLoadError;
+
+  /// No description provided for @profileLocationsEmptyForCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'No locations available for {countryName}.'**
+  String profileLocationsEmptyForCountry(String countryName);
+
+  /// No description provided for @profileCityInCountryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'City in {countryName}'**
+  String profileCityInCountryDescription(String countryName);
+
+  /// No description provided for @profileSelectLocationSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select location'**
+  String get profileSelectLocationSheetTitle;
 
   /// No description provided for @profileLocationChanged.
   ///
@@ -3734,6 +3796,12 @@ abstract class AppLocalizations {
   /// **'Failed to load category'**
   String get categoryErrorCategory;
 
+  /// No description provided for @categoryErrorSubcategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load subcategories'**
+  String get categoryErrorSubcategories;
+
   /// No description provided for @categoryEmptyPrompt.
   ///
   /// In en, this message translates to:
@@ -3751,6 +3819,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try different keywords or categories'**
   String get categoryEmptyTryDifferentKeywords;
+
+  /// No description provided for @categoryPlacesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for new listings'**
+  String get categoryPlacesEmptySubtitle;
+
+  /// No description provided for @exploreNightlifeEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No nightlife venues found'**
+  String get exploreNightlifeEmptyTitle;
+
+  /// No description provided for @exploreNightlifeFilterSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter nightlife'**
+  String get exploreNightlifeFilterSheetTitle;
+
+  /// No description provided for @exploreNightlifeSortSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort nightlife'**
+  String get exploreNightlifeSortSheetTitle;
+
+  /// No description provided for @exploreDiningEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No dining options found'**
+  String get exploreDiningEmptyTitle;
+
+  /// No description provided for @exploreRecommendationsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No recommendations found'**
+  String get exploreRecommendationsEmptyTitle;
+
+  /// No description provided for @exploreRecommendationsEmptySubtitleSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for new recommendations'**
+  String get exploreRecommendationsEmptySubtitleSoon;
+
+  /// No description provided for @exploreRecommendationsEmptySubtitleCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'No featured places in this category yet — try All or Explore'**
+  String get exploreRecommendationsEmptySubtitleCategory;
+
+  /// No description provided for @exploreRecommendationsFilterSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter recommendations'**
+  String get exploreRecommendationsFilterSheetTitle;
+
+  /// No description provided for @exploreNightlifeEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for new venues'**
+  String get exploreNightlifeEmptySubtitle;
+
+  /// No description provided for @exploreDiningEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for new dining options'**
+  String get exploreDiningEmptySubtitle;
+
+  /// No description provided for @exploreRecommendationsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recommendations'**
+  String get exploreRecommendationsLoadFailed;
 
   /// No description provided for @categorySearchSuggestionsDining.
   ///
@@ -6350,6 +6490,48 @@ abstract class AppLocalizations {
   /// **'Failed to load tour details'**
   String get tourDetailLoadError;
 
+  /// No description provided for @tourDetailPricePerPersonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per person'**
+  String get tourDetailPricePerPersonLabel;
+
+  /// No description provided for @tourDetailGroupSizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Group: {min}-{max} people'**
+  String tourDetailGroupSizeLabel(String min, String max);
+
+  /// No description provided for @tourDetailAboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About this tour'**
+  String get tourDetailAboutTitle;
+
+  /// No description provided for @tourDetailIncludedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s included'**
+  String get tourDetailIncludedTitle;
+
+  /// No description provided for @tourDetailNotIncludedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s not included'**
+  String get tourDetailNotIncludedTitle;
+
+  /// No description provided for @tourDetailRequirementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Requirements'**
+  String get tourDetailRequirementsTitle;
+
+  /// No description provided for @tourDetailLanguagesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Available languages'**
+  String get tourDetailLanguagesTitle;
+
   /// No description provided for @listingDetailLoadFailed.
   ///
   /// In en, this message translates to:
@@ -6698,6 +6880,72 @@ abstract class AppLocalizations {
   /// **'Search events, places, experiences…'**
   String get searchScreenGlobalHint;
 
+  /// No description provided for @searchScreenNoRecentSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent searches'**
+  String get searchScreenNoRecentSearches;
+
+  /// No description provided for @searchScreenSignInForHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to see your search history'**
+  String get searchScreenSignInForHistory;
+
+  /// No description provided for @searchScreenFailedLoadRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recent searches'**
+  String get searchScreenFailedLoadRecent;
+
+  /// No description provided for @searchScreenNoPopularSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'No popular searches available'**
+  String get searchScreenNoPopularSearches;
+
+  /// No description provided for @searchScreenFailedLoadPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load popular searches'**
+  String get searchScreenFailedLoadPopular;
+
+  /// No description provided for @searchScreenTryDifferentKeywords.
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching with different keywords'**
+  String get searchScreenTryDifferentKeywords;
+
+  /// No description provided for @searchScreenSearchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Search failed'**
+  String get searchScreenSearchFailed;
+
+  /// No description provided for @searchScreenHistoryCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Search history cleared'**
+  String get searchScreenHistoryCleared;
+
+  /// No description provided for @searchScreenHistoryClearFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to clear search history: {error}'**
+  String searchScreenHistoryClearFailed(String error);
+
+  /// No description provided for @searchScreenPopularSearchesSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular searches'**
+  String get searchScreenPopularSearchesSectionTitle;
+
+  /// No description provided for @searchScreenRecentSearchesSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get searchScreenRecentSearchesSectionTitle;
+
   /// No description provided for @searchClearHistoryTitle.
   ///
   /// In en, this message translates to:
@@ -6709,6 +6957,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to clear all your search history?'**
   String get searchClearHistoryBody;
+
+  /// No description provided for @listingDetailWriteReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a review'**
+  String get listingDetailWriteReviewTitle;
+
+  /// No description provided for @listingSubmitReviewButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit review'**
+  String get listingSubmitReviewButton;
 
   /// No description provided for @listingReviewComposerHint.
   ///
@@ -7142,6 +7402,12 @@ abstract class AppLocalizations {
   /// **'No amenities listed'**
   String get stayDetailNoAmenitiesListed;
 
+  /// No description provided for @listingAmenitiesInfoSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Amenities information will be available soon'**
+  String get listingAmenitiesInfoSoon;
+
   /// No description provided for @stayDetailNoReviewsYet.
   ///
   /// In en, this message translates to:
@@ -7153,6 +7419,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Be the first to review this place!'**
   String get stayDetailBeFirstToReview;
+
+  /// No description provided for @listingReviewsTabLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load reviews'**
+  String get listingReviewsTabLoadFailed;
+
+  /// No description provided for @listingProductsTabLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load products'**
+  String get listingProductsTabLoadFailed;
+
+  /// No description provided for @listingServicesTabLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load services'**
+  String get listingServicesTabLoadFailed;
+
+  /// No description provided for @listingMenusCountAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} menus available'**
+  String listingMenusCountAvailable(int count);
 
   /// No description provided for @stayDetailReviewsLoadFailed.
   ///
@@ -8402,7 +8692,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+      <String>['en', 'fr', 'sw'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -8415,6 +8705,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEn();
     case 'fr':
       return AppLocalizationsFr();
+    case 'sw':
+      return AppLocalizationsSw();
   }
 
   throw FlutterError(

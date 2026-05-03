@@ -1,0 +1,2187 @@
+{
+  "@@locale": "sw",
+  "@profileAboutSubtitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileLanguageChanged": {
+    "placeholders": {
+      "languageName": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileLanguageUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileCurrencyChanged": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileCurrencyUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileCountryChanged": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileLocationChanged": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@profileLocationSaveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@exploreCallNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "@exploreTourPriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreTourDurationDays": "{count, plural, =1{Siku 1} other{Siku {count}}}",
+  "@exploreTourDurationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreTourDurationHours": "{count, plural, =1{Saa 1} other{Saa {count}}}",
+  "@exploreTourDurationHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@exploreFavoriteUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@exploreEventTimeToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@eventsTicketPriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "@eventsCalendarOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@eventsBottomPriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "@eventsShareWithLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@eventsShareNoLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@assistantErrorSend": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@assistantErrorLoadConversation": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantRelativeDaysAgo": "{count, plural, =1{Siku 1 iliyopita} other{Siku {count} zilizopita}}",
+  "@assistantRelativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayGuestCount": "{count, plural, =1{Mgeni 1} other{Wageni {count}}}",
+  "@stayGuestCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@stayEmptyNoMatchesForCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "@stayRatingAtLeastPlus": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "stayRoomTypesCount": "{count, plural, =1{Aina 1 ya chumba} other{Aina {count} za vyumba}}",
+  "@stayRoomTypesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@bookingsBookedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@bookingsOrderedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@bookingsOrderPreviewMessage": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingsLineItemCount": "{count, plural, =1{Kipengee 1} other{Vipengee {count}}}",
+  "@bookingsLineItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@maintenanceSupport": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@helpFeatureComingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "@itineraryAddWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@authResetCodeSentTo": {
+    "placeholders": {
+      "digits": {
+        "type": "int"
+      },
+      "identifier": {
+        "type": "String"
+      }
+    }
+  },
+  "@authResendCodeIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shopProductCount": "{count, plural, =1{Bidhaa 1} other{Bidhaa {count}}}",
+  "listingReviewsCountParen": "({count, plural, =1{Ukaguzi 1} other{Ukaguzi {count}}})",
+  "@shopProductCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@shopSortLine": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@categorySearchAppBar": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryEmptyPrompt": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryFilterSheetTitle": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categorySortSheetTitle": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@listingReviewsCountParen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@commonFailedLoadListing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedCreateBooking": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedBookTour": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedBookService": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedAddToCart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedUpdate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedRemove": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedClearCart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedPlaceOrder": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedShare": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@privacyPurposeLine": {
+    "placeholders": {
+      "purpose": {
+        "type": "String"
+      }
+    }
+  },
+  "@checkoutQtyLine": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "@shopServiceCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceCount": "{count, plural, =1{Huduma 1} other{Huduma {count}}}",
+  "@shopServiceDurationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@listingShareOnZoea": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@shopServiceDurationLine": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@referralPointsValue": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "@diningBookingDetailLine": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "stayBookingRoomCount": "{count, plural, =1{Chumba 1} other{Vyumba {count}}}",
+  "@stayBookingRoomCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingNightlyLine": "{price} × {roomCount, plural, =1{chumba 1} other{vyumba {roomCount}}}",
+  "@stayBookingNightlyLine": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "roomCount": {
+        "type": "int"
+      }
+    }
+  },
+  "@stayBookingQtyShort": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingDemoRatingReviews": "{rating} ({reviewCount, plural, =1{ukaguzi 1} other{ukaguzi {reviewCount}}})",
+  "@stayBookingDemoRatingReviews": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "@notificationsMarkReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationsMarkAllReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@notificationsTimeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeMinutesAgo": "{count, plural, =1{Dakika 1 iliyopita} other{Dakika {count} zilizopita}}",
+  "@notificationsTimeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeHoursAgo": "{count, plural, =1{Saa 1 iliyopita} other{Saa {count} zilizopita}}",
+  "@notificationsTimeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeDaysAgo": "{count, plural, =1{Siku 1 iliyopita} other{Siku {count} zilizopita}}",
+  "@notificationsOpeningUrl": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "@diningBookingNumberLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "@webviewInvalidUrlLine": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "@myBookingsCancelConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myBookingsBookAgainPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@diningFlowCouponSavedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFavoriteUpdateFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "@listingShareOnZoeaInLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "@listingDetailCouldNotOpenWebsite": {
+    "placeholders": {
+      "website": {
+        "type": "String"
+      }
+    }
+  },
+  "@listingDetailCouldNotCallPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@aboutCopyrightCardSubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "@aboutVersionLine": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@stayDetailReviewsLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@stayDetailReviewsCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayDetailReviewsCountLine": "{count, plural, =1{Ukaguzi 1} other{Ukaguzi {count}}}",
+  "@profileVisitedDateLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@itineraryDaysCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itineraryDaysCountLine": "{count, plural, =1{Siku 1} other{Siku {count}}}",
+  "@itineraryItemsCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itineraryItemsCountLine": "{count, plural, =1{Kipengee 1} other{Vipengee {count}}}",
+  "@reviewHelpfulCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewHelpfulCountLine": "{count, plural, =1{Mtu 1 aliona hii kuwa na msaada} other{Watu {count} waliona hii kuwa na msaada}}",
+  "@reviewTimeWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeWeeksAgo": "{count, plural, =1{Wiki 1 iliyopita} other{Wiki {count} zilizopita}}",
+  "@reviewTimeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeMonthsAgo": "{count, plural, =1{Mwezi 1 uliopita} other{Miezi {count} iliyopita}}",
+  "@reviewTimeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTimeYearsAgo": "{count, plural, =1{Mwaka 1 uliopita} other{Miaka {count} iliyopita}}",
+  "@tourBookingScheduleSubtitleWithTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "spots": {
+        "type": "int"
+      }
+    }
+  },
+  "@tourBookingScheduleSubtitleSpotsOnly": {
+    "placeholders": {
+      "spots": {
+        "type": "int"
+      }
+    }
+  },
+  "@tourBookingPriceLineAdults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tourBookingPriceLineChildren": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tourBookingPriceLineInfants": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tourCardStartingFromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "@tourOperatorReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourOperatorReviewsCount": "({count, plural, =1{Ukaguzi 1} other{Ukaguzi {count}}})",
+  "@tourPackagesPriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "@tourDurationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourDurationDays": "{count, plural, =1{Siku 1} other{Siku {count}}}",
+  "@tourDurationHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourDurationHours": "{count, plural, =1{Saa 1} other{Saa {count}}}",
+  "@aboutLegalCopyrightBody": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "staySortDistance": "Umbali",
+  "staySortPopularity": "Umaarufu",
+  "stayListingFallback": "Malazi",
+  "stayLocationUnavailable": "Mahali hapapatikani",
+  "stayBreakfast": "Kifungua kinywa",
+  "bookingsBookAgain": "Weka nafasi tena",
+  "bookingsViewDetails": "Tazama maelezo",
+  "bookingsBookedOn": "Imehifadhiwa tarehe {date}",
+  "bookingsOrderedOn": "Imeagizwa mnamo {date}",
+  "bookingsOrderLabel": "AGIZA",
+  "bookingsDateNotSpecified": "Tarehe haijabainishwa",
+  "bookingsOrderPreviewMessage": "Agiza maelezo ya {number}",
+  "bookingsCancelOrderSoon": "Ghairi agizo linakuja hivi karibuni",
+  "commonNotSpecified": "Haijabainishwa",
+  "maintenanceTitle": "Tutarudi Mara Moja!",
+  "maintenanceMessage": "Mifumo yetu kwa sasa inafanyiwa matengenezo ili kukuhudumia vyema zaidi. Tutarejea mtandaoni hivi karibuni.",
+  "maintenanceTryAgain": "Jaribu Tena",
+  "maintenanceSupport": "Je, unahitaji usaidizi? Wasiliana nasi kwa {email}",
+  "maintenanceStillUnavailable": "Huduma bado haipatikani. Tafadhali jaribu tena baada ya muda mfupi.",
+  "helpSearchHint": "Tafuta makala ya usaidizi...",
+  "helpQuickHelp": "Msaada wa Haraka",
+  "helpPopularTopics": "Mada Maarufu",
+  "helpContactSupport": "Wasiliana na Usaidizi",
+  "helpFaqCategoriesTitle": "Maswali Yanayoulizwa Mara Kwa Mara",
+  "helpLinkOpenFailed": "Haikuweza kufungua kiungo. Jaribu tena baadaye.",
+  "helpContactButton": "Wasiliana",
+  "helpFeatureComingSoon": "{feature} inakuja hivi karibuni!",
+  "helpLiveChatBody": "Anzisha kipindi cha gumzo la moja kwa moja na timu yetu ya usaidizi.",
+  "helpQuickAccountTitle": "Masuala ya Akaunti",
+  "helpQuickAccountSubtitle": "Matatizo ya kuingia, usajili na wasifu",
+  "helpQuickPaymentTitle": "Malipo na Malipo",
+  "helpQuickPaymentSubtitle": "Malipo ya kuhifadhi na kurejesha pesa",
+  "helpQuickEventsTitle": "Matukio na Uhifadhi",
+  "helpQuickEventsSubtitle": "Tikiti za hafla na usimamizi wa kuhifadhi",
+  "helpQuickPlacesTitle": "Maeneo na Mahali",
+  "helpQuickPlacesSubtitle": "Kutafuta na kutembelea maeneo",
+  "helpTopicBookEvents": "Jinsi ya kuweka matukio",
+  "helpTopicPaymentMethods": "Mbinu za malipo",
+  "helpTopicCancelBooking": "Ghairi kuhifadhi",
+  "helpTopicUpdateProfile": "Sasisha wasifu",
+  "helpTopicContactSupport": "Wasiliana na usaidizi",
+  "helpTopicAppFeatures": "Vipengele vya programu",
+  "helpLiveChatTitle": "Chat ya Moja kwa Moja",
+  "helpLiveChatSubtitle": "Pata usaidizi wa papo hapo kutoka kwa timu yetu ya usaidizi",
+  "helpEmailSupportTitle": "Msaada wa barua pepe",
+  "helpPhoneSupportTitle": "Msaada wa Simu",
+  "helpPhoneSupportSubtitle": "+250 796 889 900",
+  "helpFaqGettingStarted": "Kuanza",
+  "helpFaqAccountProfile": "Akaunti na Wasifu",
+  "helpFaqBookingsEvents": "Uhifadhi na Matukio",
+  "helpFaqPaymentRefunds": "Malipo na Marejesho",
+  "helpFaqTechnicalIssues": "Masuala ya Kiufundi",
+  "helpAppVersionLabel": "Toleo la Programu",
+  "helpBuildNumberLabel": "Nambari ya Kujenga",
+  "helpLastUpdatedLabel": "Ilisasishwa Mwisho",
+  "helpPlatformLabel": "Jukwaa",
+  "helpPackageInfoError": "Haikuweza kupakia maelezo ya kifurushi.",
+  "helpArticleAccount": "Maswala ya kawaida ya akaunti na suluhisho:\n\n• Umesahau Nenosiri: Tumia kiungo cha \"Umesahau Nenosiri\" kwenye skrini ya kuingia\n• Uthibitishaji wa Akaunti: Angalia barua pepe yako kwa viungo vya uthibitishaji\n• Masasisho ya Wasifu: Nenda kwa Wasifu > Badilisha Wasifu ili kusasisha maelezo yako\n• Usalama wa Akaunti: Washa uthibitishaji wa vipengele viwili katika mipangilio ya Faragha na Usalama\n• Faragha ya Data: Kagua mipangilio yako ya faragha katika mipangilio ya programu",
+  "helpArticlePayment": "Msaada wa malipo na bili:\n\n• Mbinu za Malipo: Ongeza kadi za mkopo, pesa za rununu au akaunti za benki\n• Maombi ya Kurejeshewa Pesa: Wasiliana na usaidizi kwa kughairiwa kwa kuhifadhi na kurejesha pesa\n• Historia ya Malipo: Tazama miamala yote kwenye wasifu wako\n• Malipo Yanayoshindikana: Angalia njia yako ya kulipa kisha ujaribu tena\n• Sarafu: Malipo yote yanachakatwa kwa Faranga za Rwanda (RWF)",
+  "helpArticleBooking": "Uhifadhi na usimamizi wa hafla:\n\n• Kuhifadhi Matukio: Vinjari matukio na uguse \"Hifadhi Nafasi Sasa\" ili kuhifadhi eneo lako\n• Uthibitishaji wa Kuhifadhi Nafasi: Utapokea arifa za barua pepe na programu\n• Ghairi Uhifadhi: Nenda kwenye Uhifadhi Wangu ili kughairi matukio yajayo\n• Masasisho ya Tukio: Angalia kichupo cha Matukio kwa taarifa za hivi punde\n• Uhifadhi wa Kikundi: Wasiliana na usaidizi kwa uhifadhi wa kikundi",
+  "helpArticlePlaces": "Maeneo na maelezo ya eneo:\n\n• Kupata Maeneo: Tumia upau wa kutafutia au uvinjari kategoria\n• Maelezo ya Mahali: Gusa mahali popote ili kuona picha, maoni na maelezo\n• Maelekezo: Pata maelekezo kwa kutumia programu ya ramani unayopendelea\n• Uhakiki: Shiriki uzoefu wako kwa kuandika hakiki\n• Vipendwa: Hifadhi maeneo unayotaka kutembelea baadaye",
+  "helpFaqGs1Q": "Je, nitafunguaje akaunti?",
+  "helpFaqGs1A": "Pakua programu na uguse \"Jisajili\" ili kuunda akaunti yako ukitumia barua pepe au nambari ya simu.",
+  "helpFaqGs2Q": "Je, ninawezaje kuhifadhi tukio langu la kwanza?",
+  "helpFaqGs2A": "Vinjari matukio katika kichupo cha Matukio, chagua tukio na uguse \"Hifadhi Nafasi Sasa\" ili kuhifadhi eneo lako.",
+  "helpFaqGs3Q": "Je, ninasasisha wasifu wangu vipi?",
+  "helpFaqGs3A": "Nenda kwa Wasifu > Badilisha Wasifu ili kusasisha maelezo yako ya kibinafsi.",
+  "helpFaqGs4Q": "Je, ninapataje maeneo ya kutembelea?",
+  "helpFaqGs4A": "Tumia kichupo cha Gundua ili kugundua maeneo, au utafute maeneo mahususi.",
+  "helpFaqGs5Q": "Je, ninapataje msaada?",
+  "helpFaqGs5A": "Tumia Kituo hiki cha Usaidizi, wasiliana na usaidizi, au angalia sehemu yetu ya Maswali Yanayoulizwa Mara kwa Mara.",
+  "helpFaqAc1Q": "Je, ninabadilishaje nenosiri langu?",
+  "helpFaqAc1A": "Nenda kwa Wasifu > Faragha na Usalama > Badilisha Nenosiri ili kusasisha nenosiri lako.",
+  "helpFaqAc2Q": "Je, ninasasisha vipi barua pepe yangu?",
+  "helpFaqAc2A": "Nenda kwa Wasifu > Badilisha Wasifu ili kusasisha anwani yako ya barua pepe.",
+  "helpFaqAc3Q": "Je, ninafutaje akaunti yangu?",
+  "helpFaqAc3A": "Wasiliana na usaidizi ili kuomba kufutwa kwa akaunti. Kitendo hiki hakiwezi kutenduliwa.",
+  "helpFaqAc4Q": "Ninawezaje kuwezesha uthibitishaji wa sababu mbili?",
+  "helpFaqAc4A": "Nenda kwa Wasifu > Faragha na Usalama ili kuwezesha 2FA kwa usalama zaidi.",
+  "helpFaqAc5Q": "Je, ninasasishaje picha yangu ya wasifu?",
+  "helpFaqAc5A": "Nenda kwa Wasifu > Badilisha Wasifu na uguse picha yako ya wasifu ili kuibadilisha.",
+  "helpFaqAc6Q": "Je, ninabadilishaje nambari yangu ya simu?",
+  "helpFaqAc6A": "Nenda kwa Wasifu > Badilisha Wasifu ili kusasisha nambari yako ya simu.",
+  "helpFaqAc7Q": "Je, ninawezaje kuthibitisha akaunti yangu?",
+  "helpFaqAc7A": "Angalia barua pepe yako kwa viungo vya uthibitishaji na ufuate maagizo.",
+  "helpFaqAc8Q": "Je, ninapakuaje data yangu?",
+  "helpFaqAc8A": "Nenda kwa Wasifu > Faragha na Usalama > Pakua Data ili kuomba data yako.",
+  "helpFaqBk1Q": "Je, ninawezaje kuhifadhi tukio?",
+  "helpFaqBk1A": "Vinjari matukio, chagua moja na uguse \"Hifadhi Nafasi Sasa\" ili ukamilishe kuhifadhi.",
+  "helpFaqBk2Q": "Je, ninaghairi jinsi gani kuweka nafasi?",
+  "helpFaqBk2A": "Nenda kwenye Nafasi Zangu, tafuta nafasi uliyohifadhi, na uguse \"Ghairi Kuhifadhi\".",
+  "helpFaqBk3Q": "Je, ninapataje tikiti zangu za tukio?",
+  "helpFaqBk3A": "Tikiti zako zitatumwa kupitia barua pepe na zinapatikana katika programu.",
+  "helpFaqBk4Q": "Je, ninaweza kuweka nafasi kwa watu wengi?",
+  "helpFaqBk4A": "Ndiyo, chagua idadi ya watu unapohifadhi tukio.",
+  "helpFaqBk5Q": "Je, ninawezaje kurejeshewa pesa?",
+  "helpFaqBk5A": "Wasiliana na usaidizi kwa maombi ya kurejesha pesa. Sera ya kurejesha pesa inatofautiana kulingana na tukio.",
+  "helpFaqBk6Q": "Je, nitapangaje tena uwekaji nafasi?",
+  "helpFaqBk6A": "Ghairi uhifadhi wako wa sasa na uweke nafasi ya wakati mpya.",
+  "helpFaqBk7Q": "Je, nitaangaliaje hali yangu ya kuweka nafasi?",
+  "helpFaqBk7A": "Nenda kwenye Nafasi Zangu za Kuhifadhi ili uone uhifadhi wako wote na hali zao.",
+  "helpFaqBk8Q": "Je, ikiwa tukio limeghairiwa?",
+  "helpFaqBk8A": "Utaarifiwa na unaweza kuomba kurejeshewa pesa kamili au uhamishiwe kwenye tukio lingine.",
+  "helpFaqBk9Q": "Je, ninapangaje hoteli?",
+  "helpFaqBk9A": "Vinjari hoteli katika kichupo cha Gundua na ufuate mchakato wa kuhifadhi.",
+  "helpFaqBk10Q": "Je, nitahifadhije ziara?",
+  "helpFaqBk10A": "Tafuta ziara katika kichupo cha Gundua na uziweke kama matukio.",
+  "helpFaqBk11Q": "Je, ninapataje maelekezo ya tukio?",
+  "helpFaqBk11A": "Gonga eneo la tukio ili kulifungua katika programu yako ya ramani.",
+  "helpFaqBk12Q": "Je, ninashirikije tukio?",
+  "helpFaqBk12A": "Gusa kitufe cha kushiriki kwenye tukio lolote ili kulishiriki na marafiki.",
+  "helpFaqPy1Q": "Ni njia gani za malipo zinakubaliwa?",
+  "helpFaqPy1A": "Tunakubali kadi za mkopo, pesa za rununu na uhamishaji wa benki.",
+  "helpFaqPy2Q": "Je, nitaongezaje njia ya kulipa?",
+  "helpFaqPy2A": "Nenda kwenye Wasifu > Mbinu za Kulipa ili kuongeza chaguo lako la malipo unalopendelea.",
+  "helpFaqPy3Q": "Je, ninawezaje kurejeshewa pesa?",
+  "helpFaqPy3A": "Wasiliana na usaidizi na maelezo yako ya kuhifadhi ili uombe kurejeshewa pesa.",
+  "helpFaqPy4Q": "Je, kurejesha pesa huchukua muda gani?",
+  "helpFaqPy4A": "Marejesho ya pesa kwa kawaida huchukua siku 3-5 za kazi ili kuchakatwa.",
+  "helpFaqPy5Q": "Je, maelezo yangu ya malipo ni salama?",
+  "helpFaqPy5A": "Ndiyo, tunatumia usimbaji fiche wa kiwango cha sekta ili kulinda data yako.",
+  "helpFaqPy6Q": "Je, nitasasisha vipi njia yangu ya kulipa?",
+  "helpFaqPy6A": "Nenda kwenye Wasifu > Mbinu za Kulipa ili usasishe maelezo yako ya malipo.",
+  "helpFaqTx1Q": "Programu haipakii ipasavyo",
+  "helpFaqTx1A": "Jaribu kufunga na kufungua tena programu, au uwashe upya kifaa chako.",
+  "helpFaqTx2Q": "Siwezi kuingia kwenye akaunti yangu",
+  "helpFaqTx2A": "Angalia muunganisho wako wa intaneti na uthibitishe kitambulisho chako cha kuingia.",
+  "helpFaqTx3Q": "Programu huacha kufanya kazi mara kwa mara",
+  "helpFaqTx3A": "Pata toleo jipya zaidi la programu kutoka kwa duka lako la programu.",
+  "helpFaqTx4Q": "Sipokei arifa",
+  "helpFaqTx4A": "Angalia mipangilio yako ya arifa katika mipangilio ya kifaa chako na mipangilio ya programu.",
+  "registerTitle": "Fungua Akaunti",
+  "registerSubtitle": "Jiunge na jumuiya ya Zoea Africa",
+  "registerInviteBanner": "Umefungua kiungo cha mwaliko - tuliongeza msimbo hapa chini. Unaweza kubadilisha au kubandika msimbo tofauti kutoka kwa maandishi au gumzo.",
+  "registerFullName": "Jina Kamili",
+  "registerFullNameHint": "Ingiza jina lako kamili",
+  "registerFieldRequired": "Inahitajika",
+  "registerEmailLabel": "Barua pepe",
+  "registerEmailHint": "Weka barua pepe yako",
+  "registerInviteCodeLabel": "Msimbo wa mwaliko",
+  "registerInviteCodeHint": "Bandika ikiwa unayo",
+  "registerCodeTooLong": "Msimbo ni mrefu sana",
+  "registerPasswordLabel": "Nenosiri",
+  "registerPasswordHint": "Unda nenosiri kali",
+  "registerConfirmPasswordLabel": "Thibitisha Nenosiri",
+  "registerConfirmPasswordHint": "Thibitisha nenosiri lako",
+  "registerConfirmPasswordRequired": "Tafadhali thibitisha nenosiri lako",
+  "registerPasswordsMismatch": "Manenosiri hayalingani",
+  "registerAgreePrefix": "Nakubaliana na",
+  "registerTerms": "Vigezo na Masharti",
+  "registerAndConjunction": "na",
+  "registerPrivacy": "Sera ya Faragha",
+  "registerAlreadyHaveAccount": "Je, tayari una akaunti?",
+  "registerAgreeTermsMessage": "Tafadhali ukubali Sheria na Masharti",
+  "registerFailed": "Usajili umeshindwa. Tafadhali jaribu tena.",
+  "settingsTitle": "Mipangilio",
+  "settingsAppearanceSection": "Muonekano",
+  "settingsCurrentTheme": "Mandhari ya Sasa",
+  "commonViewDetails": "Tazama maelezo",
+  "commonRemove": "Ondoa",
+  "commonLoadMore": "Pakia zaidi",
+  "mapScreenTitle": "Ramani",
+  "transactionHistoryTitle": "Historia ya muamala",
+  "itineraryAddFromFavoritesTitle": "Ongeza kutoka kwa vipendwa",
+  "shopSearchProductsTitle": "Tafuta bidhaa",
+  "shopClearFilters": "Futa vichujio",
+  "webviewOpenInBrowser": "Fungua katika kivinjari",
+  "commonViewEvent": "Tazama tukio",
+  "commonViewPlace": "Tazama mahali",
+  "mapScreenHeadline": "Mwonekano wa ramani",
+  "mapScreenPlaceholder": "Ramani shirikishi iliyo na uorodheshaji itatekelezwa hapa",
+  "transactionHistorySubtitle": "Tazama historia yako ya malipo na muamala",
+  "itineraryAddWithCount": "Ongeza ({count})",
+  "favoritesEmptyTitle": "Hakuna vipendwa",
+  "favoritesEmptySubtitle": "Bado huna vipendwa vyovyote",
+  "favoritesLoadError": "Imeshindwa kupakia vipendwa",
+  "splashHeadline1": "Gundua Rwanda",
+  "splashHeadline2": "Kama Kamwe Kamwe",
+  "splashTagline": "Gundua maeneo ya kupendeza, matukio halisi, na vito vilivyofichwa kote katika Ardhi ya Milima Elfu.",
+  "onboardingPage1Title": "Gundua Rwanda",
+  "onboardingPage1Subtitle": "Gundua ardhi ya milima elfu moja na matukio yaliyothibitishwa",
+  "onboardingPage2Title": "Weka nafasi bila mshono",
+  "onboardingPage2Subtitle": "Hifadhi hoteli, mikahawa na ziara ukitumia Kadi yako ya Zoea",
+  "onboardingPage3Title": "Unganisha na ushiriki",
+  "onboardingPage3Subtitle": "Jiunge na jumuiya na ushiriki matukio yako ya Rwanda",
+  "onboardingNext": "Inayofuata",
+  "onboardingGetStarted": "Anza",
+  "onboardingSkipGuest": "Ruka - vinjari kama mgeni",
+  "onboardingSignInPrompt": "Je, tayari una akaunti? Ingia",
+  "countryPickerSearchHint": "Anza kuchapa ili kutafuta",
+  "authResetPasswordAppBar": "Weka upya nenosiri",
+  "authChooseResetMethod": "Chagua jinsi ungependa kuweka upya nenosiri lako",
+  "authResetCodeSentDefault": "Weka upya msimbo umetumwa kwa mafanikio",
+  "authSendResetCode": "Tuma msimbo wa kuweka upya",
+  "authBackToLogin": "Rudi kwa kuingia",
+  "authVerifyCodeTitle": "Thibitisha msimbo",
+  "authEnterResetCode": "Weka msimbo wa kuweka upya",
+  "authResetCodeSentTo": "Tulituma msimbo wa tarakimu {digits} kwa {identifier}",
+  "authVerifyCodeButton": "Thibitisha msimbo",
+  "authResendCode": "Tuma tena msimbo",
+  "authResendSending": "Inatuma...",
+  "authResendCodeIn": "Tuma tena nambari ya kuthibitisha katika {time}",
+  "authNewPasswordAppBar": "Nenosiri mpya",
+  "authCreateNewPasswordTitle": "Unda nenosiri mpya",
+  "authCreateNewPasswordBody": "Weka nenosiri lako jipya. Hakikisha ni imara na salama.",
+  "authNewPasswordFieldLabel": "Nenosiri mpya",
+  "authNewPasswordFieldHint": "Weka nenosiri lako jipya",
+  "authConfirmNewPasswordHint": "Thibitisha nenosiri lako jipya",
+  "authEnterNewPasswordError": "Tafadhali weka nenosiri jipya",
+  "authPasswordResetSuccess": "Imefaulu kuweka upya nenosiri!",
+  "authSaveNewPassword": "Hifadhi nenosiri",
+  "authNewCodeRequested": "Msimbo mpya umeombwa.",
+  "authPhoneNumberExample": "780 123 456",
+  "shopScreenTitleShop": "Duka",
+  "shopScreenTitleProducts": "Bidhaa",
+  "shopSortLine": "Panga: {label}",
+  "shopEmptyNoProducts": "Hakuna bidhaa zilizopatikana",
+  "shopEmptyAdjustFilters": "Jaribu kurekebisha vichujio vyako au utafute",
+  "shopErrorLoadProducts": "Imeshindwa kupakia bidhaa",
+  "shopOutOfStock": "Imeisha",
+  "shopFilterTitle": "Chuja bidhaa",
+  "shopStatusSection": "Hali",
+  "shopFeaturedSection": "Iliyoangaziwa",
+  "shopFilterActive": "Inayotumika",
+  "shopFilterInactive": "Isiyotumika",
+  "shopFeaturedOnly": "Iliyoangaziwa pekee",
+  "shopFilterReset": "Weka upya",
+  "shopSearchProductNameHint": "Weka jina la bidhaa...",
+  "shopSortPopular": "Maarufu",
+  "shopSortNameAz": "Jina (A–Z)",
+  "shopSortNameZa": "Jina (Z–A)",
+  "shopSortPriceLowHigh": "Bei (chini hadi juu)",
+  "shopSortPriceHighLow": "Bei (juu hadi chini)",
+  "shopSortNewest": "Mpya zaidi kwanza",
+  "favoritesEmptyAllTitle": "Bado hakuna vipendwa",
+  "favoritesEmptyAllSubtitle": "Anza kuchunguza na kuhifadhi matukio na maeneo unayopenda",
+  "favoritesEmptyExploreCta": "Chunguza sasa",
+  "favoritesEmptyEventsTitle": "Hakuna matukio unayopenda",
+  "favoritesEmptyEventsSubtitle": "Hifadhi matukio ambayo ungependa kuyaona hapa",
+  "favoritesEmptyEventsCta": "Vinjari matukio",
+  "favoritesEmptyPlacesTitle": "Hakuna maeneo unayopenda",
+  "favoritesEmptyPlacesSubtitle": "Hifadhi maeneo unayotaka kutembelea ili kuyaona hapa",
+  "favoritesEmptyPlacesCta": "Chunguza maeneo",
+  "favoritesRemoveTitle": "Ondoa kutoka kwa vipendwa",
+  "favoritesRemoveMessage": "Je, una uhakika unataka kuondoa \"{name}\" kutoka kwa vipendwa vyako?",
+  "favoritesRemoveFailed": "Haikuweza kuondoa kipendwa: {error}",
+  "favoritesTypeEvent": "Tukio",
+  "favoritesTypePlace": "Mahali",
+  "favoritesDateTba": "Tarehe ya TBA",
+  "categoryTitleDining": "Kula",
+  "categoryTitleNightlife": "Maisha ya usiku",
+  "categoryTitleExperiences": "Uzoefu",
+  "categoryTitlePlaces": "Maeneo",
+  "categorySearchAppBar": "Tafuta {categoryName}",
+  "categorySearchHintDining": "Tafuta mikahawa, mikahawa...",
+  "categorySearchHintNightlife": "Tafuta baa, vilabu, sebule...",
+  "categorySearchHintExperiences": "Tafuta ziara, matukio, matukio...",
+  "categorySearchHintDefault": "Tafuta maeneo...",
+  "categoryNotFound": "Aina haijapatikana",
+  "categoryErrorListings": "Imeshindwa kupakia matangazo",
+  "categoryErrorCategory": "Imeshindwa kupakia kategoria",
+  "categoryErrorSubcategories": "Imeshindwa kupakia makategoria madogo",
+  "categoryEmptyPrompt": "Tafuta {categoryName}",
+  "categoryEmptyNoResults": "Hakuna matokeo yaliyopatikana",
+  "categoryEmptyTryDifferentKeywords": "Jaribu maneno muhimu au kategoria tofauti",
+  "categoryPlacesEmptySubtitle": "Rudi baadaye kwa matangazo mapya",
+  "exploreNightlifeEmptyTitle": "Hakuna maeneo ya starehe ya usiku",
+  "exploreNightlifeFilterSheetTitle": "Chuja starehe ya usiku",
+  "exploreNightlifeSortSheetTitle": "Panga starehe ya usiku",
+  "exploreDiningEmptyTitle": "Hakuna chaguo za mgahawa",
+  "exploreRecommendationsEmptyTitle": "Hakuna mapendekezo",
+  "exploreRecommendationsEmptySubtitleSoon": "Rudi baadaye kwa mapendekezo mapya",
+  "exploreRecommendationsEmptySubtitleCategory": "Bado hakuna maeneo ya kipekee katika jamii hii — jaribu Yote au Gundua",
+  "exploreRecommendationsFilterSheetTitle": "Chuja mapendekezo",
+  "exploreNightlifeEmptySubtitle": "Rudi baadaye kwa maeneo mapya",
+  "exploreDiningEmptySubtitle": "Rudi baadaye kwa chaguo mapya za mgahawa",
+  "exploreRecommendationsLoadFailed": "Imeshindwa kupakia mapendekezo",
+  "categorySearchSuggestionsDining": "Jaribu kutafuta \"pizza\", \"kahawa\", au \"sushi\"",
+  "categorySearchSuggestionsNightlife": "Jaribu kutafuta \"bar\", \"club\", au \"sebule\"",
+  "categorySearchSuggestionsExperiences": "Jaribu kutafuta \"gorilla\", \"kutembea\", au \"kitamaduni\"",
+  "categorySearchSuggestionsDefault": "Jaribu kutafuta maeneo au maeneo mahususi",
+  "categoryFilterSheetTitle": "Chuja {categoryName}",
+  "categorySortSheetTitle": "Panga {categoryName}",
+  "categorySectionPriceRange": "Aina ya bei",
+  "categorySectionFeatures": "Vipengele",
+  "categoryRatingStars40": "Nyota 4.0+",
+  "categoryRatingStars45": "Nyota 4.5+",
+  "categoryRatingStars50": "5.0 nyota",
+  "catTourOperatorBadge": "Mwendeshaji wa watalii",
+  "catSubDiningRestaurants": "Mikahawa",
+  "catSubDiningCafes": "Mikahawa",
+  "catSubDiningFastFood": "Chakula cha haraka",
+  "catSubNightBars": "Baa",
+  "catSubNightClubs": "Vilabu",
+  "catSubNightLounges": "Vyumba vya mapumziko",
+  "catSubExpTours": "Ziara",
+  "catSubExpAdventures": "Vituko",
+  "catSubExpCultural": "Utamaduni",
+  "catSubExpOperators": "Waendeshaji",
+  "catPriceDiningU5k": "Chini ya RWF 5,000",
+  "catPriceDining5to15k": "RWF 5,000 - 15,000",
+  "catPriceDining15to30k": "RWF 15,000 - 30,000",
+  "catPriceDiningOver30k": "Zaidi ya RWF 30,000",
+  "catPriceNightU10k": "Chini ya RWF 10,000",
+  "catPriceNight10to20k": "RWF 10,000 - 20,000",
+  "catPriceNight20to30k": "RWF 20,000 - 30,000",
+  "catPriceNightOver30k": "Zaidi ya RWF 30,000",
+  "catPriceExpU50k": "Chini ya RWF 50,000",
+  "catPriceExp50to100k": "RWF 50,000 - 100,000",
+  "catPriceExp100to200k": "RWF 100,000 - 200,000",
+  "catPriceExpOver200k": "Zaidi ya RWF 200,000",
+  "catPriceDefU10k": "Chini ya RWF 10,000",
+  "catPriceDef10to30k": "RWF 10,000 - 30,000",
+  "catPriceDefOver30k": "Zaidi ya RWF 30,000",
+  "catFeatDiningWifi": "Wi-Fi",
+  "catFeatDiningParking": "Maegesho",
+  "catFeatDiningOutdoorSeating": "Viti vya nje",
+  "catFeatDiningDelivery": "Uwasilishaji",
+  "catFeatDiningTakeaway": "Takeaway",
+  "catFeatDiningVegetarian": "Chaguzi za mboga",
+  "catFeatNightLiveMusic": "Muziki wa moja kwa moja",
+  "catFeatNightDanceFloor": "Sakafu ya ngoma",
+  "catFeatNightOutdoorSeating": "Viti vya nje",
+  "catFeatNightVip": "Sehemu ya VIP",
+  "catFeatNightParking": "Maegesho",
+  "catFeatNightWifi": "Wi-Fi",
+  "catFeatExpGuidedTours": "Ziara za kuongozwa",
+  "catFeatExpTransport": "Usafiri pamoja",
+  "catFeatExpMeals": "Milo pamoja",
+  "catFeatExpEquipment": "Vifaa vilivyotolewa",
+  "catFeatExpGroup": "Ziara za kikundi",
+  "catFeatExpPrivate": "Ziara za kibinafsi",
+  "catFeatDefWifi": "Wi-Fi",
+  "catFeatDefParking": "Maegesho",
+  "catFeatDefAccessible": "Inaweza kufikiwa",
+  "exploreApplySort": "Tumia aina",
+  "exploreCategoryNotFoundShort": "Aina haijapatikana",
+  "commonSignIn": "Ingia",
+  "commonBack": "Nyuma",
+  "commonDelete": "Futa",
+  "commonAdd": "Ongeza",
+  "commonMaybeLater": "Labda baadaye",
+  "commonGoBack": "Rudi nyuma",
+  "commonStartShopping": "Anza ununuzi",
+  "commonContinueShopping": "Endelea kufanya manunuzi",
+  "commonFavoriteVerb": "Kipendwa",
+  "commonBookNow": "Weka nafasi sasa",
+  "commonOrderNow": "Agiza sasa",
+  "commonContact": "Wasiliana",
+  "commonReserveTable": "Jedwali la hifadhi",
+  "commonWriteReview": "Andika ukaguzi",
+  "commonViewAllProducts": "Tazama bidhaa zote",
+  "commonViewAllServices": "Tazama huduma zote",
+  "commonViewMenu": "Tazama menyu",
+  "commonViewMenus": "Tazama menyu",
+  "commonSelectVariant": "Chagua lahaja",
+  "commonShareReferralCode": "Shiriki msimbo wa rufaa",
+  "commonCompleteProfile": "Kamilisha wasifu",
+  "commonLinkOpenFailed": "Haikuweza kufungua kiungo. Jaribu tena baadaye.",
+  "commonCouponApplied": "Kuponi imetumika!",
+  "commonCouponInvalid": "Msimbo wa kuponi si sahihi",
+  "commonBookingNotAvailable": "Kuhifadhi nafasi hakupatikani kwa aina hii ya uorodheshaji",
+  "commonFailedLoadListing": "Imeshindwa kupakia uorodheshaji: {error}",
+  "commonFailedCreateBooking": "Imeshindwa kuweka nafasi: {error}",
+  "commonFailedBookTour": "Imeshindwa kuhifadhi ziara: {error}",
+  "commonFailedBookService": "Imeshindwa kuhifadhi huduma: {error}",
+  "commonFailedAddToCart": "Imeshindwa kuongeza kwenye rukwama: {error}",
+  "commonFailedUpdate": "Imeshindwa kusasisha: {error}",
+  "commonFailedRemove": "Imeshindwa kuondoa: {error}",
+  "commonFailedClearCart": "Imeshindwa kufuta rukwama: {error}",
+  "commonFailedPlaceOrder": "Imeshindwa kuagiza: {error}",
+  "commonFailedShare": "Imeshindwa kushiriki: {error}",
+  "commonProductAddedToCart": "Bidhaa imeongezwa kwenye kikapu",
+  "commonItemAddedToCart": "Bidhaa imeongezwa kwenye rukwama",
+  "commonPleaseSelectTourSchedule": "Tafadhali chagua ziara na ratiba",
+  "commonPleaseFillRequiredFields": "Tafadhali jaza sehemu zote zinazohitajika",
+  "commonBookingMissingConfirmation": "Uhifadhi umeundwa, lakini kitambulisho cha uthibitishaji hakipo.",
+  "commonPleaseSelectDateTime": "Tafadhali chagua tarehe na saa",
+  "commonServiceBookedSuccess": "Huduma imehifadhiwa!",
+  "commonPleaseWriteReview": "Tafadhali andika ukaguzi kabla ya kuwasilisha",
+  "commonPleaseWriteReviewUpdate": "Tafadhali andika ukaguzi kabla ya kusasisha",
+  "commonReviewSubmitMissingContext": "Imeshindwa kuwasilisha ukaguzi. Uorodheshaji haupo, tukio au maelezo ya utalii.",
+  "commonThankYouReview": "Asante kwa ukaguzi wako!",
+  "commonReviewUpdatedSuccess": "Ukaguzi umesasishwa!",
+  "commonCheckInOutRequired": "Tafadhali chagua tarehe za kuingia na kutoka",
+  "commonCheckOutAfterCheckIn": "Tarehe ya kutoka lazima iwe baada ya tarehe ya kuingia",
+  "commonSelectRoomType": "Tafadhali chagua aina ya chumba ili kuendelea",
+  "cartTitle": "Futa gari",
+  "cartClearConfirm": "Je, una uhakika ungependa kuondoa vipengee vyote kwenye rukwama yako?",
+  "cartEmptyMessage": "Rukwama yako haina chochote",
+  "checkoutFulfillmentPickup": "Kuchukua",
+  "checkoutFulfillmentPickupSubtitle": "Kusanya kutoka kwa duka",
+  "checkoutFulfillmentDelivery": "Uwasilishaji",
+  "checkoutFulfillmentDeliverySubtitle": "Imewasilishwa kwa anwani yako",
+  "checkoutFulfillmentDineIn": "Kula ndani",
+  "checkoutFulfillmentDineInSubtitle": "Kula kwenye mgahawa",
+  "checkoutUnableListing": "Imeshindwa kubainisha uorodheshaji",
+  "shopSearchServicesTitle": "Tafuta huduma",
+  "shopServicesTitle": "Huduma",
+  "referralScreenShareCta": "Shiriki msimbo wa rufaa",
+  "zoeaCardScreenTitle": "Kadi ya Zoea",
+  "itinerariesScreenTitle": "Ratiba",
+  "itinerariesMyScreenTitle": "Ratiba zangu",
+  "itineraryCreateFab": "Unda ratiba",
+  "itineraryDetailTitle": "Ratiba",
+  "itineraryViewCta": "Tazama",
+  "itineraryMakePublicTitle": "Weka hadharani",
+  "itineraryMakePublicSubtitle": "Ruhusu wengine kutazama ratiba hii",
+  "itineraryAddItem": "Ongeza kipengee",
+  "itineraryFromFavoritesTitle": "Kutoka kwa vipendwa",
+  "itineraryFromFavoritesSubtitle": "Ongeza kutoka kwa vipendwa vyako vilivyohifadhiwa",
+  "itineraryFromRecommendationsTitle": "Kutoka kwa mapendekezo",
+  "itineraryFromRecommendationsSubtitle": "Ongeza kutoka sehemu zinazopendekezwa",
+  "itineraryCustomItemTitle": "Kipengee maalum",
+  "itineraryCustomItemSubtitle": "Ongeza eneo maalum au shughuli",
+  "itineraryDeleteTitle": "Futa ratiba",
+  "itineraryDeleteMessage": "Je, una uhakika unataka kufuta ratiba hii? Kitendo hiki hakiwezi kutenduliwa.",
+  "itineraryDeletedSuccess": "Ratiba imefutwa",
+  "itineraryAddCustomTitle": "Ongeza kipengee maalum",
+  "itineraryCustomNameRequired": "Tafadhali weka jina",
+  "itineraryAddFromRecommendationsTitle": "Ongeza kutoka kwa mapendekezo",
+  "reviewsEventComingSoon": "Ukurasa wa maelezo ya tukio unakuja hivi karibuni",
+  "reviewsTourComingSoon": "Ukurasa wa maelezo ya ziara unakuja hivi karibuni",
+  "tourDetailGoBack": "Rudi nyuma",
+  "eventsAttendedViewDetails": "Tazama maelezo",
+  "visitedPlacesViewDetails": "Tazama maelezo",
+  "appUpdateRequiredTitle": "Usasishaji unahitajika",
+  "appUpdateRequiredMessage": "Tafadhali sasisha programu ili kuendelea kutumia Zoea.",
+  "appUpdateAvailableTitle": "Sasisho linapatikana",
+  "appUpdateAvailableMessage": "Toleo jipya la Zoea liko tayari pamoja na maboresho na marekebisho.",
+  "appUpdateNow": "Sasisha sasa",
+  "appUpdateLater": "Baadaye",
+  "appUpdateStoreOpenFailed": "Haikuweza kufungua kiungo cha duka",
+  "privacySectionPrivacySettings": "Mipangilio ya faragha",
+  "privacyLocationServicesTitle": "Huduma za eneo",
+  "privacyLocationServicesSubtitle": "Ruhusu programu kutumia eneo lako kwa mapendekezo bora",
+  "privacyPushNotificationsTitle": "Arifa za kushinikiza",
+  "privacyPushNotificationsSubtitle": "Pokea arifa kuhusu matukio na masasisho",
+  "privacyDataSharingTitle": "Kushiriki data",
+  "privacyDataSharingSubtitle": "Shiriki data isiyokutambulisha ili kuboresha matumizi ya programu",
+  "privacyAnalyticsTitle": "Uchanganuzi",
+  "privacyAnalyticsSubtitle": "Tusaidie kuboresha programu kwa uchanganuzi wa matumizi",
+  "privacyAnalyticsEnabled": "Uchanganuzi umewashwa",
+  "privacyAnalyticsDisabled": "Uchanganuzi umezimwa",
+  "privacyAnalyticsUpdateFailed": "Imeshindwa kusasisha mipangilio ya uchanganuzi",
+  "privacyAnalyticsLoadingSubtitle": "Inapakia...",
+  "privacySectionDataPrivacy": "Data na faragha",
+  "privacyWhatDataTitle": "Data gani tunakusanya",
+  "privacyWhatDataSubtitle": "Angalia ni taarifa gani inakusanywa na kwa nini",
+  "privacyClearAnalyticsTitle": "Futa data ya uchanganuzi",
+  "privacyClearAnalyticsSubtitle": "Futa data zote za uchanganuzi zilizohifadhiwa",
+  "privacySectionSecurity": "Mipangilio ya usalama",
+  "privacyBiometricTitle": "Uthibitishaji wa kibayometriki",
+  "privacyBiometricSubtitle": "Tumia alama ya vidole au utambuzi wa uso ili kufungua",
+  "privacyTwoFactorTitle": "Uthibitishaji wa mambo mawili",
+  "privacyTwoFactorSubtitle": "Ongeza safu ya ziada ya usalama kwenye akaunti yako",
+  "privacyChangePasswordTileTitle": "Badilisha nenosiri",
+  "privacyChangePasswordTileSubtitle": "Sasisha nenosiri la akaunti yako",
+  "privacyEmailVerificationTileTitle": "Uthibitishaji wa barua pepe",
+  "privacyEmailVerificationTileSubtitle": "Thibitisha anwani yako ya barua pepe",
+  "privacyPhoneVerified": "Simu imethibitishwa",
+  "privacyPhoneAddVerify": "Ongeza na uthibitishe nambari yako ya simu",
+  "privacyPhoneVerificationTileTitle": "Uthibitishaji wa simu",
+  "privacySectionAccountManagement": "Usimamizi wa akaunti",
+  "privacyDownloadDataTitle": "Pakua data yangu",
+  "privacyDownloadDataSubtitle": "Pata nakala ya data yako ya kibinafsi",
+  "privacyDeleteAccountTitle": "Futa akaunti",
+  "privacyDeleteAccountSubtitle": "Futa kabisa akaunti yako na data yote",
+  "privacySectionLegal": "Kisheria",
+  "privacyPolicyTileTitle": "Sera ya faragha",
+  "privacyPolicyTileSubtitle": "Soma sera yetu ya faragha",
+  "privacyTermsTileTitle": "Masharti ya huduma",
+  "privacyTermsTileSubtitle": "Soma masharti yetu ya huduma",
+  "privacyChangePasswordDialogTitle": "Badilisha nenosiri",
+  "privacyCurrentPasswordLabel": "Nenosiri la sasa",
+  "privacyCurrentPasswordHint": "Weka nenosiri lako la sasa",
+  "privacyCurrentPasswordRequired": "Tafadhali weka nenosiri lako la sasa",
+  "privacyNewPasswordLabel": "Nenosiri mpya",
+  "privacyNewPasswordHint": "Weka nenosiri lako jipya",
+  "privacyNewPasswordRequired": "Tafadhali weka nenosiri jipya",
+  "privacyPasswordMinLength": "Nenosiri lazima liwe na angalau vibambo 6",
+  "privacyConfirmPasswordLabel": "Thibitisha nenosiri jipya",
+  "privacyConfirmPasswordHint": "Thibitisha nenosiri lako jipya",
+  "privacyConfirmPasswordRequired": "Tafadhali thibitisha nenosiri lako jipya",
+  "privacyPasswordsMismatch": "Manenosiri hayalingani",
+  "privacyPasswordChangedSuccess": "Nenosiri limebadilishwa!",
+  "privacyPasswordChangeFailed": "Imeshindwa kubadilisha nenosiri. Tafadhali jaribu tena.",
+  "privacyEmailVerificationDialogTitle": "Uthibitishaji wa barua pepe",
+  "privacyEmailVerificationDialogBody": "Barua pepe ya uthibitishaji itatumwa kwa anwani yako ya barua pepe iliyosajiliwa.",
+  "privacyVerificationEmailSent": "Barua pepe ya uthibitishaji imetumwa!",
+  "privacySendEmail": "Tuma barua pepe",
+  "privacyPhoneInvalid": "Weka nambari sahihi ya simu",
+  "privacyPhoneCodeSent": "Tulituma msimbo wa tarakimu 6 kwa SMS.",
+  "privacyPhoneEnterCode": "Weka msimbo wa tarakimu 6",
+  "privacyPhoneVerifiedSuccess": "Nambari ya simu imethibitishwa",
+  "privacyPhoneVerificationIntro": "Tutatuma msimbo ili kuthibitisha nambari hii.",
+  "myBookingsKeepBooking": "Endelea kuweka nafasi",
+  "myBookingsCancelBooking": "Ghairi kuhifadhi",
+  "editProfileConfirm": "Thibitisha",
+  "privacyPhoneMobileLabel": "Nambari ya simu",
+  "privacySendCode": "Tuma msimbo",
+  "privacyVerify": "Thibitisha",
+  "privacyDownloadDataDialogTitle": "Pakua data yangu",
+  "privacyDownloadDataDialogBody": "Tutatayarisha data yako na kuituma kwa anwani yako ya barua pepe ndani ya saa 24.",
+  "privacyDownloadDataSubmitted": "Ombi la kupakua data limewasilishwa!",
+  "privacyRequestData": "Omba data",
+  "privacyDeleteAccountDialogTitle": "Futa akaunti",
+  "privacyDeleteAccountDialogBody": "Kitendo hiki hakiwezi kutenduliwa. Data yako yote itafutwa kabisa.",
+  "privacyDeleteForever": "Futa milele",
+  "privacyAccountDeletionComingSoon": "Kipengele cha kufuta akaunti kinakuja hivi karibuni!",
+  "privacyFinalConfirmationTitle": "Uthibitisho wa mwisho",
+  "privacyFinalConfirmationBody": "Una uhakika kabisa? Hii itafuta kabisa akaunti yako na data yote husika.",
+  "privacyWhatDataCollectSheetTitle": "Data gani tunakusanya",
+  "privacyDataProfileTitle": "Maelezo ya wasifu",
+  "privacyDataProfileDescription": "Nchi, lugha, umri, jinsia, mapendeleo, mapendeleo ya usafiri",
+  "privacyDataProfilePurpose": "Binafsisha uzoefu na mapendekezo yako",
+  "privacyDataSearchTitle": "Maswali ya utafutaji",
+  "privacyDataSearchDescription": "Unachotafuta kwenye programu",
+  "privacyDataSearchPurpose": "Kuboresha matokeo ya utafutaji na kupendekeza maudhui muhimu",
+  "privacyDataViewsTitle": "Mionekano ya maudhui",
+  "privacyDataViewsDescription": "Maeneo na matukio unayotazama",
+  "privacyDataViewsPurpose": "Kuelewa mambo yanayokuvutia na kuboresha mapendekezo",
+  "privacyDataUsageTitle": "Matumizi ya programu",
+  "privacyDataUsageDescription": "Jinsi unavyotumia programu, muda wa kipindi, vipengele vinavyotumika",
+  "privacyDataUsagePurpose": "Boresha utendakazi wa programu na matumizi ya mtumiaji",
+  "privacyDataAnonymizedFootnote": "Data yote haijatambulishwa na inatumika tu kuboresha matumizi yako. Unaweza kuzima uchanganuzi au kufuta data yako wakati wowote.",
+  "privacyGotIt": "Nimeipata",
+  "privacyPurposeLine": "Kusudi: {purpose}",
+  "privacyClearAnalyticsDialogTitle": "Futa data ya uchanganuzi",
+  "privacyClearAnalyticsDialogBody": "Hii itafuta data yote ya uchanganuzi iliyohifadhiwa kutoka kwa kifaa chako. Kitendo hiki hakiwezi kutenduliwa.",
+  "privacyClearData": "Futa data",
+  "privacyClearAnalyticsSuccess": "Data ya uchanganuzi imefutwa",
+  "privacyClearAnalyticsFailed": "Imeshindwa kufuta data ya uchanganuzi",
+  "privacyPhoneSixDigitCodeLabel": "Msimbo wa tarakimu 6",
+  "zoeaCardSubtitle": "Pochi yako ya kidijitali kwa malipo ya bila mshono",
+  "shopCartScreenTitle": "Mkokoteni wa ununuzi",
+  "shopCartEmptySubtitle": "Ongeza vipengee kwenye rukwama yako ili kuanza",
+  "shopCartLoadFailed": "Imeshindwa kupakia rukwama",
+  "shopCheckoutSignInTitle": "Ingia ili kulipa",
+  "shopCheckoutSignInMessage": "Fungua akaunti au ingia ili kukamilisha ununuzi wako. Rukwama yako itahifadhiwa.",
+  "shopCartItemTypeProduct": "Bidhaa",
+  "shopCartItemTypeService": "Huduma",
+  "shopCartItemTypeMenuItem": "Kipengee cha menyu",
+  "shopCartClearTooltip": "Futa gari",
+  "shopCartTotalLabel": "Jumla",
+  "shopProceedToCheckout": "Endelea kulipia",
+  "checkoutScreenTitle": "Lipa",
+  "checkoutOrderSummary": "Muhtasari wa agizo",
+  "checkoutDeliveryMethod": "Njia ya utoaji",
+  "checkoutDeliveryAddress": "Anwani ya usafirishaji",
+  "checkoutStreetAddressLabel": "Anwani ya mtaa",
+  "checkoutStreetAddressHint": "Weka anwani yako ya mtaani",
+  "checkoutStreetAddressRequired": "Tafadhali weka anwani yako ya uwasilishaji",
+  "checkoutCityLabel": "Jiji",
+  "checkoutCityHint": "Ingiza jiji lako",
+  "checkoutCityRequired": "Tafadhali ingiza jiji lako",
+  "checkoutContactInformation": "Maelezo ya mawasiliano",
+  "checkoutFullNameLabel": "Jina kamili",
+  "checkoutFullNameHint": "Ingiza jina lako kamili",
+  "checkoutFullNameRequired": "Tafadhali weka jina lako",
+  "checkoutEmailOptionalLabel": "Barua pepe (ya hiari)",
+  "checkoutEmailHint": "Weka barua pepe yako",
+  "checkoutPhoneLabel": "Nambari ya simu",
+  "checkoutPhoneHint": "Weka nambari yako ya simu",
+  "checkoutPhoneRequired": "Tafadhali weka nambari yako ya simu",
+  "checkoutSpecialInstructionsTitle": "Maagizo maalum (hiari)",
+  "checkoutSpecialInstructionsHint": "Ongeza maagizo yoyote maalum kwa agizo lako...",
+  "checkoutPlaceOrder": "Weka agizo",
+  "checkoutStorePickup": "Hifadhi ya kuchukua",
+  "checkoutSubtotalLabel": "Jumla ndogo",
+  "checkoutTaxVatLabel": "Kodi (18%)",
+  "checkoutShippingLabel": "Usafirishaji",
+  "checkoutQtyLine": "Kiasi: {quantity}",
+  "shopEmptyNoServices": "Hakuna huduma zilizopatikana",
+  "shopErrorLoadServices": "Imeshindwa kupakia huduma",
+  "shopFilterServicesSheetTitle": "Huduma za kichujio",
+  "shopServiceSearchHint": "Weka jina la huduma...",
+  "shopPricePerHour": "saa",
+  "shopPricePerSession": "kikao",
+  "shopPricePerPerson": "mtu",
+  "shopServiceUnavailable": "Haipatikani",
+  "shopServiceDurationMinutes": "{minutes} dakika",
+  "shopErrorLoadMenu": "Imeshindwa kupakia menyu",
+  "shopErrorLoadProduct": "Imeshindwa kupakia bidhaa",
+  "shopMenuCategoryEmpty": "Hakuna vipengee katika kategoria hii",
+  "shopErrorLoadService": "Imeshindwa kupakia huduma",
+  "shopViewCart": "Tazama rukwama",
+  "shopAddToCart": "Ongeza kwenye rukwama",
+  "shopBookService": "Huduma ya kitabu",
+  "shopProductDescription": "Maelezo",
+  "shopProductTags": "Lebo",
+  "shopProductVariantHeading": "Chagua lahaja",
+  "shopMenuChefSpecial": "Chef maalum",
+  "shopMenuDietaryInformation": "Habari ya lishe",
+  "shopMenuAllergensTitle": "Allergens",
+  "shopServiceUnavailableBanner": "Huduma haipatikani kwa sasa",
+  "listingShareOnZoea": "Angalia {name} kwenye Zoea!",
+  "shopServiceDurationLine": "Muda: {minutes} dakika",
+  "shopBookingFullNameRequiredLabel": "Jina kamili *",
+  "shopBookingPhoneRequiredLabel": "Nambari ya simu *",
+  "shopBookingEmailOptionalLabel": "Barua pepe (ya hiari)",
+  "shopBookingSelectDateRequired": "Chagua tarehe *",
+  "shopBookingSelectTimeRequired": "Chagua saa*",
+  "shopBookingSpecialRequestsLabel": "Maombi maalum (ya hiari)",
+  "shopMenuScreenTitle": "Menyu",
+  "shopMenusEmptyTitle": "Hakuna menyu inayopatikana",
+  "shopMenusEmptySubtitle": "Mkahawa huu bado haujaongeza menyu",
+  "shopOrderPlacedSuccessTitle": "Agizo limefaulu!",
+  "shopOrderPlacedSuccessSubtitle": "Agizo lako limepokelewa na linachakatwa",
+  "shopOrderDetailsSection": "Maelezo ya agizo",
+  "shopOrderNumberLabel": "Nambari ya agizo",
+  "shopOrderMerchantLabel": "Mfanyabiashara",
+  "shopOrderStatusLabel": "Hali",
+  "shopOrderTotalAmountLabel": "Jumla ya kiasi",
+  "shopOrderDateLabel": "Tarehe ya kuagiza",
+  "shopOrderViewMyOrders": "Tazama maagizo yangu",
+  "shopOrderDetailsLoadFailed": "Imeshindwa kupakia maelezo ya agizo",
+  "referralInviteHeroTitle": "Alika marafiki na upate zawadi",
+  "referralInviteHeroSubtitle": "Shiriki msimbo wako wa rufaa na upate pointi marafiki wanapojiunga na Zoea",
+  "referralYourCodeSectionTitle": "Msimbo wako wa rufaa",
+  "referralSignInForCodeBody": "Ingia katika akaunti ili kuona nambari yako ya kuthibitisha na kufuatilia pointi.",
+  "referralErrorLoadCode": "Haikuweza kupakia msimbo wako wa rufaa. Vuta ili kujaribu tena au uingie tena.",
+  "referralShareCodeHint": "Shiriki nambari hii na marafiki zako",
+  "referralCodeCopied": "Msimbo wa rufaa umenakiliwa",
+  "referralShareInviteMessage": "Jiunge nami kwenye Zoea Africa na ugundue maeneo mazuri nchini Rwanda!",
+  "referralHowItWorksTitle": "Jinsi inavyofanya kazi",
+  "referralStepShareTitle": "Shiriki nambari yako ya kuthibitisha",
+  "referralStepShareBody": "Tuma msimbo wako wa rufaa kwa marafiki kupitia mitandao ya kijamii, barua pepe au maandishi",
+  "referralStepFriendTitle": "Rafiki anajiandikisha",
+  "referralStepFriendBody": "Rafiki yako anafungua akaunti yake ya Zoea kwa kutumia msimbo wako",
+  "referralStepEarnTitle": "Pata pointi",
+  "referralStepEarnBody": "Nyote wawili mnapata pointi wanapojiandikisha (imeonyeshwa kama inasubiri hadi waidhinishwe)",
+  "referralRewardsTitle": "Zawadi",
+  "referralRewardForYouTitle": "Kwa ajili yako",
+  "referralRewardForYouSubtitle": "Rafiki anapojiunga",
+  "referralRewardForFriendTitle": "Kwa rafiki",
+  "referralRewardForFriendSubtitle": "Karibu bonasi",
+  "referralRewardsLoadError": "Haikuweza kupakia kiasi cha zawadi.",
+  "referralStatsTitle": "Marejeleo yako",
+  "referralStatTotalReferrals": "Jumla ya rufaa",
+  "referralStatPointsEarned": "Alama ulizopata",
+  "referralStatPending": "Inasubiri",
+  "referralPointsValue": "{points} pointi",
+  "onboardingGenderMale": "Mwanaume",
+  "onboardingGenderFemale": "Mwanamke",
+  "onboardingGenderOther": "Nyingine",
+  "onboardingGenderPreferNot": "Pendelea kutosema",
+  "onboardingVisitLeisureTitle": "Burudani",
+  "onboardingVisitLeisureSubtitle": "Kuchunguza na kufurahia Rwanda",
+  "onboardingVisitBusinessTitle": "Biashara",
+  "onboardingVisitBusinessSubtitle": "Kazi na usafiri wa kitaaluma",
+  "onboardingVisitMiceTitle": "PANYA",
+  "onboardingVisitMiceSubtitle": "Mikutano, motisha, mikutano, maonyesho",
+  "diningBookingLabelDate": "Tarehe",
+  "diningBookingLabelTime": "Wakati",
+  "diningBookingLabelGuests": "Wageni",
+  "diningBookingLabelRestaurant": "Mkahawa",
+  "diningBookingLabelLocation": "Mahali",
+  "diningBookingLabelName": "Jina",
+  "diningBookingLabelPhone": "Simu",
+  "diningBookingLabelEmail": "Barua pepe",
+  "diningBookingDetailLine": "{label}:",
+  "exploreFilterBudgetHintNoLimit": "Hakuna kikomo",
+  "stayBookingSpecialRequestsHint": "Maombi yoyote maalum au mapendeleo...",
+  "stayCouponCodeHint": "Weka msimbo wa kuponi",
+  "stayBookingScreenTitle": "Weka nafasi ya kukaa kwako",
+  "stayBookingSelectDatesHeading": "Chagua tarehe",
+  "stayBookingRoomsHeading": "Vyumba",
+  "stayBookingContinueToPayment": "Endelea kulipa",
+  "stayBookingSelectedRoomsTitle": "Vyumba vilivyochaguliwa",
+  "stayBookingQtyShort": "Kiasi: {quantity}",
+  "stayBookingDemoHotelName": "Hoteli ya Kigali Marriott",
+  "stayBookingDemoHotelAddress": "Kacyiru, Kigali",
+  "notificationsMarkAllRead": "Weka alama kuwa zote zimesomwa",
+  "notificationsEmptyTitle": "Hakuna arifa",
+  "notificationsEmptyBody": "Bado huna arifa zozote",
+  "notificationsLoadFailed": "Imeshindwa kupakia arifa",
+  "notificationsAllMarkedRead": "Arifa zote zimetiwa alama kuwa zimesomwa",
+  "notificationsDefaultTitle": "Taarifa",
+  "notificationsActionViewBooking": "Tazama uhifadhi",
+  "notificationsActionViewEvent": "Tazama tukio",
+  "notificationsActionViewListing": "Tazama uorodheshaji",
+  "notificationsMarkReadFailed": "Imeshindwa kutia arifa alama kuwa imesomwa: {error}",
+  "notificationsMarkAllReadFailed": "Imeshindwa kutia alama zote kuwa zimesomwa: {error}",
+  "notificationsTimeJustNow": "Sasa hivi",
+  "notificationsTimeRecently": "Hivi majuzi",
+  "notificationsOpeningUrl": "Ufunguzi: {url}",
+  "diningBookingConfirmationTitle": "Uthibitishaji wa kuhifadhi",
+  "diningBookingReservationConfirmedTitle": "Uhifadhi umethibitishwa!",
+  "diningBookingReservationConfirmedSubtitle": "Jedwali lako limehifadhiwa kwa mafanikio",
+  "diningBookingNumberLine": "Unahifadhi #{number}",
+  "diningBookingReservationDetailsSection": "Maelezo ya kuhifadhi",
+  "diningBookingNotSpecified": "Haijabainishwa",
+  "appTitle": "Zoea",
+  "shellTabExplore": "Chunguza",
+  "shellTabEvents": "Matukio",
+  "shellTabAskZoea": "Muulize Zoea",
+  "shellTabStay": "Kaa",
+  "shellTabBookings": "Uhifadhi",
+  "shellNoInternetTitle": "Hakuna Muunganisho wa Mtandao",
+  "shellNoInternetSubtitle": "Angalia muunganisho wako wa WiFi au data ya simu ya mkononi",
+  "shellRetry": "Jaribu tena",
+  "shellServiceIssueTitle": "Suala la Huduma",
+  "shellServiceIssueSubtitle": "Tunatatizika kuunganisha kwenye seva zetu",
+  "shellSnackNoInternet": "Hakuna muunganisho wa intaneti. Tafadhali angalia mipangilio ya mtandao wako.",
+  "shellSnackInternetRestored": "Muunganisho wa mtandao umerejeshwa!",
+  "shellSnackServiceUnavailable": "Huduma haipatikani kwa muda. Inajaribu tena...",
+  "shellSnackBackOnline": "Rudi mtandaoni! Muunganisho umerejeshwa.",
+  "authPromptBookingsTitle": "Ingia Katika Akaunti Inahitajika",
+  "authPromptBookingsMessage": "Tafadhali ingia ili kuona uhifadhi na uhifadhi wako.",
+  "authCancel": "Ghairi",
+  "signIn": "Ingia",
+  "loginWelcomeBack": "Karibu tena",
+  "loginSignInToContinue": "Ingia ili kuendelea",
+  "loginTabPhone": "Simu",
+  "loginTabEmail": "Barua pepe",
+  "loginPhoneNumber": "Nambari ya Simu",
+  "loginPassword": "Nenosiri",
+  "loginPasswordHint": "Weka nenosiri lako",
+  "loginForgotPassword": "Umesahau Nenosiri?",
+  "loginSignInButton": "Ingia",
+  "loginOr": "au",
+  "loginContinueWithGoogle": "Endelea na Google",
+  "loginBrowseAsGuest": "Vinjari kama Mgeni",
+  "loginDontHaveAccount": "Je, huna akaunti?",
+  "loginSignUp": "Jisajili",
+  "loginFailed": "Kuingia kumeshindwa. Tafadhali angalia stakabadhi zako.",
+  "loginErrorGeneric": "Hitilafu imetokea. Tafadhali jaribu tena.",
+  "loginGoogleFailed": "Kuingia kwa Google kumeshindwa. Tafadhali jaribu tena.",
+  "loginEmailAddress": "Anwani ya Barua Pepe",
+  "loginEmailHint": "your.email@example.com",
+  "loginValidationEmailRequired": "Tafadhali ingiza barua pepe yako",
+  "loginValidationEmailInvalid": "Tafadhali weka barua pepe halali",
+  "loginValidationPasswordRequired": "Tafadhali weka nenosiri lako",
+  "loginValidationPasswordShort": "Nenosiri lazima liwe na angalau vibambo 6",
+  "profileTitle": "Wasifu",
+  "profileAppInformation": "Taarifa ya programu",
+  "profileSectionAccount": "Akaunti",
+  "profileNotificationsTitle": "Arifa",
+  "profileNotificationsSubtitle": "Dhibiti arifa zako",
+  "profileEditTitle": "Badilisha Wasifu",
+  "profileEditSubtitle": "Sasisha maelezo yako ya kibinafsi",
+  "profilePrivacyTitle": "Faragha na Usalama",
+  "profilePrivacySubtitle": "Nenosiri na mipangilio ya faragha",
+  "profileSectionPreferences": "Mapendeleo",
+  "profileCurrencyTitle": "Sarafu",
+  "profileCountryTitle": "Nchi",
+  "profileCountryRwanda": "Rwanda",
+  "profileLocationTitle": "Mahali",
+  "profileLanguageTitle": "Lugha",
+  "profileSectionAppearance": "Muonekano",
+  "profileThemeLabel": "Mandhari",
+  "profileThemeDark": "Hali ya Giza",
+  "profileThemeLight": "Hali ya Mwanga",
+  "profileThemeSystem": "Chaguomsingi ya Mfumo",
+  "appearanceLight": "Mwanga",
+  "appearanceDark": "Giza",
+  "appearanceSystem": "Mfumo",
+  "profileSectionTravel": "Usafiri na Shughuli",
+  "profileMyBookingsTitle": "Uhifadhi Wangu",
+  "profileMyBookingsSubtitle": "Tazama uhifadhi wako",
+  "profileFavoritesTitle": "Vipendwa",
+  "profileFavoritesSubtitle": "Maeneo na matukio uliyohifadhi",
+  "profileReviewsTitle": "Ukaguzi na Ukadiriaji",
+  "profileReviewsSubtitle": "Maoni na maoni yako",
+  "profileSectionSupport": "Msaada",
+  "profileHelpTitle": "Kituo cha Usaidizi",
+  "profileHelpSubtitle": "Pata usaidizi na usaidizi",
+  "profileAboutMenuTitle": "Kuhusu",
+  "profileAboutSubtitle": "Toleo {version} ({buildNumber})",
+  "profileSignOutTitle": "Ondoka",
+  "profileSignOutSubtitle": "Ondoka kwenye akaunti yako",
+  "profileStatEvents": "Matukio",
+  "profileStatPlaces": "Maeneo",
+  "profileStatReviews": "Ukaguzi",
+  "profileStatAttended": "Walihudhuria",
+  "profileStatVisited": "Alitembelea",
+  "profileStatWritten": "Imeandikwa",
+  "profileVerifiedTraveler": "Msafiri Aliyethibitishwa",
+  "profileSelectLanguage": "Chagua Lugha",
+  "languageOptionEnglish": "Kiingereza",
+  "languageOptionFrench": "Kifaransa",
+  "languageOptionSwahili": "Kiswahili",
+  "languageNativeNameEnglish": "English",
+  "languageNativeNameFrench": "Français",
+  "languageNativeNameSwahili": "Kiswahili",
+  "profileLanguageChanged": "Lugha imebadilishwa hadi {languageName}",
+  "profileLanguageUpdateFailed": "Imeshindwa kusasisha lugha: {error}",
+  "profileCurrencyChanged": "Sarafu imebadilishwa hadi {code}",
+  "profileCurrencyUpdateFailed": "Imeshindwa kusasisha sarafu: {error}",
+  "profileCountryChanged": "Nchi imebadilishwa kuwa {name}. Maudhui yatachujwa ipasavyo.",
+  "profileCountryChangeFailed": "Imeshindwa kubadilisha nchi. Tafadhali jaribu tena.",
+  "profileSelectCountrySheetTitle": "Chagua nchi",
+  "profileCountriesLoadError": "Imeshindwa kupakia nchi. Jaribu tena.",
+  "profileCountriesEmpty": "Hakuna nchi zinazopatikana.",
+  "profileSelectCountryFirstForLocations": "Chagua nchi kwanza ili kupakia maeneo.",
+  "profileLocationsLoadError": "Imeshindwa kupakia maeneo. Jaribu tena.",
+  "profileLocationsEmptyForCountry": "Hakuna maeneo yanayopatikana kwa {countryName}.",
+  "profileCityInCountryDescription": "Jiji katika {countryName}",
+  "profileSelectLocationSheetTitle": "Chagua eneo",
+  "profileLocationChanged": "Eneo limebadilishwa hadi {name}",
+  "profileLocationSaveFailed": "Imeshindwa kuhifadhi eneo: {error}",
+  "profileSelectCity": "Chagua jiji",
+  "signOutDialogTitle": "Ondoka",
+  "signOutDialogMessage": "Je, una uhakika unataka kuondoka?",
+  "signOutDialogConfirm": "Ondoka",
+  "commonViewMore": "Tazama Zaidi",
+  "commonViewAll": "Tazama Zote",
+  "commonRetry": "Jaribu tena",
+  "exploreLoading": "Inapakia...",
+  "exploreDefaultCity": "Kigali",
+  "exploreCurrencyPair": "USD / RWF",
+  "exploreQuickActions": "Vitendo vya Haraka",
+  "exploreUnablePhoneCall": "Imeshindwa kupiga simu",
+  "exploreEmergencyTollFreeTitle": "Nambari za Simu za Dharura",
+  "exploreEmergencyEmergency": "Dharura",
+  "exploreEmergencyTrafficAccidents": "Ajali za Trafiki",
+  "exploreEmergencyAbusePolice": "Dhuluma na Afisa wa Polisi",
+  "exploreEmergencyAntiCorruption": "Kupambana na Rushwa",
+  "exploreEmergencyMaritime": "Matatizo ya Bahari",
+  "exploreEmergencyDrivingLicense": "Maswali ya Leseni ya Kuendesha gari",
+  "exploreEmergencyFireRescue": "Moto na Uokoaji",
+  "exploreCallNumber": "Piga simu: {number}",
+  "exploreActionEmergencySos": "SOS ya dharura",
+  "exploreActionCallTaxi": "Piga Teksi",
+  "exploreActionBookTour": "Ziara ya Kitabu",
+  "exploreActionEsim": "eSim",
+  "exploreActionPharmacy": "Apoteket",
+  "exploreActionRoadsideAssistance": "Msaada wa barabarani",
+  "exploreActionFlightInfo": "Maelezo ya Ndege",
+  "exploreActionIrembo": "Irembo",
+  "exploreActionVisitRwanda": "Tembelea Rwanda",
+  "exploreWebviewTitleEsim": "eSim",
+  "exploreWebviewTitleRwandAir": "RwandaAir",
+  "exploreWebviewTitleIrembo": "Irembo",
+  "exploreWebviewTitleVisitRwanda": "Tembelea Rwanda",
+  "exploreCategories": "Kategoria",
+  "exploreHappening": "Kutokea",
+  "exploreFailedLoadEvents": "Imeshindwa kupakia matukio",
+  "exploreNoEventsToday": "Hakuna matukio leo",
+  "exploreAllCategories": "Kategoria Zote",
+  "exploreNoCategoriesAvailable": "Hakuna kategoria zinazopatikana",
+  "exploreFailedLoadCategories": "Imeshindwa kupakia kategoria",
+  "exploreRecommended": "Imependekezwa",
+  "exploreNoFeaturedListings": "Hakuna matangazo yaliyoangaziwa yanayopatikana",
+  "exploreFailedRecommendations": "Imeshindwa kupakia mapendekezo",
+  "exploreNearMe": "Karibu Nami",
+  "exploreNoListings": "Hakuna matangazo yanayopatikana",
+  "exploreFailedListings": "Imeshindwa kupakia matangazo",
+  "exploreTourPackages": "Vifurushi vya Ziara",
+  "exploreFailedTours": "Imeshindwa kupakia ziara",
+  "exploreNoTours": "Hakuna vifurushi vya utalii vinavyopatikana",
+  "exploreUntitledTour": "Ziara isiyo na jina",
+  "exploreTourBadgeTour": "TOUR",
+  "exploreTourBadgeFeatured": "INAYOAngaziwa",
+  "exploreTourPriceFrom": "Kutoka {price}",
+  "exploreTourPriceUnavailable": "Kutoka kwa RWF ----",
+  "exploreFavoriteSignInTitle": "Ingia ili Uhifadhi Vipendwa",
+  "exploreFavoriteSignInMessage": "Fungua akaunti au ingia ili kuhifadhi maeneo unayopenda na kuyafikia wakati wowote.",
+  "exploreFavoriteSessionTitle": "Ingia ili Uhifadhi Vipendwa",
+  "exploreFavoriteSessionMessage": "Muda wa kipindi chako umeisha. Tafadhali ingia tena ili kuhifadhi vipendwa.",
+  "exploreFavoriteUpdateFailed": "Imeshindwa kusasisha kipendwa: {error}",
+  "exploreGiftReferTitle": "Rejea & Pata",
+  "exploreGiftReferSubtitle": "Alika marafiki na upate zawadi",
+  "exploreGiftItineraryTitle": "Upangaji wa Ratiba",
+  "exploreGiftItinerarySubtitle": "Panga na ushiriki safari yako",
+  "exploreEventTimeToday": "Leo, {time}",
+  "exploreCategoryFallback": "Kategoria",
+  "exploreListingUnknown": "Haijulikani",
+  "exploreListingPlace": "Mahali",
+  "commonCancel": "Ghairi",
+  "commonSearch": "Tafuta",
+  "commonClose": "Funga",
+  "commonContinue": "Endelea",
+  "commonApply": "Omba",
+  "commonClearAll": "Futa Zote",
+  "commonFavoriteAdded": "Imeongezwa kwa vipendwa!",
+  "commonFavoriteRemoved": "Imeondolewa kwenye vipendwa!",
+  "eventsTitle": "Matukio",
+  "eventsTabTrending": "Zinazovuma",
+  "eventsTabNearMe": "Karibu Nami",
+  "eventsTabThisWeek": "Wiki Hii",
+  "eventsTabMice": "PANYA",
+  "eventsErrorLoading": "Hitilafu katika kupakia matukio",
+  "eventsEmptyTitle": "Hakuna matukio yaliyopatikana",
+  "eventsEmptySubtitle": "Angalia tena baadaye kwa matukio mapya",
+  "eventsSearchTitle": "Tafuta Matukio",
+  "eventsSearchHint": "Tafuta matukio...",
+  "eventsTicketPriceFrom": "Kutoka {amount} {currency}",
+  "eventsFilterTitle": "Chuja Matukio",
+  "eventsFilterSearchSection": "Tafuta",
+  "eventsFilterSearchHint": "Tafuta matukio...",
+  "eventsFilterCategory": "Kategoria",
+  "eventsFilterDateRange": "Masafa ya Tarehe",
+  "eventsFilterStartDate": "Tarehe ya Kuanza",
+  "eventsFilterEndDate": "Tarehe ya Mwisho",
+  "eventsFilterPriceRange": "Kiwango cha Bei",
+  "eventsFilterLocation": "Mahali",
+  "eventsFilterLocationHint": "Ingiza eneo...",
+  "eventsFilterOptions": "Chaguo",
+  "eventsFilterFreeEvents": "Matukio ya Bure",
+  "eventsFilterVerifiedOnly": "Imethibitishwa Pekee",
+  "eventsCategoryMusic": "Muziki",
+  "eventsCategorySports": "Michezo na Ustawi",
+  "eventsCategoryFood": "Chakula na Vinywaji",
+  "eventsCategoryArts": "Sanaa na Utamaduni",
+  "eventsCategoryConferences": "Mikutano",
+  "eventsCategoryPerformance": "Utendaji",
+  "eventsPriceFree": "Bure",
+  "eventsPriceUnder5k": "Chini ya 5K RWF",
+  "eventsPrice5kTo15k": "5K - 15K RWF",
+  "eventsPrice15kTo50k": "15K - 50K RWF",
+  "eventsPrice50kTo100k": "50K - 100K RWF",
+  "eventsPrice100kPlus": "100K+ RWF",
+  "eventsCalendarTitle": "Kalenda ya Tukio",
+  "eventsCalendarOnDate": "Matukio mnamo {date}",
+  "eventsFavoriteSignInTitle": "Ingia ili Uhifadhi Vipendwa",
+  "eventsFavoriteSignInMessage": "Fungua akaunti au ingia ili kuhifadhi matukio yako uyapendayo na uyafikie wakati wowote.",
+  "eventsFavoriteSessionMessage": "Muda wa kipindi chako umeisha. Tafadhali ingia tena ili kuhifadhi vipendwa.",
+  "eventsOrganizedBy": "Imeandaliwa na",
+  "eventsAboutTitle": "Kuhusu tukio hili",
+  "eventsSectionCategory": "Kategoria",
+  "eventsLabelAttending": "Kuhudhuria",
+  "eventsLabelCapacity": "Uwezo",
+  "eventsLabelStatus": "Hali",
+  "eventsStatusOngoing": "Inaendelea",
+  "eventsStatusUpcoming": "Ijayo",
+  "eventsTicketsSection": "Tiketi",
+  "eventsTicketSoldOut": "Imeuzwa",
+  "eventsTicketBuy": "Nunua Tikiti",
+  "eventsBottomPerPerson": "kwa kila mtu",
+  "eventsBottomSelectTickets": "Chagua Tiketi",
+  "eventsBottomJoinEvent": "Jiunge na Tukio",
+  "eventsBottomPriceFrom": "Kutoka {amount} {currency}",
+  "eventsSincRedirectTitle": "Inaelekeza kwa Sinc",
+  "eventsSincRedirectMessage": "Unakaribia kuelekezwa kwenye jukwaa letu la mshirika \"Sinc\" ili kununua tikiti za tukio hili. Sinc ni mshirika wetu tunayemwamini anayeshughulikia uhifadhi wa matukio na malipo.",
+  "eventsSincDontShowAgain": "Usionyeshe tena",
+  "eventsShareWithLocation": "Angalia \"{name}\" katika {location} kwenye {date}!",
+  "eventsShareNoLocation": "Angalia \"{name}\" kwenye {date}!",
+  "assistantSubtitle": "Mwongozo wako wa Rwanda",
+  "assistantTooltipNewChat": "Mazungumzo mapya",
+  "assistantTooltipHistory": "Historia",
+  "assistantInputHint": "Niulize chochote kuhusu Rwanda...",
+  "assistantEmptyGreeting": "Habari! Mimi ni Zoea 👋",
+  "assistantEmptyBody": "Mwongozo wako rafiki kwa Rwanda. Niulize kuhusu maeneo ya kutembelea, mikahawa, ziara, au kitu kingine chochote!",
+  "assistantEmptyTryAsking": "Jaribu kuuliza:",
+  "assistantErrorSend": "Imeshindwa kutuma ujumbe: {error}",
+  "assistantHistorySignInTitle": "Ingia ili Kuangalia Historia",
+  "assistantHistorySignInMessage": "Fungua akaunti au ingia ili kutazama historia ya mazungumzo yako na Zoea.",
+  "assistantHistoryTitle": "Mazungumzo ya Hivi Karibuni",
+  "assistantHistoryEmpty": "Hakuna mazungumzo bado",
+  "assistantHistoryLoadFailed": "Imeshindwa kupakia mazungumzo",
+  "assistantErrorLoadConversation": "Imeshindwa kupakia mazungumzo: {error}",
+  "assistantRelativeToday": "Leo",
+  "assistantRelativeYesterday": "Jana",
+  "assistantSuggestion1": "Chakula cha jioni cha Italia huko Kigali",
+  "assistantSuggestion2": "Safari za gorilla au safari",
+  "assistantSuggestion3": "Duka la dawa au ATM karibu",
+  "assistantSuggestion4": "Nionyeshe maeneo maarufu",
+  "assistantSuggestion5": "Tafuta migahawa mjini Kigali",
+  "assistantSuggestion6": "Ziara gani zinapatikana?",
+  "commonDone": "Imekamilika",
+  "commonClear": "Wazi",
+  "commonNotApplicable": "N/A",
+  "bookingsTabAll": "Wote",
+  "bookingsTabUpcoming": "Ijayo",
+  "bookingsTabPast": "Zamani",
+  "bookingsTabCancelled": "Imeghairiwa",
+  "bookingsErrorOrders": "Imeshindwa kupakia maagizo",
+  "bookingsErrorBookings": "Imeshindwa kupakia nafasi zilizohifadhiwa",
+  "bookingsEmptyUpcomingTitle": "Hakuna uhifadhi au maagizo yajayo",
+  "bookingsEmptyUpcomingSubtitle": "Huna uhifadhi au maagizo yoyote yanayokuja",
+  "bookingsEmptyPastTitle": "Hakuna uhifadhi au maagizo ya awali",
+  "bookingsEmptyPastSubtitle": "Historia yako ya kuhifadhi na kuagiza itaonekana hapa",
+  "bookingsEmptyCancelledTitle": "Hakuna uhifadhi au maagizo yaliyoghairiwa",
+  "bookingsEmptyCancelledSubtitle": "Uhifadhi na maagizo yaliyoghairiwa yataonekana hapa",
+  "bookingsEmptyDefaultTitle": "Bado hakuna uhifadhi au maagizo",
+  "bookingsEmptyDefaultSubtitle": "Anza kuchunguza na uweke nafasi au agizo lako la kwanza!",
+  "bookingsExploreNow": "Chunguza sasa",
+  "bookingsSearchTitle": "Tafuta uhifadhi",
+  "bookingsSearchHint": "Tafuta kwa jina, eneo, nafasi uliyohifadhi au nambari ya agizo...",
+  "bookingsLocationNotSpecified": "Mahali hapajabainishwa",
+  "bookingsTourLocation": "Mahali pa ziara",
+  "stayTitle": "Mahali pa kukaa",
+  "staySubtitle": "Tafuta malazi yako kamili",
+  "stayTabAll": "Wote",
+  "stayTabHotels": "Hoteli",
+  "stayTabBnbs": "B&Bs",
+  "stayTabApartments": "Vyumba",
+  "stayTabVillas": "Majumba ya kifahari",
+  "stayAnyDates": "Tarehe zozote",
+  "staySelectCheckout": "Chagua malipo",
+  "stayFailedLoad": "Imeshindwa kupakia makao",
+  "stayEmptyNoMatchesForCategory": "Hakuna {category} iliyopatikana",
+  "stayEmptyAdjust": "Jaribu kurekebisha utafutaji wako au vichujio",
+  "stayFiltersTitle": "Vichujio",
+  "stayPriceRangeRwf": "Aina ya bei (RWF)",
+  "stayPriceMinSample": "Kiwango cha chini: 10,000",
+  "stayPriceMaxSample": "Kiwango cha juu: 200,000",
+  "stayMinimumRating": "Kiwango cha chini cha ukadiriaji",
+  "stayRatingAtLeastPlus": "{min}+",
+  "stayAmenities": "Vistawishi",
+  "stayAmenityWifi": "Wi-Fi",
+  "stayAmenityPool": "Bwawa",
+  "stayAmenitySpa": "Biashara",
+  "stayAmenityGym": "Gym",
+  "stayAmenityRestaurant": "Mkahawa",
+  "stayAmenityParking": "Maegesho",
+  "stayAmenityAirConditioning": "Kiyoyozi",
+  "stayAmenityBusinessCenter": "Kituo cha biashara",
+  "stayAmenityKitchen": "Jikoni",
+  "stayAmenityGarden": "Bustani",
+  "stayAmenityRoomService": "Huduma ya chumba",
+  "stayPropertyType": "Aina ya mali",
+  "stayDistanceFromCenter": "Umbali kutoka katikati mwa jiji",
+  "stayDistanceAny": "Yoyote",
+  "stayDistanceUnder5km": "Chini ya kilomita 5",
+  "stayDistance5to10km": "5-10 km",
+  "stayDistance10to20km": "10-20 km",
+  "stayDistanceOver20km": "Zaidi ya kilomita 20",
+  "stayApplyFilters": "Weka vichujio",
+  "stayMapComingSoon": "Mwonekano wa ramani unakuja hivi karibuni!",
+  "staySearchOptionsTitle": "Chaguzi za utafutaji",
+  "stayWhereLabel": "Wapi",
+  "stayCheckInOutLabel": "Ingia na utoke",
+  "stayGuestsLabel": "Wageni",
+  "staySearchAccommodations": "Tafuta malazi",
+  "staySelectLocationTitle": "Chagua eneo",
+  "staySelectDatesTimesTitle": "Chagua tarehe na saa",
+  "stayCheckIn": "Ingia",
+  "stayCheckOut": "Ondoka",
+  "staySelectDate": "Chagua tarehe",
+  "staySelectTime": "Chagua wakati",
+  "stayNumberOfGuests": "Idadi ya wageni",
+  "stayGuestsSheetGuests": "Wageni",
+  "staySortBy": "Panga kwa",
+  "staySortRecommended": "Imependekezwa",
+  "staySortPriceLowHigh": "Bei: chini hadi juu",
+  "staySortPriceHighLow": "Bei: juu hadi chini",
+  "staySortRatingHighLow": "Ukadiriaji: juu hadi chini",
+  "staySortRatingLowHigh": "Ukadiriaji: chini hadi juu",
+  "diningBookingRestaurantInfoSection": "Habari za mgahawa",
+  "diningBookingGuestInfoSection": "Taarifa za wageni",
+  "diningBookingSpecialRequestsSection": "Maombi maalum",
+  "diningBookingImportantInfoTitle": "Taarifa muhimu",
+  "diningBookingImportantInfoBody": "• Tafadhali fika dakika 5–10 kabla ya muda wako wa kuweka nafasi\n• Ili kughairi au kubadilisha nafasi uliyoweka, wasiliana na mkahawa moja kwa moja\n• Kuchelewa kufika kunaweza kusababisha kupoteza meza\n• Kanuni ya mavazi inaweza kutumika—angalia na mkahawa",
+  "diningBookingBrowseMore": "Vinjari zaidi",
+  "diningBookingViewMyBookings": "Tazama uhifadhi wangu",
+  "listingScreenDefaultTitle": "Orodha",
+  "tourDetailLoadError": "Imeshindwa kupakia maelezo ya ziara",
+  "tourDetailPricePerPersonLabel": "Bei kwa mtu mmoja",
+  "tourDetailGroupSizeLabel": "Kundi: {min}-{max} watu",
+  "tourDetailAboutTitle": "Kuhusu ziara hii",
+  "tourDetailIncludedTitle": "Kinachojumuishwa",
+  "tourDetailNotIncludedTitle": "Hakijumuishwi",
+  "tourDetailRequirementsTitle": "Mahitaji",
+  "tourDetailLanguagesTitle": "Lugha zinazopatikana",
+  "listingDetailLoadFailed": "Imeshindwa kupakia uorodheshaji",
+  "bookingConfirmationHeaderTitle": "Uhifadhi umethibitishwa!",
+  "bookingConfirmationHeaderSubtitle": "Uhifadhi wako umethibitishwa",
+  "bookingConfirmationSectionBookingInfo": "Maelezo ya kuhifadhi",
+  "bookingConfirmationLabelBookingNumber": "Nambari ya kuhifadhi",
+  "bookingConfirmationLabelType": "Aina",
+  "bookingConfirmationSectionDetails": "Maelezo ya kuhifadhi",
+  "bookingConfirmationLabelPartySize": "Ukubwa wa chama",
+  "bookingConfirmationLabelSpecialRequests": "Maombi maalum",
+  "bookingConfirmationTourDetailsPlaceholder": "Maelezo ya uthibitishaji wa ziara yataonekana hapa pindi tu yatakapopatikana.",
+  "bookingConfirmationSectionPriceSummary": "Muhtasari wa bei",
+  "bookingConfirmationLabelTaxesFees": "Ushuru na ada",
+  "bookingConfirmationLabelDiscount": "Punguzo",
+  "bookingConfirmationLoadFailed": "Imeshindwa kupakia nafasi",
+  "webviewPageLoadFailed": "Imeshindwa kupakia ukurasa",
+  "webviewInvalidUrlLine": "URL batili: {url}",
+  "webviewLoadTimeoutBody": "Ukurasa huu unachukua muda mrefu sana kupakia. Tafadhali angalia muunganisho wako wa intaneti.",
+  "webviewTooltipReload": "Pakia upya",
+  "webviewTooltipForward": "Nenda mbele",
+  "listingDetailReviewSignInTitle": "Ingia ili kuandika ukaguzi",
+  "listingDetailReviewSignInMessage": "Fungua akaunti au ingia ili kushiriki matumizi yako na kuwasaidia wasafiri wengine.",
+  "itineraryDetailLoadFailed": "Imeshindwa kupakia ratiba",
+  "myBookingsCancelConfirmBody": "Je, una uhakika ungependa kughairi uhifadhi wako wa \"{name}\"? Kitendo hiki hakiwezi kutenduliwa.",
+  "myBookingsBookAgainPrompt": "Je, ungependa kuweka nafasi ya \"{name}\" tena?",
+  "diningFilterSheetTitle": "Chuja chakula",
+  "diningSortSheetTitle": "Panga dining",
+  "listingFeaturedOnlyTitle": "Iliyoangaziwa pekee",
+  "listingFeaturedOnlySubtitle": "Onyesha orodha zilizoangaziwa pekee",
+  "listingSortOldestFirst": "Mzee kwanza",
+  "diningFlowBookTableTitle": "Jedwali la kitabu",
+  "diningFlowReservationDetailsSection": "Maelezo ya kuhifadhi",
+  "diningFlowSelectDatePlaceholder": "Chagua tarehe",
+  "diningFlowAvailableTimes": "Nyakati zinazopatikana",
+  "diningFlowNumberOfGuests": "Idadi ya wageni",
+  "diningFlowGuestInformation": "Taarifa za wageni",
+  "diningFlowFullNameHint": "John Doe",
+  "diningFlowPhoneHint": "+250 796 889 900",
+  "diningFlowSpecialRequestsTitle": "Maombi maalum",
+  "diningFlowSpecialRequestsHint": "Mahitaji yoyote maalum ya chakula, upendeleo wa kuketi, nk.",
+  "diningFlowCouponCodeTitle": "Msimbo wa kuponi",
+  "diningFlowCouponAppliedTitle": "Kuponi imetumika!",
+  "diningFlowCouponSavedBody": "Umehifadhi {amount}",
+  "diningBookingTimeNotSelected": "Haijachaguliwa",
+  "diningFlowConfirmSheetTitle": "Thibitisha kuhifadhi",
+  "diningFlowConfirmBookingCta": "Thibitisha kuhifadhi",
+  "stayFavoriteSignInMessage": "Fungua akaunti au ingia ili kuhifadhi makao yako unayopenda na uyafikie wakati wowote.",
+  "tourFavoriteSignInMessage": "Fungua akaunti au ingia ili kuhifadhi ziara unazozipenda na uzifikie wakati wowote.",
+  "diningReserveSignInTitle": "Ingia ili kuhifadhi",
+  "diningReserveSignInMessage": "Fungua akaunti au uingie ili kuhifadhi jedwali na udhibiti uhifadhi wako wa chakula.",
+  "stayBookSignInTitle": "Ingia ili uweke nafasi",
+  "stayBookSignInMessage": "Fungua akaunti au ingia ili ukamilishe kuhifadhi na udhibiti uhifadhi wako.",
+  "tourBookSignInTitle": "Ingia ili uweke nafasi",
+  "tourBookSignInMessage": "Fungua akaunti au uingie katika akaunti ili ukamilishe kuhifadhi nafasi ya ziara yako na udhibiti uhifadhi wako.",
+  "commonFavoriteUpdateFailed": "Imeshindwa kusasisha kipendwa: {detail}",
+  "listingShareOnZoeaInLocation": "Angalia {name} katika {location} kwenye Zoea!",
+  "listingDetailCouldNotOpenWebsite": "Haikuweza kufungua tovuti: {website}",
+  "listingDetailCouldNotCallPhone": "Haikuweza kupiga simu kwa {phone}",
+  "searchScreenGlobalHint": "Tafuta matukio, maeneo, matukio...",
+  "searchScreenNoRecentSearches": "Hakuna utafutaji wa hivi karibuni",
+  "searchScreenSignInForHistory": "Ingia ili kuona historia ya utafutaji",
+  "searchScreenFailedLoadRecent": "Imeshindwa kupakia utafutaji wa hivi karibuni",
+  "searchScreenNoPopularSearches": "Hakuna utafutaji maarufu unaopatikana",
+  "searchScreenFailedLoadPopular": "Imeshindwa kupakia utafutaji maarufu",
+  "searchScreenTryDifferentKeywords": "Jaribu kuandika maneno muhimu tofauti",
+  "searchScreenSearchFailed": "Utafutaji umeshindwa",
+  "searchScreenHistoryCleared": "Historia ya utafutaji imefutwa",
+  "searchScreenHistoryClearFailed": "Imeshindwa kufuta historia ya utafutaji: {error}",
+  "searchScreenPopularSearchesSectionTitle": "Utafutaji maarufu",
+  "searchScreenRecentSearchesSectionTitle": "Utafutaji wa hivi karibuni",
+  "searchClearHistoryTitle": "Futa historia ya utafutaji",
+  "searchClearHistoryBody": "Je, una uhakika unataka kufuta historia yako yote ya utafutaji?",
+  "listingDetailWriteReviewTitle": "Andika ukaguzi",
+  "listingSubmitReviewButton": "Wasilisha ukaguzi",
+  "listingReviewComposerHint": "Shiriki mawazo yako kuhusu eneo hili...",
+  "exploreFilterBudgetHintMin": "0",
+  "tourBookingPickupHint": "Weka eneo la kuchukua au uache wazi kwa chaguomsingi",
+  "tourBookingSpecialRequirementsHint": "Mahitaji yoyote maalum, upendeleo wa chakula, nk.",
+  "itineraryCreateNameHint": "k.m., Mchezo Wangu wa Rwanda",
+  "itineraryCreateDescriptionHint": "Tuambie kuhusu safari yako...",
+  "itineraryCreateStartLocationHint": "k.m., Kigali, Rwanda",
+  "itineraryStopTitleHint": "k.m., Mapumziko ya Kahawa",
+  "itineraryStopDurationHint": "k.m., 60",
+  "itinerariesFabCreateTooltip": "Unda ratiba",
+  "itineraryCreateDeleteTooltip": "Futa ratiba",
+  "itineraryDetailEditTooltip": "Hariri",
+  "itineraryDetailShareTooltip": "Shiriki",
+  "udcTravelPartySolo": "Solo",
+  "udcTravelPartyCouple": "Wanandoa",
+  "udcTravelPartyFamily": "Familia",
+  "udcTravelPartyGroup": "Kikundi",
+  "udcFieldAgeRangeTitle": "Kiwango cha umri",
+  "udcFieldAgeRangeSubtitle": "Tusaidie kubinafsisha maudhui kwa ajili yako",
+  "udcFieldGenderTitle": "Jinsia",
+  "udcFieldGenderSubtitle": "Hiari - husaidia kuweka mapendeleo",
+  "udcFieldLengthOfStayTitle": "Urefu wa kukaa",
+  "udcFieldLengthOfStaySubtitle": "Unakaa Rwanda kwa muda gani?",
+  "udcFieldInterestsTitle": "Maslahi",
+  "udcFieldInterestsSubtitle": "Chagua zote zinazotumika",
+  "udcFieldTravelPartyTitle": "Tafrija ya kusafiri",
+  "udcFieldTravelPartySubtitle": "Unasafiri na nani?",
+  "onboardingAudienceResidentTitle": "Mkazi",
+  "onboardingAudienceResidentSubtitle": "Ninaishi Rwanda",
+  "onboardingAudienceVisitorTitle": "Mgeni",
+  "onboardingAudienceVisitorSubtitle": "Ninatembelea Rwanda",
+  "commonProfileUpdatedSuccess": "Wasifu umesasishwa!",
+  "commonSaveFailedTryAgain": "Imeshindwa kuhifadhi. Tafadhali jaribu tena.",
+  "commonFailedSaveDataTryAgain": "Imeshindwa kuhifadhi data. Tafadhali jaribu tena.",
+  "progressivePromptThanks": "Asante kwa kutusaidia kubinafsisha matumizi yako!",
+  "profileEditPasswordRequiredForEmail": "Nenosiri linahitajika ili kusasisha anwani ya barua pepe.",
+  "profileEditPleaseEnterPassword": "Tafadhali weka nenosiri lako",
+  "reviewsWrittenSearchHint": "Tafuta maoni...",
+  "aboutAppInfoSectionTitle": "Taarifa ya programu",
+  "aboutAppVersionLabel": "Toleo la programu",
+  "aboutBuildNumberLabel": "Jenga nambari",
+  "aboutLastUpdatedLabel": "Ilisasishwa mwisho",
+  "aboutPlatformLabel": "Jukwaa",
+  "aboutLanguageLabel": "Lugha",
+  "aboutLegalSectionTitle": "Kisheria",
+  "aboutPrivacyPolicyTitle": "Sera ya Faragha",
+  "aboutPrivacyPolicySubtitle": "Jinsi tunavyolinda data yako",
+  "aboutTermsOfServiceTitle": "Masharti ya Huduma",
+  "aboutTermsOfServiceSubtitle": "Sheria na masharti",
+  "aboutCopyrightTitle": "Hakimiliki",
+  "aboutCopyrightCardSubtitle": "© {year} Zoea Africa. Haki zote zimehifadhiwa.",
+  "aboutConnectSectionTitle": "Ungana nasi",
+  "aboutContactEmailTitle": "Barua pepe",
+  "aboutContactPhoneTitle": "Simu",
+  "aboutContactWebsiteTitle": "Tovuti",
+  "aboutContactPhoneDisplay": "+250 796 889 900",
+  "aboutContactWebsiteDisplay": "www.zoea.africa",
+  "aboutCloseButton": "Funga",
+  "aboutVersionLine": "Toleo {version}",
+  "aboutVersionLoading": "Toleo…",
+  "aboutBrandTagline": "Gundua uzuri wa Rwanda",
+  "aboutWebsiteWebviewTitle": "Zoea Afrika",
+  "stayDetailLoadFailed": "Imeshindwa kupakia malazi",
+  "stayDetailTabAmenities": "Vistawishi",
+  "stayDetailAboutTitle": "Kuhusu mahali hapa",
+  "stayDetailCheckInOutSection": "Ingia na utoke",
+  "stayDetailCheckOutLabel": "Ondoka",
+  "stayDetailBookingPoliciesSection": "Sera za kuhifadhi",
+  "stayDetailAvailableRooms": "Vyumba vinavyopatikana",
+  "stayDetailNoRoomTypes": "Hakuna aina za vyumba zinazopatikana",
+  "stayDetailAmenitiesSection": "Vistawishi",
+  "stayDetailNoAmenitiesListed": "Hakuna huduma zilizoorodheshwa",
+  "listingAmenitiesInfoSoon": "Taarifa za huduma zitapatikana hivi karibuni",
+  "stayDetailNoReviewsYet": "Bado hakuna hakiki",
+  "stayDetailBeFirstToReview": "Kuwa wa kwanza kukagua eneo hili!",
+  "listingReviewsTabLoadFailed": "Imeshindwa kupakia ukaguzi",
+  "listingProductsTabLoadFailed": "Imeshindwa kupakia bidhaa",
+  "listingServicesTabLoadFailed": "Imeshindwa kupakia huduma",
+  "listingMenusCountAvailable": "Menyu {count} zinapatikana",
+  "stayDetailReviewsLoadFailed": "Imeshindwa kupakia hakiki: {error}",
+  "stayPolicyCancellationTitle": "Kughairi",
+  "stayPolicyCancellationBody": "Kughairiwa bila malipo hadi saa 24 kabla ya kuingia.",
+  "stayPolicyRefundTitle": "Sera ya kurejesha pesa",
+  "stayPolicyRefundBody": "Urejeshaji kamili wa pesa ukighairiwa saa 24+ kabla ya kuingia.",
+  "stayPolicyPetTitle": "Sera ya kipenzi",
+  "stayPolicyPetBody": "Wanyama kipenzi wanaoruhusiwa na ada ya ziada ya RWF 15,000 kwa usiku.",
+  "stayPolicySmokingTitle": "Sera ya kuvuta sigara",
+  "stayPolicySmokingBody": "Mali isiyo ya kuvuta sigara. Uvutaji sigara unaruhusiwa katika maeneo maalum tu.",
+  "stayPolicyChildrenTitle": "Sera ya watoto",
+  "stayPolicyChildrenBody": "Watoto wa rika zote wanakaribishwa. Vitanda vya ziada vinapatikana kwa ombi.",
+  "stayPolicyPaymentTitle": "Sera ya malipo",
+  "stayPolicyPaymentBody": "Kadi ya mkopo inahitajika kwa kuhifadhi. Malipo yanadaiwa wakati wa kuingia.",
+  "itineraryCreateScreenTitle": "Unda ratiba",
+  "itineraryEditScreenTitle": "Hariri ratiba",
+  "itineraryFieldTitleLabel": "Kichwa",
+  "itineraryFieldDescriptionOptionalLabel": "Maelezo (ya hiari)",
+  "itineraryFieldLocationOptionalLabel": "Mahali (si lazima)",
+  "itineraryFieldStartDateLabel": "Tarehe ya kuanza",
+  "itineraryFieldEndDateLabel": "Tarehe ya mwisho",
+  "itineraryFieldNameLabel": "Jina",
+  "itineraryFieldTimeLabel": "Wakati",
+  "itineraryFieldDurationOptionalLabel": "Muda (dakika, hiari)",
+  "itineraryValidationTitleRequired": "Tafadhali weka kichwa",
+  "profileEnterPasswordDialogTitle": "Weka nenosiri",
+  "profileEnterPasswordDialogBody": "Tafadhali weka nenosiri lako la sasa ili kusasisha barua pepe yako.",
+  "profileUpdateFailedGeneric": "Imeshindwa kusasisha wasifu. Tafadhali jaribu tena.",
+  "stayDetailTabOverview": "Muhtasari",
+  "stayDetailTabRooms": "Vyumba",
+  "stayDetailTabReviews": "Ukaguzi",
+  "stayDetailTabPhotos": "Picha",
+  "onboardingUserTypeHeadline": "Je, wewe ni mkazi au mgeni?",
+  "onboardingUserTypeSubtitle": "Hii hutusaidia kukuonyesha maudhui muhimu",
+  "commonComplete": "Kamilisha",
+  "commonSave": "Hifadhi",
+  "phoneValidationRequired": "Tafadhali weka nambari yako ya simu",
+  "phoneValidationInternationalInvalid": "Tafadhali weka nambari sahihi ya simu",
+  "phoneValidationRwandanInvalid": "Tafadhali weka nambari sahihi ya simu ya Rwanda (07xxxxxxxx au 08xxxxxxxx)",
+  "exploreFilterLabelMinPrice": "Bei ndogo",
+  "exploreFilterLabelMaxPrice": "Bei ya juu",
+  "profileEditInterestsTitle": "Maslahi",
+  "profileEditInterestsSubtitle": "Chagua zote zinazotumika",
+  "profileEditUnsavedChangesBody": "Una mabadiliko ambayo hayajahifadhiwa. Je, una uhakika unataka kuondoka?",
+  "profileEditDiscard": "Tupa",
+  "profileEditPersonalInfoSectionTitle": "Taarifa za kibinafsi",
+  "profileEditHintFullName": "Ingiza jina lako kamili",
+  "profileEditValidationFullNameRequired": "Tafadhali ingiza jina lako kamili",
+  "profileEditHintEmail": "Weka barua pepe yako",
+  "profileEditValidationEmailRequired": "Tafadhali ingiza barua pepe yako",
+  "profileEditHintPhone": "Weka nambari yako ya simu",
+  "profileEditValidationPhoneRequired": "Tafadhali weka nambari yako ya simu",
+  "profileEditTabBasicInfo": "Maelezo ya msingi",
+  "profileEditTabPreferences": "Mapendeleo",
+  "profileVisitedPlacesTitle": "Maeneo yaliyotembelewa",
+  "profileVisitedTabAllPlaces": "Maeneo yote",
+  "profileVisitedTabThisYear": "Mwaka huu",
+  "profileVisitedTabListingsOnly": "Orodha pekee",
+  "profileVisitedStatusViewed": "Imetazamwa",
+  "profileVisitedDateLine": "Imetazamwa kwenye {date}",
+  "profileVisitedEmptyTitle": "Bado hakuna maeneo yaliyotembelewa",
+  "profileVisitedEmptySubtitle": "Anza kuchunguza Rwanda ili kuunda mkusanyiko wako wa maeneo uliyotembelea.",
+  "profileVisitedExploreButton": "Chunguza maeneo",
+  "profileUnknownLocation": "Mahali pasipojulikana",
+  "profileEventsAttendedTitle": "Matukio yalihudhuria",
+  "eventsAttendedTabAll": "Matukio yote",
+  "eventsAttendedTabThisYear": "Mwaka huu",
+  "eventsAttendedTabFavorites": "Vipendwa",
+  "eventsAttendedEmptyTitle": "Bado hakuna matukio yaliyohudhuriwa",
+  "eventsAttendedEmptySubtitle": "Anza kuchunguza matukio ili kuunda historia yako ya mahudhurio.",
+  "eventsAttendedExploreButton": "Chunguza matukio",
+  "eventsAttendedBadge": "Walihudhuria",
+  "exploreHomeCategoryEvents": "Matukio",
+  "exploreHomeCategoryDining": "Kula",
+  "exploreHomeCategoryExperiences": "Uzoefu",
+  "exploreHomeCategoryNightlife": "Maisha ya usiku",
+  "exploreHomeCategoryAccommodation": "Malazi",
+  "exploreHomeCategoryShopping": "Ununuzi",
+  "exploreHomeCategoryAttractions": "Vivutio",
+  "exploreHomeCategorySports": "Michezo",
+  "exploreHomeCategoryTransport": "Usafiri",
+  "exploreHomeCategoryServices": "Huduma",
+  "exploreHomeCategoryKids": "Watoto",
+  "exploreHomeCategoryRealEstate": "Mali isiyohamishika",
+  "exploreHomeCategoryHiking": "Kutembea kwa miguu",
+  "exploreHomeCategoryNationalParks": "Hifadhi za Taifa",
+  "exploreHomeCategoryMuseums": "Makumbusho",
+  "placeDetailOpeningHoursTitle": "Saa za ufunguzi",
+  "placeDetailAboutTitle": "Kuhusu",
+  "placeDetailFeaturesTitle": "Vipengele",
+  "placeDetailNoPhotosExtended": "Hakuna picha zinazopatikana za mahali hapa",
+  "placeDetailNoMenuForPlace": "Hakuna menyu inayopatikana ya mahali hapa",
+  "listingNoPhotosShort": "Hakuna picha zinazopatikana",
+  "listingHoursClosed": "Imefungwa",
+  "weekdayMonday": "Jumatatu",
+  "weekdayTuesday": "Jumanne",
+  "weekdayWednesday": "Jumatano",
+  "weekdayThursday": "Alhamisi",
+  "weekdayFriday": "Ijumaa",
+  "weekdaySaturday": "Jumamosi",
+  "weekdaySunday": "Jumapili",
+  "listingReviewExperienceTitle": "Uzoefu wako ulikuwaje?",
+  "listingReviewExperienceSubtitle": "Tuambie kuhusu uzoefu wako",
+  "listingAnonymousUser": "Asiyejulikana",
+  "stayDefaultRoomLabel": "Chumba",
+  "stayDefaultAmenityLabel": "Ustawi",
+  "contentTypeEventLabel": "Tukio",
+  "contentTypePlaceLabel": "Mahali",
+  "contentTypeTourLabel": "Ziara",
+  "itineraryFallbackItemPlace": "Mahali",
+  "itineraryFallbackItemEvent": "Tukio",
+  "itineraryFallbackItemTour": "Ziara",
+  "itineraryFallbackItemCustom": "Kipengee maalum",
+  "onboardingCountryHeadline": "Unatoka wapi?",
+  "onboardingCountrySubtitle": "Tusaidie kubinafsisha matumizi yako",
+  "onboardingVisitRwandaHeadline": "Nini kinakuleta Rwanda?",
+  "onboardingVisitRwandaSubtitle": "Chagua kusudi lako kuu",
+  "onboardingLanguageHeadline": "Je, unapendelea lugha gani?",
+  "onboardingLanguageSubtitle": "Unaweza kubadilisha hii wakati wowote katika mipangilio",
+  "onboardingConsentHeadline": "Tusaidie kuboresha",
+  "onboardingConsentSubtitle": "Ruhusu uchanganuzi utusaidie kubinafsisha matumizi yako",
+  "onboardingConsentCheckboxLabel": "Ninakubali kushiriki data ya uchanganuzi ili kuboresha mapendekezo",
+  "onboardingSettingsFootnote": "Unaweza kubadilisha hii wakati wowote katika mipangilio",
+  "progressivePromptTitleWithDuration": "Tusaidie kubinafsisha Zoea (sekunde 10)",
+  "progressivePromptTitleDefault": "Tusaidie kubinafsisha Zoea",
+  "progressiveQuestionAgeRange": "Je, una umri gani?",
+  "progressiveQuestionGender": "Jinsia yako ni nini?",
+  "progressiveQuestionLengthOfStay": "Unakaa muda gani?",
+  "progressiveQuestionInterests": "Je, unavutiwa na nini?",
+  "progressiveQuestionTravelParty": "Unasafiri na nani?",
+  "profileSaveChangesButton": "Hifadhi mabadiliko",
+  "profileCompletionPrivacyNote": "Data yako inatumika tu kubinafsisha matumizi yako. Unaweza kuisasisha au kuiondoa wakati wowote.",
+  "profileCompletionSectionTitle": "Kukamilika kwa wasifu",
+  "profileCompletionSubtitleRecommendations": "Kamilisha wasifu wako ili kupata mapendekezo bora",
+  "tourBookingScreenTitle": "Ziara ya kitabu",
+  "tourBookingPerPersonSuffix": "/mtu",
+  "tourBookingSelectTourTitle": "Chagua ziara",
+  "tourBookingSelectDateTimeTitle": "Chagua tarehe na saa",
+  "tourBookingNoSchedules": "Hakuna ratiba zinazopatikana",
+  "tourBookingScheduleSubtitleWithTime": "Saa: {time} · Matangazo: {spots} yanapatikana",
+  "tourBookingScheduleSubtitleSpotsOnly": "Matangazo: {spots} yanapatikana",
+  "tourBookingNumberOfGuestsTitle": "Idadi ya wageni",
+  "tourBookingGuestAdults": "Watu wazima",
+  "tourBookingGuestChildren": "Watoto",
+  "tourBookingGuestInfants": "Watoto wachanga",
+  "tourBookingContactSectionTitle": "Maelezo ya mawasiliano",
+  "tourBookingPickupLocationOptionalTitle": "Mahali pa kuchukua (si lazima)",
+  "tourBookingSpecialRequestsTitle": "Maombi maalum",
+  "tourBookingPriceBreakdownTitle": "Mchanganuo wa bei",
+  "tourBookingPriceLineAdults": "Watu wazima ({count}×)",
+  "tourBookingPriceLineChildren": "Watoto ({count}×)",
+  "tourBookingPriceLineInfants": "Watoto wachanga ({count}×)",
+  "tourBookingPriceLineFree": "Bure",
+  "tourBookingPriceLineTotal": "Jumla",
+  "tourBookingLocationDefaultLabel": "Mahali",
+  "experiencesTabTours": "Ziara",
+  "experiencesTabAdventures": "Vituko",
+  "experiencesTabCultural": "Utamaduni",
+  "experiencesTabOperators": "Waendeshaji",
+  "experiencesFailedLoad": "Imeshindwa kupakia matukio",
+  "experiencesOperatorsFailedLoad": "Imeshindwa kupakia waendeshaji",
+  "experiencesEmptyAll": "Hakuna matumizi yaliyopatikana",
+  "experiencesEmptyTours": "Hakuna ziara zilizopatikana",
+  "experiencesEmptyAdventures": "Hakuna matukio yaliyopatikana",
+  "experiencesEmptyCultural": "Hakuna uzoefu wa kitamaduni uliopatikana",
+  "experiencesEmptyOperators": "Hakuna waendeshaji waliopatikana",
+  "experiencesEmptySubtitle": "Angalia tena baadaye kwa matumizi mapya",
+  "experiencesFilterBy": "Chuja kwa",
+  "experiencesSortRating": "Ukadiriaji",
+  "experiencesSortPrice": "Bei",
+  "tourListingFallbackName": "Ziara",
+  "tourOperatorUnknown": "Opereta asiyejulikana",
+  "tourCardStartingFromLabel": "Kuanzia",
+  "tourCardStartingFromPrice": "Kuanzia {price}",
+  "tourPackagesLoadFailed": "Imeshindwa kupakia vifurushi vya ziara",
+  "tourPackagesEmpty": "Hakuna vifurushi vya utalii vinavyopatikana",
+  "tourPackagesBadgePackage": "KIFURUSHI CHA TOUR",
+  "tourPackagesBadgeFeatured": "INAYOAngaziwa",
+  "tourPackagesPriceOnRequest": "Bei kwa ombi",
+  "tourPackagesPriceFrom": "Kutoka {price}",
+  "tourPackagesUntitled": "Ziara isiyo na jina",
+  "tourPackagesScreenTitle": "Vifurushi vya utalii",
+  "reviewsViewPlaceAction": "Tazama mahali",
+  "placeDetailMapViewAction": "Tazama",
+  "itineraryFormButtonCreate": "Unda ratiba",
+  "itineraryFormButtonUpdate": "Sasisha ratiba",
+  "itineraryUpdatedSuccess": "Ratiba imesasishwa",
+  "itineraryCreatedSuccess": "Ratiba imeundwa",
+  "itineraryAddItemsHint": "Ongeza maeneo, matukio au ziara kwenye ratiba yako",
+  "itinerarySharedBadge": "Imeshirikiwa",
+  "shopCartUnknownItem": "Kipengee kisichojulikana",
+  "listingDetailHoursClosed": "Imefungwa",
+  "diningCategoryFallbackName": "Kula",
+  "bookingFallbackRestaurantName": "Mkahawa",
+  "aboutLegalCopyrightBody": "Notisi ya Hakimiliki\n\n© {year} Zoea Africa. Haki zote zimehifadhiwa.\n\nProgramu hii na yaliyomo inalindwa na hakimiliki na sheria zingine za uvumbuzi.\n\nHuwezi:\n- Nakili, rekebisha, au usambaze programu bila ruhusa\n- Badilisha mhandisi au jaribu kutoa msimbo wa chanzo\n- Tumia programu kwa madhumuni ya kibiashara bila idhini\n\nKwa maswali ya leseni, wasiliana nasi kwa legal@zoea.africa.",
+  "aboutLegalPrivacyBody": "Sera ya Faragha\n\nIlisasishwa mwisho: Desemba 2024\n\n1. Taarifa Tunazokusanya\nTunakusanya maelezo unayotupa moja kwa moja, kama vile unapofungua akaunti, kuweka nafasi, au kuwasiliana nasi kwa usaidizi.\n\n2. Jinsi Tunavyotumia Taarifa Zako\nTunatumia maelezo tunayokusanya ili kutoa, kudumisha, na kuboresha huduma zetu, kuchakata miamala na kuwasiliana nawe.\n\n3. Kupeana Taarifa\nHatuuzi, kufanya biashara, au kuhamisha taarifa zako za kibinafsi kwa wahusika wengine bila idhini yako.\n\n4. Usalama wa Data\nTunatekeleza hatua zinazofaa za usalama ili kulinda taarifa zako za kibinafsi dhidi ya ufikiaji, mabadiliko, ufichuzi, au uharibifu usioidhinishwa.\n\n5. Haki zako\nUna haki ya kufikia, kusasisha, au kufuta maelezo yako ya kibinafsi. Unaweza kufanya hivyo kupitia mipangilio ya akaunti yako au kwa kuwasiliana nasi.\n\n6. Wasiliana Nasi\nIkiwa una maswali yoyote kuhusu Sera hii ya Faragha, tafadhali wasiliana nasi kwa privacy@zoea.africa.",
+  "aboutLegalTermsBody": "Masharti ya Huduma\n\nIlisasishwa mwisho: Desemba 2024\n\n1. Kukubali Masharti\nKwa kutumia programu yetu, unakubali kuwa chini ya Sheria na Masharti haya.\n\n2. Matumizi ya Programu\nUnaweza kutumia programu yetu kwa madhumuni halali pekee. Unakubali kutotumia programu kwa njia yoyote ambayo inaweza kuharibu, kuzima au kudhoofisha programu.\n\n3. Akaunti za Mtumiaji\nUnawajibu wa kudumisha usiri wa akaunti yako na nenosiri lako.\n\n4. Bookings na Malipo\nUhifadhi wote unategemea kupatikana. Masharti ya malipo ni kama yalivyobainishwa wakati wa kuhifadhi.\n\n5. Sera ya Kughairi\nSera za kughairi hutofautiana kulingana na tukio na hubainishwa wakati wa kuhifadhi.\n\n6. Ukomo wa Dhima\nKwa kiwango cha juu kinachoruhusiwa na sheria, hatutawajibika kwa uharibifu wowote usio wa moja kwa moja, wa bahati mbaya au wa matokeo.\n\n7. Mabadiliko ya Masharti\nTunahifadhi haki ya kurekebisha masharti haya wakati wowote. Tutaarifu watumiaji kuhusu mabadiliko yoyote ya nyenzo.\n\n8. Maelezo ya Mawasiliano\nKwa maswali kuhusu Sheria na Masharti haya, wasiliana nasi kwa legal@zoea.africa."
+}

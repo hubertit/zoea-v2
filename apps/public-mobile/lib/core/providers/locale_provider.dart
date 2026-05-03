@@ -16,7 +16,7 @@ class LocaleNotifier extends StateNotifier<Locale> {
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
     final code = prefs.getString(_prefsKey);
-    if (code == 'fr' || code == 'en') {
+    if (code == 'fr' || code == 'en' || code == 'sw') {
       state = Locale(code!);
       return;
     }
@@ -30,6 +30,7 @@ class LocaleNotifier extends StateNotifier<Locale> {
   static Locale localeFromLanguageCode(String? code) {
     final normalized = (code ?? '').toLowerCase();
     if (normalized == 'fr') return const Locale('fr');
+    if (normalized == 'sw') return const Locale('sw');
     return const Locale('en');
   }
 
@@ -41,10 +42,11 @@ class LocaleNotifier extends StateNotifier<Locale> {
     await prefs.setString(_prefsKey, locale.languageCode);
   }
 
-  /// Apply server or device preference (en / fr / anything else → en).
+  /// Apply server or device preference (en / fr / sw / anything else → en).
   Future<void> applyLanguageCode(String? code) async {
     final normalized = (code ?? '').toLowerCase();
-    final target = normalized == 'fr' ? 'fr' : 'en';
+    final target =
+        normalized == 'fr' ? 'fr' : normalized == 'sw' ? 'sw' : 'en';
     await setLanguageCode(target);
   }
 }

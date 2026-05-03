@@ -98,6 +98,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
     final places = _getMockNightlifePlaces(category);
     
     if (places.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -109,14 +110,14 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'No nightlife venues found',
+              l10n.exploreNightlifeEmptyTitle,
               style: context.headlineSmall.copyWith(
                 color: context.secondaryTextColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Check back later for new venues',
+              l10n.exploreNightlifeEmptySubtitle,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -158,6 +159,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
   }
 
   void _showFilterBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -175,7 +177,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
             Text(
-              'Filter Nightlife',
+              l10n.exploreNightlifeFilterSheetTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -184,7 +186,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
             
             // Price Range Filter
             Text(
-              'Price Range',
+              l10n.categorySectionPriceRange,
               style: context.titleMedium.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -205,7 +207,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
             
             // Rating Filter
             Text(
-              'Minimum Rating',
+              l10n.stayMinimumRating,
               style: context.titleMedium.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -225,7 +227,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
             
             // Features Filter
             Text(
-              'Features',
+              l10n.categorySectionFeatures,
               style: context.titleMedium.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -282,6 +284,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
   }
 
   void _showSortBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -299,7 +302,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
             Text(
-              'Sort Nightlife',
+              l10n.exploreNightlifeSortSheetTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),

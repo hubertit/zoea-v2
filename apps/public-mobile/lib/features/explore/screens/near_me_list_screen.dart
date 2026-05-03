@@ -40,7 +40,7 @@ class NearMeListScreen extends ConsumerWidget {
           if (listings.isEmpty) {
             return Center(
               child: Text(
-                'No listings available',
+                AppLocalizations.of(context)!.exploreNoListings,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),

@@ -405,7 +405,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Failed to load subcategories',
+                    AppLocalizations.of(context)!.categoryErrorSubcategories,
                     style: context.headlineSmall.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -480,7 +480,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load category',
+                AppLocalizations.of(context)!.categoryErrorCategory,
                 style: context.headlineSmall.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -596,14 +596,16 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No ${_categoryName ?? widget.category} found',
+                  AppLocalizations.of(context)!.stayEmptyNoMatchesForCategory(
+                    _categoryName ?? widget.category,
+                  ),
                   style: context.headlineSmall.copyWith(
                     color: context.secondaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Check back later for new listings',
+                  AppLocalizations.of(context)!.categoryPlacesEmptySubtitle,
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -655,7 +657,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load listings',
+              AppLocalizations.of(context)!.categoryErrorListings,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -719,14 +721,16 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No ${_categoryName ?? widget.category} found',
+                  AppLocalizations.of(context)!.stayEmptyNoMatchesForCategory(
+                    _categoryName ?? widget.category,
+                  ),
                   style: context.headlineSmall.copyWith(
                     color: context.secondaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Check back later for new listings',
+                  AppLocalizations.of(context)!.categoryPlacesEmptySubtitle,
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -814,7 +818,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load listings',
+              AppLocalizations.of(context)!.categoryErrorListings,
               style: context.headlineSmall.copyWith(
                 color: context.secondaryTextColor,
               ),

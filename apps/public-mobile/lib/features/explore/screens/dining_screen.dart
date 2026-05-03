@@ -731,14 +731,14 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'No dining options found',
+            AppLocalizations.of(context)!.exploreDiningEmptyTitle,
             style: context.headlineSmall.copyWith(
               color: context.secondaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Check back later for new dining options',
+            AppLocalizations.of(context)!.exploreDiningEmptySubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),

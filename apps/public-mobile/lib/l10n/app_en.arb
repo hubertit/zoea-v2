@@ -99,8 +99,10 @@
   "profileSelectLanguage": "Select Language",
   "languageOptionEnglish": "English",
   "languageOptionFrench": "French",
+  "languageOptionSwahili": "Swahili",
   "languageNativeNameEnglish": "English",
   "languageNativeNameFrench": "Français",
+  "languageNativeNameSwahili": "Kiswahili",
   "profileLanguageChanged": "Language changed to {languageName}",
   "@profileLanguageChanged": {
     "placeholders": {
@@ -142,6 +144,28 @@
     }
   },
   "profileCountryChangeFailed": "Failed to change country. Please try again.",
+  "profileSelectCountrySheetTitle": "Select country",
+  "profileCountriesLoadError": "Failed to load countries. Please try again.",
+  "profileCountriesEmpty": "No countries available.",
+  "profileSelectCountryFirstForLocations": "Select a country first to load locations.",
+  "profileLocationsLoadError": "Failed to load locations. Please try again.",
+  "@profileLocationsEmptyForCountry": {
+    "placeholders": {
+      "countryName": {
+        "type": "String"
+      }
+    }
+  },
+  "profileLocationsEmptyForCountry": "No locations available for {countryName}.",
+  "@profileCityInCountryDescription": {
+    "placeholders": {
+      "countryName": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCityInCountryDescription": "City in {countryName}",
+  "profileSelectLocationSheetTitle": "Select location",
   "profileLocationChanged": "Location changed to {name}",
   "@profileLocationChanged": {
     "placeholders": {
@@ -872,9 +896,22 @@
   "categoryNotFound": "Category not found",
   "categoryErrorListings": "Failed to load listings",
   "categoryErrorCategory": "Failed to load category",
+  "categoryErrorSubcategories": "Failed to load subcategories",
   "categoryEmptyPrompt": "Search for {categoryName}",
   "categoryEmptyNoResults": "No results found",
   "categoryEmptyTryDifferentKeywords": "Try different keywords or categories",
+  "categoryPlacesEmptySubtitle": "Check back later for new listings",
+  "exploreNightlifeEmptyTitle": "No nightlife venues found",
+  "exploreNightlifeFilterSheetTitle": "Filter nightlife",
+  "exploreNightlifeSortSheetTitle": "Sort nightlife",
+  "exploreDiningEmptyTitle": "No dining options found",
+  "exploreRecommendationsEmptyTitle": "No recommendations found",
+  "exploreRecommendationsEmptySubtitleSoon": "Check back later for new recommendations",
+  "exploreRecommendationsEmptySubtitleCategory": "No featured places in this category yet — try All or Explore",
+  "exploreRecommendationsFilterSheetTitle": "Filter recommendations",
+  "exploreNightlifeEmptySubtitle": "Check back later for new venues",
+  "exploreDiningEmptySubtitle": "Check back later for new dining options",
+  "exploreRecommendationsLoadFailed": "Failed to load recommendations",
   "categorySearchSuggestionsDining": "Try searching for \"pizza\", \"coffee\", or \"sushi\"",
   "categorySearchSuggestionsNightlife": "Try searching for \"bar\", \"club\", or \"lounge\"",
   "categorySearchSuggestionsExperiences": "Try searching for \"gorilla\", \"hiking\", or \"cultural\"",
@@ -1580,6 +1617,23 @@
   "diningBookingViewMyBookings": "View my bookings",
   "listingScreenDefaultTitle": "Listings",
   "tourDetailLoadError": "Failed to load tour details",
+  "tourDetailPricePerPersonLabel": "Price per person",
+  "@tourDetailGroupSizeLabel": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "tourDetailGroupSizeLabel": "Group: {min}-{max} people",
+  "tourDetailAboutTitle": "About this tour",
+  "tourDetailIncludedTitle": "What's included",
+  "tourDetailNotIncludedTitle": "What's not included",
+  "tourDetailRequirementsTitle": "Requirements",
+  "tourDetailLanguagesTitle": "Available languages",
   "listingDetailLoadFailed": "Failed to load listing",
   "bookingConfirmationHeaderTitle": "Booking confirmed!",
   "bookingConfirmationHeaderSubtitle": "Your booking has been confirmed successfully",
@@ -1697,8 +1751,28 @@
   },
   "listingDetailCouldNotCallPhone": "Could not make phone call to {phone}",
   "searchScreenGlobalHint": "Search events, places, experiences…",
+  "searchScreenNoRecentSearches": "No recent searches",
+  "searchScreenSignInForHistory": "Sign in to see your search history",
+  "searchScreenFailedLoadRecent": "Failed to load recent searches",
+  "searchScreenNoPopularSearches": "No popular searches available",
+  "searchScreenFailedLoadPopular": "Failed to load popular searches",
+  "searchScreenTryDifferentKeywords": "Try searching with different keywords",
+  "searchScreenSearchFailed": "Search failed",
+  "searchScreenHistoryCleared": "Search history cleared",
+  "@searchScreenHistoryClearFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "searchScreenHistoryClearFailed": "Failed to clear search history: {error}",
+  "searchScreenPopularSearchesSectionTitle": "Popular searches",
+  "searchScreenRecentSearchesSectionTitle": "Recent searches",
   "searchClearHistoryTitle": "Clear search history",
   "searchClearHistoryBody": "Are you sure you want to clear all your search history?",
+  "listingDetailWriteReviewTitle": "Write a review",
+  "listingSubmitReviewButton": "Submit review",
   "listingReviewComposerHint": "Share your thoughts about this place…",
   "exploreFilterBudgetHintMin": "0",
   "tourBookingPickupHint": "Enter pickup location or leave blank for default",
@@ -1785,6 +1859,7 @@
   "stayDetailNoRoomTypes": "No room types available",
   "stayDetailAmenitiesSection": "Amenities",
   "stayDetailNoAmenitiesListed": "No amenities listed",
+  "listingAmenitiesInfoSoon": "Amenities information will be available soon",
   "stayDetailNoReviewsYet": "No reviews yet",
   "stayDetailBeFirstToReview": "Be the first to review this place!",
   "@stayDetailReviewsLoadFailed": {
@@ -1794,6 +1869,17 @@
       }
     }
   },
+  "listingReviewsTabLoadFailed": "Failed to load reviews",
+  "listingProductsTabLoadFailed": "Failed to load products",
+  "listingServicesTabLoadFailed": "Failed to load services",
+  "@listingMenusCountAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "listingMenusCountAvailable": "{count} menus available",
   "stayDetailReviewsLoadFailed": "Failed to load reviews: {error}",
   "stayPolicyCancellationTitle": "Cancellation",
   "stayPolicyCancellationBody": "Free cancellation until 24 hours before check-in.",

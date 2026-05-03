@@ -607,7 +607,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             ? '$cityName${countryName.isNotEmpty ? ', $countryName' : ''}'
             : countryName.isNotEmpty
                 ? countryName
-                : 'Location not available';
+                : AppLocalizations.of(context)!.stayLocationUnavailable;
     
     // Extract contact info
     final contactPhone = listing['contactPhone'] as String?;
@@ -907,14 +907,14 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'No amenities listed',
+                AppLocalizations.of(context)!.stayDetailNoAmenitiesListed,
                 style: context.headlineSmall.copyWith(
                   color: context.secondaryTextColor,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Amenities information will be available soon',
+                AppLocalizations.of(context)!.listingAmenitiesInfoSoon,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -1135,14 +1135,14 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No reviews yet',
+                    AppLocalizations.of(context)!.stayDetailNoReviewsYet,
                     style: context.headlineSmall.copyWith(
                       color: context.secondaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Be the first to review this place!',
+                    AppLocalizations.of(context)!.stayDetailBeFirstToReview,
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -1249,7 +1249,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load reviews',
+                AppLocalizations.of(context)!.listingReviewsTabLoadFailed,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -1494,7 +1494,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No products available',
+                        AppLocalizations.of(context)!.shopEmptyNoProducts,
                         style: context.bodyLarge.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -1567,7 +1567,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Failed to load products',
+                    AppLocalizations.of(context)!.listingProductsTabLoadFailed,
                     style: context.bodyMedium.copyWith(
                       color: context.errorColor,
                     ),
@@ -1633,7 +1633,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No services available',
+                        AppLocalizations.of(context)!.shopEmptyNoServices,
                         style: context.bodyLarge.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -1706,7 +1706,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Failed to load services',
+                    AppLocalizations.of(context)!.listingServicesTabLoadFailed,
                     style: context.bodyMedium.copyWith(
                       color: context.errorColor,
                     ),
@@ -1761,7 +1761,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No menu available',
+                  AppLocalizations.of(context)!.shopMenusEmptyTitle,
                   style: context.bodyLarge.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -1798,7 +1798,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Menu is empty',
+                    AppLocalizations.of(context)!.shopMenuCategoryEmpty,
                     style: context.bodyLarge.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -1860,7 +1860,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                '${menus.length} menus available',
+                AppLocalizations.of(context)!.listingMenusCountAvailable(menus.length),
                 style: context.bodyLarge.copyWith(
                   color: context.primaryTextColor,
                 ),
@@ -1888,7 +1888,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load menu',
+              AppLocalizations.of(context)!.shopErrorLoadMenu,
               style: context.bodyMedium.copyWith(
                 color: context.errorColor,
               ),
@@ -1915,7 +1915,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
-            'No photos available',
+            AppLocalizations.of(context)!.listingNoPhotosShort,
             style: TextStyle(
               fontSize: 16,
               color: context.secondaryTextColor,
@@ -2294,7 +2294,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Title
           Text(
-            'Write a Review',
+            AppLocalizations.of(context)!.listingDetailWriteReviewTitle,
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -2304,7 +2304,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Rating selection
           Text(
-            'How was your experience?',
+            AppLocalizations.of(context)!.listingReviewExperienceTitle,
             style: context.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
               color: context.primaryTextColor,
@@ -2337,7 +2337,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Review text field
           Text(
-            'Tell us about your experience',
+            AppLocalizations.of(context)!.listingReviewExperienceSubtitle,
             style: context.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
               color: context.primaryTextColor,
@@ -2399,7 +2399,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
                       ),
                     )
                   : Text(
-                      'Submit Review',
+                      AppLocalizations.of(context)!.listingSubmitReviewButton,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,

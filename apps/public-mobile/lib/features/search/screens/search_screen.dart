@@ -190,6 +190,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     // Fetch search history and trending searches
     final searchHistoryAsync = ref.watch(searchHistoryProvider);
     final trendingAsync = ref.watch(trendingSearchesProvider);
@@ -211,7 +212,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Recent Searches',
+                  l10n.searchScreenRecentSearchesSectionTitle,
                   style: context.headlineSmall.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -223,7 +224,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     return TextButton(
                       onPressed: () => _showClearHistoryDialog(),
                       child: Text(
-                        'Clear',
+                        l10n.commonClear,
                         style: context.bodySmall.copyWith(
                           color: context.primaryColorTheme,
                         ),
@@ -242,7 +243,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
-                      'No recent searches',
+                      l10n.searchScreenNoRecentSearches,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -266,7 +267,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
-                      'Sign in to see your search history',
+                      l10n.searchScreenSignInForHistory,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -277,7 +278,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
-                    'Failed to load recent searches',
+                    l10n.searchScreenFailedLoadRecent,
                     style: context.bodyMedium.copyWith(
                       color: context.errorColor,
                     ),
@@ -290,7 +291,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             
             // Popular searches
             Text(
-              'Popular Searches',
+              l10n.searchScreenPopularSearchesSectionTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -304,7 +305,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
-                      'No popular searches available',
+                      l10n.searchScreenNoPopularSearches,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -326,7 +327,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               error: (error, stack) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Text(
-                  'Failed to load popular searches',
+                  l10n.searchScreenFailedLoadPopular,
                   style: context.bodyMedium.copyWith(
                     color: context.errorColor,
                   ),
@@ -346,6 +347,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildNoResultsState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -357,14 +359,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No results found',
+            l10n.categoryEmptyNoResults,
             style: context.headlineSmall.copyWith(
               color: context.secondaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Try searching with different keywords',
+            l10n.searchScreenTryDifferentKeywords,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -386,6 +388,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildErrorState(Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -397,7 +400,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Search failed',
+            l10n.searchScreenSearchFailed,
             style: context.headlineSmall.copyWith(
               color: context.errorColor,
             ),
@@ -621,7 +624,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         } else if (difference.inMinutes > 0) {
           timeAgo = '${difference.inMinutes}m ago';
         } else {
-          timeAgo = 'Just now';
+          timeAgo = AppLocalizations.of(context)!.notificationsTimeJustNow;
         }
       } catch (e) {
         // If parsing fails, don't show time
@@ -745,7 +748,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Search history cleared',
+            AppLocalizations.of(context)!.searchScreenHistoryCleared,
             style: context.bodyMedium.copyWith(
               color: context.primaryTextColor,
             ),
@@ -760,7 +763,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Failed to clear search history: ${e.toString().replaceFirst('Exception: ', '')}',
+            AppLocalizations.of(context)!.searchScreenHistoryClearFailed(
+              e.toString().replaceFirst('Exception: ', ''),
+            ),
             style: context.bodyMedium.copyWith(
               color: context.primaryTextColor,
             ),

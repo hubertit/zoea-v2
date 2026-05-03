@@ -220,6 +220,8 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
       orElse: () => false,
     );
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: context.grey50,
       body: CustomScrollView(
@@ -363,7 +365,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              '($reviewCount reviews)',
+                              l10n.listingReviewsCountParen(reviewCount),
                               style: context.bodySmall.copyWith(
                                 color: context.secondaryTextColor,
                               ),
@@ -380,8 +382,10 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                             const SizedBox(width: 4),
                             Text(
                               durationDays != null
-                                  ? '$durationDays day${durationDays > 1 ? 's' : ''}'
-                                  : '${durationHours}h',
+                                  ? l10n.exploreTourDurationDays(durationDays!)
+                                  : l10n.exploreTourDurationHours(
+                                      durationHours!.ceil(),
+                                    ),
                               style: context.bodyMedium.copyWith(
                                 color: context.primaryTextColor,
                               ),
@@ -440,7 +444,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Price per person',
+                              l10n.tourDetailPricePerPersonLabel,
                               style: context.bodySmall.copyWith(
                                 color: context.secondaryTextColor,
                               ),
@@ -458,7 +462,10 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                           ],
                         ),
                         Text(
-                          'Group: $minGroupSize-$maxGroupSize people',
+                          l10n.tourDetailGroupSizeLabel(
+                            '$minGroupSize',
+                            '$maxGroupSize',
+                          ),
                           style: context.bodySmall.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -478,7 +485,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'About this tour',
+                          l10n.tourDetailAboutTitle,
                           style: context.titleMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryTextColor,
@@ -507,7 +514,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'What\'s included',
+                          l10n.tourDetailIncludedTitle,
                           style: context.titleMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryTextColor,
@@ -551,7 +558,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'What\'s not included',
+                          l10n.tourDetailNotIncludedTitle,
                           style: context.titleMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryTextColor,
@@ -595,7 +602,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Requirements',
+                          l10n.tourDetailRequirementsTitle,
                           style: context.titleMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryTextColor,
@@ -639,7 +646,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Available languages',
+                          l10n.tourDetailLanguagesTitle,
                           style: context.titleMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.primaryTextColor,
@@ -721,7 +728,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
               ),
             ),
             child: Text(
-              'Book Now',
+              l10n.commonBookNow,
               style: context.bodyLarge.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

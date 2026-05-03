@@ -197,7 +197,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No recommendations found',
+                  AppLocalizations.of(context)!.exploreRecommendationsEmptyTitle,
                   style: context.headlineSmall.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -205,8 +205,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
                 const SizedBox(height: 8),
                 Text(
                   allowedCategoryIds == null
-                      ? 'Check back later for new recommendations'
-                      : 'No featured places in this category yet — try All or Explore',
+                      ? AppLocalizations.of(context)!.exploreRecommendationsEmptySubtitleSoon
+                      : AppLocalizations.of(context)!.exploreRecommendationsEmptySubtitleCategory,
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -253,7 +253,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load recommendations',
+              AppLocalizations.of(context)!.exploreRecommendationsLoadFailed,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -307,7 +307,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
             ? address
             : cityName.isNotEmpty
                 ? cityName
-                : 'Location not available';
+                : AppLocalizations.of(context)!.stayLocationUnavailable;
 
     final rating = listing['rating'] != null
         ? (listing['rating'] is String
@@ -434,7 +434,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Filter Recommendations',
+                AppLocalizations.of(context)!.exploreRecommendationsFilterSheetTitle,
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,

@@ -10,7 +10,12 @@ String localizedCategoryName(Map<String, dynamic>? category, Locale locale) {
   final primary = (category['name'] as String?)?.trim() ?? '';
   final frRaw = category['nameFr'] ?? category['name_fr'];
   final fr = frRaw is String ? frRaw.trim() : '';
+  final swRaw = category['nameSw'] ?? category['name_sw'];
+  final sw = swRaw is String ? swRaw.trim() : '';
   final lang = locale.languageCode.toLowerCase();
+  final useSw =
+      (lang == 'sw' || lang.startsWith('sw')) && sw.isNotEmpty;
+  if (useSw) return sw;
   final useFr =
       (lang == 'fr' || lang.startsWith('fr')) && fr.isNotEmpty;
   if (useFr) return fr;
@@ -55,8 +60,8 @@ String exploreHomeCategoryTitleForSlug(AppLocalizations l10n, String slug) {
   }
 }
 
-/// Explore parent-category tiles: French uses API `nameFr` when set; otherwise
-/// slug-based ARB titles so labels match the shell locale even if the API only sends English `name`.
+/// Explore parent-category tiles: French uses API `nameFr` when set; Kiswahili
+/// uses `nameSw` when set; otherwise slug-based ARB titles match the shell locale.
 String localizedExploreParentCategoryName(
   Map<String, dynamic>? category,
   Locale locale,
@@ -69,9 +74,24 @@ String localizedExploreParentCategoryName(
   final primary = (category['name'] as String?)?.trim() ?? '';
   final frRaw = category['nameFr'] ?? category['name_fr'];
   final fr = frRaw is String ? frRaw.trim() : '';
+  final swRaw = category['nameSw'] ?? category['name_sw'];
+  final sw = swRaw is String ? swRaw.trim() : '';
 
   final lang = locale.languageCode.toLowerCase();
   final isFr = lang == 'fr' || lang.startsWith('fr');
+  final isSw = lang == 'sw' || lang.startsWith('sw');
+
+  if (isSw) {
+    if (sw.isNotEmpty) return sw;
+    if (slug.isNotEmpty) {
+      final titled = exploreHomeCategoryTitleForSlug(l10n, slug);
+      if (titled != l10n.exploreCategoryFallback) return titled;
+    }
+    if (primary.isNotEmpty) return primary;
+    return slug.isNotEmpty
+        ? exploreHomeCategoryTitleForSlug(l10n, slug)
+        : l10n.exploreCategoryFallback;
+  }
 
   if (isFr) {
     if (fr.isNotEmpty) return fr;

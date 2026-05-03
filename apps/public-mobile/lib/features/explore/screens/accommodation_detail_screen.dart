@@ -1329,7 +1329,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
-            'No photos available',
+            AppLocalizations.of(context)!.listingNoPhotosShort,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -1444,7 +1444,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child: Text(
-                'Book Now',
+                AppLocalizations.of(context)!.commonBookNow,
                 style: context.bodyMedium.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -1827,7 +1827,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Title
           Text(
-            'Write a Review',
+            AppLocalizations.of(context)!.listingDetailWriteReviewTitle,
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -1836,7 +1836,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Rating selection
           Text(
-            'How was your experience?',
+            AppLocalizations.of(context)!.listingReviewExperienceTitle,
             style: context.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -1868,7 +1868,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Review text field
           Text(
-            'Tell us about your experience',
+            AppLocalizations.of(context)!.listingReviewExperienceSubtitle,
             style: context.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -1924,7 +1924,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
                       ),
                     )
                   : Text(
-                      'Submit Review',
+                      AppLocalizations.of(context)!.listingSubmitReviewButton,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,

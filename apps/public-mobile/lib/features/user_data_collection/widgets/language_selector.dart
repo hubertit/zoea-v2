@@ -20,14 +20,17 @@ class LanguageSelector extends StatelessWidget {
   static const List<Map<String, String>> _languages = [
     {'code': 'en', 'name': 'English', 'native': 'English'},
     {'code': 'fr', 'name': 'French', 'native': 'Français'},
+    {'code': 'sw', 'name': 'Swahili', 'native': 'Kiswahili'},
   ];
 
-  /// Map device / legacy codes to a supported app language (English or French only).
+  /// Map device / legacy codes to a supported app language (en / fr / sw).
   static String normalizeToSupportedCode(String? code) {
     if (code == null) return 'en';
     switch (code.toLowerCase()) {
       case 'fr':
         return 'fr';
+      case 'sw':
+        return 'sw';
       case 'en':
       default:
         return 'en';

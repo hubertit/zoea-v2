@@ -1791,7 +1791,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Title
           Text(
-            'Write a Review',
+            AppLocalizations.of(context)!.listingDetailWriteReviewTitle,
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -1801,7 +1801,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Rating selection
           Text(
-            'How was your experience?',
+            AppLocalizations.of(context)!.listingReviewExperienceTitle,
             style: context.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
               color: context.primaryTextColor,
@@ -1834,7 +1834,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
           
           // Review text field
           Text(
-            'Tell us about your experience',
+            AppLocalizations.of(context)!.listingReviewExperienceSubtitle,
             style: context.bodyMedium.copyWith(
               fontWeight: FontWeight.w500,
               color: context.primaryTextColor,
@@ -1891,7 +1891,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
                       ),
                     )
                   : Text(
-                      'Submit Review',
+                      AppLocalizations.of(context)!.listingSubmitReviewButton,
                       style: context.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,

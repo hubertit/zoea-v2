@@ -284,10 +284,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get languageOptionFrench => 'Français';
 
   @override
+  String get languageOptionSwahili => 'Swahili';
+
+  @override
   String get languageNativeNameEnglish => 'Anglais';
 
   @override
   String get languageNativeNameFrench => 'Français';
+
+  @override
+  String get languageNativeNameSwahili => 'Kiswahili';
 
   @override
   String profileLanguageChanged(String languageName) {
@@ -317,6 +323,37 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get profileCountryChangeFailed =>
       'Impossible de changer de pays. Réessayez.';
+
+  @override
+  String get profileSelectCountrySheetTitle => 'Choisir un pays';
+
+  @override
+  String get profileCountriesLoadError =>
+      'Impossible de charger les pays. Réessayez.';
+
+  @override
+  String get profileCountriesEmpty => 'Aucun pays disponible.';
+
+  @override
+  String get profileSelectCountryFirstForLocations =>
+      'Sélectionnez d’abord un pays pour charger les lieux.';
+
+  @override
+  String get profileLocationsLoadError =>
+      'Impossible de charger les lieux. Réessayez.';
+
+  @override
+  String profileLocationsEmptyForCountry(String countryName) {
+    return 'Aucun lieu disponible pour $countryName.';
+  }
+
+  @override
+  String profileCityInCountryDescription(String countryName) {
+    return 'Ville en $countryName';
+  }
+
+  @override
+  String get profileSelectLocationSheetTitle => 'Choisir un lieu';
 
   @override
   String profileLocationChanged(String name) {
@@ -2035,6 +2072,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryErrorCategory => 'Impossible de charger la catégorie';
 
   @override
+  String get categoryErrorSubcategories =>
+      'Impossible de charger les sous-catégories';
+
+  @override
   String categoryEmptyPrompt(String categoryName) {
     return 'Rechercher · $categoryName';
   }
@@ -2045,6 +2086,49 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get categoryEmptyTryDifferentKeywords =>
       'Essayez d’autres mots-clés ou catégories';
+
+  @override
+  String get categoryPlacesEmptySubtitle =>
+      'Revenez plus tard pour de nouvelles annonces';
+
+  @override
+  String get exploreNightlifeEmptyTitle => 'Aucun lieu nocturne trouvé';
+
+  @override
+  String get exploreNightlifeFilterSheetTitle => 'Filtrer la vie nocturne';
+
+  @override
+  String get exploreNightlifeSortSheetTitle => 'Trier la vie nocturne';
+
+  @override
+  String get exploreDiningEmptyTitle => 'Aucune option de restauration trouvée';
+
+  @override
+  String get exploreRecommendationsEmptyTitle => 'Aucune recommandation';
+
+  @override
+  String get exploreRecommendationsEmptySubtitleSoon =>
+      'Revenez plus tard pour de nouvelles recommandations';
+
+  @override
+  String get exploreRecommendationsEmptySubtitleCategory =>
+      'Pas encore de lieux à la une dans cette catégorie — essayez Tout ou Explorer';
+
+  @override
+  String get exploreRecommendationsFilterSheetTitle =>
+      'Filtrer les recommandations';
+
+  @override
+  String get exploreNightlifeEmptySubtitle =>
+      'Revenez plus tard pour de nouveaux lieux';
+
+  @override
+  String get exploreDiningEmptySubtitle =>
+      'Revenez plus tard pour de nouvelles options de restauration';
+
+  @override
+  String get exploreRecommendationsLoadFailed =>
+      'Impossible de charger les recommandations';
 
   @override
   String get categorySearchSuggestionsDining =>
@@ -3552,6 +3636,29 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de charger les détails du circuit';
 
   @override
+  String get tourDetailPricePerPersonLabel => 'Prix par personne';
+
+  @override
+  String tourDetailGroupSizeLabel(String min, String max) {
+    return 'Groupe : $min-$max personnes';
+  }
+
+  @override
+  String get tourDetailAboutTitle => 'À propos de cette excursion';
+
+  @override
+  String get tourDetailIncludedTitle => 'Inclus';
+
+  @override
+  String get tourDetailNotIncludedTitle => 'Non inclus';
+
+  @override
+  String get tourDetailRequirementsTitle => 'Exigences';
+
+  @override
+  String get tourDetailLanguagesTitle => 'Langues disponibles';
+
+  @override
   String get listingDetailLoadFailed => 'Impossible de charger l’annonce';
 
   @override
@@ -3758,11 +3865,56 @@ class AppLocalizationsFr extends AppLocalizations {
       'Rechercher des événements, lieux, expériences…';
 
   @override
+  String get searchScreenNoRecentSearches => 'Aucune recherche récente';
+
+  @override
+  String get searchScreenSignInForHistory =>
+      'Connectez-vous pour voir votre historique';
+
+  @override
+  String get searchScreenFailedLoadRecent =>
+      'Impossible de charger les recherches récentes';
+
+  @override
+  String get searchScreenNoPopularSearches =>
+      'Aucune recherche populaire disponible';
+
+  @override
+  String get searchScreenFailedLoadPopular =>
+      'Impossible de charger les recherches populaires';
+
+  @override
+  String get searchScreenTryDifferentKeywords => 'Essayez d’autres mots-clés';
+
+  @override
+  String get searchScreenSearchFailed => 'Échec de la recherche';
+
+  @override
+  String get searchScreenHistoryCleared => 'Historique de recherche effacé';
+
+  @override
+  String searchScreenHistoryClearFailed(String error) {
+    return 'Impossible d’effacer l’historique : $error';
+  }
+
+  @override
+  String get searchScreenPopularSearchesSectionTitle => 'Recherches populaires';
+
+  @override
+  String get searchScreenRecentSearchesSectionTitle => 'Recherches récentes';
+
+  @override
   String get searchClearHistoryTitle => 'Effacer l’historique de recherche';
 
   @override
   String get searchClearHistoryBody =>
       'Voulez-vous vraiment effacer tout l’historique de recherche ?';
+
+  @override
+  String get listingDetailWriteReviewTitle => 'Rédiger un avis';
+
+  @override
+  String get listingSubmitReviewButton => 'Publier l’avis';
 
   @override
   String get listingReviewComposerHint => 'Partagez votre avis sur ce lieu…';
@@ -3995,11 +4147,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get stayDetailNoAmenitiesListed => 'Aucun équipement indiqué';
 
   @override
+  String get listingAmenitiesInfoSoon =>
+      'Les informations sur les équipements seront bientôt disponibles';
+
+  @override
   String get stayDetailNoReviewsYet => 'Pas encore d’avis';
 
   @override
   String get stayDetailBeFirstToReview =>
       'Soyez le premier à laisser un avis !';
+
+  @override
+  String get listingReviewsTabLoadFailed => 'Impossible de charger les avis';
+
+  @override
+  String get listingProductsTabLoadFailed =>
+      'Impossible de charger les produits';
+
+  @override
+  String get listingServicesTabLoadFailed =>
+      'Impossible de charger les services';
+
+  @override
+  String listingMenusCountAvailable(int count) {
+    return '$count menus disponibles';
+  }
 
   @override
   String stayDetailReviewsLoadFailed(String error) {
