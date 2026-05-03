@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/tours_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TourPackagesScreen extends ConsumerStatefulWidget {
   const TourPackagesScreen({super.key});
@@ -52,6 +51,7 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final toursAsync = ref.watch(toursProvider(const ToursParams(
       page: 1,
       limit: 100,
@@ -72,7 +72,7 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Tour Packages',
+          loc.tourPackagesScreenTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -98,7 +98,7 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load tour packages',
+                loc.tourPackagesLoadFailed,
                 style: context.bodyLarge.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -129,7 +129,7 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No tour packages available',
+                    loc.tourPackagesEmpty,
                     style: context.bodyLarge.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -144,7 +144,7 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
             itemCount: tours.length,
             itemBuilder: (context, index) {
               final tour = tours[index];
-              return _buildTourCard(context, tour);
+              return _buildTourCard(context, loc, tour);
             },
           );
         },
@@ -152,8 +152,9 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
     );
   }
 
-  Widget _buildTourCard(BuildContext context, Map<String, dynamic> tour) {
-    final String title = tour['name'] ?? 'Untitled Tour';
+  Widget _buildTourCard(
+      BuildContext context, AppLocalizations loc, Map<String, dynamic> tour) {
+    final String title = tour['name'] ?? loc.tourPackagesUntitled;
     final String description = tour['description'] ?? '';
     
     // Parse price safely
@@ -193,27 +194,31 @@ class _TourPackagesScreenState extends ConsumerState<TourPackagesScreen>
       }
     }
     
-    final String? durationType = tour['durationDays'] != null ? 'day' : (tour['durationHours'] != null ? 'hour' : null);
+    final bool durationIsDays = tour['durationDays'] != null;
     final bool isFeatured = tour['isFeatured'] ?? false;
 
     // Determine badge
-    String badge = 'TOUR PACKAGE';
+    String badge = loc.tourPackagesBadgePackage;
     if (isFeatured) {
-      badge = 'FEATURED';
+      badge = loc.tourPackagesBadgeFeatured;
     } else if (difficulty != null) {
       badge = difficulty.toUpperCase();
     }
 
     // Format price
-    String priceText = 'Price on request';
+    String priceText = loc.tourPackagesPriceOnRequest;
     if (priceFrom != null) {
-      priceText = 'From ${PriceFormatter.formatAbbreviated(priceFrom, currency: 'RWF')}';
+      priceText = loc.tourPackagesPriceFrom(
+        PriceFormatter.formatAbbreviated(priceFrom, currency: 'RWF'),
+      );
     }
 
     // Format duration
     String durationText = '';
-    if (duration != null && durationType != null) {
-      durationText = '$duration ${durationType}${duration > 1 ? 's' : ''}';
+    if (duration != null) {
+      durationText = durationIsDays
+          ? loc.tourDurationDays(duration)
+          : loc.tourDurationHours(duration);
     }
 
     return GestureDetector(

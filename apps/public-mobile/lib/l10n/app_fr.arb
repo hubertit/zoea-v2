@@ -1873,6 +1873,70 @@
   "tourBookingPriceLineFree": "Gratuit",
   "tourBookingPriceLineTotal": "Total",
   "tourBookingLocationDefaultLabel": "Lieu",
+  "experiencesTabTours": "Circuits",
+  "experiencesTabAdventures": "Aventures",
+  "experiencesTabCultural": "Culturel",
+  "experiencesTabOperators": "Opérateurs",
+  "experiencesFailedLoad": "Impossible de charger les expériences",
+  "experiencesOperatorsFailedLoad": "Impossible de charger les opérateurs",
+  "experiencesEmptyAll": "Aucune expérience trouvée",
+  "experiencesEmptyTours": "Aucun circuit trouvé",
+  "experiencesEmptyAdventures": "Aucune aventure trouvée",
+  "experiencesEmptyCultural": "Aucune expérience culturelle trouvée",
+  "experiencesEmptyOperators": "Aucun opérateur trouvé",
+  "experiencesEmptySubtitle": "Revenez plus tard pour de nouvelles expériences",
+  "experiencesFilterBy": "Filtrer par",
+  "experiencesSortRating": "Note",
+  "experiencesSortPrice": "Prix",
+  "tourListingFallbackName": "Circuit",
+  "tourOperatorUnknown": "Opérateur inconnu",
+  "tourCardStartingFromLabel": "À partir de",
+  "@tourCardStartingFromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tourCardStartingFromPrice": "À partir de {price}",
+  "@tourOperatorReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourOperatorReviewsCount": "({count, plural, =1{1 avis} other{{count} avis}})",
+  "tourPackagesLoadFailed": "Impossible de charger les forfaits circuits",
+  "tourPackagesEmpty": "Aucun forfait circuit disponible",
+  "tourPackagesBadgePackage": "FORFAIT CIRCUIT",
+  "tourPackagesBadgeFeatured": "À LA UNE",
+  "tourPackagesPriceOnRequest": "Prix sur demande",
+  "@tourPackagesPriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tourPackagesPriceFrom": "À partir de {price}",
+  "@tourDurationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourDurationDays": "{count, plural, =1{1 jour} other{{count} jours}}",
+  "@tourDurationHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourDurationHours": "{count, plural, =1{1 heure} other{{count} heures}}",
+  "tourPackagesUntitled": "Circuit sans titre",
   "tourPackagesScreenTitle": "Forfaits circuits",
   "reviewsViewPlaceAction": "Voir le lieu",
   "placeDetailMapViewAction": "Voir",

@@ -2016,6 +2016,70 @@
   "tourBookingPriceLineFree": "Free",
   "tourBookingPriceLineTotal": "Total",
   "tourBookingLocationDefaultLabel": "Location",
+  "experiencesTabTours": "Tours",
+  "experiencesTabAdventures": "Adventures",
+  "experiencesTabCultural": "Cultural",
+  "experiencesTabOperators": "Operators",
+  "experiencesFailedLoad": "Failed to load experiences",
+  "experiencesOperatorsFailedLoad": "Failed to load operators",
+  "experiencesEmptyAll": "No experiences found",
+  "experiencesEmptyTours": "No tours found",
+  "experiencesEmptyAdventures": "No adventures found",
+  "experiencesEmptyCultural": "No cultural experiences found",
+  "experiencesEmptyOperators": "No operators found",
+  "experiencesEmptySubtitle": "Check back later for new experiences",
+  "experiencesFilterBy": "Filter by",
+  "experiencesSortRating": "Rating",
+  "experiencesSortPrice": "Price",
+  "tourListingFallbackName": "Tour",
+  "tourOperatorUnknown": "Unknown operator",
+  "tourCardStartingFromLabel": "Starting from",
+  "@tourCardStartingFromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tourCardStartingFromPrice": "Starting from {price}",
+  "@tourOperatorReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourOperatorReviewsCount": "({count, plural, =1{1 review} other{{count} reviews}})",
+  "tourPackagesLoadFailed": "Failed to load tour packages",
+  "tourPackagesEmpty": "No tour packages available",
+  "tourPackagesBadgePackage": "TOUR PACKAGE",
+  "tourPackagesBadgeFeatured": "FEATURED",
+  "tourPackagesPriceOnRequest": "Price on request",
+  "@tourPackagesPriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tourPackagesPriceFrom": "From {price}",
+  "@tourDurationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourDurationDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@tourDurationHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tourDurationHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "tourPackagesUntitled": "Untitled tour",
   "tourPackagesScreenTitle": "Tour packages",
   "reviewsViewPlaceAction": "View place",
   "placeDetailMapViewAction": "View",

@@ -4509,6 +4509,121 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tourBookingLocationDefaultLabel => 'Location';
 
   @override
+  String get experiencesTabTours => 'Tours';
+
+  @override
+  String get experiencesTabAdventures => 'Adventures';
+
+  @override
+  String get experiencesTabCultural => 'Cultural';
+
+  @override
+  String get experiencesTabOperators => 'Operators';
+
+  @override
+  String get experiencesFailedLoad => 'Failed to load experiences';
+
+  @override
+  String get experiencesOperatorsFailedLoad => 'Failed to load operators';
+
+  @override
+  String get experiencesEmptyAll => 'No experiences found';
+
+  @override
+  String get experiencesEmptyTours => 'No tours found';
+
+  @override
+  String get experiencesEmptyAdventures => 'No adventures found';
+
+  @override
+  String get experiencesEmptyCultural => 'No cultural experiences found';
+
+  @override
+  String get experiencesEmptyOperators => 'No operators found';
+
+  @override
+  String get experiencesEmptySubtitle => 'Check back later for new experiences';
+
+  @override
+  String get experiencesFilterBy => 'Filter by';
+
+  @override
+  String get experiencesSortRating => 'Rating';
+
+  @override
+  String get experiencesSortPrice => 'Price';
+
+  @override
+  String get tourListingFallbackName => 'Tour';
+
+  @override
+  String get tourOperatorUnknown => 'Unknown operator';
+
+  @override
+  String get tourCardStartingFromLabel => 'Starting from';
+
+  @override
+  String tourCardStartingFromPrice(String price) {
+    return 'Starting from $price';
+  }
+
+  @override
+  String tourOperatorReviewsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+    );
+    return '($_temp0)';
+  }
+
+  @override
+  String get tourPackagesLoadFailed => 'Failed to load tour packages';
+
+  @override
+  String get tourPackagesEmpty => 'No tour packages available';
+
+  @override
+  String get tourPackagesBadgePackage => 'TOUR PACKAGE';
+
+  @override
+  String get tourPackagesBadgeFeatured => 'FEATURED';
+
+  @override
+  String get tourPackagesPriceOnRequest => 'Price on request';
+
+  @override
+  String tourPackagesPriceFrom(String price) {
+    return 'From $price';
+  }
+
+  @override
+  String tourDurationDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tourDurationHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours',
+      one: '1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tourPackagesUntitled => 'Untitled tour';
+
+  @override
   String get tourPackagesScreenTitle => 'Tour packages';
 
   @override

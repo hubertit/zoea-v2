@@ -4565,6 +4565,124 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tourBookingLocationDefaultLabel => 'Lieu';
 
   @override
+  String get experiencesTabTours => 'Circuits';
+
+  @override
+  String get experiencesTabAdventures => 'Aventures';
+
+  @override
+  String get experiencesTabCultural => 'Culturel';
+
+  @override
+  String get experiencesTabOperators => 'Opérateurs';
+
+  @override
+  String get experiencesFailedLoad => 'Impossible de charger les expériences';
+
+  @override
+  String get experiencesOperatorsFailedLoad =>
+      'Impossible de charger les opérateurs';
+
+  @override
+  String get experiencesEmptyAll => 'Aucune expérience trouvée';
+
+  @override
+  String get experiencesEmptyTours => 'Aucun circuit trouvé';
+
+  @override
+  String get experiencesEmptyAdventures => 'Aucune aventure trouvée';
+
+  @override
+  String get experiencesEmptyCultural => 'Aucune expérience culturelle trouvée';
+
+  @override
+  String get experiencesEmptyOperators => 'Aucun opérateur trouvé';
+
+  @override
+  String get experiencesEmptySubtitle =>
+      'Revenez plus tard pour de nouvelles expériences';
+
+  @override
+  String get experiencesFilterBy => 'Filtrer par';
+
+  @override
+  String get experiencesSortRating => 'Note';
+
+  @override
+  String get experiencesSortPrice => 'Prix';
+
+  @override
+  String get tourListingFallbackName => 'Circuit';
+
+  @override
+  String get tourOperatorUnknown => 'Opérateur inconnu';
+
+  @override
+  String get tourCardStartingFromLabel => 'À partir de';
+
+  @override
+  String tourCardStartingFromPrice(String price) {
+    return 'À partir de $price';
+  }
+
+  @override
+  String tourOperatorReviewsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count avis',
+      one: '1 avis',
+    );
+    return '($_temp0)';
+  }
+
+  @override
+  String get tourPackagesLoadFailed =>
+      'Impossible de charger les forfaits circuits';
+
+  @override
+  String get tourPackagesEmpty => 'Aucun forfait circuit disponible';
+
+  @override
+  String get tourPackagesBadgePackage => 'FORFAIT CIRCUIT';
+
+  @override
+  String get tourPackagesBadgeFeatured => 'À LA UNE';
+
+  @override
+  String get tourPackagesPriceOnRequest => 'Prix sur demande';
+
+  @override
+  String tourPackagesPriceFrom(String price) {
+    return 'À partir de $price';
+  }
+
+  @override
+  String tourDurationDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tourDurationHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count heures',
+      one: '1 heure',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tourPackagesUntitled => 'Circuit sans titre';
+
+  @override
   String get tourPackagesScreenTitle => 'Forfaits circuits';
 
   @override

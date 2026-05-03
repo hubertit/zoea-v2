@@ -14,6 +14,15 @@ import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../l10n/app_localizations.dart';
 
+/// Tab keys for API/filter logic — labels come from [AppLocalizations].
+enum _ExperienceTab {
+  all,
+  tours,
+  adventures,
+  cultural,
+  operators,
+}
+
 class ExperiencesScreen extends ConsumerStatefulWidget {
   const ExperiencesScreen({super.key});
 
@@ -39,8 +48,40 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     super.dispose();
   }
 
+  String? _typeFilterForTab(_ExperienceTab tab) {
+    switch (tab) {
+      case _ExperienceTab.all:
+      case _ExperienceTab.tours:
+        return null;
+      case _ExperienceTab.adventures:
+        return 'adventure';
+      case _ExperienceTab.cultural:
+        return 'cultural';
+      case _ExperienceTab.operators:
+        return null;
+    }
+  }
+
+  bool _isAllTab(_ExperienceTab tab) => tab == _ExperienceTab.all;
+
+  String _emptyTitle(AppLocalizations loc, _ExperienceTab tab) {
+    switch (tab) {
+      case _ExperienceTab.all:
+        return loc.experiencesEmptyAll;
+      case _ExperienceTab.tours:
+        return loc.experiencesEmptyTours;
+      case _ExperienceTab.adventures:
+        return loc.experiencesEmptyAdventures;
+      case _ExperienceTab.cultural:
+        return loc.experiencesEmptyCultural;
+      case _ExperienceTab.operators:
+        return loc.experiencesEmptyOperators;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -55,7 +96,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           ),
         ),
         title: Text(
-          'Experiences',
+          loc.categoryTitleExperiences,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -84,40 +125,31 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           isScrollable: true,
           tabAlignment: TabAlignment.start,
           labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-          tabs: const [
-            Tab(text: 'All'),
-            Tab(text: 'Tours'),
-            Tab(text: 'Adventures'),
-            Tab(text: 'Cultural'),
-            Tab(text: 'Operators'),
+          tabs: [
+            Tab(text: loc.stayTabAll),
+            Tab(text: loc.experiencesTabTours),
+            Tab(text: loc.experiencesTabAdventures),
+            Tab(text: loc.experiencesTabCultural),
+            Tab(text: loc.experiencesTabOperators),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildExperiencesList('All'),
-          _buildExperiencesList('Tours'),
-          _buildExperiencesList('Adventures'),
-          _buildExperiencesList('Cultural'),
+          _buildExperiencesList(_ExperienceTab.all),
+          _buildExperiencesList(_ExperienceTab.tours),
+          _buildExperiencesList(_ExperienceTab.adventures),
+          _buildExperiencesList(_ExperienceTab.cultural),
           _buildTourOperatorsList(),
         ],
       ),
     );
   }
 
-  Widget _buildExperiencesList(String category) {
-    // Map category to tour type for filtering
-    String? typeFilter;
-    bool isAllTab = category == 'All';
-    
-    if (category == 'Tours') {
-      typeFilter = null; // Show all tours
-    } else if (category == 'Adventures') {
-      typeFilter = 'adventure';
-    } else if (category == 'Cultural') {
-      typeFilter = 'cultural';
-    }
+  Widget _buildExperiencesList(_ExperienceTab tab) {
+    final typeFilter = _typeFilterForTab(tab);
+    final isAllTab = _isAllTab(tab);
 
     final toursAsync = ref.watch(
       toursProvider(
@@ -136,7 +168,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         final tours = (response['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
 
         if (tours.isEmpty) {
-          return _buildEmptyState(category);
+          return _buildEmptyState(tab);
         }
 
         return RefreshIndicator(
@@ -149,7 +181,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
                   page: 1,
                   limit: 100,
                   status: 'active',
-                  type: category == 'All' ? null : typeFilter,
+                  type: isAllTab ? null : typeFilter,
                   search: null,
                 ),
               ),
@@ -181,7 +213,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load experiences',
+              AppLocalizations.of(context)!.experiencesFailedLoad,
               style: context.titleMedium.copyWith(
                 color: context.errorColor,
               ),
@@ -195,7 +227,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
                       page: 1,
                       limit: 100,
                       status: 'active',
-                      type: category == 'All' ? null : typeFilter,
+                      type: isAllTab ? null : typeFilter,
                       search: null,
                     ),
                   ),
@@ -210,14 +242,15 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
   }
 
   Widget _buildExperienceCard(Map<String, dynamic> tour, {bool showSubcategoryBadge = false}) {
+    final loc = AppLocalizations.of(context)!;
     final id = tour['id'] as String? ?? '';
-    final name = tour['name'] as String? ?? 'Unknown';
+    final name = tour['name'] as String? ?? loc.exploreListingUnknown;
     final startLocationName = tour['startLocationName'] as String? ?? '';
     final city = tour['city'] as Map<String, dynamic>?;
     final cityName = city?['name'] as String? ?? '';
     final location = startLocationName.isNotEmpty 
         ? '$startLocationName${cityName.isNotEmpty ? ', $cityName' : ''}'
-        : cityName.isNotEmpty ? cityName : 'Location not available';
+        : cityName.isNotEmpty ? cityName : loc.stayLocationUnavailable;
     
     final images = tour['images'] as List? ?? [];
     String? imageUrl;
@@ -241,8 +274,8 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         : '';
     
     final category = tour['category'] as Map<String, dynamic>?;
-    final categoryName = category?['name'] as String? ?? 'Tour';
-    final tourType = tour['type'] as String? ?? 'Tour';
+    final categoryName = category?['name'] as String? ?? loc.tourListingFallbackName;
+    final tourType = tour['type'] as String? ?? loc.tourListingFallbackName;
     
     // For "All" tab, show the tour type as category badge
     String displayCategory = categoryName.isNotEmpty ? categoryName : tourType;
@@ -339,6 +372,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
 
     return toursAsync.when(
       data: (response) {
+        final loc = AppLocalizations.of(context)!;
         final tours = (response['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
         
         // Group tours by operator
@@ -350,7 +384,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
             if (operatorId.isNotEmpty && !operatorMap.containsKey(operatorId)) {
               operatorMap[operatorId] = {
                 'id': operatorId,
-                'name': operator['companyName'] as String? ?? 'Unknown Operator',
+                'name': operator['companyName'] as String? ?? loc.tourOperatorUnknown,
                 'rating': operator['averageRating'] as num? ?? 0.0,
                 'tours': <Map<String, dynamic>>[],
               };
@@ -364,7 +398,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         final operators = operatorMap.values.toList();
 
         if (operators.isEmpty) {
-          return _buildEmptyState('Operators');
+          return _buildEmptyState(_ExperienceTab.operators);
         }
 
         return RefreshIndicator(
@@ -407,7 +441,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load operators',
+              AppLocalizations.of(context)!.experiencesOperatorsFailedLoad,
               style: context.titleMedium.copyWith(
                 color: context.errorColor,
               ),
@@ -434,14 +468,15 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
   }
 
   Widget _buildTourOperatorCard(Map<String, dynamic> operator) {
-    final name = operator['name'] as String? ?? 'Unknown Operator';
+    final loc = AppLocalizations.of(context)!;
+    final name = operator['name'] as String? ?? loc.tourOperatorUnknown;
     final rating = (operator['rating'] as num?)?.toDouble() ?? 0.0;
     final tours = operator['tours'] as List<Map<String, dynamic>>? ?? [];
     
     // Get location from first tour
-    String location = 'Location not available';
+    String location = loc.stayLocationUnavailable;
     String? imageUrl;
-    String priceRange = '';
+    String priceFormatted = '';
     String? phone;
     String? description;
     
@@ -452,7 +487,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
       final startLocationName = firstTour['startLocationName'] as String? ?? '';
       location = startLocationName.isNotEmpty 
           ? '$startLocationName${cityName.isNotEmpty ? ', $cityName' : ''}'
-          : cityName.isNotEmpty ? cityName : 'Location not available';
+          : cityName.isNotEmpty ? cityName : loc.stayLocationUnavailable;
       
       final images = firstTour['images'] as List? ?? [];
       if (images.isNotEmpty && images[0] != null) {
@@ -467,7 +502,10 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
       final pricePerPerson = firstTour['pricePerPerson'] as num?;
       final currency = firstTour['currency'] as String? ?? 'USD';
       if (pricePerPerson != null) {
-        priceRange = 'Starting from ${PriceFormatter.formatAbbreviated(pricePerPerson.toDouble(), currency: currency)}';
+        priceFormatted = PriceFormatter.formatAbbreviated(
+          pricePerPerson.toDouble(),
+          currency: currency,
+        );
       }
       
       final operatorData = firstTour['operator'] as Map<String, dynamic>?;
@@ -485,7 +523,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           final tourId = firstTour['id'] as String? ?? '';
           context.push('/tour-booking', extra: {
             'tourId': tourId,
-            'tourName': firstTour['name'] as String? ?? 'Tour',
+            'tourName': firstTour['name'] as String? ?? loc.tourListingFallbackName,
             'tourLocation': location,
             'tourImage': imageUrl ?? '',
             'tourRating': (firstTour['rating'] as num?)?.toDouble() ?? 0.0,
@@ -602,7 +640,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '($reviewCount reviews)',
+                        loc.tourOperatorReviewsCount(reviewCount),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -623,48 +661,51 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
                     ),
                   ],
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Starting from',
-                            style: context.bodySmall.copyWith(
-                              color: context.secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            priceRange,
-                            style: context.bodyLarge.copyWith(
-                              color: context.primaryColorTheme,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (phone != null && phone.isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Contact',
-                              style: context.bodySmall.copyWith(
-                                color: context.secondaryTextColor,
+                  if (priceFormatted.isNotEmpty ||
+                      (phone != null && phone.isNotEmpty))
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (priceFormatted.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc.tourCardStartingFromLabel,
+                                style: context.bodySmall.copyWith(
+                                  color: context.secondaryTextColor,
+                                ),
                               ),
-                            ),
-                            Text(
-                              phone,
-                              style: context.bodyMedium.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: context.primaryTextColor,
+                              Text(
+                                priceFormatted,
+                                style: context.bodyLarge.copyWith(
+                                  color: context.primaryColorTheme,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
+                            ],
+                          ),
+                        if (phone != null && phone.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                loc.commonContact,
+                                style: context.bodySmall.copyWith(
+                                  color: context.secondaryTextColor,
+                                ),
+                              ),
+                              Text(
+                                phone,
+                                style: context.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: context.primaryTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -674,7 +715,8 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
     );
   }
 
-  Widget _buildEmptyState(String category) {
+  Widget _buildEmptyState(_ExperienceTab tab) {
+    final loc = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -686,14 +728,14 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'No $category found',
+            _emptyTitle(loc, tab),
             style: context.headlineSmall.copyWith(
               color: context.secondaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Check back later for new experiences',
+            loc.experiencesEmptySubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -712,32 +754,39 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Filter by',
-              style: context.headlineSmall.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
+      builder: (sheetContext) {
+        final loc = AppLocalizations.of(sheetContext)!;
+        return Container(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                loc.experiencesFilterBy,
+                style: context.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.primaryTextColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildFilterOption('All', 'All'),
-            _buildFilterOption('Tours', 'Tours'),
-            _buildFilterOption('Adventures', 'Adventures'),
-            _buildFilterOption('Cultural', 'Cultural'),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+              _buildFilterOption(sheetContext, loc.stayTabAll, 'All'),
+              _buildFilterOption(
+                  sheetContext, loc.experiencesTabTours, 'Tours'),
+              _buildFilterOption(
+                  sheetContext, loc.experiencesTabAdventures, 'Adventures'),
+              _buildFilterOption(
+                  sheetContext, loc.experiencesTabCultural, 'Cultural'),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildFilterOption(String label, String value) {
+  Widget _buildFilterOption(
+      BuildContext sheetContext, String label, String value) {
     return ListTile(
       title: Text(label),
       leading: Radio<String>(
@@ -747,7 +796,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           setState(() {
             _selectedFilter = value!;
           });
-          Navigator.pop(context);
+          Navigator.pop(sheetContext);
         },
         activeColor: context.primaryColorTheme,
       ),
@@ -755,7 +804,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         setState(() {
           _selectedFilter = value;
         });
-        Navigator.pop(context);
+        Navigator.pop(sheetContext);
       },
     );
   }
@@ -767,32 +816,39 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Sort by',
-              style: context.headlineSmall.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.primaryTextColor,
+      builder: (sheetContext) {
+        final loc = AppLocalizations.of(sheetContext)!;
+        return Container(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                loc.staySortBy,
+                style: context.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.primaryTextColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildSortOption('Popular', 'Popular'),
-            _buildSortOption('Rating', 'Rating'),
-            _buildSortOption('Distance', 'Distance'),
-            _buildSortOption('Price', 'Price'),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+              _buildSortOption(sheetContext, loc.shopSortPopular, 'Popular'),
+              _buildSortOption(
+                  sheetContext, loc.experiencesSortRating, 'Rating'),
+              _buildSortOption(
+                  sheetContext, loc.staySortDistance, 'Distance'),
+              _buildSortOption(
+                  sheetContext, loc.experiencesSortPrice, 'Price'),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSortOption(String label, String value) {
+  Widget _buildSortOption(
+      BuildContext sheetContext, String label, String value) {
     return ListTile(
       title: Text(label),
       leading: Radio<String>(
@@ -802,7 +858,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
           setState(() {
             _selectedSort = value!;
           });
-          Navigator.pop(context);
+          Navigator.pop(sheetContext);
         },
         activeColor: context.primaryColorTheme,
       ),
@@ -810,7 +866,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
         setState(() {
           _selectedSort = value;
         });
-        Navigator.pop(context);
+        Navigator.pop(sheetContext);
       },
     );
   }

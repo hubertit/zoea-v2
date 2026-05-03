@@ -8066,6 +8066,180 @@ abstract class AppLocalizations {
   /// **'Location'**
   String get tourBookingLocationDefaultLabel;
 
+  /// No description provided for @experiencesTabTours.
+  ///
+  /// In en, this message translates to:
+  /// **'Tours'**
+  String get experiencesTabTours;
+
+  /// No description provided for @experiencesTabAdventures.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventures'**
+  String get experiencesTabAdventures;
+
+  /// No description provided for @experiencesTabCultural.
+  ///
+  /// In en, this message translates to:
+  /// **'Cultural'**
+  String get experiencesTabCultural;
+
+  /// No description provided for @experiencesTabOperators.
+  ///
+  /// In en, this message translates to:
+  /// **'Operators'**
+  String get experiencesTabOperators;
+
+  /// No description provided for @experiencesFailedLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load experiences'**
+  String get experiencesFailedLoad;
+
+  /// No description provided for @experiencesOperatorsFailedLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load operators'**
+  String get experiencesOperatorsFailedLoad;
+
+  /// No description provided for @experiencesEmptyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'No experiences found'**
+  String get experiencesEmptyAll;
+
+  /// No description provided for @experiencesEmptyTours.
+  ///
+  /// In en, this message translates to:
+  /// **'No tours found'**
+  String get experiencesEmptyTours;
+
+  /// No description provided for @experiencesEmptyAdventures.
+  ///
+  /// In en, this message translates to:
+  /// **'No adventures found'**
+  String get experiencesEmptyAdventures;
+
+  /// No description provided for @experiencesEmptyCultural.
+  ///
+  /// In en, this message translates to:
+  /// **'No cultural experiences found'**
+  String get experiencesEmptyCultural;
+
+  /// No description provided for @experiencesEmptyOperators.
+  ///
+  /// In en, this message translates to:
+  /// **'No operators found'**
+  String get experiencesEmptyOperators;
+
+  /// No description provided for @experiencesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for new experiences'**
+  String get experiencesEmptySubtitle;
+
+  /// No description provided for @experiencesFilterBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by'**
+  String get experiencesFilterBy;
+
+  /// No description provided for @experiencesSortRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get experiencesSortRating;
+
+  /// No description provided for @experiencesSortPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get experiencesSortPrice;
+
+  /// No description provided for @tourListingFallbackName.
+  ///
+  /// In en, this message translates to:
+  /// **'Tour'**
+  String get tourListingFallbackName;
+
+  /// No description provided for @tourOperatorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown operator'**
+  String get tourOperatorUnknown;
+
+  /// No description provided for @tourCardStartingFromLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting from'**
+  String get tourCardStartingFromLabel;
+
+  /// No description provided for @tourCardStartingFromPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting from {price}'**
+  String tourCardStartingFromPrice(String price);
+
+  /// No description provided for @tourOperatorReviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'({count, plural, =1{1 review} other{{count} reviews}})'**
+  String tourOperatorReviewsCount(int count);
+
+  /// No description provided for @tourPackagesLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load tour packages'**
+  String get tourPackagesLoadFailed;
+
+  /// No description provided for @tourPackagesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tour packages available'**
+  String get tourPackagesEmpty;
+
+  /// No description provided for @tourPackagesBadgePackage.
+  ///
+  /// In en, this message translates to:
+  /// **'TOUR PACKAGE'**
+  String get tourPackagesBadgePackage;
+
+  /// No description provided for @tourPackagesBadgeFeatured.
+  ///
+  /// In en, this message translates to:
+  /// **'FEATURED'**
+  String get tourPackagesBadgeFeatured;
+
+  /// No description provided for @tourPackagesPriceOnRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Price on request'**
+  String get tourPackagesPriceOnRequest;
+
+  /// No description provided for @tourPackagesPriceFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From {price}'**
+  String tourPackagesPriceFrom(String price);
+
+  /// No description provided for @tourDurationDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String tourDurationDays(int count);
+
+  /// No description provided for @tourDurationHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String tourDurationHours(int count);
+
+  /// No description provided for @tourPackagesUntitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled tour'**
+  String get tourPackagesUntitled;
+
   /// No description provided for @tourPackagesScreenTitle.
   ///
   /// In en, this message translates to:
