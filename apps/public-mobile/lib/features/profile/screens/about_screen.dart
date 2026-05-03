@@ -50,10 +50,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
 
   void _launchPhone() => _tryLaunchUri(Uri(scheme: 'tel', path: _contactPhoneTel));
 
-  void _launchWebsite() {
+  void _launchWebsite(AppLocalizations l10n) {
     context.push(
       '/webview?url=${Uri.encodeComponent(_websiteUrl)}'
-      '&title=${Uri.encodeComponent('Zoea Africa')}',
+      '&title=${Uri.encodeComponent(l10n.aboutWebsiteWebviewTitle)}',
     );
   }
 
@@ -62,9 +62,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     final packageInfo = ref.watch(packageInfoProvider);
     final appUpdateCheck = ref.watch(appUpdateCheckProvider);
     final locale = Localizations.localeOf(context);
+    final l10n = AppLocalizations.of(context)!;
     final lastUpdated = lastUpdatedDisplayLabel(
       policyUpdatedAtIso: appUpdateCheck.valueOrNull?.policyUpdatedAt,
-      fallback: 'Not specified',
+      fallback: l10n.commonNotSpecified,
       intlLocale: locale.toLanguageTag(),
     );
 
@@ -72,7 +73,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'About',
+          l10n.profileAboutMenuTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -94,19 +95,19 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // App Logo and Info
-            _buildAppHeader(packageInfo),
+            _buildAppHeader(l10n, packageInfo),
             const SizedBox(height: 32),
             
             // App Information
-            _buildAppInformation(context, packageInfo, lastUpdated),
+            _buildAppInformation(context, l10n, packageInfo, lastUpdated),
             const SizedBox(height: 24),
             
             // Legal
-            _buildLegal(),
+            _buildLegal(l10n),
             const SizedBox(height: 24),
             
             // Social Links
-            _buildSocialLinks(),
+            _buildSocialLinks(l10n),
             const SizedBox(height: 32),
           ],
         ),
@@ -114,7 +115,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  Widget _buildAppHeader(AsyncValue<PackageInfo> packageInfo) {
+  Widget _buildAppHeader(AppLocalizations l10n, AsyncValue<PackageInfo> packageInfo) {
     return Center(
       child: Column(
         children: [
@@ -143,7 +144,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
           
           // App Name
           Text(
-            'Zoea',
+            l10n.appTitle,
             style: context.titleLarge.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 32,
@@ -154,7 +155,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
           
           // Tagline
           Text(
-            'Discover Rwanda\'s Beauty',
+            l10n.aboutBrandTagline,
             style: context.bodyLarge.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -171,8 +172,8 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
             ),
             child: Text(
               packageInfo.maybeWhen(
-                data: (p) => 'Version ${p.version}',
-                orElse: () => 'Version …',
+                data: (p) => l10n.aboutVersionLine(p.version),
+                orElse: () => l10n.aboutVersionLoading,
               ),
               style: context.bodySmall.copyWith(
                 color: context.primaryColorTheme,
@@ -187,6 +188,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
 
   Widget _buildAppInformation(
     BuildContext context,
+    AppLocalizations l10n,
     AsyncValue<PackageInfo> packageInfo,
     String lastUpdated,
   ) {
@@ -196,7 +198,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'App Information',
+          l10n.aboutAppInfoSectionTitle,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -220,31 +222,31 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
               children: [
                 _buildInfoItem(
                   icon: Icons.info_outline,
-                  title: 'App Version',
+                  title: l10n.aboutAppVersionLabel,
                   value: p.version,
                 ),
                 _buildDivider(),
                 _buildInfoItem(
                   icon: Icons.build_outlined,
-                  title: 'Build Number',
+                  title: l10n.aboutBuildNumberLabel,
                   value: p.buildNumber,
                 ),
                 _buildDivider(),
                 _buildInfoItem(
                   icon: Icons.update_outlined,
-                  title: 'Last Updated',
+                  title: l10n.aboutLastUpdatedLabel,
                   value: lastUpdated,
                 ),
                 _buildDivider(),
                 _buildInfoItem(
                   icon: Icons.phone_android_outlined,
-                  title: 'Platform',
+                  title: l10n.aboutPlatformLabel,
                   value: describeRuntimePlatform(),
                 ),
                 _buildDivider(),
                 _buildInfoItem(
                   icon: Icons.language_outlined,
-                  title: 'Language',
+                  title: l10n.aboutLanguageLabel,
                   value: localeDisplayLabel(locale),
                 ),
               ],
@@ -265,7 +267,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
             error: (_, __) => Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                'Could not load package info.',
+                l10n.helpPackageInfoError,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -320,12 +322,12 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  Widget _buildLegal() {
+  Widget _buildLegal(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Legal',
+          l10n.aboutLegalSectionTitle,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -348,24 +350,23 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
             children: [
               _buildLegalItem(
                 icon: Icons.privacy_tip_outlined,
-                title: 'Privacy Policy',
-                subtitle: 'How we protect your data',
-                onTap: () => _showLegalDialog('Privacy Policy', _getPrivacyPolicy()),
+                title: l10n.aboutPrivacyPolicyTitle,
+                subtitle: l10n.aboutPrivacyPolicySubtitle,
+                onTap: () => _showLegalDialog(l10n.aboutPrivacyPolicyTitle, _getPrivacyPolicy()),
               ),
               _buildDivider(),
               _buildLegalItem(
                 icon: Icons.description_outlined,
-                title: 'Terms of Service',
-                subtitle: 'Terms and conditions',
-                onTap: () => _showLegalDialog('Terms of Service', _getTermsOfService()),
+                title: l10n.aboutTermsOfServiceTitle,
+                subtitle: l10n.aboutTermsOfServiceSubtitle,
+                onTap: () => _showLegalDialog(l10n.aboutTermsOfServiceTitle, _getTermsOfService()),
               ),
               _buildDivider(),
               _buildLegalItem(
                 icon: Icons.copyright_outlined,
-                title: 'Copyright',
-                subtitle:
-                    '© ${DateTime.now().year} Zoea Africa. All rights reserved.',
-                onTap: () => _showLegalDialog('Copyright', _getCopyright()),
+                title: l10n.aboutCopyrightTitle,
+                subtitle: l10n.aboutCopyrightCardSubtitle(DateTime.now().year),
+                onTap: () => _showLegalDialog(l10n.aboutCopyrightTitle, _getCopyright()),
               ),
             ],
           ),
@@ -424,12 +425,12 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     );
   }
 
-  Widget _buildSocialLinks() {
+  Widget _buildSocialLinks(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Connect With Us',
+          l10n.aboutConnectSectionTitle,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -452,23 +453,23 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
             children: [
               _buildSocialItem(
                 icon: Icons.email_outlined,
-                title: 'Email',
+                title: l10n.aboutContactEmailTitle,
                 subtitle: _contactEmail,
                 onTap: _launchEmail,
               ),
               _buildDivider(),
               _buildSocialItem(
                 icon: Icons.phone_outlined,
-                title: 'Phone',
-                subtitle: '+250 796 889 900',
+                title: l10n.aboutContactPhoneTitle,
+                subtitle: l10n.aboutContactPhoneDisplay,
                 onTap: _launchPhone,
               ),
               _buildDivider(),
               _buildSocialItem(
                 icon: Icons.language_outlined,
-                title: 'Website',
-                subtitle: 'www.zoea.africa',
-                onTap: _launchWebsite,
+                title: l10n.aboutContactWebsiteTitle,
+                subtitle: l10n.aboutContactWebsiteDisplay,
+                onTap: () => _launchWebsite(l10n),
               ),
             ],
           ),
@@ -549,7 +550,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Close',
+              AppLocalizations.of(context)!.aboutCloseButton,
               style: context.bodyMedium.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w500,

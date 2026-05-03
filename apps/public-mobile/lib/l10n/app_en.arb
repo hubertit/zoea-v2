@@ -1063,6 +1063,7 @@
   "referralScreenShareCta": "Share referral code",
   "zoeaCardScreenTitle": "Zoea Card",
   "itinerariesScreenTitle": "Itineraries",
+  "itinerariesMyScreenTitle": "My itineraries",
   "itineraryCreateFab": "Create itinerary",
   "itineraryDetailTitle": "Itinerary",
   "itineraryViewCta": "View",
@@ -1645,5 +1646,185 @@
   "diningFlowCouponSavedBody": "You saved {amount}",
   "diningBookingTimeNotSelected": "Not selected",
   "diningFlowConfirmSheetTitle": "Confirm booking",
-  "diningFlowConfirmBookingCta": "Confirm booking"
+  "diningFlowConfirmBookingCta": "Confirm booking",
+  "stayFavoriteSignInMessage": "Create an account or sign in to save your favorite accommodations and access them anytime.",
+  "tourFavoriteSignInMessage": "Create an account or sign in to save your favorite tours and access them anytime.",
+  "diningReserveSignInTitle": "Sign in to reserve",
+  "diningReserveSignInMessage": "Create an account or sign in to reserve a table and manage your dining reservations.",
+  "stayBookSignInTitle": "Sign in to book",
+  "stayBookSignInMessage": "Create an account or sign in to complete your booking and manage your reservations.",
+  "tourBookSignInTitle": "Sign in to book",
+  "tourBookSignInMessage": "Create an account or sign in to complete your tour booking and manage your reservations.",
+  "@commonFavoriteUpdateFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "commonFavoriteUpdateFailed": "Failed to update favorite: {detail}",
+  "@listingShareOnZoeaInLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "listingShareOnZoeaInLocation": "Check out {name} in {location} on Zoea!",
+  "@listingDetailCouldNotOpenWebsite": {
+    "placeholders": {
+      "website": {
+        "type": "String"
+      }
+    }
+  },
+  "listingDetailCouldNotOpenWebsite": "Could not open website: {website}",
+  "@listingDetailCouldNotCallPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "listingDetailCouldNotCallPhone": "Could not make phone call to {phone}",
+  "searchScreenGlobalHint": "Search events, places, experiences…",
+  "listingReviewComposerHint": "Share your thoughts about this place…",
+  "exploreFilterBudgetHintMin": "0",
+  "tourBookingPickupHint": "Enter pickup location or leave blank for default",
+  "tourBookingSpecialRequirementsHint": "Any special requirements, dietary preferences, etc.",
+  "itineraryCreateNameHint": "e.g., My Rwanda Adventure",
+  "itineraryCreateDescriptionHint": "Tell us about your trip…",
+  "itineraryCreateStartLocationHint": "e.g., Kigali, Rwanda",
+  "itineraryStopTitleHint": "e.g., Coffee Break",
+  "itineraryStopDurationHint": "e.g., 60",
+  "itinerariesFabCreateTooltip": "Create itinerary",
+  "itineraryCreateDeleteTooltip": "Delete itinerary",
+  "itineraryDetailEditTooltip": "Edit",
+  "itineraryDetailShareTooltip": "Share",
+  "udcTravelPartySolo": "Solo",
+  "udcTravelPartyCouple": "Couple",
+  "udcTravelPartyFamily": "Family",
+  "udcTravelPartyGroup": "Group",
+  "udcFieldAgeRangeTitle": "Age range",
+  "udcFieldAgeRangeSubtitle": "Help us personalize content for you",
+  "udcFieldGenderTitle": "Gender",
+  "udcFieldGenderSubtitle": "Optional — helps with personalization",
+  "udcFieldLengthOfStayTitle": "Length of stay",
+  "udcFieldLengthOfStaySubtitle": "How long are you staying in Rwanda?",
+  "udcFieldInterestsTitle": "Interests",
+  "udcFieldInterestsSubtitle": "Select all that apply",
+  "udcFieldTravelPartyTitle": "Travel party",
+  "udcFieldTravelPartySubtitle": "Who are you traveling with?",
+  "onboardingAudienceResidentTitle": "Resident",
+  "onboardingAudienceResidentSubtitle": "I live in Rwanda",
+  "onboardingAudienceVisitorTitle": "Visitor",
+  "onboardingAudienceVisitorSubtitle": "I'm visiting Rwanda",
+  "commonProfileUpdatedSuccess": "Profile updated successfully!",
+  "commonSaveFailedTryAgain": "Failed to save. Please try again.",
+  "commonFailedSaveDataTryAgain": "Failed to save data. Please try again.",
+  "progressivePromptThanks": "Thanks for helping us personalize your experience!",
+  "profileEditPasswordRequiredForEmail": "Password is required to update email address.",
+  "profileEditPleaseEnterPassword": "Please enter your password",
+  "reviewsWrittenSearchHint": "Search reviews…",
+  "aboutAppInfoSectionTitle": "App information",
+  "aboutAppVersionLabel": "App version",
+  "aboutBuildNumberLabel": "Build number",
+  "aboutLastUpdatedLabel": "Last updated",
+  "aboutPlatformLabel": "Platform",
+  "aboutLanguageLabel": "Language",
+  "aboutLegalSectionTitle": "Legal",
+  "aboutPrivacyPolicyTitle": "Privacy Policy",
+  "aboutPrivacyPolicySubtitle": "How we protect your data",
+  "aboutTermsOfServiceTitle": "Terms of Service",
+  "aboutTermsOfServiceSubtitle": "Terms and conditions",
+  "aboutCopyrightTitle": "Copyright",
+  "@aboutCopyrightCardSubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "aboutCopyrightCardSubtitle": "© {year} Zoea Africa. All rights reserved.",
+  "aboutConnectSectionTitle": "Connect with us",
+  "aboutContactEmailTitle": "Email",
+  "aboutContactPhoneTitle": "Phone",
+  "aboutContactWebsiteTitle": "Website",
+  "aboutContactPhoneDisplay": "+250 796 889 900",
+  "aboutContactWebsiteDisplay": "www.zoea.africa",
+  "aboutCloseButton": "Close",
+  "@aboutVersionLine": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutVersionLine": "Version {version}",
+  "aboutVersionLoading": "Version …",
+  "aboutBrandTagline": "Discover Rwanda's beauty",
+  "aboutWebsiteWebviewTitle": "Zoea Africa",
+  "stayDetailLoadFailed": "Failed to load accommodation",
+  "stayDetailTabAmenities": "Amenities",
+  "stayDetailAboutTitle": "About this place",
+  "stayDetailCheckInOutSection": "Check-in & check-out",
+  "stayDetailCheckOutLabel": "Check-out",
+  "stayDetailBookingPoliciesSection": "Booking policies",
+  "stayDetailAvailableRooms": "Available rooms",
+  "stayDetailNoRoomTypes": "No room types available",
+  "stayDetailAmenitiesSection": "Amenities",
+  "stayDetailNoAmenitiesListed": "No amenities listed",
+  "stayDetailNoReviewsYet": "No reviews yet",
+  "stayDetailBeFirstToReview": "Be the first to review this place!",
+  "@stayDetailReviewsLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "stayDetailReviewsLoadFailed": "Failed to load reviews: {error}",
+  "stayPolicyCancellationTitle": "Cancellation",
+  "stayPolicyCancellationBody": "Free cancellation until 24 hours before check-in.",
+  "stayPolicyRefundTitle": "Refund policy",
+  "stayPolicyRefundBody": "Full refund if cancelled 24+ hours before check-in.",
+  "stayPolicyPetTitle": "Pet policy",
+  "stayPolicyPetBody": "Pets allowed with an additional fee of RWF 15,000 per night.",
+  "stayPolicySmokingTitle": "Smoking policy",
+  "stayPolicySmokingBody": "Non-smoking property. Smoking allowed in designated areas only.",
+  "stayPolicyChildrenTitle": "Children policy",
+  "stayPolicyChildrenBody": "Children of all ages welcome. Extra beds available on request.",
+  "stayPolicyPaymentTitle": "Payment policy",
+  "stayPolicyPaymentBody": "Credit card required for booking. Payment due at check-in.",
+  "itineraryCreateScreenTitle": "Create itinerary",
+  "itineraryEditScreenTitle": "Edit itinerary",
+  "itineraryFieldTitleLabel": "Title",
+  "itineraryFieldDescriptionOptionalLabel": "Description (optional)",
+  "itineraryFieldLocationOptionalLabel": "Location (optional)",
+  "itineraryFieldStartDateLabel": "Start date",
+  "itineraryFieldEndDateLabel": "End date",
+  "itineraryFieldNameLabel": "Name",
+  "itineraryFieldTimeLabel": "Time",
+  "itineraryFieldDurationOptionalLabel": "Duration (minutes, optional)",
+  "itineraryValidationTitleRequired": "Please enter a title",
+  "profileEnterPasswordDialogTitle": "Enter password",
+  "profileEnterPasswordDialogBody": "Please enter your current password to update your email address.",
+  "profileUpdateFailedGeneric": "Failed to update profile. Please try again.",
+  "@stayDetailReviewsCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayDetailReviewsCountLine": "{count, plural, =1{1 review} other{{count} reviews}}",
+  "stayDetailTabOverview": "Overview",
+  "stayDetailTabRooms": "Rooms",
+  "stayDetailTabReviews": "Reviews",
+  "stayDetailTabPhotos": "Photos",
+  "onboardingUserTypeHeadline": "Are you a resident or visitor?",
+  "onboardingUserTypeSubtitle": "This helps us show you relevant content"
 }

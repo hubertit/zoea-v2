@@ -920,6 +920,7 @@
   "referralScreenShareCta": "Partager le code de parrainage",
   "zoeaCardScreenTitle": "Carte Zoea",
   "itinerariesScreenTitle": "Itinéraires",
+  "itinerariesMyScreenTitle": "Mes itinéraires",
   "itineraryCreateFab": "Créer un itinéraire",
   "itineraryDetailTitle": "Itinéraire",
   "itineraryViewCta": "Voir",
@@ -1502,5 +1503,185 @@
   "diningFlowCouponSavedBody": "Vous économisez {amount}",
   "diningBookingTimeNotSelected": "Non sélectionné",
   "diningFlowConfirmSheetTitle": "Confirmer la réservation",
-  "diningFlowConfirmBookingCta": "Confirmer la réservation"
+  "diningFlowConfirmBookingCta": "Confirmer la réservation",
+  "stayFavoriteSignInMessage": "Créez un compte ou connectez-vous pour enregistrer vos hébergements favoris et y accéder à tout moment.",
+  "tourFavoriteSignInMessage": "Créez un compte ou connectez-vous pour enregistrer vos circuits favoris et y accéder à tout moment.",
+  "diningReserveSignInTitle": "Se connecter pour réserver",
+  "diningReserveSignInMessage": "Créez un compte ou connectez-vous pour réserver une table et gérer vos réservations au restaurant.",
+  "stayBookSignInTitle": "Se connecter pour réserver",
+  "stayBookSignInMessage": "Créez un compte ou connectez-vous pour finaliser votre réservation et la gérer.",
+  "tourBookSignInTitle": "Se connecter pour réserver",
+  "tourBookSignInMessage": "Créez un compte ou connectez-vous pour finaliser votre réservation de circuit et la gérer.",
+  "@commonFavoriteUpdateFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "commonFavoriteUpdateFailed": "Impossible de mettre à jour le favori : {detail}",
+  "@listingShareOnZoeaInLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "listingShareOnZoeaInLocation": "Découvrez {name} à {location} sur Zoea !",
+  "@listingDetailCouldNotOpenWebsite": {
+    "placeholders": {
+      "website": {
+        "type": "String"
+      }
+    }
+  },
+  "listingDetailCouldNotOpenWebsite": "Impossible d’ouvrir le site : {website}",
+  "@listingDetailCouldNotCallPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "listingDetailCouldNotCallPhone": "Impossible d’appeler le numéro : {phone}",
+  "searchScreenGlobalHint": "Rechercher des événements, lieux, expériences…",
+  "listingReviewComposerHint": "Partagez votre avis sur ce lieu…",
+  "exploreFilterBudgetHintMin": "0",
+  "tourBookingPickupHint": "Lieu de prise en charge, ou laissez vide pour la valeur par défaut",
+  "tourBookingSpecialRequirementsHint": "Besoins particuliers, préférences alimentaires, etc.",
+  "itineraryCreateNameHint": "ex. : Mon aventure au Rwanda",
+  "itineraryCreateDescriptionHint": "Parlez-nous de votre voyage…",
+  "itineraryCreateStartLocationHint": "ex. : Kigali, Rwanda",
+  "itineraryStopTitleHint": "ex. : Pause café",
+  "itineraryStopDurationHint": "ex. : 60",
+  "itinerariesFabCreateTooltip": "Créer un itinéraire",
+  "itineraryCreateDeleteTooltip": "Supprimer l’itinéraire",
+  "itineraryDetailEditTooltip": "Modifier",
+  "itineraryDetailShareTooltip": "Partager",
+  "udcTravelPartySolo": "Seul(e)",
+  "udcTravelPartyCouple": "Couple",
+  "udcTravelPartyFamily": "Famille",
+  "udcTravelPartyGroup": "Groupe",
+  "udcFieldAgeRangeTitle": "Tranche d’âge",
+  "udcFieldAgeRangeSubtitle": "Pour personnaliser le contenu",
+  "udcFieldGenderTitle": "Genre",
+  "udcFieldGenderSubtitle": "Facultatif — aide à la personnalisation",
+  "udcFieldLengthOfStayTitle": "Durée du séjour",
+  "udcFieldLengthOfStaySubtitle": "Combien de temps restez-vous au Rwanda ?",
+  "udcFieldInterestsTitle": "Centres d’intérêt",
+  "udcFieldInterestsSubtitle": "Sélectionnez tout ce qui s’applique",
+  "udcFieldTravelPartyTitle": "Composition du voyage",
+  "udcFieldTravelPartySubtitle": "Avec qui voyagez-vous ?",
+  "onboardingAudienceResidentTitle": "Résident(e)",
+  "onboardingAudienceResidentSubtitle": "Je vis au Rwanda",
+  "onboardingAudienceVisitorTitle": "Visiteur(se)",
+  "onboardingAudienceVisitorSubtitle": "Je visite le Rwanda",
+  "commonProfileUpdatedSuccess": "Profil mis à jour avec succès !",
+  "commonSaveFailedTryAgain": "Enregistrement impossible. Réessayez.",
+  "commonFailedSaveDataTryAgain": "Impossible d’enregistrer les données. Réessayez.",
+  "progressivePromptThanks": "Merci de nous aider à personnaliser votre expérience !",
+  "profileEditPasswordRequiredForEmail": "Le mot de passe est requis pour modifier l’adresse e-mail.",
+  "profileEditPleaseEnterPassword": "Veuillez saisir votre mot de passe",
+  "reviewsWrittenSearchHint": "Rechercher dans les avis…",
+  "aboutAppInfoSectionTitle": "Informations sur l’application",
+  "aboutAppVersionLabel": "Version de l’app",
+  "aboutBuildNumberLabel": "Numéro de build",
+  "aboutLastUpdatedLabel": "Dernière mise à jour",
+  "aboutPlatformLabel": "Plateforme",
+  "aboutLanguageLabel": "Langue",
+  "aboutLegalSectionTitle": "Mentions légales",
+  "aboutPrivacyPolicyTitle": "Politique de confidentialité",
+  "aboutPrivacyPolicySubtitle": "Comment nous protégeons vos données",
+  "aboutTermsOfServiceTitle": "Conditions d’utilisation",
+  "aboutTermsOfServiceSubtitle": "Modalités et conditions",
+  "aboutCopyrightTitle": "Droits d’auteur",
+  "@aboutCopyrightCardSubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "aboutCopyrightCardSubtitle": "© {year} Zoea Africa. Tous droits réservés.",
+  "aboutConnectSectionTitle": "Nous contacter",
+  "aboutContactEmailTitle": "E-mail",
+  "aboutContactPhoneTitle": "Téléphone",
+  "aboutContactWebsiteTitle": "Site web",
+  "aboutContactPhoneDisplay": "+250 796 889 900",
+  "aboutContactWebsiteDisplay": "www.zoea.africa",
+  "aboutCloseButton": "Fermer",
+  "@aboutVersionLine": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutVersionLine": "Version {version}",
+  "aboutVersionLoading": "Version …",
+  "aboutBrandTagline": "Découvrez la beauté du Rwanda",
+  "aboutWebsiteWebviewTitle": "Zoea Africa",
+  "stayDetailLoadFailed": "Impossible de charger l’hébergement",
+  "stayDetailTabAmenities": "Équipements",
+  "stayDetailAboutTitle": "À propos de ce lieu",
+  "stayDetailCheckInOutSection": "Arrivée et départ",
+  "stayDetailCheckOutLabel": "Départ",
+  "stayDetailBookingPoliciesSection": "Politiques de réservation",
+  "stayDetailAvailableRooms": "Chambres disponibles",
+  "stayDetailNoRoomTypes": "Aucun type de chambre disponible",
+  "stayDetailAmenitiesSection": "Équipements",
+  "stayDetailNoAmenitiesListed": "Aucun équipement indiqué",
+  "stayDetailNoReviewsYet": "Pas encore d’avis",
+  "stayDetailBeFirstToReview": "Soyez le premier à laisser un avis !",
+  "@stayDetailReviewsLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "stayDetailReviewsLoadFailed": "Impossible de charger les avis : {error}",
+  "stayPolicyCancellationTitle": "Annulation",
+  "stayPolicyCancellationBody": "Annulation gratuite jusqu’à 24 h avant l’arrivée.",
+  "stayPolicyRefundTitle": "Politique de remboursement",
+  "stayPolicyRefundBody": "Remboursement intégral si annulation plus de 24 h avant l’arrivée.",
+  "stayPolicyPetTitle": "Politique animaux",
+  "stayPolicyPetBody": "Animaux acceptés avec des frais supplémentaires de 15 000 RWF par nuit.",
+  "stayPolicySmokingTitle": "Politique tabac",
+  "stayPolicySmokingBody": "Établissement non-fumeur. Tabac autorisé dans les zones prévues.",
+  "stayPolicyChildrenTitle": "Politique enfants",
+  "stayPolicyChildrenBody": "Tous âges bienvenus. Lits supplémentaires sur demande.",
+  "stayPolicyPaymentTitle": "Politique de paiement",
+  "stayPolicyPaymentBody": "Carte bancaire requise pour la réservation. Paiement à l’arrivée.",
+  "itineraryCreateScreenTitle": "Créer un itinéraire",
+  "itineraryEditScreenTitle": "Modifier l’itinéraire",
+  "itineraryFieldTitleLabel": "Titre",
+  "itineraryFieldDescriptionOptionalLabel": "Description (facultatif)",
+  "itineraryFieldLocationOptionalLabel": "Lieu (facultatif)",
+  "itineraryFieldStartDateLabel": "Date de début",
+  "itineraryFieldEndDateLabel": "Date de fin",
+  "itineraryFieldNameLabel": "Nom",
+  "itineraryFieldTimeLabel": "Heure",
+  "itineraryFieldDurationOptionalLabel": "Durée (minutes, facultatif)",
+  "itineraryValidationTitleRequired": "Veuillez saisir un titre",
+  "profileEnterPasswordDialogTitle": "Saisir le mot de passe",
+  "profileEnterPasswordDialogBody": "Saisissez votre mot de passe actuel pour modifier votre adresse e-mail.",
+  "profileUpdateFailedGeneric": "Impossible de mettre à jour le profil. Réessayez.",
+  "@stayDetailReviewsCountLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayDetailReviewsCountLine": "{count, plural, =1{1 avis} other{{count} avis}}",
+  "stayDetailTabOverview": "Vue d’ensemble",
+  "stayDetailTabRooms": "Chambres",
+  "stayDetailTabReviews": "Avis",
+  "stayDetailTabPhotos": "Photos",
+  "onboardingUserTypeHeadline": "Résident(e) ou visiteur(se) ?",
+  "onboardingUserTypeSubtitle": "Cela nous aide à vous proposer du contenu adapté"
 }

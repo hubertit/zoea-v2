@@ -2468,6 +2468,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get itinerariesScreenTitle => 'Itinéraires';
 
   @override
+  String get itinerariesMyScreenTitle => 'Mes itinéraires';
+
+  @override
   String get itineraryCreateFab => 'Créer un itinéraire';
 
   @override
@@ -3681,4 +3684,417 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get diningFlowConfirmBookingCta => 'Confirmer la réservation';
+
+  @override
+  String get stayFavoriteSignInMessage =>
+      'Créez un compte ou connectez-vous pour enregistrer vos hébergements favoris et y accéder à tout moment.';
+
+  @override
+  String get tourFavoriteSignInMessage =>
+      'Créez un compte ou connectez-vous pour enregistrer vos circuits favoris et y accéder à tout moment.';
+
+  @override
+  String get diningReserveSignInTitle => 'Se connecter pour réserver';
+
+  @override
+  String get diningReserveSignInMessage =>
+      'Créez un compte ou connectez-vous pour réserver une table et gérer vos réservations au restaurant.';
+
+  @override
+  String get stayBookSignInTitle => 'Se connecter pour réserver';
+
+  @override
+  String get stayBookSignInMessage =>
+      'Créez un compte ou connectez-vous pour finaliser votre réservation et la gérer.';
+
+  @override
+  String get tourBookSignInTitle => 'Se connecter pour réserver';
+
+  @override
+  String get tourBookSignInMessage =>
+      'Créez un compte ou connectez-vous pour finaliser votre réservation de circuit et la gérer.';
+
+  @override
+  String commonFavoriteUpdateFailed(String detail) {
+    return 'Impossible de mettre à jour le favori : $detail';
+  }
+
+  @override
+  String listingShareOnZoeaInLocation(String name, String location) {
+    return 'Découvrez $name à $location sur Zoea !';
+  }
+
+  @override
+  String listingDetailCouldNotOpenWebsite(String website) {
+    return 'Impossible d’ouvrir le site : $website';
+  }
+
+  @override
+  String listingDetailCouldNotCallPhone(String phone) {
+    return 'Impossible d’appeler le numéro : $phone';
+  }
+
+  @override
+  String get searchScreenGlobalHint =>
+      'Rechercher des événements, lieux, expériences…';
+
+  @override
+  String get listingReviewComposerHint => 'Partagez votre avis sur ce lieu…';
+
+  @override
+  String get exploreFilterBudgetHintMin => '0';
+
+  @override
+  String get tourBookingPickupHint =>
+      'Lieu de prise en charge, ou laissez vide pour la valeur par défaut';
+
+  @override
+  String get tourBookingSpecialRequirementsHint =>
+      'Besoins particuliers, préférences alimentaires, etc.';
+
+  @override
+  String get itineraryCreateNameHint => 'ex. : Mon aventure au Rwanda';
+
+  @override
+  String get itineraryCreateDescriptionHint => 'Parlez-nous de votre voyage…';
+
+  @override
+  String get itineraryCreateStartLocationHint => 'ex. : Kigali, Rwanda';
+
+  @override
+  String get itineraryStopTitleHint => 'ex. : Pause café';
+
+  @override
+  String get itineraryStopDurationHint => 'ex. : 60';
+
+  @override
+  String get itinerariesFabCreateTooltip => 'Créer un itinéraire';
+
+  @override
+  String get itineraryCreateDeleteTooltip => 'Supprimer l’itinéraire';
+
+  @override
+  String get itineraryDetailEditTooltip => 'Modifier';
+
+  @override
+  String get itineraryDetailShareTooltip => 'Partager';
+
+  @override
+  String get udcTravelPartySolo => 'Seul(e)';
+
+  @override
+  String get udcTravelPartyCouple => 'Couple';
+
+  @override
+  String get udcTravelPartyFamily => 'Famille';
+
+  @override
+  String get udcTravelPartyGroup => 'Groupe';
+
+  @override
+  String get udcFieldAgeRangeTitle => 'Tranche d’âge';
+
+  @override
+  String get udcFieldAgeRangeSubtitle => 'Pour personnaliser le contenu';
+
+  @override
+  String get udcFieldGenderTitle => 'Genre';
+
+  @override
+  String get udcFieldGenderSubtitle =>
+      'Facultatif — aide à la personnalisation';
+
+  @override
+  String get udcFieldLengthOfStayTitle => 'Durée du séjour';
+
+  @override
+  String get udcFieldLengthOfStaySubtitle =>
+      'Combien de temps restez-vous au Rwanda ?';
+
+  @override
+  String get udcFieldInterestsTitle => 'Centres d’intérêt';
+
+  @override
+  String get udcFieldInterestsSubtitle => 'Sélectionnez tout ce qui s’applique';
+
+  @override
+  String get udcFieldTravelPartyTitle => 'Composition du voyage';
+
+  @override
+  String get udcFieldTravelPartySubtitle => 'Avec qui voyagez-vous ?';
+
+  @override
+  String get onboardingAudienceResidentTitle => 'Résident(e)';
+
+  @override
+  String get onboardingAudienceResidentSubtitle => 'Je vis au Rwanda';
+
+  @override
+  String get onboardingAudienceVisitorTitle => 'Visiteur(se)';
+
+  @override
+  String get onboardingAudienceVisitorSubtitle => 'Je visite le Rwanda';
+
+  @override
+  String get commonProfileUpdatedSuccess => 'Profil mis à jour avec succès !';
+
+  @override
+  String get commonSaveFailedTryAgain =>
+      'Enregistrement impossible. Réessayez.';
+
+  @override
+  String get commonFailedSaveDataTryAgain =>
+      'Impossible d’enregistrer les données. Réessayez.';
+
+  @override
+  String get progressivePromptThanks =>
+      'Merci de nous aider à personnaliser votre expérience !';
+
+  @override
+  String get profileEditPasswordRequiredForEmail =>
+      'Le mot de passe est requis pour modifier l’adresse e-mail.';
+
+  @override
+  String get profileEditPleaseEnterPassword =>
+      'Veuillez saisir votre mot de passe';
+
+  @override
+  String get reviewsWrittenSearchHint => 'Rechercher dans les avis…';
+
+  @override
+  String get aboutAppInfoSectionTitle => 'Informations sur l’application';
+
+  @override
+  String get aboutAppVersionLabel => 'Version de l’app';
+
+  @override
+  String get aboutBuildNumberLabel => 'Numéro de build';
+
+  @override
+  String get aboutLastUpdatedLabel => 'Dernière mise à jour';
+
+  @override
+  String get aboutPlatformLabel => 'Plateforme';
+
+  @override
+  String get aboutLanguageLabel => 'Langue';
+
+  @override
+  String get aboutLegalSectionTitle => 'Mentions légales';
+
+  @override
+  String get aboutPrivacyPolicyTitle => 'Politique de confidentialité';
+
+  @override
+  String get aboutPrivacyPolicySubtitle =>
+      'Comment nous protégeons vos données';
+
+  @override
+  String get aboutTermsOfServiceTitle => 'Conditions d’utilisation';
+
+  @override
+  String get aboutTermsOfServiceSubtitle => 'Modalités et conditions';
+
+  @override
+  String get aboutCopyrightTitle => 'Droits d’auteur';
+
+  @override
+  String aboutCopyrightCardSubtitle(int year) {
+    return '© $year Zoea Africa. Tous droits réservés.';
+  }
+
+  @override
+  String get aboutConnectSectionTitle => 'Nous contacter';
+
+  @override
+  String get aboutContactEmailTitle => 'E-mail';
+
+  @override
+  String get aboutContactPhoneTitle => 'Téléphone';
+
+  @override
+  String get aboutContactWebsiteTitle => 'Site web';
+
+  @override
+  String get aboutContactPhoneDisplay => '+250 796 889 900';
+
+  @override
+  String get aboutContactWebsiteDisplay => 'www.zoea.africa';
+
+  @override
+  String get aboutCloseButton => 'Fermer';
+
+  @override
+  String aboutVersionLine(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get aboutVersionLoading => 'Version …';
+
+  @override
+  String get aboutBrandTagline => 'Découvrez la beauté du Rwanda';
+
+  @override
+  String get aboutWebsiteWebviewTitle => 'Zoea Africa';
+
+  @override
+  String get stayDetailLoadFailed => 'Impossible de charger l’hébergement';
+
+  @override
+  String get stayDetailTabAmenities => 'Équipements';
+
+  @override
+  String get stayDetailAboutTitle => 'À propos de ce lieu';
+
+  @override
+  String get stayDetailCheckInOutSection => 'Arrivée et départ';
+
+  @override
+  String get stayDetailCheckOutLabel => 'Départ';
+
+  @override
+  String get stayDetailBookingPoliciesSection => 'Politiques de réservation';
+
+  @override
+  String get stayDetailAvailableRooms => 'Chambres disponibles';
+
+  @override
+  String get stayDetailNoRoomTypes => 'Aucun type de chambre disponible';
+
+  @override
+  String get stayDetailAmenitiesSection => 'Équipements';
+
+  @override
+  String get stayDetailNoAmenitiesListed => 'Aucun équipement indiqué';
+
+  @override
+  String get stayDetailNoReviewsYet => 'Pas encore d’avis';
+
+  @override
+  String get stayDetailBeFirstToReview =>
+      'Soyez le premier à laisser un avis !';
+
+  @override
+  String stayDetailReviewsLoadFailed(String error) {
+    return 'Impossible de charger les avis : $error';
+  }
+
+  @override
+  String get stayPolicyCancellationTitle => 'Annulation';
+
+  @override
+  String get stayPolicyCancellationBody =>
+      'Annulation gratuite jusqu’à 24 h avant l’arrivée.';
+
+  @override
+  String get stayPolicyRefundTitle => 'Politique de remboursement';
+
+  @override
+  String get stayPolicyRefundBody =>
+      'Remboursement intégral si annulation plus de 24 h avant l’arrivée.';
+
+  @override
+  String get stayPolicyPetTitle => 'Politique animaux';
+
+  @override
+  String get stayPolicyPetBody =>
+      'Animaux acceptés avec des frais supplémentaires de 15 000 RWF par nuit.';
+
+  @override
+  String get stayPolicySmokingTitle => 'Politique tabac';
+
+  @override
+  String get stayPolicySmokingBody =>
+      'Établissement non-fumeur. Tabac autorisé dans les zones prévues.';
+
+  @override
+  String get stayPolicyChildrenTitle => 'Politique enfants';
+
+  @override
+  String get stayPolicyChildrenBody =>
+      'Tous âges bienvenus. Lits supplémentaires sur demande.';
+
+  @override
+  String get stayPolicyPaymentTitle => 'Politique de paiement';
+
+  @override
+  String get stayPolicyPaymentBody =>
+      'Carte bancaire requise pour la réservation. Paiement à l’arrivée.';
+
+  @override
+  String get itineraryCreateScreenTitle => 'Créer un itinéraire';
+
+  @override
+  String get itineraryEditScreenTitle => 'Modifier l’itinéraire';
+
+  @override
+  String get itineraryFieldTitleLabel => 'Titre';
+
+  @override
+  String get itineraryFieldDescriptionOptionalLabel =>
+      'Description (facultatif)';
+
+  @override
+  String get itineraryFieldLocationOptionalLabel => 'Lieu (facultatif)';
+
+  @override
+  String get itineraryFieldStartDateLabel => 'Date de début';
+
+  @override
+  String get itineraryFieldEndDateLabel => 'Date de fin';
+
+  @override
+  String get itineraryFieldNameLabel => 'Nom';
+
+  @override
+  String get itineraryFieldTimeLabel => 'Heure';
+
+  @override
+  String get itineraryFieldDurationOptionalLabel =>
+      'Durée (minutes, facultatif)';
+
+  @override
+  String get itineraryValidationTitleRequired => 'Veuillez saisir un titre';
+
+  @override
+  String get profileEnterPasswordDialogTitle => 'Saisir le mot de passe';
+
+  @override
+  String get profileEnterPasswordDialogBody =>
+      'Saisissez votre mot de passe actuel pour modifier votre adresse e-mail.';
+
+  @override
+  String get profileUpdateFailedGeneric =>
+      'Impossible de mettre à jour le profil. Réessayez.';
+
+  @override
+  String stayDetailReviewsCountLine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count avis',
+      one: '1 avis',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get stayDetailTabOverview => 'Vue d’ensemble';
+
+  @override
+  String get stayDetailTabRooms => 'Chambres';
+
+  @override
+  String get stayDetailTabReviews => 'Avis';
+
+  @override
+  String get stayDetailTabPhotos => 'Photos';
+
+  @override
+  String get onboardingUserTypeHeadline => 'Résident(e) ou visiteur(se) ?';
+
+  @override
+  String get onboardingUserTypeSubtitle =>
+      'Cela nous aide à vous proposer du contenu adapté';
 }

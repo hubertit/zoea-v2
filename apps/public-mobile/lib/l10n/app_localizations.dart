@@ -4502,6 +4502,12 @@ abstract class AppLocalizations {
   /// **'Itineraries'**
   String get itinerariesScreenTitle;
 
+  /// No description provided for @itinerariesMyScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My itineraries'**
+  String get itinerariesMyScreenTitle;
+
   /// No description provided for @itineraryCreateFab.
   ///
   /// In en, this message translates to:
@@ -6577,6 +6583,732 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm booking'**
   String get diningFlowConfirmBookingCta;
+
+  /// No description provided for @stayFavoriteSignInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account or sign in to save your favorite accommodations and access them anytime.'**
+  String get stayFavoriteSignInMessage;
+
+  /// No description provided for @tourFavoriteSignInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account or sign in to save your favorite tours and access them anytime.'**
+  String get tourFavoriteSignInMessage;
+
+  /// No description provided for @diningReserveSignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to reserve'**
+  String get diningReserveSignInTitle;
+
+  /// No description provided for @diningReserveSignInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account or sign in to reserve a table and manage your dining reservations.'**
+  String get diningReserveSignInMessage;
+
+  /// No description provided for @stayBookSignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to book'**
+  String get stayBookSignInTitle;
+
+  /// No description provided for @stayBookSignInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account or sign in to complete your booking and manage your reservations.'**
+  String get stayBookSignInMessage;
+
+  /// No description provided for @tourBookSignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to book'**
+  String get tourBookSignInTitle;
+
+  /// No description provided for @tourBookSignInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account or sign in to complete your tour booking and manage your reservations.'**
+  String get tourBookSignInMessage;
+
+  /// No description provided for @commonFavoriteUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update favorite: {detail}'**
+  String commonFavoriteUpdateFailed(String detail);
+
+  /// No description provided for @listingShareOnZoeaInLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Check out {name} in {location} on Zoea!'**
+  String listingShareOnZoeaInLocation(String name, String location);
+
+  /// No description provided for @listingDetailCouldNotOpenWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open website: {website}'**
+  String listingDetailCouldNotOpenWebsite(String website);
+
+  /// No description provided for @listingDetailCouldNotCallPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not make phone call to {phone}'**
+  String listingDetailCouldNotCallPhone(String phone);
+
+  /// No description provided for @searchScreenGlobalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search events, places, experiences…'**
+  String get searchScreenGlobalHint;
+
+  /// No description provided for @listingReviewComposerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your thoughts about this place…'**
+  String get listingReviewComposerHint;
+
+  /// No description provided for @exploreFilterBudgetHintMin.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get exploreFilterBudgetHintMin;
+
+  /// No description provided for @tourBookingPickupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter pickup location or leave blank for default'**
+  String get tourBookingPickupHint;
+
+  /// No description provided for @tourBookingSpecialRequirementsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Any special requirements, dietary preferences, etc.'**
+  String get tourBookingSpecialRequirementsHint;
+
+  /// No description provided for @itineraryCreateNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., My Rwanda Adventure'**
+  String get itineraryCreateNameHint;
+
+  /// No description provided for @itineraryCreateDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about your trip…'**
+  String get itineraryCreateDescriptionHint;
+
+  /// No description provided for @itineraryCreateStartLocationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Kigali, Rwanda'**
+  String get itineraryCreateStartLocationHint;
+
+  /// No description provided for @itineraryStopTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Coffee Break'**
+  String get itineraryStopTitleHint;
+
+  /// No description provided for @itineraryStopDurationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 60'**
+  String get itineraryStopDurationHint;
+
+  /// No description provided for @itinerariesFabCreateTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Create itinerary'**
+  String get itinerariesFabCreateTooltip;
+
+  /// No description provided for @itineraryCreateDeleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete itinerary'**
+  String get itineraryCreateDeleteTooltip;
+
+  /// No description provided for @itineraryDetailEditTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get itineraryDetailEditTooltip;
+
+  /// No description provided for @itineraryDetailShareTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get itineraryDetailShareTooltip;
+
+  /// No description provided for @udcTravelPartySolo.
+  ///
+  /// In en, this message translates to:
+  /// **'Solo'**
+  String get udcTravelPartySolo;
+
+  /// No description provided for @udcTravelPartyCouple.
+  ///
+  /// In en, this message translates to:
+  /// **'Couple'**
+  String get udcTravelPartyCouple;
+
+  /// No description provided for @udcTravelPartyFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get udcTravelPartyFamily;
+
+  /// No description provided for @udcTravelPartyGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get udcTravelPartyGroup;
+
+  /// No description provided for @udcFieldAgeRangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Age range'**
+  String get udcFieldAgeRangeTitle;
+
+  /// No description provided for @udcFieldAgeRangeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us personalize content for you'**
+  String get udcFieldAgeRangeSubtitle;
+
+  /// No description provided for @udcFieldGenderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get udcFieldGenderTitle;
+
+  /// No description provided for @udcFieldGenderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional — helps with personalization'**
+  String get udcFieldGenderSubtitle;
+
+  /// No description provided for @udcFieldLengthOfStayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Length of stay'**
+  String get udcFieldLengthOfStayTitle;
+
+  /// No description provided for @udcFieldLengthOfStaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How long are you staying in Rwanda?'**
+  String get udcFieldLengthOfStaySubtitle;
+
+  /// No description provided for @udcFieldInterestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Interests'**
+  String get udcFieldInterestsTitle;
+
+  /// No description provided for @udcFieldInterestsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply'**
+  String get udcFieldInterestsSubtitle;
+
+  /// No description provided for @udcFieldTravelPartyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel party'**
+  String get udcFieldTravelPartyTitle;
+
+  /// No description provided for @udcFieldTravelPartySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who are you traveling with?'**
+  String get udcFieldTravelPartySubtitle;
+
+  /// No description provided for @onboardingAudienceResidentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resident'**
+  String get onboardingAudienceResidentTitle;
+
+  /// No description provided for @onboardingAudienceResidentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'I live in Rwanda'**
+  String get onboardingAudienceResidentSubtitle;
+
+  /// No description provided for @onboardingAudienceVisitorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visitor'**
+  String get onboardingAudienceVisitorTitle;
+
+  /// No description provided for @onboardingAudienceVisitorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m visiting Rwanda'**
+  String get onboardingAudienceVisitorSubtitle;
+
+  /// No description provided for @commonProfileUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully!'**
+  String get commonProfileUpdatedSuccess;
+
+  /// No description provided for @commonSaveFailedTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save. Please try again.'**
+  String get commonSaveFailedTryAgain;
+
+  /// No description provided for @commonFailedSaveDataTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save data. Please try again.'**
+  String get commonFailedSaveDataTryAgain;
+
+  /// No description provided for @progressivePromptThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for helping us personalize your experience!'**
+  String get progressivePromptThanks;
+
+  /// No description provided for @profileEditPasswordRequiredForEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required to update email address.'**
+  String get profileEditPasswordRequiredForEmail;
+
+  /// No description provided for @profileEditPleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get profileEditPleaseEnterPassword;
+
+  /// No description provided for @reviewsWrittenSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search reviews…'**
+  String get reviewsWrittenSearchHint;
+
+  /// No description provided for @aboutAppInfoSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App information'**
+  String get aboutAppInfoSectionTitle;
+
+  /// No description provided for @aboutAppVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App version'**
+  String get aboutAppVersionLabel;
+
+  /// No description provided for @aboutBuildNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Build number'**
+  String get aboutBuildNumberLabel;
+
+  /// No description provided for @aboutLastUpdatedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated'**
+  String get aboutLastUpdatedLabel;
+
+  /// No description provided for @aboutPlatformLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get aboutPlatformLabel;
+
+  /// No description provided for @aboutLanguageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get aboutLanguageLabel;
+
+  /// No description provided for @aboutLegalSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get aboutLegalSectionTitle;
+
+  /// No description provided for @aboutPrivacyPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get aboutPrivacyPolicyTitle;
+
+  /// No description provided for @aboutPrivacyPolicySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How we protect your data'**
+  String get aboutPrivacyPolicySubtitle;
+
+  /// No description provided for @aboutTermsOfServiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get aboutTermsOfServiceTitle;
+
+  /// No description provided for @aboutTermsOfServiceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and conditions'**
+  String get aboutTermsOfServiceSubtitle;
+
+  /// No description provided for @aboutCopyrightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Copyright'**
+  String get aboutCopyrightTitle;
+
+  /// No description provided for @aboutCopyrightCardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'© {year} Zoea Africa. All rights reserved.'**
+  String aboutCopyrightCardSubtitle(int year);
+
+  /// No description provided for @aboutConnectSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with us'**
+  String get aboutConnectSectionTitle;
+
+  /// No description provided for @aboutContactEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get aboutContactEmailTitle;
+
+  /// No description provided for @aboutContactPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get aboutContactPhoneTitle;
+
+  /// No description provided for @aboutContactWebsiteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get aboutContactWebsiteTitle;
+
+  /// No description provided for @aboutContactPhoneDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'+250 796 889 900'**
+  String get aboutContactPhoneDisplay;
+
+  /// No description provided for @aboutContactWebsiteDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'www.zoea.africa'**
+  String get aboutContactWebsiteDisplay;
+
+  /// No description provided for @aboutCloseButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get aboutCloseButton;
+
+  /// No description provided for @aboutVersionLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String aboutVersionLine(String version);
+
+  /// No description provided for @aboutVersionLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Version …'**
+  String get aboutVersionLoading;
+
+  /// No description provided for @aboutBrandTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Rwanda\'s beauty'**
+  String get aboutBrandTagline;
+
+  /// No description provided for @aboutWebsiteWebviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoea Africa'**
+  String get aboutWebsiteWebviewTitle;
+
+  /// No description provided for @stayDetailLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load accommodation'**
+  String get stayDetailLoadFailed;
+
+  /// No description provided for @stayDetailTabAmenities.
+  ///
+  /// In en, this message translates to:
+  /// **'Amenities'**
+  String get stayDetailTabAmenities;
+
+  /// No description provided for @stayDetailAboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About this place'**
+  String get stayDetailAboutTitle;
+
+  /// No description provided for @stayDetailCheckInOutSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in & check-out'**
+  String get stayDetailCheckInOutSection;
+
+  /// No description provided for @stayDetailCheckOutLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get stayDetailCheckOutLabel;
+
+  /// No description provided for @stayDetailBookingPoliciesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking policies'**
+  String get stayDetailBookingPoliciesSection;
+
+  /// No description provided for @stayDetailAvailableRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Available rooms'**
+  String get stayDetailAvailableRooms;
+
+  /// No description provided for @stayDetailNoRoomTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'No room types available'**
+  String get stayDetailNoRoomTypes;
+
+  /// No description provided for @stayDetailAmenitiesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Amenities'**
+  String get stayDetailAmenitiesSection;
+
+  /// No description provided for @stayDetailNoAmenitiesListed.
+  ///
+  /// In en, this message translates to:
+  /// **'No amenities listed'**
+  String get stayDetailNoAmenitiesListed;
+
+  /// No description provided for @stayDetailNoReviewsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get stayDetailNoReviewsYet;
+
+  /// No description provided for @stayDetailBeFirstToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to review this place!'**
+  String get stayDetailBeFirstToReview;
+
+  /// No description provided for @stayDetailReviewsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load reviews: {error}'**
+  String stayDetailReviewsLoadFailed(String error);
+
+  /// No description provided for @stayPolicyCancellationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation'**
+  String get stayPolicyCancellationTitle;
+
+  /// No description provided for @stayPolicyCancellationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation until 24 hours before check-in.'**
+  String get stayPolicyCancellationBody;
+
+  /// No description provided for @stayPolicyRefundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund policy'**
+  String get stayPolicyRefundTitle;
+
+  /// No description provided for @stayPolicyRefundBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Full refund if cancelled 24+ hours before check-in.'**
+  String get stayPolicyRefundBody;
+
+  /// No description provided for @stayPolicyPetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet policy'**
+  String get stayPolicyPetTitle;
+
+  /// No description provided for @stayPolicyPetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pets allowed with an additional fee of RWF 15,000 per night.'**
+  String get stayPolicyPetBody;
+
+  /// No description provided for @stayPolicySmokingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoking policy'**
+  String get stayPolicySmokingTitle;
+
+  /// No description provided for @stayPolicySmokingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-smoking property. Smoking allowed in designated areas only.'**
+  String get stayPolicySmokingBody;
+
+  /// No description provided for @stayPolicyChildrenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Children policy'**
+  String get stayPolicyChildrenTitle;
+
+  /// No description provided for @stayPolicyChildrenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Children of all ages welcome. Extra beds available on request.'**
+  String get stayPolicyChildrenBody;
+
+  /// No description provided for @stayPolicyPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment policy'**
+  String get stayPolicyPaymentTitle;
+
+  /// No description provided for @stayPolicyPaymentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit card required for booking. Payment due at check-in.'**
+  String get stayPolicyPaymentBody;
+
+  /// No description provided for @itineraryCreateScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create itinerary'**
+  String get itineraryCreateScreenTitle;
+
+  /// No description provided for @itineraryEditScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit itinerary'**
+  String get itineraryEditScreenTitle;
+
+  /// No description provided for @itineraryFieldTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get itineraryFieldTitleLabel;
+
+  /// No description provided for @itineraryFieldDescriptionOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get itineraryFieldDescriptionOptionalLabel;
+
+  /// No description provided for @itineraryFieldLocationOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location (optional)'**
+  String get itineraryFieldLocationOptionalLabel;
+
+  /// No description provided for @itineraryFieldStartDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start date'**
+  String get itineraryFieldStartDateLabel;
+
+  /// No description provided for @itineraryFieldEndDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End date'**
+  String get itineraryFieldEndDateLabel;
+
+  /// No description provided for @itineraryFieldNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get itineraryFieldNameLabel;
+
+  /// No description provided for @itineraryFieldTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get itineraryFieldTimeLabel;
+
+  /// No description provided for @itineraryFieldDurationOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (minutes, optional)'**
+  String get itineraryFieldDurationOptionalLabel;
+
+  /// No description provided for @itineraryValidationTitleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a title'**
+  String get itineraryValidationTitleRequired;
+
+  /// No description provided for @profileEnterPasswordDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter password'**
+  String get profileEnterPasswordDialogTitle;
+
+  /// No description provided for @profileEnterPasswordDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your current password to update your email address.'**
+  String get profileEnterPasswordDialogBody;
+
+  /// No description provided for @profileUpdateFailedGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile. Please try again.'**
+  String get profileUpdateFailedGeneric;
+
+  /// No description provided for @stayDetailReviewsCountLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 review} other{{count} reviews}}'**
+  String stayDetailReviewsCountLine(int count);
+
+  /// No description provided for @stayDetailTabOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get stayDetailTabOverview;
+
+  /// No description provided for @stayDetailTabRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get stayDetailTabRooms;
+
+  /// No description provided for @stayDetailTabReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get stayDetailTabReviews;
+
+  /// No description provided for @stayDetailTabPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get stayDetailTabPhotos;
+
+  /// No description provided for @onboardingUserTypeHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you a resident or visitor?'**
+  String get onboardingUserTypeHeadline;
+
+  /// No description provided for @onboardingUserTypeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us show you relevant content'**
+  String get onboardingUserTypeSubtitle;
 }
 
 class _AppLocalizationsDelegate
