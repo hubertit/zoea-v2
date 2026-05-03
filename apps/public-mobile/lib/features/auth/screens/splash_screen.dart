@@ -193,8 +193,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       // Mandatory data is complete, go to explore
       return '/explore';
     } else {
-      // Not logged in - allow guest browsing by going to explore
-      return '/explore';
+      // Not logged in - show sign-in; user can choose "Browse as Guest" for explore
+      return '/login';
     }
   }
 
