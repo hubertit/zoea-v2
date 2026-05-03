@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import '../widgets/event_filter_sheet.dart';
 import '../widgets/event_calendar_sheet.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../core/widgets/event_flyer_image.dart';
 
 /// Temporary: MICE tab uses mock data. Set to `true` to show the tab again.
 const bool kShowEventsMiceTab = false;
@@ -638,29 +639,13 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
           // Event Image
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: CachedNetworkImage(
-              imageUrl: eventDetails.flyer,
+            child: EventFlyerImage(
+              flyer: eventDetails.flyer,
               height: 200,
               width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                height: 200,
-                color: context.dividerColor,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: context.primaryColorTheme,
-                  ),
-                ),
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: 200,
-                color: context.dividerColor,
-                child: Icon(
-                  Icons.event,
-                  size: 64,
-                  color: context.secondaryTextColor,
-                ),
-              ),
+              indicatorColor: context.primaryColorTheme,
+              placeholderColor: context.dividerColor,
+              errorIconColor: context.secondaryTextColor,
             ),
           ),
           // Event Details
@@ -737,7 +722,24 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                   children: [
                     CircleAvatar(
                       radius: 12,
-                      backgroundImage: CachedNetworkImageProvider(event.owner.imageUrl),
+                      backgroundColor: context.grey200,
+                      backgroundImage:
+                          event.owner.imageUrl.trim().isEmpty
+                              ? null
+                              : CachedNetworkImageProvider(
+                                    event.owner.imageUrl),
+                      child:
+                          event.owner.imageUrl.trim().isEmpty
+                              ? Text(
+                                event.owner.name.isNotEmpty
+                                    ? event.owner.name[0].toUpperCase()
+                                    : 'L',
+                                style: context.bodySmall.copyWith(
+                                  color: context.primaryColorTheme,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              )
+                              : null,
                     ),
                     const SizedBox(width: 8),
                     Expanded(

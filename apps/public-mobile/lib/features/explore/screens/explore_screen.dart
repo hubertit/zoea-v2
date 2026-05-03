@@ -9,6 +9,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
+import '../../../core/widgets/event_flyer_image.dart';
 import '../../../core/providers/events_provider.dart';
 import '../data/home_explore_categories.dart';
 import '../../../core/providers/listings_provider.dart';
@@ -1602,18 +1603,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             children: [
               // Event image
               Positioned.fill(
-                child: FadeInNetworkImage(
-                  imageUrl: eventDetails.flyer,
+                child: EventFlyerImage(
+                  flyer: eventDetails.flyer,
                   fit: BoxFit.cover,
+                  expandToParent: true,
+                  indicatorColor: context.primaryColorTheme,
                   placeholderColor: context.grey300,
-                  errorWidget: Container(
-                    color: context.grey300,
-                    child: Icon(
-                      Icons.event,
-                      color: context.grey400,
-                      size: 40,
-                    ),
-                  ),
+                  errorIconColor: context.grey400,
                 ),
               ),
               // Gradient overlay

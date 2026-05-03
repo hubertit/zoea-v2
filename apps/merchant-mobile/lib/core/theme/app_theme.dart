@@ -53,7 +53,7 @@ class AppTheme {
           elevation: 0,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: backgroundColor,
         elevation: 2,
         shadowColor: primaryColor.withOpacity(0.05),
@@ -112,7 +112,7 @@ class AppTheme {
           elevation: 0,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: darkCardColor,
         elevation: 2,
         shadowColor: Colors.black.withOpacity(0.3),

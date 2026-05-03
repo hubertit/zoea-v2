@@ -16,6 +16,7 @@ import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../core/widgets/event_flyer_image.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
   final Event event;
@@ -102,25 +103,13 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: eventDetails.flyer,
+                  EventFlyerImage(
+                    flyer: eventDetails.flyer,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: context.dividerColor,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: context.primaryColorTheme,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: context.dividerColor,
-                      child: Icon(
-                        Icons.event,
-                        size: 64,
-                        color: context.secondaryTextColor,
-                      ),
-                    ),
+                    expandToParent: true,
+                    indicatorColor: context.primaryColorTheme,
+                    placeholderColor: context.dividerColor,
+                    errorIconColor: context.secondaryTextColor,
                   ),
                   // Gradient overlay
                   Container(
@@ -249,12 +238,16 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                                   ? eventDetails.locationName 
                                   : '';
                               final dateText = dateFormat.format(startDate);
-                              
-                              // Share Sinc link instead of Zoea link
-                              final sincUrl = 'https://www.sinc.events/${event.slug}';
-                              final shareText = 'Check out "$eventName"${location.isNotEmpty ? ' in $location' : ''} on $dateText!';
-                              
-                              await SharePlus.instance.share(ShareParams(text: '$shareText\n$sincUrl'));
+
+                              final shareText =
+                                  'Check out "$eventName"${location.isNotEmpty ? ' in $location' : ''} on $dateText!';
+                              final footer =
+                                  event.slug.startsWith('lacreola-')
+                                      ? 'Reservations: +250793084995 / reservation@lacreola.com'
+                                      : 'https://www.sinc.events/${event.slug}';
+
+                              await SharePlus.instance.share(
+                                  ShareParams(text: '$shareText\n$footer'));
                             },
                           ),
                         ),
@@ -345,11 +338,23 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: CachedNetworkImageProvider(event.owner.imageUrl),
-                        onBackgroundImageError: (exception, stackTrace) {
-                          // Handle image error
-                        },
-                        child: Icon(Icons.person, color: context.primaryColorTheme),
+                        backgroundColor: context.grey200,
+                        backgroundImage:
+                            event.owner.imageUrl.trim().isEmpty
+                                ? null
+                                : CachedNetworkImageProvider(
+                                      event.owner.imageUrl),
+                        onBackgroundImageError:
+                            event.owner.imageUrl.trim().isEmpty
+                                ? null
+                                : (_, __) {},
+                        child:
+                            event.owner.imageUrl.trim().isEmpty
+                                ? Icon(
+                                    Icons.business,
+                                    color: context.primaryColorTheme,
+                                  )
+                                : null,
                       ),
                       const SizedBox(width: 12),
                       Expanded(

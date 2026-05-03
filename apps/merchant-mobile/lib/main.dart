@@ -6,20 +6,8 @@ import 'core/router/app_router.dart';
 import 'core/config/app_config.dart';
 import 'core/providers/theme_provider.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'core/services/push_notification_service.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Firebase
-  try {
-    await Firebase.initializeApp();
-    // Initialize Push Notifications
-    await PushNotificationService.init();
-  } catch (e) {
-    debugPrint('⚠️ Firebase initialization failed: $e');
-  }
 
   // Initialize Hive for local storage
   await Hive.initFlutter();

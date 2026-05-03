@@ -17,7 +17,7 @@ The Merchant Web Portal is a dedicated web application for business owners and m
 
 ## Technology Stack
 
-- **Framework**: Next.js (React, TypeScript) - *To be implemented*
+- **Framework**: Next.js 16 (React 19, TypeScript)
 - **Styling**: Tailwind CSS
 - **State Management**: React Context / Zustand
 - **API Client**: Axios
@@ -25,7 +25,7 @@ The Merchant Web Portal is a dedicated web application for business owners and m
 
 ## Status
 
-⏳ **Planned** - This application is planned for future development.
+**Scaffolded** — Next.js app runs locally (`npm run dev`). Features from the list below are still to be built.
 
 ## Difference from Admin App
 
@@ -39,13 +39,15 @@ The Merchant Web Portal is a dedicated web application for business owners and m
 
 ## Getting Started
 
-*To be implemented*
-
 ```bash
 cd apps/merchant-web
 npm install
 npm run dev
 ```
+
+Open **http://localhost:3010** — `/` redirects to **`/auth/login`**. Auth UI follows the same split layout as Gemura Web (40% form / 60% cover) with Zoea branding. Register: **`/auth/register`**.
+
+Port **3010** avoids clashing with other apps on 3000.
 
 ## API Integration
 

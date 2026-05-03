@@ -117,6 +117,11 @@ flutter:
   # Assets
   assets:
     - assets/images/
+    # Subfolders are NOT picked up by the parent line — list explicitly (Flutter asset rules).
+    - assets/images/lacreola/lacreola1.jpeg
+    - assets/images/lacreola/lacreola2.jpeg
+    - assets/images/lacreola/lacreola3.jpeg
+    - assets/images/lacreola/lacreola4.jpeg
     # Splash: list files explicitly so iOS/Android bundles always pick them up after moves/clean builds
     - assets/splash/kigali.jpg
     - assets/splash/canopy.jpeg

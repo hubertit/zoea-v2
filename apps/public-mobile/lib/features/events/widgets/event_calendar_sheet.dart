@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/event_flyer_image.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/models/event.dart';
@@ -338,28 +337,17 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
             // Event poster
             ClipRRect(
               borderRadius: const BorderRadius.horizontal(left: Radius.circular(6)),
-              child: CachedNetworkImage(
-                imageUrl: event.event.flyer,
+              child: SizedBox(
                 width: 70,
-                height: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  width: 70,
-                  color: context.dividerColor,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: context.primaryColorTheme,
-                      strokeWidth: 1.5,
-                    ),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  width: 70,
-                  color: context.dividerColor,
-                  child: Icon(
-                    Icons.event,
-                    size: 16,
-                    color: context.secondaryTextColor,
+                child: AspectRatio(
+                  aspectRatio: 10 / 14,
+                  child: EventFlyerImage(
+                    flyer: event.event.flyer,
+                    fit: BoxFit.cover,
+                    expandToParent: true,
+                    indicatorColor: context.primaryColorTheme,
+                    placeholderColor: context.dividerColor,
+                    errorIconColor: context.secondaryTextColor,
                   ),
                 ),
               ),

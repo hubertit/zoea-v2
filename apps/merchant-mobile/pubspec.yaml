@@ -48,7 +48,7 @@ dependencies:
 
   # UI & Icons
   cupertino_icons: ^1.0.6
-  google_fonts: ^6.1.0
+  google_fonts: ^6.3.1
   flutter_animate: ^4.5.0
   lottie: ^2.7.0
 
@@ -64,11 +64,6 @@ dependencies:
   package_info_plus: ^4.2.0
   device_info_plus: ^9.1.1
   connectivity_plus: ^5.0.2
-  
-  # Push Notifications
-  firebase_core: ^2.24.2
-  firebase_messaging: ^14.7.10
-  flutter_local_notifications: ^16.3.2
 
   # Phone Validation
   country_picker: ^2.0.24

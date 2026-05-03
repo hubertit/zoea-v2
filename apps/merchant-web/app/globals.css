@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* Zoea Merchant — aligned with `merchant-mobile` AppTheme (light) */
+@theme {
+  --color-primary: #181e29;
+  --color-surface: #ffffff;
+  --color-muted: #6c727f;
+  --color-border: #e9e9ec;
+  --color-success: #009e60;
+  --color-danger: #d9534f;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #181e29;
+  /* Used by Gemura-style `.btn` / phone input overrides */
+  --primary: #181e29;
+  --primary-hover: #121722;
+  --primary-active: #0c0f16;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  min-width: 0;
+}
+
+/* Same as gemura-web: responsive content max-width inside portal main */
+.container-content {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 1280px) {
+  .container-content {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container-content {
+    max-width: 1600px;
+  }
+}
+
+/* Gemura-style primary button (Zoea `--primary`) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.125rem;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: white;
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: var(--primary-active);
+  border-color: var(--primary-active);
+}
+
+/* react-phone-number-input — same structure as gemura-web */
+.phone-input-wrapper {
+  position: relative;
+}
+
+.phone-input-wrapper .PhoneInput {
+  width: 100%;
+}
+
+.phone-input-wrapper .PhoneInputInput {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.125rem;
+  font-size: 0.875rem;
+  color: #111827;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phone-input-wrapper .PhoneInputInput:focus {
+  outline: none;
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.phone-input-wrapper.error .PhoneInputInput {
+  border-color: #fca5a5;
+}
+
+.phone-input-wrapper.error .PhoneInputInput:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.phone-input-wrapper .PhoneInputCountry {
+  margin-right: 0.5rem;
+}
+
+.phone-input-wrapper .PhoneInputCountryIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.125rem;
+}
+
+.phone-input-wrapper .PhoneInputCountrySelect {
+  padding: 0.625rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.125rem;
+  font-size: 0.875rem;
+}
+
+.phone-input-wrapper .PhoneInputCountrySelect:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}

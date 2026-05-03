@@ -59,7 +59,7 @@ class AppConfig {
   static const String profileUpdateSuccessMessage = 'Profile updated successfully!';
 
   // Feature Flags
-  static const bool enablePushNotifications = true;
+  static const bool enablePushNotifications = false;
 
   // Payment Configuration
   static const String paymentGateway = 'ZoeaPay';
