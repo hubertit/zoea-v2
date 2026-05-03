@@ -8,6 +8,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/products_provider.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   final String? listingId;
@@ -36,6 +37,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final params = ProductsParams(
       page: _currentPage,
       limit: _pageSize,
@@ -68,7 +70,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           ),
         ),
         title: Text(
-          widget.listingId != null ? 'Products' : 'Shop',
+          widget.listingId != null ? l10n.shopScreenTitleProducts : l10n.shopScreenTitleShop,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -95,7 +97,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           final totalPages = meta['totalPages'] as int? ?? 1;
 
           if (products.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(l10n);
           }
 
           return RefreshIndicator(
@@ -116,7 +118,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     child: Row(
                       children: [
                         Text(
-                          '$total ${total == 1 ? 'product' : 'products'}',
+                          l10n.shopProductCount(total),
                           style: context.bodyMedium.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -128,7 +130,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Sort: ${_getSortLabel(_selectedSort!)}',
+                                  l10n.shopSortLine(_getSortLabel(l10n, _selectedSort!)),
                                   style: context.bodySmall.copyWith(
                                     color: context.primaryColorTheme,
                                   ),
@@ -157,7 +159,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     itemCount: products.length + (_currentPage < totalPages ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == products.length) {
-                        return _buildLoadMoreButton(totalPages);
+                        return _buildLoadMoreButton(l10n, totalPages);
                       }
                       return _buildProductCard(products[index]);
                     },
@@ -168,7 +170,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           );
         },
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
@@ -267,7 +269,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          'Out of Stock',
+                          AppLocalizations.of(context)!.shopOutOfStock,
                           style: context.bodyMedium.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -325,7 +327,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -339,14 +341,14 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No products found',
+              l10n.shopEmptyNoProducts,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Try adjusting your filters or search',
+              l10n.shopEmptyAdjustFilters,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -363,7 +365,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   _isFeatured = null;
                 });
               },
-              child: const Text('Clear Filters'),
+              child: Text(l10n.shopClearFilters),
             ),
           ],
         ),
@@ -371,7 +373,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -385,7 +387,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load products',
+              l10n.shopErrorLoadProducts,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -418,7 +420,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   ref.invalidate(productsByListingProvider(params));
                 }
               },
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -426,7 +428,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
-  Widget _buildLoadMoreButton(int totalPages) {
+  Widget _buildLoadMoreButton(AppLocalizations l10n, int totalPages) {
     if (_currentPage >= totalPages) return const SizedBox.shrink();
 
     return Center(
@@ -438,22 +440,23 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               _currentPage++;
             });
           },
-          child: const Text('Load More'),
+          child: Text(l10n.commonLoadMore),
         ),
       ),
     );
   }
 
   void _showSearchDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Search Products'),
+        title: Text(l10n.shopSearchProductsTitle),
         content: TextField(
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Enter product name...',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: l10n.shopSearchProductNameHint,
+            border: const OutlineInputBorder(),
           ),
           onSubmitted: (value) {
             Navigator.pop(context);
@@ -463,7 +466,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
         ],
       ),
@@ -471,21 +474,29 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   }
 
   void _showFilterBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: context.cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
+      builder: (sheetContext) => StatefulBuilder(
+        builder: (context, setModalState) {
+          final statusSelected = _selectedStatus == null
+              ? 'All'
+              : (_selectedStatus == 'active' ? 'Active' : 'Inactive');
+          final featuredSelected = _isFeatured == true ? 'Featured Only' : 'All';
+
+          return Container(
           padding: const EdgeInsets.all(12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Filter Products',
+                l10n.shopFilterTitle,
                 style: context.headlineSmall.copyWith(
                   color: context.primaryTextColor,
                   fontWeight: FontWeight.bold,
@@ -493,10 +504,14 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               ),
               const SizedBox(height: 24),
               _buildFilterSection(
-                'Status',
-                ['All', 'Active', 'Inactive'],
-                _selectedStatus == null ? 'All' : _selectedStatus!.toUpperCase(),
-                (value) {
+                title: l10n.shopStatusSection,
+                options: [
+                  ('All', l10n.stayTabAll),
+                  ('Active', l10n.shopFilterActive),
+                  ('Inactive', l10n.shopFilterInactive),
+                ],
+                selectedValue: statusSelected,
+                onSelect: (value) {
                   setModalState(() {
                     _selectedStatus = value == 'All' ? null : value.toLowerCase();
                   });
@@ -504,10 +519,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               ),
               const SizedBox(height: 16),
               _buildFilterSection(
-                'Featured',
-                ['All', 'Featured Only'],
-                _isFeatured == null ? 'All' : 'Featured Only',
-                (value) {
+                title: l10n.shopFeaturedSection,
+                options: [
+                  ('All', l10n.stayTabAll),
+                  ('Featured Only', l10n.shopFeaturedOnly),
+                ],
+                selectedValue: featuredSelected,
+                onSelect: (value) {
                   setModalState(() {
                     _isFeatured = value == 'All' ? null : true;
                   });
@@ -526,7 +544,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           _maxPrice = null;
                         });
                       },
-                      child: const Text('Reset'),
+                      child: Text(l10n.shopFilterReset),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -538,19 +556,25 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           _currentPage = 1;
                         });
                       },
-                      child: const Text('Apply'),
+                      child: Text(l10n.commonApply),
                     ),
                   ),
                 ],
               ),
             ],
           ),
-        ),
+        );
+        },
       ),
     );
   }
 
-  Widget _buildFilterSection(String title, List<String> options, String selected, Function(String) onSelect) {
+  Widget _buildFilterSection({
+    required String title,
+    required List<(String, String)> options,
+    required String selectedValue,
+    required ValueChanged<String> onSelect,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -564,13 +588,14 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: options.map((option) {
-            final isSelected = option == selected;
+          children: options.map((pair) {
+            final (value, label) = pair;
+            final isSelected = value == selectedValue;
             return FilterChip(
-              label: Text(option),
+              label: Text(label),
               selected: isSelected,
               onSelected: (selected) {
-                if (selected) onSelect(option);
+                if (selected) onSelect(value);
               },
               selectedColor: context.primaryColorTheme.withOpacity(0.2),
               checkmarkColor: context.primaryColorTheme,
@@ -582,6 +607,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   }
 
   void _showSortBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: context.cardColor,
@@ -595,7 +621,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Sort By',
+              l10n.staySortBy,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
                 fontWeight: FontWeight.bold,
@@ -610,7 +636,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 'price_desc',
                 'createdAt_desc'
               ].map((sort) => RadioListTile<String>(
-                      title: Text(_getSortLabel(sort)),
+                      title: Text(_getSortLabel(l10n, sort)),
                       value: sort,
                       groupValue: _selectedSort,
                       onChanged: (value) {
@@ -620,28 +646,27 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         });
                         Navigator.pop(context);
                       },
-                    ))
-                .toList(),
+                    )),
           ],
         ),
       ),
     );
   }
 
-  String _getSortLabel(String sort) {
+  String _getSortLabel(AppLocalizations l10n, String sort) {
     switch (sort) {
       case 'popular':
-        return 'Popular';
+        return l10n.shopSortPopular;
       case 'name_asc':
-        return 'Name (A-Z)';
+        return l10n.shopSortNameAz;
       case 'name_desc':
-        return 'Name (Z-A)';
+        return l10n.shopSortNameZa;
       case 'price_asc':
-        return 'Price (Low to High)';
+        return l10n.shopSortPriceLowHigh;
       case 'price_desc':
-        return 'Price (High to Low)';
+        return l10n.shopSortPriceHighLow;
       case 'createdAt_desc':
-        return 'Newest First';
+        return l10n.shopSortNewest;
       default:
         return sort;
     }

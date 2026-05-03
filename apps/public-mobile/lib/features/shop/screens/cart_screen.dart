@@ -12,6 +12,7 @@ import '../../../core/services/cart_service.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/models/cart.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -26,6 +27,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cartAsync = ref.watch(cartProvider);
 
     return Scaffold(
@@ -43,7 +45,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
         ),
         title: Text(
-          'Shopping Cart',
+          l10n.shopCartScreenTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -57,14 +59,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 color: context.primaryTextColor,
               ),
               onPressed: _isClearing ? null : _clearCart,
-              tooltip: 'Clear Cart',
+              tooltip: l10n.shopCartClearTooltip,
             ),
         ],
       ),
       body: cartAsync.when(
         data: (cart) {
           if (cart.items.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(l10n);
           }
 
           return Column(
@@ -85,17 +87,18 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   ),
                 ),
               ),
-              _buildBottomBar(cart),
+              _buildBottomBar(l10n, cart),
             ],
           );
         },
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
 
   Widget _buildCartItemCard(CartItem item) {
+    final l10n = AppLocalizations.of(context)!;
     final imageUrl = item.itemImage != null
         ? '${AppConfig.apiBaseUrl.replaceAll('/api', '')}/media/${item.itemImage}'
         : null;
@@ -167,7 +170,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _getItemTypeLabel(item.itemType),
+                      _getItemTypeLabel(l10n, item.itemType),
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -230,7 +233,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   onPressed: _isUpdating
                       ? null
                       : () => _removeItem(item.id),
-                  tooltip: 'Remove',
+                  tooltip: l10n.commonRemove,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -279,7 +282,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _buildBottomBar(Cart cart) {
+  Widget _buildBottomBar(AppLocalizations l10n, Cart cart) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -300,7 +303,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total',
+                  l10n.shopCartTotalLabel,
                   style: context.headlineSmall.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.primaryTextColor,
@@ -323,9 +326,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text(
-                  'Proceed to Checkout',
-                  style: TextStyle(fontSize: 16),
+                child: Text(
+                  l10n.shopProceedToCheckout,
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
             ),
@@ -335,7 +338,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -349,14 +352,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Your cart is empty',
+              l10n.cartEmptyMessage,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Add items to your cart to get started',
+              l10n.shopCartEmptySubtitle,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -367,7 +370,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               onPressed: () {
                 context.go('/explore');
               },
-              child: const Text('Start Shopping'),
+              child: Text(l10n.commonStartShopping),
             ),
           ],
         ),
@@ -375,7 +378,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -389,7 +392,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load cart',
+              l10n.shopCartLoadFailed,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -407,7 +410,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               onPressed: () {
                 ref.invalidate(cartProvider);
               },
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -426,14 +429,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     }
   }
 
-  String _getItemTypeLabel(CartItemType type) {
+  String _getItemTypeLabel(AppLocalizations l10n, CartItemType type) {
     switch (type) {
       case CartItemType.product:
-        return 'Product';
+        return l10n.shopCartItemTypeProduct;
       case CartItemType.service:
-        return 'Service';
+        return l10n.shopCartItemTypeService;
       case CartItemType.menuItem:
-        return 'Menu Item';
+        return l10n.shopCartItemTypeMenuItem;
     }
   }
 
@@ -461,9 +464,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ref.invalidate(cartProvider);
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(l10n.commonFailedUpdate(e.toString().replaceFirst('Exception: ', ''))),
             backgroundColor: context.errorColor,
           ),
         );
@@ -489,9 +493,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ref.invalidate(cartProvider);
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to remove: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(l10n.commonFailedRemove(e.toString().replaceFirst('Exception: ', ''))),
             backgroundColor: context.errorColor,
           ),
         );
@@ -506,22 +511,23 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   Future<void> _clearCart() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Cart'),
-        content: const Text('Are you sure you want to remove all items from your cart?'),
+        title: Text(l10n.cartTitle),
+        content: Text(l10n.cartClearConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(
               foregroundColor: context.errorColor,
             ),
-            child: const Text('Clear'),
+            child: Text(l10n.commonClear),
           ),
         ],
       ),
@@ -540,9 +546,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ref.invalidate(cartProvider);
     } catch (e) {
       if (mounted) {
+        final loc = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to clear cart: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(loc.commonFailedClearCart(e.toString().replaceFirst('Exception: ', ''))),
             backgroundColor: context.errorColor,
           ),
         );
@@ -557,6 +564,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   void _checkout() {
+    final l10n = AppLocalizations.of(context)!;
     // Check if user is logged in
     final isLoggedIn = ref.read(isLoggedInProvider);
     
@@ -564,8 +572,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       // Show login prompt for guests
       AuthPromptDialog.show(
         context: context,
-        title: 'Sign In to Checkout',
-        message: 'Create an account or sign in to complete your purchase. Your cart will be saved.',
+        title: l10n.shopCheckoutSignInTitle,
+        message: l10n.shopCheckoutSignInMessage,
         returnPath: '/cart',
         icon: Icons.shopping_cart,
       );
@@ -576,7 +584,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     if (cart == null || cart.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Your cart is empty'),
+          content: Text(l10n.cartEmptyMessage),
           backgroundColor: context.errorColor,
         ),
       );

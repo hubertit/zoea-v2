@@ -9,6 +9,7 @@ import '../../../core/services/bookings_service.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DiningBookingScreen extends ConsumerStatefulWidget {
   final String placeId;
@@ -125,7 +126,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
           ),
         ),
         title: Text(
-          'Book Table',
+          AppLocalizations.of(context)!.diningFlowBookTableTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -270,6 +271,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildBookingDetailsSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -288,7 +290,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Reservation Details',
+            l10n.diningFlowReservationDetailsSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -296,7 +298,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
           ),
           const SizedBox(height: 16),
           _buildDateField(
-            label: 'Date',
+            label: l10n.diningBookingLabelDate,
             date: _selectedDate,
             onTap: () => _selectDate(),
           ),
@@ -314,6 +316,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
     required DateTime? date,
     required VoidCallback onTap,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -336,7 +339,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             Text(
               date != null
                   ? '${date.day}/${date.month}/${date.year}'
-                  : 'Select date',
+                  : l10n.diningFlowSelectDatePlaceholder,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w500,
                 color: context.primaryTextColor,
@@ -349,13 +352,14 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildTimeSlotsSection() {
+    final l10n = AppLocalizations.of(context)!;
     final timeSlots = _getAvailableTimeSlots();
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Available Times',
+          l10n.diningFlowAvailableTimes,
           style: context.bodyMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.secondaryTextColor,
@@ -412,6 +416,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildGuestSelection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -430,7 +435,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Number of Guests',
+            l10n.diningFlowNumberOfGuests,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -471,6 +476,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildContactSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -489,7 +495,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Guest Information',
+            l10n.diningFlowGuestInformation,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -500,8 +506,8 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             controller: _fullNameController,
             onChanged: (value) => setState(() => _fullName = value),
             decoration: InputDecoration(
-              labelText: 'Full Name',
-              hintText: 'John Doe',
+              labelText: l10n.checkoutFullNameLabel,
+              hintText: l10n.diningFlowFullNameHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: context.grey300),
@@ -521,8 +527,8 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             controller: _contactNumberController,
             onChanged: (value) => setState(() => _contactNumber = value),
             decoration: InputDecoration(
-              labelText: 'Phone Number',
-              hintText: '+250 796 889 900',
+              labelText: l10n.checkoutPhoneLabel,
+              hintText: l10n.diningFlowPhoneHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: context.grey300),
@@ -543,8 +549,8 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             onChanged: (value) => setState(() => _email = value),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              labelText: 'Email Address',
-              hintText: 'your.email@example.com',
+              labelText: l10n.loginEmailAddress,
+              hintText: l10n.loginEmailHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: context.grey300),
@@ -565,6 +571,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildSpecialRequests() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -583,7 +590,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Special Requests',
+            l10n.diningFlowSpecialRequestsTitle,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -594,7 +601,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             onChanged: (value) => setState(() => _specialRequests = value),
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'Any special dietary requirements, seating preferences, etc.',
+              hintText: l10n.diningFlowSpecialRequestsHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: context.grey300),
@@ -615,6 +622,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildCouponSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -641,7 +649,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Coupon Code',
+                l10n.diningFlowCouponCodeTitle,
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -659,7 +667,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                     });
                   },
                   decoration: InputDecoration(
-                    hintText: 'Enter coupon code',
+                    hintText: l10n.stayCouponCodeHint,
                     hintStyle: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -698,7 +706,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                   ),
                 ),
                 child: Text(
-                  'Apply',
+                  l10n.commonApply,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -729,14 +737,16 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Coupon Applied!',
+                          l10n.diningFlowCouponAppliedTitle,
                           style: context.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppTheme.successColor,
                           ),
                         ),
                         Text(
-                          'You saved ${PriceFormatter.formatFull(_discountAmount, currency: 'RWF')}',
+                          l10n.diningFlowCouponSavedBody(
+                            PriceFormatter.formatFull(_discountAmount, currency: 'RWF'),
+                          ),
                           style: context.bodySmall.copyWith(
                             color: AppTheme.successColor,
                           ),
@@ -762,6 +772,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   Widget _buildBottomBar() {
+    final l10n = AppLocalizations.of(context)!;
     final canBook = _selectedDate != null && 
                     _selectedTimeSlot != null && 
                     _fullName.isNotEmpty &&
@@ -773,7 +784,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
       decoration: BoxDecoration(
         color: context.backgroundColor,
         border: Border(
-          top: BorderSide(color: context.grey200!),
+          top: BorderSide(color: context.grey200),
         ),
         boxShadow: [
           BoxShadow(
@@ -792,7 +803,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Total',
+                    l10n.shopCartTotalLabel,
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -821,7 +832,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Confirm Booking',
+                  l10n.diningFlowConfirmBookingCta,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -872,6 +883,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   void _applyCoupon() {
+    final l10n = AppLocalizations.of(context)!;
     // Mock coupon validation
     final validCoupons = {
       'DINE10': 0.10, // 10% discount
@@ -885,15 +897,15 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
         _discountAmount = _calculateBasePrice() * validCoupons[_couponCode.toUpperCase()]!;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Coupon applied successfully!'),
+        SnackBar(
+          content: Text(l10n.commonCouponApplied),
           backgroundColor: AppTheme.successColor,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid coupon code'),
+        SnackBar(
+          content: Text(l10n.commonCouponInvalid),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -919,6 +931,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
   }
 
   void _confirmBooking() {
+    final l10n = AppLocalizations.of(context)!;
     // Show confirmation bottom sheet
     showModalBottomSheet(
       context: context,
@@ -945,7 +958,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
             
             // Title
             Text(
-              'Confirm Booking',
+              l10n.diningFlowConfirmSheetTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -964,22 +977,22 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailRow('Restaurant', widget.placeName),
+                  _buildDetailRow(l10n.diningBookingLabelRestaurant, widget.placeName),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Date', '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'),
+                  _buildDetailRow(l10n.diningBookingLabelDate, '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Time', _selectedTimeSlot ?? 'Not selected'),
+                  _buildDetailRow(l10n.diningBookingLabelTime, _selectedTimeSlot ?? l10n.diningBookingTimeNotSelected),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Guests', _guestCount.toString()),
+                  _buildDetailRow(l10n.diningBookingLabelGuests, _guestCount.toString()),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Name', _fullName),
+                  _buildDetailRow(l10n.diningBookingLabelName, _fullName),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Phone', _contactNumber),
+                  _buildDetailRow(l10n.diningBookingLabelPhone, _contactNumber),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Email', _email),
+                  _buildDetailRow(l10n.diningBookingLabelEmail, _email),
                   if (_specialRequests.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    _buildDetailRow('Special Requests', _specialRequests),
+                    _buildDetailRow(l10n.diningBookingSpecialRequestsSection, _specialRequests),
                   ],
                 ],
               ),
@@ -997,7 +1010,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                       side: BorderSide(color: context.primaryColorTheme),
                     ),
                     child: Text(
-                      'Cancel',
+                      l10n.commonCancel,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryColorTheme,
                         fontWeight: FontWeight.w500,
@@ -1088,7 +1101,9 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Failed to create booking: ${e.toString()}'),
+                              content: Text(l10n.commonFailedCreateBooking(
+                                e.toString().replaceFirst('Exception: ', ''),
+                              )),
                               backgroundColor: AppTheme.errorColor,
                             ),
                           );
@@ -1110,7 +1125,7 @@ class _DiningBookingScreenState extends ConsumerState<DiningBookingScreen> {
                             ),
                           )
                         : Text(
-                            'Confirm',
+                            l10n.diningFlowConfirmBookingCta,
                             style: context.bodyMedium.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,

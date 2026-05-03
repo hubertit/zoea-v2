@@ -12,6 +12,7 @@ import '../../../core/services/data_inference_service.dart';
 import '../widgets/country_selector.dart';
 import '../widgets/visit_purpose_selector.dart';
 import '../widgets/language_selector.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Mandatory data collection screen (10-15 seconds)
 /// Collects: Country, User Type, Visit Purpose, Language, Analytics Consent
@@ -528,7 +529,7 @@ class _OnboardingDataScreenState extends ConsumerState<OnboardingDataScreen> {
               style: TextButton.styleFrom(
                 foregroundColor: context.secondaryTextColor,
               ),
-              child: const Text('Back'),
+              child: Text(AppLocalizations.of(context)!.commonBack),
             ),
         ],
       ),

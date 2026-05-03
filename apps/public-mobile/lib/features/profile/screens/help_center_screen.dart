@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/app_update_check_provider.dart';
 import '../../../core/providers/package_info_provider.dart';
 import '../../../core/theme/app_theme.dart';
@@ -28,18 +29,20 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     try {
       final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
       if (!launched && mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Could not open link. Try again later.'),
+            content: Text(l10n.helpLinkOpenFailed),
             backgroundColor: context.primaryColorTheme,
           ),
         );
       }
     } catch (_) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Could not open link. Try again later.'),
+            content: Text(l10n.helpLinkOpenFailed),
             backgroundColor: context.primaryColorTheme,
           ),
         );
@@ -64,9 +67,10 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     final packageInfo = ref.watch(packageInfoProvider);
     final appUpdateCheck = ref.watch(appUpdateCheckProvider);
     final locale = Localizations.localeOf(context);
+    final l10n = AppLocalizations.of(context)!;
     final lastUpdated = lastUpdatedDisplayLabel(
       policyUpdatedAtIso: appUpdateCheck.valueOrNull?.policyUpdatedAt,
-      fallback: 'Not specified',
+      fallback: l10n.commonNotSpecified,
       intlLocale: locale.toLanguageTag(),
     );
 
@@ -74,7 +78,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Help Center',
+          l10n.profileHelpTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -96,27 +100,27 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search Bar
-            _buildSearchBar(),
+            _buildSearchBar(l10n),
             const SizedBox(height: 24),
             
             // Quick Help
-            _buildQuickHelp(),
+            _buildQuickHelp(l10n),
             const SizedBox(height: 24),
             
             // Popular Topics
-            _buildPopularTopics(),
+            _buildPopularTopics(l10n),
             const SizedBox(height: 24),
             
             // Contact Support
-            _buildContactSupport(),
+            _buildContactSupport(l10n),
             const SizedBox(height: 24),
             
             // FAQ Categories
-            _buildFAQCategories(),
+            _buildFAQCategories(l10n),
             const SizedBox(height: 24),
             
             // App Information
-            _buildAppInformation(packageInfo, lastUpdated),
+            _buildAppInformation(packageInfo, lastUpdated, l10n),
             const SizedBox(height: 32),
           ],
         ),
@@ -124,7 +128,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(AppLocalizations l10n) {
     return Container(
       decoration: BoxDecoration(
         color: context.cardColor,
@@ -140,7 +144,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
-          hintText: 'Search help articles...',
+          hintText: l10n.helpSearchHint,
           hintStyle: context.bodyMedium.copyWith(
             color: context.secondaryTextColor,
           ),
@@ -174,12 +178,12 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  Widget _buildQuickHelp() {
+  Widget _buildQuickHelp(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Help',
+          l10n.helpQuickHelp,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -202,30 +206,30 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
             children: [
               _buildQuickHelpItem(
                 icon: Icons.account_circle_outlined,
-                title: 'Account Issues',
-                subtitle: 'Login, registration, and profile problems',
-                onTap: () => _showHelpDialog('Account Issues', _getAccountHelpContent()),
+                title: l10n.helpQuickAccountTitle,
+                subtitle: l10n.helpQuickAccountSubtitle,
+                onTap: () => _showHelpDialog(l10n, l10n.helpQuickAccountTitle, l10n.helpArticleAccount),
               ),
               _buildDivider(),
               _buildQuickHelpItem(
                 icon: Icons.payment_outlined,
-                title: 'Payment & Billing',
-                subtitle: 'Booking payments and refunds',
-                onTap: () => _showHelpDialog('Payment & Billing', _getPaymentHelpContent()),
+                title: l10n.helpQuickPaymentTitle,
+                subtitle: l10n.helpQuickPaymentSubtitle,
+                onTap: () => _showHelpDialog(l10n, l10n.helpQuickPaymentTitle, l10n.helpArticlePayment),
               ),
               _buildDivider(),
               _buildQuickHelpItem(
                 icon: Icons.event_outlined,
-                title: 'Events & Bookings',
-                subtitle: 'Event tickets and booking management',
-                onTap: () => _showHelpDialog('Events & Bookings', _getBookingHelpContent()),
+                title: l10n.helpQuickEventsTitle,
+                subtitle: l10n.helpQuickEventsSubtitle,
+                onTap: () => _showHelpDialog(l10n, l10n.helpQuickEventsTitle, l10n.helpArticleBooking),
               ),
               _buildDivider(),
               _buildQuickHelpItem(
                 icon: Icons.place_outlined,
-                title: 'Places & Locations',
-                subtitle: 'Finding and visiting places',
-                onTap: () => _showHelpDialog('Places & Locations', _getPlacesHelpContent()),
+                title: l10n.helpQuickPlacesTitle,
+                subtitle: l10n.helpQuickPlacesSubtitle,
+                onTap: () => _showHelpDialog(l10n, l10n.helpQuickPlacesTitle, l10n.helpArticlePlaces),
               ),
             ],
           ),
@@ -300,12 +304,12 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  Widget _buildPopularTopics() {
+  Widget _buildPopularTopics(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Popular Topics',
+          l10n.helpPopularTopics,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -316,12 +320,12 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            _buildTopicChip('How to book events'),
-            _buildTopicChip('Payment methods'),
-            _buildTopicChip('Cancel booking'),
-            _buildTopicChip('Update profile'),
-            _buildTopicChip('Contact support'),
-            _buildTopicChip('App features'),
+            _buildTopicChip(l10n.helpTopicBookEvents),
+            _buildTopicChip(l10n.helpTopicPaymentMethods),
+            _buildTopicChip(l10n.helpTopicCancelBooking),
+            _buildTopicChip(l10n.helpTopicUpdateProfile),
+            _buildTopicChip(l10n.helpTopicContactSupport),
+            _buildTopicChip(l10n.helpTopicAppFeatures),
           ],
         ),
       ],
@@ -356,12 +360,12 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  Widget _buildContactSupport() {
+  Widget _buildContactSupport(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Contact Support',
+          l10n.helpContactSupport,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -384,22 +388,22 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
             children: [
               _buildContactItem(
                 icon: Icons.chat_outlined,
-                title: 'Live Chat',
-                subtitle: 'Get instant help from our support team',
-                onTap: () => _showContactDialog('Live Chat', 'Start a live chat session with our support team.'),
+                title: l10n.helpLiveChatTitle,
+                subtitle: l10n.helpLiveChatSubtitle,
+                onTap: () => _showContactDialog(l10n, l10n.helpLiveChatTitle, l10n.helpLiveChatBody),
               ),
               _buildDivider(),
               _buildContactItem(
                 icon: Icons.email_outlined,
-                title: 'Email Support',
+                title: l10n.helpEmailSupportTitle,
                 subtitle: _supportEmail,
                 onTap: _launchSupportEmail,
               ),
               _buildDivider(),
               _buildContactItem(
                 icon: Icons.phone_outlined,
-                title: 'Phone Support',
-                subtitle: '+250 796 889 900',
+                title: l10n.helpPhoneSupportTitle,
+                subtitle: l10n.helpPhoneSupportSubtitle,
                 onTap: _launchSupportPhone,
               ),
             ],
@@ -467,12 +471,12 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  Widget _buildFAQCategories() {
+  Widget _buildFAQCategories(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Frequently Asked Questions',
+          l10n.helpFaqCategoriesTitle,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -494,33 +498,33 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
           child: Column(
             children: [
               _buildFAQItem(
-                title: 'Getting Started',
+                title: l10n.helpFaqGettingStarted,
                 count: 5,
-                onTap: () => _showFAQDialog('Getting Started', _getGettingStartedFAQs()),
+                onTap: () => _showFAQDialog(l10n, l10n.helpFaqGettingStarted, _gettingStartedFaqs(l10n)),
               ),
               _buildDivider(),
               _buildFAQItem(
-                title: 'Account & Profile',
+                title: l10n.helpFaqAccountProfile,
                 count: 8,
-                onTap: () => _showFAQDialog('Account & Profile', _getAccountFAQs()),
+                onTap: () => _showFAQDialog(l10n, l10n.helpFaqAccountProfile, _accountFaqs(l10n)),
               ),
               _buildDivider(),
               _buildFAQItem(
-                title: 'Bookings & Events',
+                title: l10n.helpFaqBookingsEvents,
                 count: 12,
-                onTap: () => _showFAQDialog('Bookings & Events', _getBookingFAQs()),
+                onTap: () => _showFAQDialog(l10n, l10n.helpFaqBookingsEvents, _bookingFaqs(l10n)),
               ),
               _buildDivider(),
               _buildFAQItem(
-                title: 'Payment & Refunds',
+                title: l10n.helpFaqPaymentRefunds,
                 count: 6,
-                onTap: () => _showFAQDialog('Payment & Refunds', _getPaymentFAQs()),
+                onTap: () => _showFAQDialog(l10n, l10n.helpFaqPaymentRefunds, _paymentFaqs(l10n)),
               ),
               _buildDivider(),
               _buildFAQItem(
-                title: 'Technical Issues',
+                title: l10n.helpFaqTechnicalIssues,
                 count: 4,
-                onTap: () => _showFAQDialog('Technical Issues', _getTechnicalFAQs()),
+                onTap: () => _showFAQDialog(l10n, l10n.helpFaqTechnicalIssues, _technicalFaqs(l10n)),
               ),
             ],
           ),
@@ -592,12 +596,13 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
   Widget _buildAppInformation(
     AsyncValue<PackageInfo> packageInfo,
     String lastUpdated,
+    AppLocalizations l10n,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'App Information',
+          l10n.profileAppInformation,
           style: context.titleMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -620,10 +625,10 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
           child: packageInfo.when(
             data: (p) => Column(
               children: [
-                _buildInfoRow('App Version', p.version),
-                _buildInfoRow('Build Number', p.buildNumber),
-                _buildInfoRow('Last Updated', lastUpdated),
-                _buildInfoRow('Platform', describeRuntimePlatform()),
+                _buildInfoRow(l10n.helpAppVersionLabel, p.version),
+                _buildInfoRow(l10n.helpBuildNumberLabel, p.buildNumber),
+                _buildInfoRow(l10n.helpLastUpdatedLabel, lastUpdated),
+                _buildInfoRow(l10n.helpPlatformLabel, describeRuntimePlatform()),
               ],
             ),
             loading: () => const Padding(
@@ -637,7 +642,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
               ),
             ),
             error: (_, __) => Text(
-              'Could not load package info.',
+              l10n.helpPackageInfoError,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -672,7 +677,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  void _showHelpDialog(String title, String content) {
+  void _showHelpDialog(AppLocalizations l10n, String title, String content) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -729,9 +734,9 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text(
-                  'Close',
-                  style: TextStyle(
+                child: Text(
+                  l10n.commonClose,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -746,7 +751,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  void _showContactDialog(String title, String content) {
+  void _showContactDialog(AppLocalizations l10n, String title, String content) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -800,7 +805,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
                       side: BorderSide(color: context.secondaryTextColor),
                     ),
                     child: Text(
-                      'Close',
+                      l10n.commonClose,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                         fontWeight: FontWeight.w500,
@@ -817,7 +822,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          '$title feature coming soon',
+                          l10n.helpFeatureComingSoon(title),
                           style: context.bodyMedium.copyWith(
                             color: context.primaryTextColor,
                           ),
@@ -831,9 +836,9 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: const Text(
-                      'Contact',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.helpContactButton,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -850,7 +855,7 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  void _showFAQDialog(String title, List<Map<String, String>> faqs) {
+  void _showFAQDialog(AppLocalizations l10n, String title, List<Map<String, String>> faqs) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -934,9 +939,9 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text(
-                  'Close',
-                  style: TextStyle(
+                child: Text(
+                  l10n.commonClose,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -951,216 +956,53 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
     );
   }
 
-  String _getAccountHelpContent() {
-    return '''
-Common account issues and solutions:
+  List<Map<String, String>> _gettingStartedFaqs(AppLocalizations l10n) => [
+        {'question': l10n.helpFaqGs1Q, 'answer': l10n.helpFaqGs1A},
+        {'question': l10n.helpFaqGs2Q, 'answer': l10n.helpFaqGs2A},
+        {'question': l10n.helpFaqGs3Q, 'answer': l10n.helpFaqGs3A},
+        {'question': l10n.helpFaqGs4Q, 'answer': l10n.helpFaqGs4A},
+        {'question': l10n.helpFaqGs5Q, 'answer': l10n.helpFaqGs5A},
+      ];
 
-• Forgot Password: Use the "Forgot Password" link on the login screen
-• Account Verification: Check your email for verification links
-• Profile Updates: Go to Profile > Edit Profile to update your information
-• Account Security: Enable two-factor authentication in Privacy & Security settings
-• Data Privacy: Review your privacy settings in the app settings
-''';
-  }
+  List<Map<String, String>> _accountFaqs(AppLocalizations l10n) => [
+        {'question': l10n.helpFaqAc1Q, 'answer': l10n.helpFaqAc1A},
+        {'question': l10n.helpFaqAc2Q, 'answer': l10n.helpFaqAc2A},
+        {'question': l10n.helpFaqAc3Q, 'answer': l10n.helpFaqAc3A},
+        {'question': l10n.helpFaqAc4Q, 'answer': l10n.helpFaqAc4A},
+        {'question': l10n.helpFaqAc5Q, 'answer': l10n.helpFaqAc5A},
+        {'question': l10n.helpFaqAc6Q, 'answer': l10n.helpFaqAc6A},
+        {'question': l10n.helpFaqAc7Q, 'answer': l10n.helpFaqAc7A},
+        {'question': l10n.helpFaqAc8Q, 'answer': l10n.helpFaqAc8A},
+      ];
 
-  String _getPaymentHelpContent() {
-    return '''
-Payment and billing assistance:
+  List<Map<String, String>> _bookingFaqs(AppLocalizations l10n) => [
+        {'question': l10n.helpFaqBk1Q, 'answer': l10n.helpFaqBk1A},
+        {'question': l10n.helpFaqBk2Q, 'answer': l10n.helpFaqBk2A},
+        {'question': l10n.helpFaqBk3Q, 'answer': l10n.helpFaqBk3A},
+        {'question': l10n.helpFaqBk4Q, 'answer': l10n.helpFaqBk4A},
+        {'question': l10n.helpFaqBk5Q, 'answer': l10n.helpFaqBk5A},
+        {'question': l10n.helpFaqBk6Q, 'answer': l10n.helpFaqBk6A},
+        {'question': l10n.helpFaqBk7Q, 'answer': l10n.helpFaqBk7A},
+        {'question': l10n.helpFaqBk8Q, 'answer': l10n.helpFaqBk8A},
+        {'question': l10n.helpFaqBk9Q, 'answer': l10n.helpFaqBk9A},
+        {'question': l10n.helpFaqBk10Q, 'answer': l10n.helpFaqBk10A},
+        {'question': l10n.helpFaqBk11Q, 'answer': l10n.helpFaqBk11A},
+        {'question': l10n.helpFaqBk12Q, 'answer': l10n.helpFaqBk12A},
+      ];
 
-• Payment Methods: Add credit cards, mobile money, or bank accounts
-• Refund Requests: Contact support for booking cancellations and refunds
-• Payment History: View all transactions in your profile
-• Failed Payments: Check your payment method and try again
-• Currency: All payments are processed in Rwandan Francs (RWF)
-''';
-  }
+  List<Map<String, String>> _paymentFaqs(AppLocalizations l10n) => [
+        {'question': l10n.helpFaqPy1Q, 'answer': l10n.helpFaqPy1A},
+        {'question': l10n.helpFaqPy2Q, 'answer': l10n.helpFaqPy2A},
+        {'question': l10n.helpFaqPy3Q, 'answer': l10n.helpFaqPy3A},
+        {'question': l10n.helpFaqPy4Q, 'answer': l10n.helpFaqPy4A},
+        {'question': l10n.helpFaqPy5Q, 'answer': l10n.helpFaqPy5A},
+        {'question': l10n.helpFaqPy6Q, 'answer': l10n.helpFaqPy6A},
+      ];
 
-  String _getBookingHelpContent() {
-    return '''
-Event booking and management:
-
-• Booking Events: Browse events and tap "Book Now" to reserve your spot
-• Booking Confirmation: You'll receive email and app notifications
-• Cancel Bookings: Go to My Bookings to cancel upcoming events
-• Event Updates: Check the Events tab for latest information
-• Group Bookings: Contact support for group reservations
-''';
-  }
-
-  String _getPlacesHelpContent() {
-    return '''
-Places and location information:
-
-• Finding Places: Use the search bar or browse categories
-• Place Details: Tap on any place to see photos, reviews, and information
-• Directions: Get directions using your preferred maps app
-• Reviews: Share your experiences by writing reviews
-• Favorites: Save places you want to visit later
-''';
-  }
-
-  List<Map<String, String>> _getGettingStartedFAQs() {
-    return [
-      {
-        'question': 'How do I create an account?',
-        'answer': 'Download the app and tap "Sign Up" to create your account with email or phone number.',
-      },
-      {
-        'question': 'How do I book my first event?',
-        'answer': 'Browse events in the Events tab, select an event, and tap "Book Now" to reserve your spot.',
-      },
-      {
-        'question': 'How do I update my profile?',
-        'answer': 'Go to Profile > Edit Profile to update your personal information.',
-      },
-      {
-        'question': 'How do I find places to visit?',
-        'answer': 'Use the Explore tab to discover places, or search for specific locations.',
-      },
-      {
-        'question': 'How do I get help?',
-        'answer': 'Use this Help Center, contact support, or check our FAQ section.',
-      },
-    ];
-  }
-
-  List<Map<String, String>> _getAccountFAQs() {
-    return [
-      {
-        'question': 'How do I change my password?',
-        'answer': 'Go to Profile > Privacy & Security > Change Password to update your password.',
-      },
-      {
-        'question': 'How do I update my email?',
-        'answer': 'Go to Profile > Edit Profile to update your email address.',
-      },
-      {
-        'question': 'How do I delete my account?',
-        'answer': 'Contact support to request account deletion. This action cannot be undone.',
-      },
-      {
-        'question': 'How do I enable two-factor authentication?',
-        'answer': 'Go to Profile > Privacy & Security to enable 2FA for added security.',
-      },
-      {
-        'question': 'How do I update my profile picture?',
-        'answer': 'Go to Profile > Edit Profile and tap on your profile picture to change it.',
-      },
-      {
-        'question': 'How do I change my phone number?',
-        'answer': 'Go to Profile > Edit Profile to update your phone number.',
-      },
-      {
-        'question': 'How do I verify my account?',
-        'answer': 'Check your email for verification links and follow the instructions.',
-      },
-      {
-        'question': 'How do I download my data?',
-        'answer': 'Go to Profile > Privacy & Security > Download Data to request your data.',
-      },
-    ];
-  }
-
-  List<Map<String, String>> _getBookingFAQs() {
-    return [
-      {
-        'question': 'How do I book an event?',
-        'answer': 'Browse events, select one, and tap "Book Now" to complete your booking.',
-      },
-      {
-        'question': 'How do I cancel a booking?',
-        'answer': 'Go to My Bookings, find your booking, and tap "Cancel Booking".',
-      },
-      {
-        'question': 'How do I get my event tickets?',
-        'answer': 'Your tickets will be sent via email and available in the app.',
-      },
-      {
-        'question': 'Can I book for multiple people?',
-        'answer': 'Yes, select the number of people when booking an event.',
-      },
-      {
-        'question': 'How do I get a refund?',
-        'answer': 'Contact support for refund requests. Refund policy varies by event.',
-      },
-      {
-        'question': 'How do I reschedule a booking?',
-        'answer': 'Cancel your current booking and book a new time slot.',
-      },
-      {
-        'question': 'How do I check my booking status?',
-        'answer': 'Go to My Bookings to see all your reservations and their status.',
-      },
-      {
-        'question': 'What if an event is cancelled?',
-        'answer': 'You\'ll be notified and can request a full refund or transfer to another event.',
-      },
-      {
-        'question': 'How do I book a hotel?',
-        'answer': 'Browse hotels in the Explore tab and follow the booking process.',
-      },
-      {
-        'question': 'How do I book a tour?',
-        'answer': 'Find tours in the Explore tab and book them like events.',
-      },
-      {
-        'question': 'How do I get directions to an event?',
-        'answer': 'Tap on the event location to open it in your maps app.',
-      },
-      {
-        'question': 'How do I share an event?',
-        'answer': 'Tap the share button on any event to share it with friends.',
-      },
-    ];
-  }
-
-  List<Map<String, String>> _getPaymentFAQs() {
-    return [
-      {
-        'question': 'What payment methods are accepted?',
-        'answer': 'We accept credit cards, mobile money, and bank transfers.',
-      },
-      {
-        'question': 'How do I add a payment method?',
-        'answer': 'Go to Profile > Payment Methods to add your preferred payment option.',
-      },
-      {
-        'question': 'How do I get a refund?',
-        'answer': 'Contact support with your booking details to request a refund.',
-      },
-      {
-        'question': 'How long do refunds take?',
-        'answer': 'Refunds typically take 3-5 business days to process.',
-      },
-      {
-        'question': 'Is my payment information secure?',
-        'answer': 'Yes, we use industry-standard encryption to protect your data.',
-      },
-      {
-        'question': 'How do I update my payment method?',
-        'answer': 'Go to Profile > Payment Methods to update your payment information.',
-      },
-    ];
-  }
-
-  List<Map<String, String>> _getTechnicalFAQs() {
-    return [
-      {
-        'question': 'The app is not loading properly',
-        'answer': 'Try closing and reopening the app, or restart your device.',
-      },
-      {
-        'question': 'I can\'t log in to my account',
-        'answer': 'Check your internet connection and verify your login credentials.',
-      },
-      {
-        'question': 'The app crashes frequently',
-        'answer': 'Update to the latest version of the app from your app store.',
-      },
-      {
-        'question': 'I\'m not receiving notifications',
-        'answer': 'Check your notification settings in your device settings and app settings.',
-      },
-    ];
-  }
+  List<Map<String, String>> _technicalFaqs(AppLocalizations l10n) => [
+        {'question': l10n.helpFaqTx1Q, 'answer': l10n.helpFaqTx1A},
+        {'question': l10n.helpFaqTx2Q, 'answer': l10n.helpFaqTx2A},
+        {'question': l10n.helpFaqTx3Q, 'answer': l10n.helpFaqTx3A},
+        {'question': l10n.helpFaqTx4Q, 'answer': l10n.helpFaqTx4A},
+      ];
 }

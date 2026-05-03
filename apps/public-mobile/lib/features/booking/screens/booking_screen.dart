@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/utils/price_formatter.dart';
@@ -18,6 +19,7 @@ class BookingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final listingAsync = ref.watch(listingByIdProvider(listingId));
 
     return listingAsync.when(
@@ -122,7 +124,7 @@ class BookingScreen extends ConsumerWidget {
             context.pop();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Booking is not available for this listing type'),
+                content: Text(l10n.commonBookingNotAvailable),
                 backgroundColor: context.errorColor,
               ),
             );
@@ -152,7 +154,9 @@ class BookingScreen extends ConsumerWidget {
           context.pop();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to load listing: ${error.toString()}'),
+              content: Text(l10n.commonFailedLoadListing(
+                error.toString().replaceFirst('Exception: ', ''),
+              )),
               backgroundColor: context.errorColor,
             ),
           );

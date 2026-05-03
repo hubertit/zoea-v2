@@ -34,7 +34,6 @@ import '../../features/events/screens/events_screen.dart';
 import '../../features/notifications/screens/notifications_screen.dart';
 import '../../features/search/screens/search_screen.dart';
 import '../../features/events/screens/event_detail_screen.dart';
-import '../data/lacreola_hardcoded_events.dart';
 import '../../core/models/event.dart';
 import '../../core/models/itinerary.dart';
 import '../../features/listings/screens/listing_detail_screen.dart';
@@ -269,14 +268,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           final event = state.extra as Event?;
           if (event != null) {
             return EventDetailScreen(event: event);
-          }
-          final idStr = state.pathParameters['id']!;
-          final idNum = int.tryParse(idStr);
-          if (idNum != null) {
-            final local = lookupLaCreolaHardcodedEventById(idNum);
-            if (local != null) {
-              return EventDetailScreen(event: local);
-            }
           }
           return const EventsScreen();
         },

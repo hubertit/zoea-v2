@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/menus_provider.dart';
@@ -30,19 +31,20 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final menuAsync = ref.watch(menuByIdProvider(widget.menuId));
 
     return Scaffold(
       backgroundColor: context.grey50,
       body: menuAsync.when(
-        data: (menu) => _buildContent(menu),
+        data: (menu) => _buildContent(l10n, menu),
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -66,7 +68,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load menu',
+                l10n.shopErrorLoadMenu,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -84,7 +86,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                 onPressed: () {
                   ref.invalidate(menuByIdProvider(widget.menuId));
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),
@@ -93,7 +95,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
     );
   }
 
-  Widget _buildContent(Menu menu) {
+  Widget _buildContent(AppLocalizations l10n, Menu menu) {
     final items = menu.items ?? [];
     final categories = _getCategoriesFromItems(items);
     final filteredItems = _selectedCategoryId == null
@@ -150,7 +152,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: ChoiceChip(
-                        label: const Text('All'),
+                        label: Text(l10n.bookingsTabAll),
                         selected: isSelected,
                         onSelected: (selected) {
                           if (selected) {
@@ -190,7 +192,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
           SliverFillRemaining(
             child: Center(
               child: Text(
-                'No items in this category',
+                l10n.shopMenuCategoryEmpty,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -202,7 +204,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final item = filteredItems[index];
-                return _buildMenuItemCard(item);
+                return _buildMenuItemCard(l10n, item);
               },
               childCount: filteredItems.length,
             ),
@@ -222,7 +224,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
       ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
   }
 
-  Widget _buildMenuItemCard(MenuItem item) {
+  Widget _buildMenuItemCard(AppLocalizations l10n, MenuItem item) {
     final imageUrl = item.imageId != null
         ? '${AppConfig.apiBaseUrl.replaceAll('/api', '')}/media/${item.imageId}'
         : null;
@@ -238,7 +240,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        onTap: () => _showItemDetails(item),
+        onTap: () => _showItemDetails(l10n, item),
         borderRadius: BorderRadius.circular(12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +309,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              'Popular',
+                              l10n.shopSortPopular,
                               style: context.bodySmall.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -324,7 +326,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              'Chef\'s Special',
+                              l10n.shopMenuChefSpecial,
                               style: context.bodySmall.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -406,7 +408,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
     );
   }
 
-  void _showItemDetails(MenuItem item) {
+  void _showItemDetails(AppLocalizations l10n, MenuItem item) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -471,7 +473,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
             if (item.dietaryTags.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(
-                'Dietary Information',
+                l10n.shopMenuDietaryInformation,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -492,7 +494,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
             if (item.allergens.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(
-                'Allergens',
+                l10n.shopMenuAllergensTitle,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -530,7 +532,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(
-                        item.isAvailable ? 'Add to Cart' : 'Unavailable',
+                        item.isAvailable ? l10n.shopAddToCart : l10n.shopServiceUnavailable,
                         style: const TextStyle(fontSize: 16),
                       ),
               ),
@@ -542,6 +544,7 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
   }
 
   Future<void> _addToCart(MenuItem item) async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isAddingToCart = true;
     });
@@ -558,10 +561,10 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
         Navigator.pop(context); // Close item details
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Item added to cart'),
+            content: Text(l10n.commonItemAddedToCart),
             backgroundColor: context.primaryColorTheme,
             action: SnackBarAction(
-              label: 'View Cart',
+              label: l10n.shopViewCart,
               textColor: Colors.white,
               onPressed: () {
                 context.push('/cart');
@@ -574,7 +577,9 @@ class _MenuDetailScreenState extends ConsumerState<MenuDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add to cart: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(l10n.commonFailedAddToCart(
+              e.toString().replaceFirst('Exception: ', ''),
+            )),
             backgroundColor: context.errorColor,
           ),
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -18,14 +19,15 @@ class VisitPurposeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         _buildPurposeCard(
           context: context,
           purpose: VisitPurpose.leisure,
           icon: Icons.beach_access,
-          title: 'Leisure',
-          subtitle: 'Exploring and enjoying Rwanda',
+          title: l10n.onboardingVisitLeisureTitle,
+          subtitle: l10n.onboardingVisitLeisureSubtitle,
           color: context.successColor,
         ),
         const SizedBox(height: AppTheme.spacing16),
@@ -33,8 +35,8 @@ class VisitPurposeSelector extends StatelessWidget {
           context: context,
           purpose: VisitPurpose.business,
           icon: Icons.business_center,
-          title: 'Business',
-          subtitle: 'Work and professional travel',
+          title: l10n.onboardingVisitBusinessTitle,
+          subtitle: l10n.onboardingVisitBusinessSubtitle,
           color: context.primaryColorTheme,
         ),
         const SizedBox(height: AppTheme.spacing16),
@@ -42,8 +44,8 @@ class VisitPurposeSelector extends StatelessWidget {
           context: context,
           purpose: VisitPurpose.mice,
           icon: Icons.event,
-          title: 'MICE',
-          subtitle: 'Meetings, Incentives, Conferences, Exhibitions',
+          title: l10n.onboardingVisitMiceTitle,
+          subtitle: l10n.onboardingVisitMiceSubtitle,
           color: const Color(0xFF9C27B0), // Purple for MICE
         ),
       ],

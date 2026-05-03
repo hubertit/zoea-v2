@@ -21,6 +21,7 @@ import '../../../core/widgets/auth_prompt_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Helper class to hold shop tabs data
 class _ShopTabsData {
@@ -100,6 +101,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
   }
 
   Widget _buildErrorState(Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -121,7 +123,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load listing',
+              l10n.listingDetailLoadFailed,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -139,7 +141,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               onPressed: () {
                 ref.invalidate(listingByIdProvider(widget.listingId));
               },
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -239,6 +241,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                       // Favorite button
                       Consumer(
                         builder: (context, ref, child) {
+                          final l10n = AppLocalizations.of(context)!;
                           final isFavoritedAsync = ref.watch(isListingFavoritedProvider(widget.listingId));
                           final isFavorited = isFavoritedAsync.value ?? false;
 
@@ -265,8 +268,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                                   // Show login prompt for guests
                                   AuthPromptDialog.show(
                                     context: context,
-                                    title: 'Sign In to Save Favorites',
-                                    message: 'Create an account or sign in to save your favorite places and access them anytime.',
+                                    title: l10n.exploreFavoriteSignInTitle,
+                                    message: l10n.exploreFavoriteSignInMessage,
                                     returnPath: '/listings/${widget.listingId}',
                                     icon: Icons.favorite,
                                   );
@@ -297,9 +300,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                                     if (errorText.contains('Unauthorized')) {
                                       AuthPromptDialog.show(
                                         context: context,
-                                        title: 'Sign In to Save Favorites',
-                                        message:
-                                            'Your session has expired. Please sign in again to save favorites.',
+                                        title: l10n.exploreFavoriteSessionTitle,
+                                        message: l10n.exploreFavoriteSessionMessage,
                                         returnPath:
                                             '/listings/${widget.listingId}',
                                         icon: Icons.favorite,
@@ -310,7 +312,12 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       AppTheme.errorSnackBar(
                                         message:
-                                            'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+                                            l10n.exploreFavoriteUpdateFailed(
+                                              errorText.replaceFirst(
+                                                'Exception: ',
+                                                '',
+                                              ),
+                                            ),
                                       ),
                                     );
                                   }
@@ -1139,6 +1146,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () {
+                      final l10n = AppLocalizations.of(context)!;
                       // Check if user is logged in
                       final isLoggedIn = ref.read(isLoggedInProvider);
                       
@@ -1146,8 +1154,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                         // Show login prompt for guests
                         AuthPromptDialog.show(
                           context: context,
-                          title: 'Sign In to Write Review',
-                          message: 'Create an account or sign in to share your experience and help other travelers.',
+                          title: l10n.listingDetailReviewSignInTitle,
+                          message: l10n.listingDetailReviewSignInMessage,
                           returnPath: '/listings/${widget.listingId}',
                           icon: Icons.rate_review,
                         );
@@ -1157,7 +1165,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                       _showReviewBottomSheet();
                     },
                     icon: const Icon(Icons.edit),
-                    label: const Text('Write Review'),
+                    label: Text(AppLocalizations.of(context)!.commonWriteReview),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
@@ -1264,7 +1272,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     ),
                   );
                 },
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -1495,7 +1503,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                         style: TextButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                         ),
-                        child: const Text('View All Products'),
+                        child: Text(AppLocalizations.of(context)!.commonViewAllProducts),
                       ),
                     ],
                   ),
@@ -1572,7 +1580,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     style: TextButton.styleFrom(
                       foregroundColor: context.primaryColorTheme,
                     ),
-                    child: const Text('Retry'),
+                    child: Text(AppLocalizations.of(context)!.commonRetry),
                   ),
                 ],
               ),
@@ -1587,7 +1595,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               onPressed: () {
                 context.push('/products?listingId=$listingId');
               },
-              child: const Text('View All Products'),
+              child: Text(AppLocalizations.of(context)!.commonViewAllProducts),
             ),
           ),
         ),
@@ -1634,7 +1642,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                         style: TextButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                         ),
-                        child: const Text('View All Services'),
+                        child: Text(AppLocalizations.of(context)!.commonViewAllServices),
                       ),
                     ],
                   ),
@@ -1711,7 +1719,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     style: TextButton.styleFrom(
                       foregroundColor: context.primaryColorTheme,
                     ),
-                    child: const Text('Retry'),
+                    child: Text(AppLocalizations.of(context)!.commonRetry),
                   ),
                 ],
               ),
@@ -1726,7 +1734,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               onPressed: () {
                 context.push('/services?listingId=$listingId');
               },
-              child: const Text('View All Services'),
+              child: Text(AppLocalizations.of(context)!.commonViewAllServices),
             ),
           ),
         ),
@@ -1762,7 +1770,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text('View Menu'),
+                  child: Text(AppLocalizations.of(context)!.commonViewMenu),
                 ),
               ],
             ),
@@ -1858,7 +1866,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                 onPressed: () {
                   context.push('/menus/$listingId');
                 },
-                child: const Text('View Menus'),
+                child: Text(AppLocalizations.of(context)!.commonViewMenus),
               ),
             ],
           ),
@@ -1889,7 +1897,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
               style: TextButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
               ),
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -2049,6 +2057,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: () {
+                  final l10n = AppLocalizations.of(context)!;
                   // Check if user is logged in
                   final isLoggedIn = ref.read(isLoggedInProvider);
                   
@@ -2056,8 +2065,8 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     // Show login prompt for guests
                     AuthPromptDialog.show(
                       context: context,
-                      title: 'Sign In to Book',
-                      message: 'Create an account or sign in to complete your booking and manage your reservations.',
+                      title: l10n.authPromptBookingsTitle,
+                      message: l10n.authPromptBookingsMessage,
                       returnPath: '/listings/${widget.listingId}',
                       icon: Icons.calendar_today,
                     );
@@ -2068,7 +2077,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   context.push('/booking/${widget.listingId}');
                 },
                 icon: const Icon(Icons.calendar_today, size: 18),
-                label: const Text('Book Now'),
+                label: Text(AppLocalizations.of(context)!.commonBookNow),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: context.primaryColorTheme,
                   backgroundColor: context.backgroundColor,
@@ -2159,7 +2168,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                   }
                 },
                 icon: const Icon(Icons.shopping_cart, size: 18),
-                label: const Text('Order Now'),
+                label: Text(AppLocalizations.of(context)!.commonOrderNow),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFF038f44), // Vuba Vuba brand color (intentional)
                   backgroundColor: context.backgroundColor,
@@ -2193,7 +2202,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen>
                     }
                   : null,
               icon: const Icon(Icons.phone, size: 18),
-              label: const Text('Contact'),
+              label: Text(AppLocalizations.of(context)!.commonContact),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
@@ -2399,11 +2408,12 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
   }
 
   Future<void> _submitReview() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_reviewController.text.trim().isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-            content: Text('Please write a review before submitting'),
+            content: Text(l10n.commonPleaseWriteReview),
             backgroundColor: context.errorColor,
           ),
         );
@@ -2416,7 +2426,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-            content: Text('Unable to submit review. Missing listing, event, or tour information.'),
+            content: Text(l10n.commonReviewSubmitMissingContext),
             backgroundColor: context.errorColor,
           ),
         );
@@ -2463,7 +2473,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-          content: Text('Thank you for your review!'),
+          content: Text(l10n.commonThankYouReview),
           backgroundColor: context.successColor,
         ),
       );

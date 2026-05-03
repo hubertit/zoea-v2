@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 
@@ -14,10 +15,11 @@ class ZoeaCardScreen extends ConsumerStatefulWidget {
 class _ZoeaCardScreenState extends ConsumerState<ZoeaCardScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text('Zoea Card'),
+        title: Text(l10n.zoeaCardScreenTitle),
         backgroundColor: context.backgroundColor,
         elevation: 0,
         actions: [
@@ -38,12 +40,12 @@ class _ZoeaCardScreenState extends ConsumerState<ZoeaCardScreen> {
             ),
             const SizedBox(height: AppTheme.spacing16),
             Text(
-              'Zoea Card',
+              l10n.zoeaCardScreenTitle,
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: AppTheme.spacing8),
             Text(
-              'Your digital wallet for seamless payments',
+              l10n.zoeaCardSubtitle,
               style: TextStyle(
                 color: context.secondaryTextColor,
               ),

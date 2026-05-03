@@ -9,6 +9,7 @@ import '../../../core/providers/package_info_provider.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/utils/app_build_metadata.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AboutScreen extends ConsumerStatefulWidget {
   const AboutScreen({super.key});
@@ -28,7 +29,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
       if (!launched && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Could not open link. Try again later.'),
+            content: Text(AppLocalizations.of(context)!.commonLinkOpenFailed),
             backgroundColor: context.primaryColorTheme,
           ),
         );
@@ -37,7 +38,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Could not open link. Try again later.'),
+            content: Text(AppLocalizations.of(context)!.commonLinkOpenFailed),
             backgroundColor: context.primaryColorTheme,
           ),
         );

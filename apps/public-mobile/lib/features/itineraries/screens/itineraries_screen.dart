@@ -8,6 +8,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/itinerary_provider.dart';
 import '../../../core/models/itinerary.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ItinerariesScreen extends ConsumerStatefulWidget {
   const ItinerariesScreen({super.key});
@@ -111,7 +112,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.primaryColorTheme,
                     ),
-                    child: const Text('Retry'),
+                    child: Text(AppLocalizations.of(context)!.commonRetry),
                   ),
                 ],
               ),
@@ -354,7 +355,7 @@ class _ItinerariesScreenState extends ConsumerState<ItinerariesScreen> {
               context.push('/itineraries/create');
             },
             icon: const Icon(Icons.add),
-            label: const Text('Create Itinerary'),
+            label: Text(AppLocalizations.of(context)!.itineraryCreateFab),
             style: ElevatedButton.styleFrom(
               backgroundColor: context.primaryColorTheme,
               foregroundColor: Colors.white,

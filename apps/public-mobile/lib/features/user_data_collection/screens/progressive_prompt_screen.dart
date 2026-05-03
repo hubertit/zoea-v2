@@ -10,6 +10,7 @@ import '../widgets/gender_selector.dart';
 import '../widgets/length_of_stay_selector.dart';
 import '../widgets/interests_chips.dart';
 import '../widgets/travel_party_selector.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Progressive prompt screen shown as bottom sheet
 /// One question at a time, always skippable
@@ -153,7 +154,7 @@ class _ProgressivePromptScreenState
                     style: TextButton.styleFrom(
                       foregroundColor: context.secondaryTextColor,
                     ),
-                    child: const Text('Maybe later'),
+                    child: Text(AppLocalizations.of(context)!.commonMaybeLater),
                   ),
                 ),
                 const SizedBox(width: AppTheme.spacing12),

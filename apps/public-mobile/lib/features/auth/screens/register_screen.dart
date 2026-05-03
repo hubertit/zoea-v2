@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -59,12 +60,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> _handleRegister() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     
     if (!_agreeToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         AppTheme.errorSnackBar(
-          message: 'Please agree to the Terms and Conditions',
+          message: l10n.registerAgreeTermsMessage,
         ),
       );
       return;
@@ -90,7 +92,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: 'Registration failed. Please try again.',
+            message: l10n.registerFailed,
           ),
         );
       }
@@ -99,7 +101,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         final errorMessage = e.toString().replaceFirst('Exception: ', '');
         ScaffoldMessenger.of(context).showSnackBar(
           AppTheme.errorSnackBar(
-            message: errorMessage.isNotEmpty ? errorMessage : 'An error occurred. Please try again.',
+            message: errorMessage.isNotEmpty ? errorMessage : l10n.loginErrorGeneric,
           ),
         );
       }
@@ -114,6 +116,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final inviteRef =
         GoRouterState.of(context).uri.queryParameters['ref']?.trim();
 
@@ -139,13 +142,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Column(
                   children: [
                     Text(
-                      'Create Account',
+                      l10n.registerTitle,
                       style: Theme.of(context).textTheme.displayMedium,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppTheme.spacing8),
                     Text(
-                      'Join the Zoea Africa community',
+                      l10n.registerSubtitle,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -154,7 +157,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     if (inviteRef != null && inviteRef.isNotEmpty) ...[
                       const SizedBox(height: AppTheme.spacing12),
                       Text(
-                        'You opened an invite link — we added the code below. You can change or paste a different code from a text or chat.',
+                        l10n.registerInviteBanner,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: context.primaryColorTheme,
                               fontWeight: FontWeight.w600,
@@ -172,8 +175,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   controller: _fullNameController,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Full Name',
-                    hintText: 'Enter your full name',
+                    labelText: l10n.registerFullName,
+                    hintText: l10n.registerFullNameHint,
                     prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -189,7 +192,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Required';
+                      return l10n.registerFieldRequired;
                     }
                     return null;
                   },
@@ -203,8 +206,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email address',
+                    labelText: l10n.registerEmailLabel,
+                    hintText: l10n.registerEmailHint,
                     prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -220,10 +223,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return l10n.loginValidationEmailRequired;
                     }
                     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Please enter a valid email';
+                      return l10n.loginValidationEmailInvalid;
                     }
                     return null;
                   },
@@ -237,8 +240,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textCapitalization: TextCapitalization.characters,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
-                    labelText: 'Invite code',
-                    hintText: 'Paste if you have one',
+                    labelText: l10n.registerInviteCodeLabel,
+                    hintText: l10n.registerInviteCodeHint,
                     prefixIcon: const Icon(Icons.card_giftcard_outlined),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -256,7 +259,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     final v = value?.trim() ?? '';
                     if (v.isEmpty) return null;
                     if (v.length > 20) {
-                      return 'Code is too long';
+                      return l10n.registerCodeTooLong;
                     }
                     return null;
                   },
@@ -270,8 +273,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   obscureText: !_isPasswordVisible,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Create a strong password',
+                    labelText: l10n.registerPasswordLabel,
+                    hintText: l10n.registerPasswordHint,
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                         icon: Icon(
@@ -297,10 +300,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
+                      return l10n.loginValidationPasswordRequired;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return l10n.loginValidationPasswordShort;
                     }
                     return null;
                   },
@@ -315,8 +318,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _handleRegister(),
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Confirm your password',
+                    labelText: l10n.registerConfirmPasswordLabel,
+                    hintText: l10n.registerConfirmPasswordHint,
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                         icon: Icon(
@@ -342,10 +345,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
+                      return l10n.registerConfirmPasswordRequired;
                     }
                     if (value != _passwordController.text) {
-                      return 'Passwords do not match';
+                      return l10n.registerPasswordsMismatch;
                     }
                     return null;
                   },
@@ -370,17 +373,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         text: TextSpan(
                           style: Theme.of(context).textTheme.bodySmall,
                           children: [
-                            const TextSpan(text: 'I agree to the '),
+                            TextSpan(text: l10n.registerAgreePrefix),
                             TextSpan(
-                              text: 'Terms and Conditions',
+                              text: l10n.registerTerms,
                               style: TextStyle(
                                 color: context.primaryColorTheme,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const TextSpan(text: ' and '),
+                            TextSpan(text: l10n.registerAndConjunction),
                             TextSpan(
-                              text: 'Privacy Policy',
+                              text: l10n.registerPrivacy,
                               style: TextStyle(
                                 color: context.primaryColorTheme,
                                 fontWeight: FontWeight.w500,
@@ -411,7 +414,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               ),
                             ),
                           )
-                        : const Text('Create Account'),
+                        : Text(l10n.registerTitle),
                   ),
                 ),
                 
@@ -422,7 +425,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Already have an account? ',
+                      l10n.registerAlreadyHaveAccount,
                       style: TextStyle(
                         color: context.secondaryTextColor,
                       ),
@@ -432,7 +435,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       style: TextButton.styleFrom(
                         foregroundColor: context.primaryColorTheme,
                       ),
-                      child: const Text('Sign In'),
+                      child: Text(l10n.signIn),
                     ),
                   ],
                 ),

@@ -12,6 +12,7 @@ import '../widgets/event_filter_sheet.dart';
 import '../widgets/event_calendar_sheet.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../core/widgets/event_flyer_image.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Temporary: MICE tab uses mock data. Set to `true` to show the tab again.
 const bool kShowEventsMiceTab = false;
@@ -89,6 +90,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final eventsState = ref.watch(eventsProvider);
 
     // Auto-open calendar after 2 seconds if events are loaded and not already shown
@@ -114,7 +116,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Events',
+            l10n.eventsTitle,
             style: context.titleLarge.copyWith(
               color: context.primaryTextColor,
             ),
@@ -156,10 +158,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                   tabAlignment: TabAlignment.start,
                   labelPadding: const EdgeInsets.symmetric(horizontal: 16),
                   tabs: [
-                    const Tab(text: 'Trending'),
-                    const Tab(text: 'Near Me'),
-                    const Tab(text: 'This Week'),
-                    if (kShowEventsMiceTab) const Tab(text: 'MICE'),
+                    Tab(text: l10n.eventsTabTrending),
+                    Tab(text: l10n.eventsTabNearMe),
+                    Tab(text: l10n.eventsTabThisWeek),
+                    if (kShowEventsMiceTab) Tab(text: l10n.eventsTabMice),
                   ],
                 ),
       ),
@@ -347,7 +349,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Error loading events',
+              AppLocalizations.of(context)!.eventsErrorLoading,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
               ),
@@ -376,7 +378,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                     break;
                 }
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -395,14 +397,14 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'No events found',
+              AppLocalizations.of(context)!.eventsEmptyTitle,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Check back later for new events',
+              AppLocalizations.of(context)!.eventsEmptySubtitle,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -617,11 +619,13 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
   }
 
   Widget _buildEventCard(Event event) {
+    final l10n = AppLocalizations.of(context)!;
     final eventDetails = event.event;
     final startDate = eventDetails.startDate;
     final endDate = eventDetails.endDate;
-    final dateFormat = DateFormat('MMM dd, yyyy');
-    final timeFormat = DateFormat('HH:mm');
+    final lc = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMM dd, yyyy', lc);
+    final timeFormat = DateFormat('HH:mm', lc);
 
     return GestureDetector(
       onTap: () {
@@ -785,7 +789,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                     // Price Range
                     if (eventDetails.tickets.isNotEmpty)
                       Text(
-                        'From ${_formatPrice(eventDetails.tickets.first.price)} ${eventDetails.tickets.first.currency}',
+                        l10n.eventsTicketPriceFrom(
+                          _formatPrice(eventDetails.tickets.first.price),
+                          eventDetails.tickets.first.currency,
+                        ),
                         style: context.bodySmall.copyWith(
                           color: context.primaryColorTheme,
                           fontWeight: FontWeight.w600,
@@ -890,7 +897,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
 
   void _showSearchDialog(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
-    
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -916,7 +924,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
             
             // Title
             Text(
-              'Search Events',
+              l10n.eventsSearchTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -928,7 +936,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
             TextField(
               controller: searchController,
               decoration: InputDecoration(
-                hintText: 'Search for events...',
+                hintText: l10n.eventsSearchHint,
                 hintStyle: context.bodyMedium.copyWith(
                   color: context.grey500,
                 ),
@@ -970,7 +978,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                       side: BorderSide(color: context.primaryColorTheme),
                     ),
                     child: Text(
-                      'Cancel',
+                      l10n.commonCancel,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryColorTheme,
                         fontWeight: FontWeight.w500,
@@ -993,7 +1001,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
-                      'Search',
+                      l10n.commonSearch,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                         fontWeight: FontWeight.w500,

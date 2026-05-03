@@ -1,7 +1,6 @@
 {
   "@@locale": "en",
   "appTitle": "Zoea",
-
   "shellTabExplore": "Explore",
   "shellTabEvents": "Events",
   "shellTabAskZoea": "Ask Zoea",
@@ -16,12 +15,10 @@
   "shellSnackInternetRestored": "Internet connection restored!",
   "shellSnackServiceUnavailable": "Service temporarily unavailable. Retrying...",
   "shellSnackBackOnline": "Back online! Connection restored.",
-
   "authPromptBookingsTitle": "Sign In Required",
   "authPromptBookingsMessage": "Please sign in to view your bookings and reservations.",
   "authCancel": "Cancel",
   "signIn": "Sign In",
-
   "loginWelcomeBack": "Welcome Back",
   "loginSignInToContinue": "Sign in to continue",
   "loginTabPhone": "Phone",
@@ -45,7 +42,6 @@
   "loginValidationEmailInvalid": "Please enter a valid email address",
   "loginValidationPasswordRequired": "Please enter your password",
   "loginValidationPasswordShort": "Password must be at least 6 characters",
-
   "profileTitle": "Profile",
   "profileAppInformation": "App information",
   "profileSectionAccount": "Account",
@@ -83,8 +79,12 @@
   "profileAboutSubtitle": "Version {version} ({buildNumber})",
   "@profileAboutSubtitle": {
     "placeholders": {
-      "version": {"type": "String"},
-      "buildNumber": {"type": "String"}
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
     }
   },
   "profileSignOutTitle": "Sign Out",
@@ -96,60 +96,1554 @@
   "profileStatVisited": "Visited",
   "profileStatWritten": "Written",
   "profileVerifiedTraveler": "Verified Traveler",
-
   "profileSelectLanguage": "Select Language",
   "languageOptionEnglish": "English",
   "languageOptionFrench": "French",
   "languageNativeNameEnglish": "English",
   "languageNativeNameFrench": "Français",
-
   "profileLanguageChanged": "Language changed to {languageName}",
   "@profileLanguageChanged": {
     "placeholders": {
-      "languageName": {"type": "String"}
+      "languageName": {
+        "type": "String"
+      }
     }
   },
   "profileLanguageUpdateFailed": "Failed to update language: {error}",
   "@profileLanguageUpdateFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
-
   "profileCurrencyChanged": "Currency changed to {code}",
   "@profileCurrencyChanged": {
     "placeholders": {
-      "code": {"type": "String"}
+      "code": {
+        "type": "String"
+      }
     }
   },
   "profileCurrencyUpdateFailed": "Failed to update currency: {error}",
   "@profileCurrencyUpdateFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "profileCountryChanged": "Country changed to {name}. Content will be filtered accordingly.",
   "@profileCountryChanged": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "profileCountryChangeFailed": "Failed to change country. Please try again.",
   "profileLocationChanged": "Location changed to {name}",
   "@profileLocationChanged": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "profileLocationSaveFailed": "Failed to save location: {error}",
   "@profileLocationSaveFailed": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "profileSelectCity": "Select city",
-
   "signOutDialogTitle": "Sign Out",
   "signOutDialogMessage": "Are you sure you want to sign out?",
-  "signOutDialogConfirm": "Sign Out"
+  "signOutDialogConfirm": "Sign Out",
+  "commonViewMore": "View More",
+  "commonViewAll": "View All",
+  "commonRetry": "Retry",
+  "exploreLoading": "Loading...",
+  "exploreDefaultCity": "Kigali",
+  "exploreCurrencyPair": "USD / RWF",
+  "exploreQuickActions": "Quick Actions",
+  "exploreUnablePhoneCall": "Unable to make phone call",
+  "exploreEmergencyTollFreeTitle": "Emergency Toll Free Numbers",
+  "exploreEmergencyEmergency": "Emergency",
+  "exploreEmergencyTrafficAccidents": "Traffic Accidents",
+  "exploreEmergencyAbusePolice": "Abuse by Police Officer",
+  "exploreEmergencyAntiCorruption": "Anti Corruption",
+  "exploreEmergencyMaritime": "Maritime Problems",
+  "exploreEmergencyDrivingLicense": "Driving License Queries",
+  "exploreEmergencyFireRescue": "Fire and Rescue",
+  "exploreCallNumber": "Call: {number}",
+  "@exploreCallNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreActionEmergencySos": "Emergency SOS",
+  "exploreActionCallTaxi": "Call Taxi",
+  "exploreActionBookTour": "Book Tour",
+  "exploreActionEsim": "eSim",
+  "exploreActionPharmacy": "Pharmacy",
+  "exploreActionRoadsideAssistance": "Roadside Assistance",
+  "exploreActionFlightInfo": "Flight Info",
+  "exploreActionIrembo": "Irembo",
+  "exploreActionVisitRwanda": "Visit Rwanda",
+  "exploreWebviewTitleEsim": "eSim",
+  "exploreWebviewTitleRwandAir": "RwandAir",
+  "exploreWebviewTitleIrembo": "Irembo",
+  "exploreWebviewTitleVisitRwanda": "Visit Rwanda",
+  "exploreCategories": "Categories",
+  "exploreHappening": "Happening",
+  "exploreFailedLoadEvents": "Failed to load events",
+  "exploreNoEventsToday": "No events today",
+  "exploreAllCategories": "All Categories",
+  "exploreNoCategoriesAvailable": "No categories available",
+  "exploreFailedLoadCategories": "Failed to load categories",
+  "exploreRecommended": "Recommended",
+  "exploreNoFeaturedListings": "No featured listings available",
+  "exploreFailedRecommendations": "Failed to load recommendations",
+  "exploreNearMe": "Near Me",
+  "exploreNoListings": "No listings available",
+  "exploreFailedListings": "Failed to load listings",
+  "exploreTourPackages": "Tour Packages",
+  "exploreFailedTours": "Failed to load tours",
+  "exploreNoTours": "No tour packages available",
+  "exploreUntitledTour": "Untitled Tour",
+  "exploreTourBadgeTour": "TOUR",
+  "exploreTourBadgeFeatured": "FEATURED",
+  "exploreTourPriceFrom": "From {price}",
+  "@exploreTourPriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreTourPriceUnavailable": "From RWF ---",
+  "exploreTourDurationDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@exploreTourDurationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreTourDurationHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@exploreTourDurationHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreFavoriteSignInTitle": "Sign In to Save Favorites",
+  "exploreFavoriteSignInMessage": "Create an account or sign in to save your favorite places and access them anytime.",
+  "exploreFavoriteSessionTitle": "Sign In to Save Favorites",
+  "exploreFavoriteSessionMessage": "Your session has expired. Please sign in again to save favorites.",
+  "exploreFavoriteUpdateFailed": "Failed to update favorite: {error}",
+  "@exploreFavoriteUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreGiftReferTitle": "Refer & Earn",
+  "exploreGiftReferSubtitle": "Invite friends and earn rewards",
+  "exploreGiftItineraryTitle": "Itinerary Planning",
+  "exploreGiftItinerarySubtitle": "Plan and share your trip",
+  "exploreEventTimeToday": "Today, {time}",
+  "@exploreEventTimeToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreCategoryFallback": "Category",
+  "exploreListingUnknown": "Unknown",
+  "exploreListingPlace": "Place",
+  "commonCancel": "Cancel",
+  "commonSearch": "Search",
+  "commonClose": "Close",
+  "commonContinue": "Continue",
+  "commonApply": "Apply",
+  "commonClearAll": "Clear All",
+  "commonFavoriteAdded": "Added to favorites!",
+  "commonFavoriteRemoved": "Removed from favorites!",
+  "eventsTitle": "Events",
+  "eventsTabTrending": "Trending",
+  "eventsTabNearMe": "Near Me",
+  "eventsTabThisWeek": "This Week",
+  "eventsTabMice": "MICE",
+  "eventsErrorLoading": "Error loading events",
+  "eventsEmptyTitle": "No events found",
+  "eventsEmptySubtitle": "Check back later for new events",
+  "eventsSearchTitle": "Search Events",
+  "eventsSearchHint": "Search for events...",
+  "eventsTicketPriceFrom": "From {amount} {currency}",
+  "@eventsTicketPriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsFilterTitle": "Filter Events",
+  "eventsFilterSearchSection": "Search",
+  "eventsFilterSearchHint": "Search events...",
+  "eventsFilterCategory": "Category",
+  "eventsFilterDateRange": "Date Range",
+  "eventsFilterStartDate": "Start Date",
+  "eventsFilterEndDate": "End Date",
+  "eventsFilterPriceRange": "Price Range",
+  "eventsFilterLocation": "Location",
+  "eventsFilterLocationHint": "Enter location...",
+  "eventsFilterOptions": "Options",
+  "eventsFilterFreeEvents": "Free Events",
+  "eventsFilterVerifiedOnly": "Verified Only",
+  "eventsCategoryMusic": "Music",
+  "eventsCategorySports": "Sports & Wellness",
+  "eventsCategoryFood": "Food & Drinks",
+  "eventsCategoryArts": "Arts & Culture",
+  "eventsCategoryConferences": "Conferences",
+  "eventsCategoryPerformance": "Performance",
+  "eventsPriceFree": "Free",
+  "eventsPriceUnder5k": "Under 5K RWF",
+  "eventsPrice5kTo15k": "5K - 15K RWF",
+  "eventsPrice15kTo50k": "15K - 50K RWF",
+  "eventsPrice50kTo100k": "50K - 100K RWF",
+  "eventsPrice100kPlus": "100K+ RWF",
+  "eventsCalendarTitle": "Event Calendar",
+  "eventsCalendarOnDate": "Events on {date}",
+  "@eventsCalendarOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsFavoriteSignInTitle": "Sign In to Save Favorites",
+  "eventsFavoriteSignInMessage": "Create an account or sign in to save your favorite events and access them anytime.",
+  "eventsFavoriteSessionMessage": "Your session has expired. Please sign in again to save favorites.",
+  "eventsOrganizedBy": "Organized by",
+  "eventsAboutTitle": "About this event",
+  "eventsSectionCategory": "Category",
+  "eventsLabelAttending": "Attending",
+  "eventsLabelCapacity": "Capacity",
+  "eventsLabelStatus": "Status",
+  "eventsStatusOngoing": "Ongoing",
+  "eventsStatusUpcoming": "Upcoming",
+  "eventsTicketsSection": "Tickets",
+  "eventsTicketSoldOut": "Sold Out",
+  "eventsTicketBuy": "Buy Ticket",
+  "eventsBottomPerPerson": "per person",
+  "eventsBottomSelectTickets": "Select Tickets",
+  "eventsBottomJoinEvent": "Join Event",
+  "eventsBottomPriceFrom": "From {amount} {currency}",
+  "@eventsBottomPriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsSincRedirectTitle": "Redirecting to Sinc",
+  "eventsSincRedirectMessage": "You are about to be redirected to our partner platform \"Sinc\" to purchase tickets for this event. Sinc is our trusted ticketing partner that handles secure event bookings and payments.",
+  "eventsSincDontShowAgain": "Don't show again",
+  "eventsShareWithLocation": "Check out \"{name}\" in {location} on {date}!",
+  "@eventsShareWithLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsShareNoLocation": "Check out \"{name}\" on {date}!",
+  "@eventsShareNoLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantSubtitle": "Your Rwanda guide",
+  "assistantTooltipNewChat": "New conversation",
+  "assistantTooltipHistory": "History",
+  "assistantInputHint": "Ask me anything about Rwanda...",
+  "assistantEmptyGreeting": "Hi! I'm Zoea 👋",
+  "assistantEmptyBody": "Your friendly guide to Rwanda. Ask me about places to visit, restaurants, tours, or anything else!",
+  "assistantEmptyTryAsking": "Try asking:",
+  "assistantErrorSend": "Failed to send message: {error}",
+  "@assistantErrorSend": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHistorySignInTitle": "Sign In to View History",
+  "assistantHistorySignInMessage": "Create an account or sign in to view your conversation history with Zoea.",
+  "assistantHistoryTitle": "Recent Conversations",
+  "assistantHistoryEmpty": "No conversations yet",
+  "assistantHistoryLoadFailed": "Failed to load conversations",
+  "assistantErrorLoadConversation": "Failed to load conversation: {error}",
+  "@assistantErrorLoadConversation": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantRelativeToday": "Today",
+  "assistantRelativeYesterday": "Yesterday",
+  "assistantRelativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "@assistantRelativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantSuggestion1": "Italian dinner in Kigali",
+  "assistantSuggestion2": "Gorilla or safari tours",
+  "assistantSuggestion3": "Pharmacy or ATM nearby",
+  "assistantSuggestion4": "Show me popular places",
+  "assistantSuggestion5": "Find restaurants in Kigali",
+  "assistantSuggestion6": "What tours are available?",
+  "commonDone": "Done",
+  "commonClear": "Clear",
+  "commonNotApplicable": "N/A",
+  "bookingsTabAll": "All",
+  "bookingsTabUpcoming": "Upcoming",
+  "bookingsTabPast": "Past",
+  "bookingsTabCancelled": "Cancelled",
+  "bookingsErrorOrders": "Failed to load orders",
+  "bookingsErrorBookings": "Failed to load bookings",
+  "bookingsEmptyUpcomingTitle": "No upcoming bookings or orders",
+  "bookingsEmptyUpcomingSubtitle": "You don't have any upcoming reservations or orders",
+  "bookingsEmptyPastTitle": "No past bookings or orders",
+  "bookingsEmptyPastSubtitle": "Your booking and order history will appear here",
+  "bookingsEmptyCancelledTitle": "No cancelled bookings or orders",
+  "bookingsEmptyCancelledSubtitle": "Cancelled bookings and orders will appear here",
+  "bookingsEmptyDefaultTitle": "No bookings or orders yet",
+  "bookingsEmptyDefaultSubtitle": "Start exploring and make your first booking or order!",
+  "bookingsExploreNow": "Explore now",
+  "bookingsSearchTitle": "Search bookings",
+  "bookingsSearchHint": "Search by name, location, booking or order number…",
+  "bookingsLocationNotSpecified": "Location not specified",
+  "bookingsTourLocation": "Tour location",
+  "stayTitle": "Where to stay",
+  "staySubtitle": "Find your perfect accommodation",
+  "stayTabAll": "All",
+  "stayTabHotels": "Hotels",
+  "stayTabBnbs": "B&Bs",
+  "stayTabApartments": "Apartments",
+  "stayTabVillas": "Villas",
+  "stayAnyDates": "Any dates",
+  "staySelectCheckout": "Select checkout",
+  "stayGuestCount": "{count, plural, =1{1 guest} other{{count} guests}}",
+  "@stayGuestCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayFailedLoad": "Failed to load accommodations",
+  "stayEmptyNoMatchesForCategory": "No {category} found",
+  "@stayEmptyNoMatchesForCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "stayEmptyAdjust": "Try adjusting your search or filters",
+  "stayFiltersTitle": "Filters",
+  "stayPriceRangeRwf": "Price range (RWF)",
+  "stayPriceMinSample": "Min: 10,000",
+  "stayPriceMaxSample": "Max: 200,000",
+  "stayMinimumRating": "Minimum rating",
+  "stayRatingAtLeastPlus": "{min}+",
+  "@stayRatingAtLeastPlus": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "stayAmenities": "Amenities",
+  "stayAmenityWifi": "Wi‑Fi",
+  "stayAmenityPool": "Pool",
+  "stayAmenitySpa": "Spa",
+  "stayAmenityGym": "Gym",
+  "stayAmenityRestaurant": "Restaurant",
+  "stayAmenityParking": "Parking",
+  "stayAmenityAirConditioning": "Air conditioning",
+  "stayAmenityBusinessCenter": "Business center",
+  "stayAmenityKitchen": "Kitchen",
+  "stayAmenityGarden": "Garden",
+  "stayAmenityRoomService": "Room service",
+  "stayPropertyType": "Property type",
+  "stayDistanceFromCenter": "Distance from city center",
+  "stayDistanceAny": "Any",
+  "stayDistanceUnder5km": "Under 5 km",
+  "stayDistance5to10km": "5–10 km",
+  "stayDistance10to20km": "10–20 km",
+  "stayDistanceOver20km": "Over 20 km",
+  "stayApplyFilters": "Apply filters",
+  "stayMapComingSoon": "Map view coming soon!",
+  "staySearchOptionsTitle": "Search options",
+  "stayWhereLabel": "Where",
+  "stayCheckInOutLabel": "Check-in & check-out",
+  "stayGuestsLabel": "Guests",
+  "staySearchAccommodations": "Search accommodations",
+  "staySelectLocationTitle": "Select location",
+  "staySelectDatesTimesTitle": "Select dates & times",
+  "stayCheckIn": "Check-in",
+  "stayCheckOut": "Check-out",
+  "staySelectDate": "Select date",
+  "staySelectTime": "Select time",
+  "stayNumberOfGuests": "Number of guests",
+  "stayGuestsSheetGuests": "Guests",
+  "staySortBy": "Sort by",
+  "staySortRecommended": "Recommended",
+  "staySortPriceLowHigh": "Price: low to high",
+  "staySortPriceHighLow": "Price: high to low",
+  "staySortRatingHighLow": "Rating: high to low",
+  "staySortDistance": "Distance",
+  "staySortPopularity": "Popularity",
+  "stayListingFallback": "Accommodation",
+  "stayLocationUnavailable": "Location not available",
+  "stayBreakfast": "Breakfast",
+  "stayRoomTypesCount": "{count, plural, =1{1 room type} other{{count} room types}}",
+  "@stayRoomTypesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingsBookAgain": "Book again",
+  "bookingsViewDetails": "View details",
+  "bookingsBookedOn": "Booked on {date}",
+  "@bookingsBookedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingsOrderedOn": "Ordered on {date}",
+  "@bookingsOrderedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingsOrderLabel": "ORDER",
+  "bookingsDateNotSpecified": "Date not specified",
+  "bookingsOrderPreviewMessage": "Order details for {number}",
+  "@bookingsOrderPreviewMessage": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingsCancelOrderSoon": "Cancel order coming soon",
+  "bookingsLineItemCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@bookingsLineItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonNotSpecified": "Not specified",
+  "maintenanceTitle": "We'll Be Right Back!",
+  "maintenanceMessage": "Our systems are currently undergoing maintenance to serve you better. We'll be back online shortly.",
+  "maintenanceTryAgain": "Try Again",
+  "maintenanceSupport": "Need help? Contact us at {email}",
+  "@maintenanceSupport": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "maintenanceStillUnavailable": "Service is still unavailable. Please try again in a moment.",
+  "helpSearchHint": "Search help articles…",
+  "helpQuickHelp": "Quick Help",
+  "helpPopularTopics": "Popular Topics",
+  "helpContactSupport": "Contact Support",
+  "helpFaqCategoriesTitle": "Frequently Asked Questions",
+  "helpLinkOpenFailed": "Could not open link. Try again later.",
+  "helpContactButton": "Contact",
+  "helpFeatureComingSoon": "{feature} is coming soon!",
+  "@helpFeatureComingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "helpLiveChatBody": "Start a live chat session with our support team.",
+  "helpQuickAccountTitle": "Account Issues",
+  "helpQuickAccountSubtitle": "Login, registration, and profile problems",
+  "helpQuickPaymentTitle": "Payment & Billing",
+  "helpQuickPaymentSubtitle": "Booking payments and refunds",
+  "helpQuickEventsTitle": "Events & Bookings",
+  "helpQuickEventsSubtitle": "Event tickets and booking management",
+  "helpQuickPlacesTitle": "Places & Locations",
+  "helpQuickPlacesSubtitle": "Finding and visiting places",
+  "helpTopicBookEvents": "How to book events",
+  "helpTopicPaymentMethods": "Payment methods",
+  "helpTopicCancelBooking": "Cancel booking",
+  "helpTopicUpdateProfile": "Update profile",
+  "helpTopicContactSupport": "Contact support",
+  "helpTopicAppFeatures": "App features",
+  "helpLiveChatTitle": "Live Chat",
+  "helpLiveChatSubtitle": "Get instant help from our support team",
+  "helpEmailSupportTitle": "Email Support",
+  "helpPhoneSupportTitle": "Phone Support",
+  "helpPhoneSupportSubtitle": "+250 796 889 900",
+  "helpFaqGettingStarted": "Getting Started",
+  "helpFaqAccountProfile": "Account & Profile",
+  "helpFaqBookingsEvents": "Bookings & Events",
+  "helpFaqPaymentRefunds": "Payment & Refunds",
+  "helpFaqTechnicalIssues": "Technical Issues",
+  "helpAppVersionLabel": "App Version",
+  "helpBuildNumberLabel": "Build Number",
+  "helpLastUpdatedLabel": "Last Updated",
+  "helpPlatformLabel": "Platform",
+  "helpPackageInfoError": "Could not load package info.",
+  "helpArticleAccount": "Common account issues and solutions:\n\n• Forgot Password: Use the \"Forgot Password\" link on the login screen\n• Account Verification: Check your email for verification links\n• Profile Updates: Go to Profile > Edit Profile to update your information\n• Account Security: Enable two-factor authentication in Privacy & Security settings\n• Data Privacy: Review your privacy settings in the app settings",
+  "helpArticlePayment": "Payment and billing assistance:\n\n• Payment Methods: Add credit cards, mobile money, or bank accounts\n• Refund Requests: Contact support for booking cancellations and refunds\n• Payment History: View all transactions in your profile\n• Failed Payments: Check your payment method and try again\n• Currency: All payments are processed in Rwandan Francs (RWF)",
+  "helpArticleBooking": "Event booking and management:\n\n• Booking Events: Browse events and tap \"Book Now\" to reserve your spot\n• Booking Confirmation: You'll receive email and app notifications\n• Cancel Bookings: Go to My Bookings to cancel upcoming events\n• Event Updates: Check the Events tab for latest information\n• Group Bookings: Contact support for group reservations",
+  "helpArticlePlaces": "Places and location information:\n\n• Finding Places: Use the search bar or browse categories\n• Place Details: Tap on any place to see photos, reviews, and information\n• Directions: Get directions using your preferred maps app\n• Reviews: Share your experiences by writing reviews\n• Favorites: Save places you want to visit later",
+  "helpFaqGs1Q": "How do I create an account?",
+  "helpFaqGs1A": "Download the app and tap \"Sign Up\" to create your account with email or phone number.",
+  "helpFaqGs2Q": "How do I book my first event?",
+  "helpFaqGs2A": "Browse events in the Events tab, select an event, and tap \"Book Now\" to reserve your spot.",
+  "helpFaqGs3Q": "How do I update my profile?",
+  "helpFaqGs3A": "Go to Profile > Edit Profile to update your personal information.",
+  "helpFaqGs4Q": "How do I find places to visit?",
+  "helpFaqGs4A": "Use the Explore tab to discover places, or search for specific locations.",
+  "helpFaqGs5Q": "How do I get help?",
+  "helpFaqGs5A": "Use this Help Center, contact support, or check our FAQ section.",
+  "helpFaqAc1Q": "How do I change my password?",
+  "helpFaqAc1A": "Go to Profile > Privacy & Security > Change Password to update your password.",
+  "helpFaqAc2Q": "How do I update my email?",
+  "helpFaqAc2A": "Go to Profile > Edit Profile to update your email address.",
+  "helpFaqAc3Q": "How do I delete my account?",
+  "helpFaqAc3A": "Contact support to request account deletion. This action cannot be undone.",
+  "helpFaqAc4Q": "How do I enable two-factor authentication?",
+  "helpFaqAc4A": "Go to Profile > Privacy & Security to enable 2FA for added security.",
+  "helpFaqAc5Q": "How do I update my profile picture?",
+  "helpFaqAc5A": "Go to Profile > Edit Profile and tap on your profile picture to change it.",
+  "helpFaqAc6Q": "How do I change my phone number?",
+  "helpFaqAc6A": "Go to Profile > Edit Profile to update your phone number.",
+  "helpFaqAc7Q": "How do I verify my account?",
+  "helpFaqAc7A": "Check your email for verification links and follow the instructions.",
+  "helpFaqAc8Q": "How do I download my data?",
+  "helpFaqAc8A": "Go to Profile > Privacy & Security > Download Data to request your data.",
+  "helpFaqBk1Q": "How do I book an event?",
+  "helpFaqBk1A": "Browse events, select one, and tap \"Book Now\" to complete your booking.",
+  "helpFaqBk2Q": "How do I cancel a booking?",
+  "helpFaqBk2A": "Go to My Bookings, find your booking, and tap \"Cancel Booking\".",
+  "helpFaqBk3Q": "How do I get my event tickets?",
+  "helpFaqBk3A": "Your tickets will be sent via email and available in the app.",
+  "helpFaqBk4Q": "Can I book for multiple people?",
+  "helpFaqBk4A": "Yes, select the number of people when booking an event.",
+  "helpFaqBk5Q": "How do I get a refund?",
+  "helpFaqBk5A": "Contact support for refund requests. Refund policy varies by event.",
+  "helpFaqBk6Q": "How do I reschedule a booking?",
+  "helpFaqBk6A": "Cancel your current booking and book a new time slot.",
+  "helpFaqBk7Q": "How do I check my booking status?",
+  "helpFaqBk7A": "Go to My Bookings to see all your reservations and their status.",
+  "helpFaqBk8Q": "What if an event is cancelled?",
+  "helpFaqBk8A": "You'll be notified and can request a full refund or transfer to another event.",
+  "helpFaqBk9Q": "How do I book a hotel?",
+  "helpFaqBk9A": "Browse hotels in the Explore tab and follow the booking process.",
+  "helpFaqBk10Q": "How do I book a tour?",
+  "helpFaqBk10A": "Find tours in the Explore tab and book them like events.",
+  "helpFaqBk11Q": "How do I get directions to an event?",
+  "helpFaqBk11A": "Tap on the event location to open it in your maps app.",
+  "helpFaqBk12Q": "How do I share an event?",
+  "helpFaqBk12A": "Tap the share button on any event to share it with friends.",
+  "helpFaqPy1Q": "What payment methods are accepted?",
+  "helpFaqPy1A": "We accept credit cards, mobile money, and bank transfers.",
+  "helpFaqPy2Q": "How do I add a payment method?",
+  "helpFaqPy2A": "Go to Profile > Payment Methods to add your preferred payment option.",
+  "helpFaqPy3Q": "How do I get a refund?",
+  "helpFaqPy3A": "Contact support with your booking details to request a refund.",
+  "helpFaqPy4Q": "How long do refunds take?",
+  "helpFaqPy4A": "Refunds typically take 3-5 business days to process.",
+  "helpFaqPy5Q": "Is my payment information secure?",
+  "helpFaqPy5A": "Yes, we use industry-standard encryption to protect your data.",
+  "helpFaqPy6Q": "How do I update my payment method?",
+  "helpFaqPy6A": "Go to Profile > Payment Methods to update your payment information.",
+  "helpFaqTx1Q": "The app is not loading properly",
+  "helpFaqTx1A": "Try closing and reopening the app, or restart your device.",
+  "helpFaqTx2Q": "I can't log in to my account",
+  "helpFaqTx2A": "Check your internet connection and verify your login credentials.",
+  "helpFaqTx3Q": "The app crashes frequently",
+  "helpFaqTx3A": "Update to the latest version of the app from your app store.",
+  "helpFaqTx4Q": "I'm not receiving notifications",
+  "helpFaqTx4A": "Check your notification settings in your device settings and app settings.",
+  "registerTitle": "Create Account",
+  "registerSubtitle": "Join the Zoea Africa community",
+  "registerInviteBanner": "You opened an invite link — we added the code below. You can change or paste a different code from a text or chat.",
+  "registerFullName": "Full Name",
+  "registerFullNameHint": "Enter your full name",
+  "registerFieldRequired": "Required",
+  "registerEmailLabel": "Email",
+  "registerEmailHint": "Enter your email address",
+  "registerInviteCodeLabel": "Invite code",
+  "registerInviteCodeHint": "Paste if you have one",
+  "registerCodeTooLong": "Code is too long",
+  "registerPasswordLabel": "Password",
+  "registerPasswordHint": "Create a strong password",
+  "registerConfirmPasswordLabel": "Confirm Password",
+  "registerConfirmPasswordHint": "Confirm your password",
+  "registerConfirmPasswordRequired": "Please confirm your password",
+  "registerPasswordsMismatch": "Passwords do not match",
+  "registerAgreePrefix": "I agree to the ",
+  "registerTerms": "Terms and Conditions",
+  "registerAndConjunction": " and ",
+  "registerPrivacy": "Privacy Policy",
+  "registerAlreadyHaveAccount": "Already have an account? ",
+  "registerAgreeTermsMessage": "Please agree to the Terms and Conditions",
+  "registerFailed": "Registration failed. Please try again.",
+  "settingsTitle": "Settings",
+  "settingsAppearanceSection": "Appearance",
+  "settingsCurrentTheme": "Current Theme",
+  "commonViewDetails": "View details",
+  "commonRemove": "Remove",
+  "commonLoadMore": "Load more",
+  "mapScreenTitle": "Map",
+  "transactionHistoryTitle": "Transaction history",
+  "itineraryAddFromFavoritesTitle": "Add from favorites",
+  "shopSearchProductsTitle": "Search products",
+  "shopClearFilters": "Clear filters",
+  "webviewOpenInBrowser": "Open in browser",
+  "commonViewEvent": "View event",
+  "commonViewPlace": "View place",
+  "mapScreenHeadline": "Map view",
+  "mapScreenPlaceholder": "Interactive map with listings will be implemented here",
+  "transactionHistorySubtitle": "View your payment and transaction history",
+  "itineraryAddWithCount": "Add ({count})",
+  "@itineraryAddWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "favoritesEmptyTitle": "No favorites",
+  "favoritesEmptySubtitle": "You don't have any favorites yet",
+  "favoritesLoadError": "Failed to load favorites",
+  "splashHeadline1": "Discover Rwanda",
+  "splashHeadline2": "Like Never Before",
+  "splashTagline": "Explore stunning destinations, authentic experiences, and hidden gems across the Land of a Thousand Hills.",
+  "onboardingPage1Title": "Discover Rwanda",
+  "onboardingPage1Subtitle": "Explore the land of a thousand hills with verified experiences",
+  "onboardingPage2Title": "Book seamlessly",
+  "onboardingPage2Subtitle": "Reserve hotels, restaurants, and tours with your Zoea Card",
+  "onboardingPage3Title": "Connect & share",
+  "onboardingPage3Subtitle": "Join the community and share your Rwandan adventures",
+  "onboardingNext": "Next",
+  "onboardingGetStarted": "Get started",
+  "onboardingSkipGuest": "Skip — browse as guest",
+  "onboardingSignInPrompt": "Already have an account? Sign in",
+  "countryPickerSearchHint": "Start typing to search",
+  "authResetPasswordAppBar": "Reset password",
+  "authChooseResetMethod": "Choose how you want to reset your password",
+  "authResetCodeSentDefault": "Reset code sent successfully",
+  "authSendResetCode": "Send reset code",
+  "authBackToLogin": "Back to login",
+  "authVerifyCodeTitle": "Verify code",
+  "authEnterResetCode": "Enter reset code",
+  "authResetCodeSentTo": "We sent a {digits}-digit code to {identifier}",
+  "@authResetCodeSentTo": {
+    "placeholders": {
+      "digits": {
+        "type": "int"
+      },
+      "identifier": {
+        "type": "String"
+      }
+    }
+  },
+  "authVerifyCodeButton": "Verify code",
+  "authResendCode": "Resend code",
+  "authResendSending": "Sending…",
+  "authResendCodeIn": "Resend code in {time}",
+  "@authResendCodeIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "authNewPasswordAppBar": "New password",
+  "authCreateNewPasswordTitle": "Create new password",
+  "authCreateNewPasswordBody": "Enter your new password. Make sure it's strong and secure.",
+  "authNewPasswordFieldLabel": "New password",
+  "authNewPasswordFieldHint": "Enter your new password",
+  "authConfirmNewPasswordHint": "Confirm your new password",
+  "authEnterNewPasswordError": "Please enter a new password",
+  "authPasswordResetSuccess": "Password reset successfully!",
+  "authSaveNewPassword": "Save password",
+  "authNewCodeRequested": "A new code has been requested.",
+  "authPhoneNumberExample": "780 123 456",
+  "shopScreenTitleShop": "Shop",
+  "shopScreenTitleProducts": "Products",
+  "shopProductCount": "{count, plural, =1{1 product} other{{count} products}}",
+  "shopSortLine": "Sort: {label}",
+  "shopEmptyNoProducts": "No products found",
+  "shopEmptyAdjustFilters": "Try adjusting your filters or search",
+  "shopErrorLoadProducts": "Failed to load products",
+  "shopOutOfStock": "Out of stock",
+  "shopFilterTitle": "Filter products",
+  "shopStatusSection": "Status",
+  "shopFeaturedSection": "Featured",
+  "shopFilterActive": "Active",
+  "shopFilterInactive": "Inactive",
+  "shopFeaturedOnly": "Featured only",
+  "shopFilterReset": "Reset",
+  "shopSearchProductNameHint": "Enter product name…",
+  "shopSortPopular": "Popular",
+  "shopSortNameAz": "Name (A–Z)",
+  "shopSortNameZa": "Name (Z–A)",
+  "shopSortPriceLowHigh": "Price (low to high)",
+  "shopSortPriceHighLow": "Price (high to low)",
+  "shopSortNewest": "Newest first",
+  "favoritesEmptyAllTitle": "No favorites yet",
+  "favoritesEmptyAllSubtitle": "Start exploring and save your favorite events and places",
+  "favoritesEmptyExploreCta": "Explore now",
+  "favoritesEmptyEventsTitle": "No favorite events",
+  "favoritesEmptyEventsSubtitle": "Save events you're interested in to see them here",
+  "favoritesEmptyEventsCta": "Browse events",
+  "favoritesEmptyPlacesTitle": "No favorite places",
+  "favoritesEmptyPlacesSubtitle": "Save places you want to visit to see them here",
+  "favoritesEmptyPlacesCta": "Explore places",
+  "favoritesRemoveTitle": "Remove from favorites",
+  "favoritesRemoveMessage": "Are you sure you want to remove \"{name}\" from your favorites?",
+  "favoritesRemoveFailed": "Couldn't remove favorite: {error}",
+  "favoritesTypeEvent": "Event",
+  "favoritesTypePlace": "Place",
+  "favoritesDateTba": "Date TBA",
+  "categoryTitleDining": "Dining",
+  "categoryTitleNightlife": "Nightlife",
+  "categoryTitleExperiences": "Experiences",
+  "categoryTitlePlaces": "Places",
+  "categorySearchAppBar": "Search {categoryName}",
+  "categorySearchHintDining": "Search restaurants, cafés…",
+  "categorySearchHintNightlife": "Search bars, clubs, lounges…",
+  "categorySearchHintExperiences": "Search tours, adventures, experiences…",
+  "categorySearchHintDefault": "Search places…",
+  "categoryNotFound": "Category not found",
+  "categoryErrorListings": "Failed to load listings",
+  "categoryErrorCategory": "Failed to load category",
+  "categoryEmptyPrompt": "Search for {categoryName}",
+  "categoryEmptyNoResults": "No results found",
+  "categoryEmptyTryDifferentKeywords": "Try different keywords or categories",
+  "categorySearchSuggestionsDining": "Try searching for \"pizza\", \"coffee\", or \"sushi\"",
+  "categorySearchSuggestionsNightlife": "Try searching for \"bar\", \"club\", or \"lounge\"",
+  "categorySearchSuggestionsExperiences": "Try searching for \"gorilla\", \"hiking\", or \"cultural\"",
+  "categorySearchSuggestionsDefault": "Try searching for specific places or locations",
+  "categoryFilterSheetTitle": "Filter {categoryName}",
+  "categorySortSheetTitle": "Sort {categoryName}",
+  "categorySectionPriceRange": "Price range",
+  "categorySectionFeatures": "Features",
+  "categoryRatingStars40": "4.0+ stars",
+  "categoryRatingStars45": "4.5+ stars",
+  "categoryRatingStars50": "5.0 stars",
+  "catTourOperatorBadge": "Tour operator",
+  "listingReviewsCountParen": "({count, plural, =1{1 review} other{{count} reviews}})",
+  "catSubDiningRestaurants": "Restaurants",
+  "catSubDiningCafes": "Cafés",
+  "catSubDiningFastFood": "Fast food",
+  "catSubNightBars": "Bars",
+  "catSubNightClubs": "Clubs",
+  "catSubNightLounges": "Lounges",
+  "catSubExpTours": "Tours",
+  "catSubExpAdventures": "Adventures",
+  "catSubExpCultural": "Cultural",
+  "catSubExpOperators": "Operators",
+  "catPriceDiningU5k": "Under RWF 5,000",
+  "catPriceDining5to15k": "RWF 5,000 – 15,000",
+  "catPriceDining15to30k": "RWF 15,000 – 30,000",
+  "catPriceDiningOver30k": "Above RWF 30,000",
+  "catPriceNightU10k": "Under RWF 10,000",
+  "catPriceNight10to20k": "RWF 10,000 – 20,000",
+  "catPriceNight20to30k": "RWF 20,000 – 30,000",
+  "catPriceNightOver30k": "Above RWF 30,000",
+  "catPriceExpU50k": "Under RWF 50,000",
+  "catPriceExp50to100k": "RWF 50,000 – 100,000",
+  "catPriceExp100to200k": "RWF 100,000 – 200,000",
+  "catPriceExpOver200k": "Above RWF 200,000",
+  "catPriceDefU10k": "Under RWF 10,000",
+  "catPriceDef10to30k": "RWF 10,000 – 30,000",
+  "catPriceDefOver30k": "Above RWF 30,000",
+  "catFeatDiningWifi": "Wi‑Fi",
+  "catFeatDiningParking": "Parking",
+  "catFeatDiningOutdoorSeating": "Outdoor seating",
+  "catFeatDiningDelivery": "Delivery",
+  "catFeatDiningTakeaway": "Takeaway",
+  "catFeatDiningVegetarian": "Vegetarian options",
+  "catFeatNightLiveMusic": "Live music",
+  "catFeatNightDanceFloor": "Dance floor",
+  "catFeatNightOutdoorSeating": "Outdoor seating",
+  "catFeatNightVip": "VIP section",
+  "catFeatNightParking": "Parking",
+  "catFeatNightWifi": "Wi‑Fi",
+  "catFeatExpGuidedTours": "Guided tours",
+  "catFeatExpTransport": "Transport included",
+  "catFeatExpMeals": "Meals included",
+  "catFeatExpEquipment": "Equipment provided",
+  "catFeatExpGroup": "Group tours",
+  "catFeatExpPrivate": "Private tours",
+  "catFeatDefWifi": "Wi‑Fi",
+  "catFeatDefParking": "Parking",
+  "catFeatDefAccessible": "Accessible",
+  "@shopProductCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@shopSortLine": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@categorySearchAppBar": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryEmptyPrompt": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryFilterSheetTitle": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categorySortSheetTitle": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@listingReviewsCountParen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreApplySort": "Apply sort",
+  "exploreCategoryNotFoundShort": "Category not found",
+  "commonSignIn": "Sign in",
+  "commonBack": "Back",
+  "commonDelete": "Delete",
+  "commonAdd": "Add",
+  "commonMaybeLater": "Maybe later",
+  "commonGoBack": "Go back",
+  "commonStartShopping": "Start shopping",
+  "commonContinueShopping": "Continue shopping",
+  "commonFavoriteVerb": "Favorite",
+  "commonBookNow": "Book now",
+  "commonOrderNow": "Order now",
+  "commonContact": "Contact",
+  "commonReserveTable": "Reserve table",
+  "commonWriteReview": "Write review",
+  "commonViewAllProducts": "View all products",
+  "commonViewAllServices": "View all services",
+  "commonViewMenu": "View menu",
+  "commonViewMenus": "View menus",
+  "commonSelectVariant": "Select a variant",
+  "commonShareReferralCode": "Share referral code",
+  "commonCompleteProfile": "Complete profile",
+  "commonLinkOpenFailed": "Could not open link. Try again later.",
+  "commonCouponApplied": "Coupon applied successfully!",
+  "commonCouponInvalid": "Invalid coupon code",
+  "commonBookingNotAvailable": "Booking is not available for this listing type",
+  "commonFailedLoadListing": "Failed to load listing: {error}",
+  "commonFailedCreateBooking": "Failed to create booking: {error}",
+  "commonFailedBookTour": "Failed to book tour: {error}",
+  "commonFailedBookService": "Failed to book service: {error}",
+  "commonFailedAddToCart": "Failed to add to cart: {error}",
+  "commonFailedUpdate": "Failed to update: {error}",
+  "commonFailedRemove": "Failed to remove: {error}",
+  "commonFailedClearCart": "Failed to clear cart: {error}",
+  "commonFailedPlaceOrder": "Failed to place order: {error}",
+  "commonFailedShare": "Failed to share: {error}",
+  "commonProductAddedToCart": "Product added to cart",
+  "commonItemAddedToCart": "Item added to cart",
+  "commonPleaseSelectTourSchedule": "Please select a tour and schedule",
+  "commonPleaseFillRequiredFields": "Please fill in all required fields",
+  "commonBookingMissingConfirmation": "Booking created, but confirmation ID is missing.",
+  "commonPleaseSelectDateTime": "Please select date and time",
+  "commonServiceBookedSuccess": "Service booked successfully!",
+  "commonPleaseWriteReview": "Please write a review before submitting",
+  "commonPleaseWriteReviewUpdate": "Please write a review before updating",
+  "commonReviewSubmitMissingContext": "Unable to submit review. Missing listing, event, or tour information.",
+  "commonThankYouReview": "Thank you for your review!",
+  "commonReviewUpdatedSuccess": "Review updated successfully!",
+  "commonCheckInOutRequired": "Please select check-in and check-out dates",
+  "commonCheckOutAfterCheckIn": "Check-out date must be after check-in date",
+  "commonSelectRoomType": "Please select a room type to continue",
+  "cartTitle": "Clear cart",
+  "cartClearConfirm": "Are you sure you want to remove all items from your cart?",
+  "cartEmptyMessage": "Your cart is empty",
+  "checkoutFulfillmentPickup": "Pickup",
+  "checkoutFulfillmentPickupSubtitle": "Collect from store",
+  "checkoutFulfillmentDelivery": "Delivery",
+  "checkoutFulfillmentDeliverySubtitle": "Delivered to your address",
+  "checkoutFulfillmentDineIn": "Dine in",
+  "checkoutFulfillmentDineInSubtitle": "Eat at the restaurant",
+  "checkoutUnableListing": "Unable to determine listing",
+  "shopSearchServicesTitle": "Search services",
+  "shopServicesTitle": "Services",
+  "referralScreenShareCta": "Share referral code",
+  "zoeaCardScreenTitle": "Zoea Card",
+  "itinerariesScreenTitle": "Itineraries",
+  "itineraryCreateFab": "Create itinerary",
+  "itineraryDetailTitle": "Itinerary",
+  "itineraryViewCta": "View",
+  "itineraryMakePublicTitle": "Make public",
+  "itineraryMakePublicSubtitle": "Allow others to view this itinerary",
+  "itineraryAddItem": "Add item",
+  "itineraryFromFavoritesTitle": "From favorites",
+  "itineraryFromFavoritesSubtitle": "Add from your saved favorites",
+  "itineraryFromRecommendationsTitle": "From recommendations",
+  "itineraryFromRecommendationsSubtitle": "Add from recommended places",
+  "itineraryCustomItemTitle": "Custom item",
+  "itineraryCustomItemSubtitle": "Add a custom location or activity",
+  "itineraryDeleteTitle": "Delete itinerary",
+  "itineraryDeleteMessage": "Are you sure you want to delete this itinerary? This action cannot be undone.",
+  "itineraryDeletedSuccess": "Itinerary deleted successfully",
+  "itineraryAddCustomTitle": "Add custom item",
+  "itineraryCustomNameRequired": "Please enter a name",
+  "itineraryAddFromRecommendationsTitle": "Add from recommendations",
+  "reviewsEventComingSoon": "Event detail page coming soon",
+  "reviewsTourComingSoon": "Tour detail page coming soon",
+  "tourDetailGoBack": "Go back",
+  "eventsAttendedViewDetails": "View details",
+  "visitedPlacesViewDetails": "View details",
+  "appUpdateRequiredTitle": "Update required",
+  "appUpdateRequiredMessage": "Please update the app to continue using Zoea.",
+  "appUpdateAvailableTitle": "Update available",
+  "appUpdateAvailableMessage": "A new version of Zoea is ready with improvements and fixes.",
+  "appUpdateNow": "Update now",
+  "appUpdateLater": "Later",
+  "appUpdateStoreOpenFailed": "Could not open the store link",
+  "privacySectionPrivacySettings": "Privacy settings",
+  "privacyLocationServicesTitle": "Location services",
+  "privacyLocationServicesSubtitle": "Allow the app to use your location for better recommendations",
+  "privacyPushNotificationsTitle": "Push notifications",
+  "privacyPushNotificationsSubtitle": "Receive notifications about events and updates",
+  "privacyDataSharingTitle": "Data sharing",
+  "privacyDataSharingSubtitle": "Share anonymous data to improve the app experience",
+  "privacyAnalyticsTitle": "Analytics",
+  "privacyAnalyticsSubtitle": "Help us improve the app with usage analytics",
+  "privacyAnalyticsEnabled": "Analytics enabled",
+  "privacyAnalyticsDisabled": "Analytics disabled",
+  "privacyAnalyticsUpdateFailed": "Failed to update analytics settings",
+  "privacyAnalyticsLoadingSubtitle": "Loading…",
+  "privacySectionDataPrivacy": "Data & privacy",
+  "privacyWhatDataTitle": "What data we collect",
+  "privacyWhatDataSubtitle": "See what information is collected and why",
+  "privacyClearAnalyticsTitle": "Clear analytics data",
+  "privacyClearAnalyticsSubtitle": "Delete all stored analytics data",
+  "privacySectionSecurity": "Security settings",
+  "privacyBiometricTitle": "Biometric authentication",
+  "privacyBiometricSubtitle": "Use fingerprint or face recognition to unlock",
+  "privacyTwoFactorTitle": "Two-factor authentication",
+  "privacyTwoFactorSubtitle": "Add an extra layer of security to your account",
+  "privacyChangePasswordTileTitle": "Change password",
+  "privacyChangePasswordTileSubtitle": "Update your account password",
+  "privacyEmailVerificationTileTitle": "Email verification",
+  "privacyEmailVerificationTileSubtitle": "Verify your email address",
+  "privacyPhoneVerified": "Phone verified",
+  "privacyPhoneAddVerify": "Add and verify your phone number",
+  "privacyPhoneVerificationTileTitle": "Phone verification",
+  "privacySectionAccountManagement": "Account management",
+  "privacyDownloadDataTitle": "Download my data",
+  "privacyDownloadDataSubtitle": "Get a copy of your personal data",
+  "privacyDeleteAccountTitle": "Delete account",
+  "privacyDeleteAccountSubtitle": "Permanently delete your account and all data",
+  "privacySectionLegal": "Legal",
+  "privacyPolicyTileTitle": "Privacy policy",
+  "privacyPolicyTileSubtitle": "Read our privacy policy",
+  "privacyTermsTileTitle": "Terms of service",
+  "privacyTermsTileSubtitle": "Read our terms of service",
+  "privacyChangePasswordDialogTitle": "Change password",
+  "privacyCurrentPasswordLabel": "Current password",
+  "privacyCurrentPasswordHint": "Enter your current password",
+  "privacyCurrentPasswordRequired": "Please enter your current password",
+  "privacyNewPasswordLabel": "New password",
+  "privacyNewPasswordHint": "Enter your new password",
+  "privacyNewPasswordRequired": "Please enter a new password",
+  "privacyPasswordMinLength": "Password must be at least 6 characters",
+  "privacyConfirmPasswordLabel": "Confirm new password",
+  "privacyConfirmPasswordHint": "Confirm your new password",
+  "privacyConfirmPasswordRequired": "Please confirm your new password",
+  "privacyPasswordsMismatch": "Passwords do not match",
+  "privacyPasswordChangedSuccess": "Password changed successfully!",
+  "privacyPasswordChangeFailed": "Failed to change password. Please try again.",
+  "privacyEmailVerificationDialogTitle": "Email verification",
+  "privacyEmailVerificationDialogBody": "A verification email will be sent to your registered email address.",
+  "privacyVerificationEmailSent": "Verification email sent!",
+  "privacySendEmail": "Send email",
+  "privacyPhoneInvalid": "Enter a valid phone number",
+  "privacyPhoneCodeSent": "We sent a 6-digit code by SMS.",
+  "privacyPhoneEnterCode": "Enter the 6-digit code",
+  "privacyPhoneVerifiedSuccess": "Phone number verified",
+  "privacyPhoneVerificationIntro": "We will send a code to confirm this number.",
+  "myBookingsKeepBooking": "Keep booking",
+  "myBookingsCancelBooking": "Cancel booking",
+  "editProfileConfirm": "Confirm",
+  "@commonFailedLoadListing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedCreateBooking": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedBookTour": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedBookService": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedAddToCart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedUpdate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedRemove": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedClearCart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedPlaceOrder": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedShare": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyPhoneMobileLabel": "Mobile number",
+  "privacySendCode": "Send code",
+  "privacyVerify": "Verify",
+  "privacyDownloadDataDialogTitle": "Download my data",
+  "privacyDownloadDataDialogBody": "We will prepare your data and send it to your email address within 24 hours.",
+  "privacyDownloadDataSubmitted": "Data download request submitted!",
+  "privacyRequestData": "Request data",
+  "privacyDeleteAccountDialogTitle": "Delete account",
+  "privacyDeleteAccountDialogBody": "This action cannot be undone. All your data will be permanently deleted.",
+  "privacyDeleteForever": "Delete forever",
+  "privacyAccountDeletionComingSoon": "Account deletion feature coming soon!",
+  "privacyFinalConfirmationTitle": "Final confirmation",
+  "privacyFinalConfirmationBody": "Are you absolutely sure? This will permanently delete your account and all associated data.",
+  "privacyWhatDataCollectSheetTitle": "What data we collect",
+  "privacyDataProfileTitle": "Profile information",
+  "privacyDataProfileDescription": "Country, language, age range, gender, interests, travel preferences",
+  "privacyDataProfilePurpose": "Personalize your experience and recommendations",
+  "privacyDataSearchTitle": "Search queries",
+  "privacyDataSearchDescription": "What you search for in the app",
+  "privacyDataSearchPurpose": "Improve search results and suggest relevant content",
+  "privacyDataViewsTitle": "Content views",
+  "privacyDataViewsDescription": "Places and events you view",
+  "privacyDataViewsPurpose": "Understand your interests and improve recommendations",
+  "privacyDataUsageTitle": "App usage",
+  "privacyDataUsageDescription": "How you use the app, session duration, features used",
+  "privacyDataUsagePurpose": "Improve app performance and user experience",
+  "privacyDataAnonymizedFootnote": "All data is anonymized and used only to improve your experience. You can disable analytics or clear your data anytime.",
+  "privacyGotIt": "Got it",
+  "privacyPurposeLine": "Purpose: {purpose}",
+  "privacyClearAnalyticsDialogTitle": "Clear analytics data",
+  "privacyClearAnalyticsDialogBody": "This will delete all stored analytics data from your device. This action cannot be undone.",
+  "privacyClearData": "Clear data",
+  "privacyClearAnalyticsSuccess": "Analytics data cleared successfully",
+  "privacyClearAnalyticsFailed": "Failed to clear analytics data",
+  "@privacyPurposeLine": {
+    "placeholders": {
+      "purpose": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyPhoneSixDigitCodeLabel": "6-digit code",
+  "zoeaCardSubtitle": "Your digital wallet for seamless payments",
+  "shopCartScreenTitle": "Shopping cart",
+  "shopCartEmptySubtitle": "Add items to your cart to get started",
+  "shopCartLoadFailed": "Failed to load cart",
+  "shopCheckoutSignInTitle": "Sign in to checkout",
+  "shopCheckoutSignInMessage": "Create an account or sign in to complete your purchase. Your cart will be saved.",
+  "shopCartItemTypeProduct": "Product",
+  "shopCartItemTypeService": "Service",
+  "shopCartItemTypeMenuItem": "Menu item",
+  "shopCartClearTooltip": "Clear cart",
+  "shopCartTotalLabel": "Total",
+  "shopProceedToCheckout": "Proceed to checkout",
+  "checkoutScreenTitle": "Checkout",
+  "checkoutOrderSummary": "Order summary",
+  "checkoutDeliveryMethod": "Delivery method",
+  "checkoutDeliveryAddress": "Delivery address",
+  "checkoutStreetAddressLabel": "Street address",
+  "checkoutStreetAddressHint": "Enter your street address",
+  "checkoutStreetAddressRequired": "Please enter your delivery address",
+  "checkoutCityLabel": "City",
+  "checkoutCityHint": "Enter your city",
+  "checkoutCityRequired": "Please enter your city",
+  "checkoutContactInformation": "Contact information",
+  "checkoutFullNameLabel": "Full name",
+  "checkoutFullNameHint": "Enter your full name",
+  "checkoutFullNameRequired": "Please enter your name",
+  "checkoutEmailOptionalLabel": "Email (optional)",
+  "checkoutEmailHint": "Enter your email",
+  "checkoutPhoneLabel": "Phone number",
+  "checkoutPhoneHint": "Enter your phone number",
+  "checkoutPhoneRequired": "Please enter your phone number",
+  "checkoutSpecialInstructionsTitle": "Special instructions (optional)",
+  "checkoutSpecialInstructionsHint": "Add any special instructions for your order…",
+  "checkoutPlaceOrder": "Place order",
+  "checkoutStorePickup": "Store pickup",
+  "checkoutSubtotalLabel": "Subtotal",
+  "checkoutTaxVatLabel": "Tax (18%)",
+  "checkoutShippingLabel": "Shipping",
+  "@checkoutQtyLine": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutQtyLine": "Qty: {quantity}",
+  "@shopServiceCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceCount": "{count, plural, =1{1 service} other{{count} services}}",
+  "shopEmptyNoServices": "No services found",
+  "shopErrorLoadServices": "Failed to load services",
+  "shopFilterServicesSheetTitle": "Filter services",
+  "shopServiceSearchHint": "Enter service name…",
+  "shopPricePerHour": "hour",
+  "shopPricePerSession": "session",
+  "shopPricePerPerson": "person",
+  "shopServiceUnavailable": "Unavailable",
+  "@shopServiceDurationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceDurationMinutes": "{minutes} min",
+  "shopErrorLoadMenu": "Failed to load menu",
+  "shopErrorLoadProduct": "Failed to load product",
+  "shopMenuCategoryEmpty": "No items in this category",
+  "shopErrorLoadService": "Failed to load service",
+  "shopViewCart": "View cart",
+  "shopAddToCart": "Add to cart",
+  "shopBookService": "Book service",
+  "shopProductDescription": "Description",
+  "shopProductTags": "Tags",
+  "shopProductVariantHeading": "Select variant",
+  "shopMenuChefSpecial": "Chef's special",
+  "shopMenuDietaryInformation": "Dietary information",
+  "shopMenuAllergensTitle": "Allergens",
+  "shopServiceUnavailableBanner": "Service is currently unavailable",
+  "@listingShareOnZoea": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "listingShareOnZoea": "Check out {name} on Zoea!",
+  "@shopServiceDurationLine": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceDurationLine": "Duration: {minutes} minutes",
+  "shopBookingFullNameRequiredLabel": "Full name *",
+  "shopBookingPhoneRequiredLabel": "Phone number *",
+  "shopBookingEmailOptionalLabel": "Email (optional)",
+  "shopBookingSelectDateRequired": "Select date *",
+  "shopBookingSelectTimeRequired": "Select time *",
+  "shopBookingSpecialRequestsLabel": "Special requests (optional)",
+  "shopMenuScreenTitle": "Menu",
+  "shopMenusEmptyTitle": "No menu available",
+  "shopMenusEmptySubtitle": "This restaurant hasn't added a menu yet",
+  "shopOrderPlacedSuccessTitle": "Order placed successfully!",
+  "shopOrderPlacedSuccessSubtitle": "Your order has been received and is being processed",
+  "shopOrderDetailsSection": "Order details",
+  "shopOrderNumberLabel": "Order number",
+  "shopOrderMerchantLabel": "Merchant",
+  "shopOrderStatusLabel": "Status",
+  "shopOrderTotalAmountLabel": "Total amount",
+  "shopOrderDateLabel": "Order date",
+  "shopOrderViewMyOrders": "View my orders",
+  "shopOrderDetailsLoadFailed": "Failed to load order details",
+  "referralInviteHeroTitle": "Invite friends & earn rewards",
+  "referralInviteHeroSubtitle": "Share your referral code and earn points when friends join Zoea",
+  "referralYourCodeSectionTitle": "Your referral code",
+  "referralSignInForCodeBody": "Sign in to see your personal code and track points.",
+  "referralErrorLoadCode": "Could not load your referral code. Pull to retry or sign in again.",
+  "referralShareCodeHint": "Share this code with your friends",
+  "referralCodeCopied": "Referral code copied",
+  "referralShareInviteMessage": "Join me on Zoea Africa and discover amazing places in Rwanda!",
+  "referralHowItWorksTitle": "How it works",
+  "referralStepShareTitle": "Share your code",
+  "referralStepShareBody": "Send your referral code to friends via social media, email, or text",
+  "referralStepFriendTitle": "Friend signs up",
+  "referralStepFriendBody": "Your friend creates their Zoea account using your code",
+  "referralStepEarnTitle": "Earn points",
+  "referralStepEarnBody": "You both get points when they sign up (shown as pending until credited)",
+  "referralRewardsTitle": "Rewards",
+  "referralRewardForYouTitle": "For you",
+  "referralRewardForYouSubtitle": "When friend joins",
+  "referralRewardForFriendTitle": "For friend",
+  "referralRewardForFriendSubtitle": "Welcome bonus",
+  "referralRewardsLoadError": "Could not load reward amounts.",
+  "referralStatsTitle": "Your referrals",
+  "referralStatTotalReferrals": "Total referrals",
+  "referralStatPointsEarned": "Points earned",
+  "referralStatPending": "Pending",
+  "@referralPointsValue": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "referralPointsValue": "{points} pts",
+  "onboardingGenderMale": "Male",
+  "onboardingGenderFemale": "Female",
+  "onboardingGenderOther": "Other",
+  "onboardingGenderPreferNot": "Prefer not to say",
+  "onboardingVisitLeisureTitle": "Leisure",
+  "onboardingVisitLeisureSubtitle": "Exploring and enjoying Rwanda",
+  "onboardingVisitBusinessTitle": "Business",
+  "onboardingVisitBusinessSubtitle": "Work and professional travel",
+  "onboardingVisitMiceTitle": "MICE",
+  "onboardingVisitMiceSubtitle": "Meetings, incentives, conferences, exhibitions",
+  "diningBookingLabelDate": "Date",
+  "diningBookingLabelTime": "Time",
+  "diningBookingLabelGuests": "Guests",
+  "diningBookingLabelRestaurant": "Restaurant",
+  "diningBookingLabelLocation": "Location",
+  "diningBookingLabelName": "Name",
+  "diningBookingLabelPhone": "Phone",
+  "diningBookingLabelEmail": "Email",
+  "diningBookingDetailLine": "{label}: ",
+  "@diningBookingDetailLine": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreFilterBudgetHintNoLimit": "No limit",
+  "stayBookingSpecialRequestsHint": "Any special requests or preferences…",
+  "stayCouponCodeHint": "Enter coupon code",
+  "stayBookingScreenTitle": "Book your stay",
+  "stayBookingSelectDatesHeading": "Select dates",
+  "stayBookingRoomsHeading": "Rooms",
+  "stayBookingRoomCount": "{count, plural, =1{1 room} other{{count} rooms}}",
+  "@stayBookingRoomCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingNightlyLine": "{price} × {roomCount, plural, =1{1 room} other{{roomCount} rooms}}",
+  "@stayBookingNightlyLine": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "roomCount": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingContinueToPayment": "Continue to payment",
+  "stayBookingSelectedRoomsTitle": "Selected rooms",
+  "stayBookingQtyShort": "Qty: {quantity}",
+  "@stayBookingQtyShort": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingDemoHotelName": "Kigali Marriott Hotel",
+  "stayBookingDemoHotelAddress": "Kacyiru, Kigali",
+  "stayBookingDemoRatingReviews": "{rating} ({reviewCount, plural, =1{1 review} other{{reviewCount} reviews}})",
+  "@stayBookingDemoRatingReviews": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsMarkAllRead": "Mark all read",
+  "notificationsEmptyTitle": "No notifications",
+  "notificationsEmptyBody": "You don't have any notifications yet",
+  "notificationsLoadFailed": "Failed to load notifications",
+  "notificationsAllMarkedRead": "All notifications marked as read",
+  "notificationsDefaultTitle": "Notification",
+  "notificationsActionViewBooking": "View booking",
+  "notificationsActionViewEvent": "View event",
+  "notificationsActionViewListing": "View listing",
+  "@notificationsMarkReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsMarkReadFailed": "Failed to mark notification as read: {error}",
+  "@notificationsMarkAllReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsMarkAllReadFailed": "Failed to mark all as read: {error}",
+  "notificationsTimeJustNow": "Just now",
+  "@notificationsTimeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "@notificationsTimeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "@notificationsTimeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "notificationsTimeRecently": "Recently",
+  "@notificationsOpeningUrl": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsOpeningUrl": "Opening: {url}",
+  "diningBookingConfirmationTitle": "Booking confirmation",
+  "diningBookingReservationConfirmedTitle": "Reservation confirmed!",
+  "diningBookingReservationConfirmedSubtitle": "Your table has been reserved successfully",
+  "@diningBookingNumberLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "diningBookingNumberLine": "Booking #{number}",
+  "diningBookingReservationDetailsSection": "Reservation details",
+  "diningBookingNotSpecified": "Not specified",
+  "diningBookingRestaurantInfoSection": "Restaurant information",
+  "diningBookingGuestInfoSection": "Guest information",
+  "diningBookingSpecialRequestsSection": "Special requests",
+  "diningBookingImportantInfoTitle": "Important information",
+  "diningBookingImportantInfoBody": "• Please arrive 5–10 minutes before your reservation time\n• To cancel or change your reservation, contact the restaurant directly\n• Late arrivals may result in losing the table\n• A dress code may apply—check with the restaurant",
+  "diningBookingBrowseMore": "Browse more",
+  "diningBookingViewMyBookings": "View my bookings",
+  "listingScreenDefaultTitle": "Listings",
+  "tourDetailLoadError": "Failed to load tour details",
+  "listingDetailLoadFailed": "Failed to load listing",
+  "bookingConfirmationHeaderTitle": "Booking confirmed!",
+  "bookingConfirmationHeaderSubtitle": "Your booking has been confirmed successfully",
+  "bookingConfirmationSectionBookingInfo": "Booking information",
+  "bookingConfirmationLabelBookingNumber": "Booking number",
+  "bookingConfirmationLabelType": "Type",
+  "bookingConfirmationSectionDetails": "Booking details",
+  "bookingConfirmationLabelPartySize": "Party size",
+  "bookingConfirmationLabelSpecialRequests": "Special requests",
+  "bookingConfirmationTourDetailsPlaceholder": "Tour confirmation details will appear here once available.",
+  "bookingConfirmationSectionPriceSummary": "Price summary",
+  "bookingConfirmationLabelTaxesFees": "Taxes & fees",
+  "bookingConfirmationLabelDiscount": "Discount",
+  "bookingConfirmationLoadFailed": "Failed to load booking",
+  "webviewPageLoadFailed": "Failed to load page",
+  "@webviewInvalidUrlLine": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "webviewInvalidUrlLine": "Invalid URL: {url}",
+  "webviewLoadTimeoutBody": "This page is taking too long to load. Please check your internet connection.",
+  "webviewTooltipReload": "Reload",
+  "webviewTooltipForward": "Go forward",
+  "listingDetailReviewSignInTitle": "Sign in to write a review",
+  "listingDetailReviewSignInMessage": "Create an account or sign in to share your experience and help other travelers.",
+  "itineraryDetailLoadFailed": "Failed to load itinerary",
+  "@myBookingsCancelConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "myBookingsCancelConfirmBody": "Are you sure you want to cancel your booking for \"{name}\"? This action cannot be undone.",
+  "@myBookingsBookAgainPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "myBookingsBookAgainPrompt": "Would you like to book \"{name}\" again?",
+  "diningFlowBookTableTitle": "Book table",
+  "diningFlowReservationDetailsSection": "Reservation details",
+  "diningFlowSelectDatePlaceholder": "Select date",
+  "diningFlowAvailableTimes": "Available times",
+  "diningFlowNumberOfGuests": "Number of guests",
+  "diningFlowGuestInformation": "Guest information",
+  "diningFlowFullNameHint": "John Doe",
+  "diningFlowPhoneHint": "+250 796 889 900",
+  "diningFlowSpecialRequestsTitle": "Special requests",
+  "diningFlowSpecialRequestsHint": "Any special dietary requirements, seating preferences, etc.",
+  "diningFlowCouponCodeTitle": "Coupon code",
+  "diningFlowCouponAppliedTitle": "Coupon applied!",
+  "@diningFlowCouponSavedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "diningFlowCouponSavedBody": "You saved {amount}",
+  "diningBookingTimeNotSelected": "Not selected",
+  "diningFlowConfirmSheetTitle": "Confirm booking",
+  "diningFlowConfirmBookingCta": "Confirm booking"
 }

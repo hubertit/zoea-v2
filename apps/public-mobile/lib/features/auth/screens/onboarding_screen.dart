@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 
@@ -15,29 +16,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingPage> _pages = [
-    OnboardingPage(
-      title: 'Discover Rwanda',
-      subtitle: 'Explore the land of a thousand hills with verified experiences',
-      icon: Icons.explore,
-      color: AppTheme.primaryColor,
-    ),
-    OnboardingPage(
-      title: 'Book Seamlessly',
-      subtitle: 'Reserve hotels, restaurants, and tours with our Zoea Card',
-      icon: Icons.credit_card,
-      color: AppTheme.successColor,
-    ),
-    OnboardingPage(
-      title: 'Connect & Share',
-      subtitle: 'Join the community and share your Rwandan adventures',
-      icon: Icons.people,
-      color: AppTheme.primaryColor,
-    ),
-  ];
+  List<OnboardingPage> _pages(AppLocalizations l10n) => [
+        OnboardingPage(
+          title: l10n.onboardingPage1Title,
+          subtitle: l10n.onboardingPage1Subtitle,
+          icon: Icons.explore,
+          color: AppTheme.primaryColor,
+        ),
+        OnboardingPage(
+          title: l10n.onboardingPage2Title,
+          subtitle: l10n.onboardingPage2Subtitle,
+          icon: Icons.credit_card,
+          color: AppTheme.successColor,
+        ),
+        OnboardingPage(
+          title: l10n.onboardingPage3Title,
+          subtitle: l10n.onboardingPage3Subtitle,
+          icon: Icons.people,
+          color: AppTheme.primaryColor,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final pages = _pages(l10n);
     return Scaffold(
       backgroundColor: context.backgroundColor,
       body: SafeArea(
@@ -51,13 +54,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     _currentPage = index;
                   });
                 },
-                itemCount: _pages.length,
+                itemCount: pages.length,
                 itemBuilder: (context, index) {
-                  return _buildPage(_pages[index]);
+                  return _buildPage(pages[index]);
                 },
               ),
             ),
-            _buildBottomSection(),
+            _buildBottomSection(l10n, pages),
           ],
         ),
       ),
@@ -110,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildBottomSection() {
+  Widget _buildBottomSection(AppLocalizations l10n, List<OnboardingPage> pages) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -118,7 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              _pages.length,
+              pages.length,
               (index) => Container(
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 width: _currentPage == index ? 24 : 8,
@@ -140,7 +143,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                if (_currentPage < _pages.length - 1) {
+                if (_currentPage < pages.length - 1) {
                   _pageController.nextPage(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
@@ -150,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 }
               },
               child: Text(
-                _currentPage < _pages.length - 1 ? 'Next' : 'Get Started',
+                _currentPage < pages.length - 1 ? l10n.onboardingNext : l10n.onboardingGetStarted,
               ),
             ),
           ).animate().slideY(
@@ -164,7 +167,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           TextButton(
             onPressed: () => context.go('/explore'),
             child: Text(
-              'Skip - Browse as Guest',
+              l10n.onboardingSkipGuest,
               style: TextStyle(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w600,
@@ -179,7 +182,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           TextButton(
             onPressed: () => context.go('/login'),
             child: Text(
-              'Already have an account? Sign In',
+              l10n.onboardingSignInPrompt,
               style: TextStyle(
                 color: context.secondaryTextColor,
               ),

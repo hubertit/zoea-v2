@@ -9,8 +9,8 @@ import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/widgets/auth_prompt_dialog.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AccommodationScreen extends ConsumerStatefulWidget {
   const AccommodationScreen({super.key});
@@ -25,7 +25,6 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
   String _selectedLocation = 'Kigali';
-  String _selectedDates = 'Any dates';
   DateTime? _checkInDate;
   DateTime? _checkOutDate;
   TimeOfDay? _checkInTime;
@@ -116,16 +115,6 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
     _checkOutDate = DateTime(now.year, now.month, now.day + 1);
     _checkOutTime = _checkInTime;
     
-    // Update the display string
-    _updateDatesDisplay();
-  }
-
-  void _updateDatesDisplay() {
-    if (_checkInDate != null && _checkOutDate != null) {
-      final checkInFormatted = '${_checkInDate!.day}/${_checkInDate!.month}/${_checkInDate!.year}';
-      final checkOutFormatted = '${_checkOutDate!.day}/${_checkOutDate!.month}/${_checkOutDate!.year}';
-      _selectedDates = '$checkInFormatted - $checkOutFormatted';
-    }
   }
 
   @override
@@ -138,6 +127,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -148,14 +138,14 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Where to stay',
+              l10n.stayTitle,
               style: context.headlineMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
               ),
             ),
             Text(
-              'Find your perfect accommodation',
+              l10n.staySubtitle,
               style: context.bodySmall.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -189,8 +179,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       ),
       body: Column(
         children: [
-          _buildSearchBar(),
-          _buildTabBar(),
+          _buildSearchBar(l10n),
+          _buildTabBar(l10n),
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -202,7 +192,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(AppLocalizations l10n) {
     return GestureDetector(
       onTap: _showSearchOptions,
       child: Container(
@@ -251,7 +241,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                _getDateRangeText(),
+                _getDateRangeText(l10n),
                 style: context.bodySmall.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -270,7 +260,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             ),
             const SizedBox(width: 8),
             Text(
-              '$_guestCount guest${_guestCount > 1 ? 's' : ''}',
+              l10n.stayGuestCount(_guestCount),
               style: context.bodySmall.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -288,7 +278,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
   }
 
 
-  Widget _buildTabBar() {
+  Widget _buildTabBar(AppLocalizations l10n) {
     return Container(
             color: context.cardColor,
       child: TabBar(
@@ -305,7 +295,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
           color: context.primaryTextColor,
         ),
         unselectedLabelStyle: context.bodyMedium,
-        tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+        tabs: _tabs.map((tab) => Tab(text: _tabLabel(tab, l10n))).toList(),
       ),
     );
   }
@@ -361,7 +351,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               }).toList();
 
         if (filteredListings.isEmpty) {
-          return _buildEmptyState(category);
+          return _buildEmptyState(category, AppLocalizations.of(context)!);
         }
 
         return RefreshIndicator(
@@ -404,7 +394,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load accommodations',
+                AppLocalizations.of(context)!.stayFailedLoad,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -432,7 +422,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                     ),
                   );
                 },
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -804,9 +794,10 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
   }
 
   Widget _buildAccommodationCard(Map<String, dynamic> listing, {bool showSubcategoryBadge = false}) {
+    final l10n = AppLocalizations.of(context)!;
     // Extract data from API response structure with graceful fallbacks
     final listingId = listing['id'] as String? ?? '';
-    final name = listing['name'] as String? ?? 'Accommodation';
+    final name = listing['name'] as String? ?? l10n.stayListingFallback;
     
     // Extract image - API returns images array with nested media
     // If no image, use mock image path
@@ -832,7 +823,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             ? '$cityName${countryName.isNotEmpty ? ', $countryName' : ''}'
             : countryName.isNotEmpty
                 ? countryName
-                : 'Location not available';
+                : l10n.stayLocationUnavailable;
     
     // Extract rating with fallback
     final rating = listing['rating'] != null
@@ -984,9 +975,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         if (!isLoggedIn) {
                           AuthPromptDialog.show(
                             context: context,
-                            title: 'Sign In to Save Favorites',
-                            message:
-                                'Create an account or sign in to save your favorite places and access them anytime.',
+                            title: l10n.exploreFavoriteSignInTitle,
+                            message: l10n.exploreFavoriteSignInMessage,
                             icon: Icons.favorite,
                           );
                           return;
@@ -1011,8 +1001,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                             ScaffoldMessenger.of(context).showSnackBar(
                               AppTheme.successSnackBar(
                                 message: isFavorited
-                                    ? AppConfig.favoriteRemovedMessage
-                                    : AppConfig.favoriteAddedMessage,
+                                    ? l10n.commonFavoriteRemoved
+                                    : l10n.commonFavoriteAdded,
                               ),
                             );
                           }
@@ -1022,9 +1012,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                               errorText.contains('Unauthorized')) {
                             AuthPromptDialog.show(
                               context: context,
-                              title: 'Sign In to Save Favorites',
-                              message:
-                                  'Your session has expired. Please sign in again to save favorites.',
+                              title: l10n.exploreFavoriteSessionTitle,
+                              message: l10n.exploreFavoriteSessionMessage,
                               icon: Icons.favorite,
                             );
                             return;
@@ -1033,8 +1022,9 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               AppTheme.errorSnackBar(
-                                message:
-                                    'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+                                message: l10n.exploreFavoriteUpdateFailed(
+                                  errorText.replaceFirst('Exception: ', ''),
+                                ),
                               ),
                             );
                           }
@@ -1108,7 +1098,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Breakfast',
+                          l10n.stayBreakfast,
                           style: context.bodySmall.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -1140,7 +1130,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${roomTypes.length} room type${roomTypes.length != 1 ? 's' : ''}',
+                          l10n.stayRoomTypesCount(roomTypes.length),
                           style: context.bodySmall.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -1181,7 +1171,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          displayRating > 0 ? displayRating.toStringAsFixed(1) : 'N/A',
+                          displayRating > 0 ? displayRating.toStringAsFixed(1) : l10n.commonNotApplicable,
                           style: context.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryTextColor,
@@ -1240,7 +1230,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          amenityNames.take(3).join(', '),
+                          amenityNames.take(3).map((a) => _amenityLabel(l10n, a)).join(', '),
                           style: context.bodySmall.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -1259,7 +1249,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
     );
   }
 
-  Widget _buildEmptyState(String category) {
+  Widget _buildEmptyState(String category, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1271,14 +1261,14 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'No ${category.toLowerCase()} found',
+            l10n.stayEmptyNoMatchesForCategory(_tabLabel(category, l10n)),
             style: context.headlineSmall.copyWith(
               color: context.secondaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Try adjusting your search or filters',
+            l10n.stayEmptyAdjust,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -1295,9 +1285,11 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
+          maxHeight: MediaQuery.of(sheetContext).size.height * 0.9,
         ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(12),
@@ -1309,7 +1301,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Filters',
+                    l10n.stayFiltersTitle,
                     style: context.headlineSmall.copyWith(
                       fontWeight: FontWeight.w600,
                       color: context.primaryTextColor,
@@ -1318,10 +1310,10 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   TextButton(
                     onPressed: () {
                       // Clear all filters
-                      Navigator.pop(context);
+                      Navigator.pop(sheetContext);
                     },
                     child: Text(
-                      'Clear All',
+                      l10n.commonClearAll,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryColorTheme,
                         fontWeight: FontWeight.w600,
@@ -1334,7 +1326,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               
               // Price Range
               Text(
-                'Price Range (RWF)',
+                l10n.stayPriceRangeRwf,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -1351,7 +1343,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        'Min: 10,000',
+                        l10n.stayPriceMinSample,
                         style: context.bodyMedium,
                       ),
                     ),
@@ -1365,7 +1357,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        'Max: 200,000',
+                        l10n.stayPriceMaxSample,
                         style: context.bodyMedium,
                       ),
                     ),
@@ -1376,7 +1368,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               
               // Rating
               Text(
-                'Minimum Rating',
+                l10n.stayMinimumRating,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -1404,7 +1396,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                             size: 16,
                           ),
                           const SizedBox(width: 4),
-                          Text('${index + 1}+'),
+                          Text(l10n.stayRatingAtLeastPlus(index + 1)),
                         ],
                       ),
                     ),
@@ -1415,7 +1407,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               
               // Amenities
               Text(
-                'Amenities',
+                l10n.stayAmenities,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -1436,7 +1428,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   'Kitchen',
                   'Garden',
                 ].map((amenity) => FilterChip(
-                  label: Text(amenity),
+                  label: Text(_amenityLabel(l10n, amenity)),
                   selected: false,
                   onSelected: (selected) {
                     // Handle amenity selection
@@ -1451,7 +1443,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               
               // Property Type
               Text(
-                'Property Type',
+                l10n.stayPropertyType,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -1461,10 +1453,10 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  'Hotels',
-                  'B&Bs',
-                  'Apartments',
-                  'Villas',
+                  l10n.stayTabHotels,
+                  l10n.stayTabBnbs,
+                  l10n.stayTabApartments,
+                  l10n.stayTabVillas,
                 ].map((type) => FilterChip(
                   label: Text(type),
                   selected: false,
@@ -1481,7 +1473,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               
               // Distance
               Text(
-                'Distance from City Center',
+                l10n.stayDistanceFromCenter,
                 style: context.bodyLarge.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -1489,11 +1481,11 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               const SizedBox(height: 12),
               Row(
                 children: [
-                  'Any',
-                  'Under 5km',
-                  '5-10km',
-                  '10-20km',
-                  'Over 20km',
+                  l10n.stayDistanceAny,
+                  l10n.stayDistanceUnder5km,
+                  l10n.stayDistance5to10km,
+                  l10n.stayDistance10to20km,
+                  l10n.stayDistanceOver20km,
                 ].map((distance) => Expanded(
                   child: Container(
                     margin: const EdgeInsets.only(right: 8),
@@ -1518,7 +1510,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(sheetContext);
                     // Apply filters logic here
                   },
                   style: ElevatedButton.styleFrom(
@@ -1529,7 +1521,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: Text(
-                    'Apply Filters',
+                    l10n.stayApplyFilters,
                     style: context.bodyMedium.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -1540,20 +1532,22 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             ],
           ),
         ),
-      ),
+      );
+      },
     );
   }
 
   void _showMapView() {
-    // Implement map view
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Map view coming soon!'),
+      SnackBar(
+        content: Text(l10n.stayMapComingSoon),
       ),
     );
   }
 
   void _showSearchOptions() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -1567,7 +1561,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Search Options',
+              l10n.staySearchOptionsTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -1578,7 +1572,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             // Location
             _buildSearchOption(
               icon: Icons.location_on,
-              title: 'Where',
+              title: l10n.stayWhereLabel,
               subtitle: _selectedLocation,
               onTap: _selectLocation,
             ),
@@ -1587,8 +1581,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             // Dates
             _buildSearchOption(
               icon: Icons.calendar_today,
-              title: 'Check-in & Check-out',
-              subtitle: _selectedDates,
+              title: l10n.stayCheckInOutLabel,
+              subtitle: _getDateRangeText(l10n),
               onTap: _selectDates,
             ),
             const SizedBox(height: 16),
@@ -1596,8 +1590,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             // Guests
             _buildSearchOption(
               icon: Icons.person,
-              title: 'Guests',
-              subtitle: '$_guestCount guest${_guestCount > 1 ? 's' : ''}',
+              title: l10n.stayGuestsLabel,
+              subtitle: l10n.stayGuestCount(_guestCount),
               onTap: _selectGuests,
             ),
             const SizedBox(height: 30),
@@ -1618,7 +1612,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Search Accommodations',
+                  l10n.staySearchAccommodations,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -1693,14 +1687,16 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Select Location',
+              l10n.staySelectLocationTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -1716,25 +1712,73 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   setState(() {
                     _selectedLocation = location;
                   });
-                  Navigator.pop(context);
+                  Navigator.pop(sheetContext);
                 },
               ),
             ),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
-  String _getDateRangeText() {
+  String _getDateRangeText(AppLocalizations l10n) {
     if (_checkInDate == null && _checkOutDate == null) {
-      return 'Any dates';
+      return l10n.stayAnyDates;
     } else if (_checkInDate != null && _checkOutDate == null) {
-      return '${_checkInDate!.day}/${_checkInDate!.month}/${_checkInDate!.year} - Select checkout';
+      return '${_checkInDate!.day}/${_checkInDate!.month}/${_checkInDate!.year} - ${l10n.staySelectCheckout}';
     } else if (_checkInDate != null && _checkOutDate != null) {
       return '${_checkInDate!.day}/${_checkInDate!.month} - ${_checkOutDate!.day}/${_checkOutDate!.month}';
     }
-    return 'Any dates';
+    return l10n.stayAnyDates;
+  }
+
+  String _tabLabel(String tabKey, AppLocalizations l10n) {
+    switch (tabKey.toLowerCase()) {
+      case 'all':
+        return l10n.stayTabAll;
+      case 'hotels':
+        return l10n.stayTabHotels;
+      case 'b&bs':
+      case 'b&b':
+        return l10n.stayTabBnbs;
+      case 'apartments':
+        return l10n.stayTabApartments;
+      case 'villas':
+        return l10n.stayTabVillas;
+      default:
+        return tabKey;
+    }
+  }
+
+  String _amenityLabel(AppLocalizations l10n, String raw) {
+    switch (raw) {
+      case 'WiFi':
+        return l10n.stayAmenityWifi;
+      case 'Pool':
+        return l10n.stayAmenityPool;
+      case 'Restaurant':
+        return l10n.stayAmenityRestaurant;
+      case 'Spa':
+        return l10n.stayAmenitySpa;
+      case 'Gym':
+        return l10n.stayAmenityGym;
+      case 'Parking':
+        return l10n.stayAmenityParking;
+      case 'Air Conditioning':
+        return l10n.stayAmenityAirConditioning;
+      case 'Business Center':
+        return l10n.stayAmenityBusinessCenter;
+      case 'Kitchen':
+        return l10n.stayAmenityKitchen;
+      case 'Garden':
+        return l10n.stayAmenityGarden;
+      case 'Room Service':
+        return l10n.stayAmenityRoomService;
+      default:
+        return raw;
+    }
   }
 
   void _selectDates() {
@@ -1749,14 +1793,16 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Select Dates & Times',
+              l10n.staySelectDatesTimesTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
@@ -1766,7 +1812,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             
             // Check-in Date
             _buildDateTimeSelector(
-              title: 'Check-in',
+              l10n: l10n,
+              title: l10n.stayCheckIn,
               date: _checkInDate,
               time: _checkInTime,
               onDateTap: () => _selectDate(true),
@@ -1776,7 +1823,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             
             // Check-out Date
             _buildDateTimeSelector(
-              title: 'Check-out',
+              l10n: l10n,
+              title: l10n.stayCheckOut,
               date: _checkOutDate,
               time: _checkOutTime,
               onDateTap: () => _selectDate(false),
@@ -1789,7 +1837,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(sheetContext);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
@@ -1798,7 +1846,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   ),
                 ),
                 child: Text(
-                  'Done',
+                  l10n.commonDone,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -1809,11 +1857,13 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             ),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
   Widget _buildDateTimeSelector({
+    required AppLocalizations l10n,
     required String title,
     required DateTime? date,
     required TimeOfDay? time,
@@ -1853,7 +1903,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                       Text(
                         date != null
                             ? '${date.day}/${date.month}/${date.year}'
-                            : 'Select date',
+                            : l10n.staySelectDate,
                         style: context.bodyMedium.copyWith(
                           color: date != null 
                               ? context.primaryTextColor 
@@ -1887,7 +1937,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                       Text(
                         time != null
                             ? '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
-                            : 'Select time',
+                            : l10n.staySelectTime,
                         style: context.bodyMedium.copyWith(
                           color: time != null 
                               ? context.primaryTextColor 
@@ -1928,7 +1978,6 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
         } else {
           _checkOutDate = picked;
         }
-        _updateDatesDisplay();
       });
     }
   }
@@ -1960,14 +2009,16 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Number of Guests',
+              l10n.stayNumberOfGuests,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -1977,7 +2028,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Guests',
+                  l10n.stayGuestsSheetGuests,
                   style: context.bodyLarge.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -2026,7 +2077,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(sheetContext);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
@@ -2035,7 +2086,7 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
                   ),
                 ),
                 child: Text(
-                  'Done',
+                  l10n.commonDone,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -2045,7 +2096,8 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
             ),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
@@ -2056,39 +2108,50 @@ class _AccommodationScreenState extends ConsumerState<AccommodationScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        final sortOptions = <({String id, String title})>[
+          (id: 'recommended', title: l10n.staySortRecommended),
+          (id: 'price_low', title: l10n.staySortPriceLowHigh),
+          (id: 'price_high', title: l10n.staySortPriceHighLow),
+          (id: 'rating', title: l10n.staySortRatingHighLow),
+          (id: 'distance', title: l10n.staySortDistance),
+          (id: 'popularity', title: l10n.staySortPopularity),
+        ];
+        return Container(
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Sort by',
+              l10n.staySortBy,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 20),
-            ...['Recommended', 'Price: Low to High', 'Price: High to Low', 'Rating: High to Low', 'Distance', 'Popularity'].map((sortOption) => 
+            ...sortOptions.map((opt) => 
               ListTile(
                 title: Text(
-                  sortOption,
+                  opt.title,
                   style: context.bodyMedium.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                trailing: sortOption == 'Recommended' 
+                trailing: opt.id == 'recommended' 
                   ? Icon(Icons.check, color: context.primaryColorTheme)
                   : null,
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(sheetContext);
                   // Handle sort selection
                 },
               ),
             ),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 

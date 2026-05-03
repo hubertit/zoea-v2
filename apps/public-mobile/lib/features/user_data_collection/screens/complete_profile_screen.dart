@@ -11,6 +11,7 @@ import '../widgets/gender_selector.dart';
 import '../widgets/length_of_stay_selector.dart';
 import '../widgets/interests_chips.dart';
 import '../widgets/travel_party_selector.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Screen for users to voluntarily complete their profile
 /// Shows all optional data fields with progress indicator
@@ -61,7 +62,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text('Complete Profile'),
+        title: Text(AppLocalizations.of(context)!.commonCompleteProfile),
         backgroundColor: context.backgroundColor,
         elevation: 0,
         leading: IconButton(

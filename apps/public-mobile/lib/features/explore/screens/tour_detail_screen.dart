@@ -11,6 +11,7 @@ import '../../../core/providers/tours_provider.dart';
 import '../../../core/providers/favorites_provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/widgets/auth_prompt_dialog.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TourDetailScreen extends ConsumerStatefulWidget {
   final String tourId;
@@ -60,6 +61,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Try to load by ID first (for UUIDs), fallback to slug if it fails
     final tourAsync = ref.watch(tourByIdProvider(widget.tourId));
 
@@ -84,7 +86,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load tour details',
+                l10n.tourDetailLoadError,
                 style: context.bodyLarge.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -92,7 +94,7 @@ class _TourDetailScreenState extends ConsumerState<TourDetailScreen>
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () => context.pop(),
-                child: const Text('Go Back'),
+                child: Text(l10n.tourDetailGoBack),
               ),
             ],
           ),

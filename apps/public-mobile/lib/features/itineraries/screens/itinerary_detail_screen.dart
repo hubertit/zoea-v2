@@ -12,6 +12,7 @@ import '../../../core/providers/itinerary_provider.dart';
 import '../../../core/services/itinerary_service.dart';
 import '../../../core/models/itinerary.dart';
 import '../../../core/config/app_config.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ItineraryDetailScreen extends ConsumerStatefulWidget {
   final String itineraryId;
@@ -37,8 +38,8 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
             itinerary.title,
             style: context.titleLarge,
           ),
-          loading: () => const Text('Itinerary'),
-          error: (_, __) => const Text('Itinerary'),
+          loading: () => Text(AppLocalizations.of(context)!.itineraryDetailTitle),
+          error: (_, __) => Text(AppLocalizations.of(context)!.itineraryDetailTitle),
         ),
         backgroundColor: context.backgroundColor,
         elevation: 0,
@@ -95,7 +96,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load itinerary',
+                AppLocalizations.of(context)!.itineraryDetailLoadFailed,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -116,7 +117,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.primaryColorTheme,
                 ),
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -451,7 +452,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                     context.push('/listing/${item.listingId}');
                   },
                   icon: const Icon(Icons.visibility, size: 16),
-                  label: const Text('View'),
+                  label: Text(AppLocalizations.of(context)!.itineraryViewCta),
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
@@ -463,7 +464,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                     context.push('/events');
                   },
                   icon: const Icon(Icons.visibility, size: 16),
-                  label: const Text('View'),
+                  label: Text(AppLocalizations.of(context)!.itineraryViewCta),
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
@@ -474,7 +475,7 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
                     context.push('/tour-packages');
                   },
                   icon: const Icon(Icons.visibility, size: 16),
-                  label: const Text('View'),
+                  label: Text(AppLocalizations.of(context)!.itineraryViewCta),
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
@@ -554,7 +555,9 @@ class _ItineraryDetailScreenState extends ConsumerState<ItineraryDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to share: ${e.toString()}'),
+            content: Text(
+              AppLocalizations.of(context)!.commonFailedShare(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );

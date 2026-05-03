@@ -14,6 +14,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class CategoryPlacesScreen extends ConsumerStatefulWidget {
   final String category; // This is the slug
@@ -182,7 +183,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
               ),
               title: Text(widget.category),
             ),
-            body: const Center(child: Text('Category not found')),
+            body: Center(child: Text(AppLocalizations.of(context)!.categoryNotFound)),
           );
         }
 
@@ -340,7 +341,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     )
                   : _categoryId == null
                       ? Center(
-                          child: Text('Category not found'),
+                          child: Text(AppLocalizations.of(context)!.categoryNotFound),
                         )
                       : _buildSkeletonLoader(), // Show skeleton while tabs initialize
             );
@@ -412,7 +413,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                     onPressed: () {
                       ref.invalidate(categoryChildrenProvider(categoryId));
                     },
-                    child: const Text('Retry'),
+                    child: Text(AppLocalizations.of(context)!.commonRetry),
                   ),
                 ],
               ),
@@ -487,7 +488,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                 onPressed: () {
                   ref.invalidate(categoryBySlugProvider(widget.category));
                 },
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -554,7 +555,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
         tabParams['showSubcategoryBadge'] as bool? ?? false;
 
     if (categoryId == null) {
-      return Center(child: Text('Category not found'));
+      return Center(child: Text(AppLocalizations.of(context)!.categoryNotFound));
     }
 
     final listingsAsync = ref.watch(
@@ -662,7 +663,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -672,7 +673,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
 
   Widget _buildListingsList() {
     if (_categoryId == null) {
-      return Center(child: Text('Category not found'));
+      return Center(child: Text(AppLocalizations.of(context)!.categoryNotFound));
     }
 
     final listingsAsync = ref.watch(
@@ -774,7 +775,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           ),
                         );
                       },
-                      child: const Text('Load More'),
+                      child: Text(AppLocalizations.of(context)!.commonLoadMore),
                     ),
                   ),
                 );
@@ -834,7 +835,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                   ),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -1583,7 +1584,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           side: BorderSide(color: context.primaryColorTheme),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Clear All'),
+                        child: Text(AppLocalizations.of(context)!.commonClearAll),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1621,7 +1622,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Apply Filters'),
+                        child: Text(AppLocalizations.of(context)!.stayApplyFilters),
                       ),
                     ),
                   ],
@@ -1761,7 +1762,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           side: BorderSide(color: context.primaryColorTheme),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Clear'),
+                        child: Text(AppLocalizations.of(context)!.commonClear),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1794,7 +1795,7 @@ class _CategoryPlacesScreenState extends ConsumerState<CategoryPlacesScreen>
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Apply Sort'),
+                        child: Text(AppLocalizations.of(context)!.exploreApplySort),
                       ),
                     ),
                   ],

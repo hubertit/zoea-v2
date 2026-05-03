@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/favorites_provider.dart';
@@ -19,12 +20,13 @@ class _AddFromFavoritesScreenState extends ConsumerState<AddFromFavoritesScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final favoritesAsync = ref.watch(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text('Add from Favorites'),
+        title: Text(l10n.itineraryAddFromFavoritesTitle),
         backgroundColor: context.backgroundColor,
         elevation: 0,
         centerTitle: false,
@@ -42,7 +44,7 @@ class _AddFromFavoritesScreenState extends ConsumerState<AddFromFavoritesScreen>
                 _addSelectedItems();
               },
               child: Text(
-                'Add (${_selectedItems.length})',
+                l10n.itineraryAddWithCount(_selectedItems.length),
                 style: TextStyle(
                   color: context.primaryColorTheme,
                   fontWeight: FontWeight.w600,
@@ -67,14 +69,14 @@ class _AddFromFavoritesScreenState extends ConsumerState<AddFromFavoritesScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No Favorites',
+                    l10n.favoritesEmptyTitle,
                     style: context.headlineSmall.copyWith(
                       color: context.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'You don\'t have any favorites yet',
+                    l10n.favoritesEmptySubtitle,
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -120,7 +122,7 @@ class _AddFromFavoritesScreenState extends ConsumerState<AddFromFavoritesScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load favorites',
+                l10n.favoritesLoadError,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),

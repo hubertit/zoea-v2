@@ -12,6 +12,7 @@ import '../../../core/providers/favorites_provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ExperiencesScreen extends ConsumerStatefulWidget {
   const ExperiencesScreen({super.key});
@@ -200,7 +201,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
                   ),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -421,7 +422,7 @@ class _ExperiencesScreenState extends ConsumerState<ExperiencesScreen>
                   ),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),

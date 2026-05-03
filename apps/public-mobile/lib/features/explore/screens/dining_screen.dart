@@ -13,6 +13,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DiningScreen extends ConsumerStatefulWidget {
   const DiningScreen({super.key});
@@ -308,7 +309,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
           body: _diningCategoryId != null
               ? _buildDiningList()
               : Center(
-                  child: Text('Category not found'),
+                  child: Text(AppLocalizations.of(context)!.categoryNotFound),
                 ),
         );
       },
@@ -384,7 +385,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                 onPressed: () {
                   ref.invalidate(categoryBySlugProvider('dining'));
                 },
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -395,7 +396,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
 
   Widget _buildDiningList() {
     if (_categoryIdForListings == null) {
-      return Center(child: Text('Category not found'));
+      return Center(child: Text(AppLocalizations.of(context)!.categoryNotFound));
     }
 
     // For Popular tab, fetch more listings to randomize from
@@ -483,7 +484,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           ),
                         );
                       },
-                      child: const Text('Load More'),
+                      child: Text(AppLocalizations.of(context)!.commonLoadMore),
                     ),
                   ),
                 );
@@ -538,7 +539,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                   ),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -1043,7 +1044,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           side: BorderSide(color: context.primaryColorTheme),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Clear All'),
+                        child: Text(AppLocalizations.of(context)!.commonClearAll),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1080,7 +1081,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Apply Filters'),
+                        child: Text(AppLocalizations.of(context)!.stayApplyFilters),
                       ),
                     ),
                   ],
@@ -1221,7 +1222,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           side: BorderSide(color: context.primaryColorTheme),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Clear'),
+                        child: Text(AppLocalizations.of(context)!.commonClear),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1253,7 +1254,7 @@ class _DiningScreenState extends ConsumerState<DiningScreen>
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text('Apply Sort'),
+                        child: Text(AppLocalizations.of(context)!.exploreApplySort),
                       ),
                     ),
                   ],

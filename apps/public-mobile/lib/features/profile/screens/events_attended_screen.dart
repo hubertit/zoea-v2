@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EventsAttendedScreen extends ConsumerStatefulWidget {
   const EventsAttendedScreen({super.key});
@@ -335,7 +336,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
                           context.go('/event/${event['id']}');
                         },
                         icon: const Icon(Icons.visibility, size: 16),
-                        label: const Text('View Details'),
+                        label: Text(AppLocalizations.of(context)!.eventsAttendedViewDetails),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -354,7 +355,7 @@ class _EventsAttendedScreenState extends ConsumerState<EventsAttendedScreen>
                           // TODO: Add to favorites
                         },
                         icon: const Icon(Icons.favorite_border, size: 16),
-                        label: const Text('Favorite'),
+                        label: Text(AppLocalizations.of(context)!.commonFavoriteVerb),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: AppTheme.primaryColor,

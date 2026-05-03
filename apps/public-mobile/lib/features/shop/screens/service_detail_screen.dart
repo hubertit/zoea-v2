@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/services_provider.dart';
@@ -67,19 +68,20 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final serviceAsync = ref.watch(serviceByIdProvider(widget.serviceId));
 
     return Scaffold(
       backgroundColor: context.grey50,
       body: serviceAsync.when(
-        data: (service) => _buildContent(service),
+        data: (service) => _buildContent(l10n, service),
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -103,7 +105,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load service',
+                l10n.shopErrorLoadService,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -121,7 +123,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                 onPressed: () {
                   ref.invalidate(serviceByIdProvider(widget.serviceId));
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),
@@ -130,12 +132,12 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     );
   }
 
-  Widget _buildContent(Service service) {
+  Widget _buildContent(AppLocalizations l10n, Service service) {
     final images = service.images;
     final primaryImage = images.isNotEmpty
         ? '${AppConfig.apiBaseUrl.replaceAll('/api', '')}/media/${images[0]}'
         : null;
-    final priceLabel = _getPriceLabel(service.basePrice, service.priceUnit);
+    final priceLabel = _getPriceLabel(l10n, service.basePrice, service.priceUnit);
     final isAvailable = service.isAvailable && service.status == ServiceStatus.active;
 
     return Scaffold(
@@ -162,7 +164,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                   color: _isScrolled ? context.primaryTextColor : Colors.white,
                 ),
                 onPressed: () {
-                  Share.share('Check out ${service.name} on Zoea!');
+                  Share.share(l10n.listingShareOnZoea(service.name));
                 },
               ),
             ],
@@ -222,7 +224,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                'Featured',
+                                l10n.shopFeaturedSection,
                                 style: context.bodySmall.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -263,7 +265,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Duration: ${service.durationMinutes} minutes',
+                              l10n.shopServiceDurationLine(service.durationMinutes!),
                               style: context.bodyMedium.copyWith(
                                 color: context.secondaryTextColor,
                               ),
@@ -288,7 +290,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Service is currently unavailable',
+                                l10n.shopServiceUnavailableBanner,
                                 style: context.bodyMedium.copyWith(
                                   color: context.errorColor,
                                   fontWeight: FontWeight.w600,
@@ -310,7 +312,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Description',
+                          l10n.shopProductDescription,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryTextColor,
@@ -337,7 +339,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Tags',
+                          l10n.shopProductTags,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryTextColor,
@@ -381,7 +383,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
         ),
         child: SafeArea(
           child: ElevatedButton(
-            onPressed: isAvailable && !_isBooking ? () => _showBookingDialog(service) : null,
+            onPressed: isAvailable && !_isBooking ? () => _showBookingDialog(l10n, service) : null,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
@@ -392,7 +394,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : Text(
-                    isAvailable ? 'Book Service' : 'Unavailable',
+                    isAvailable ? l10n.shopBookService : l10n.shopServiceUnavailable,
                     style: const TextStyle(fontSize: 16),
                   ),
           ),
@@ -401,21 +403,21 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     );
   }
 
-  String _getPriceLabel(double price, ServicePriceUnit unit) {
+  String _getPriceLabel(AppLocalizations l10n, double price, ServicePriceUnit unit) {
     final priceStr = PriceFormatter.formatFull(price, currency: AppConfig.currencySymbol);
     switch (unit) {
       case ServicePriceUnit.perHour:
-        return '$priceStr / hour';
+        return '$priceStr / ${l10n.shopPricePerHour}';
       case ServicePriceUnit.perSession:
-        return '$priceStr / session';
+        return '$priceStr / ${l10n.shopPricePerSession}';
       case ServicePriceUnit.perPerson:
-        return '$priceStr / person';
+        return '$priceStr / ${l10n.shopPricePerPerson}';
       default:
         return priceStr;
     }
   }
 
-  Future<void> _showBookingDialog(Service service) async {
+  Future<void> _showBookingDialog(AppLocalizations l10n, Service service) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -435,7 +437,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Book Service',
+                  l10n.shopBookService,
                   style: context.headlineSmall.copyWith(
                     color: context.primaryTextColor,
                     fontWeight: FontWeight.bold,
@@ -445,7 +447,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                 TextField(
                   controller: _customerNameController,
                   decoration: InputDecoration(
-                    labelText: 'Full Name *',
+                    labelText: l10n.shopBookingFullNameRequiredLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -455,7 +457,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                 TextField(
                   controller: _customerPhoneController,
                   decoration: InputDecoration(
-                    labelText: 'Phone Number *',
+                    labelText: l10n.shopBookingPhoneRequiredLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -466,7 +468,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                 TextField(
                   controller: _customerEmailController,
                   decoration: InputDecoration(
-                    labelText: 'Email (Optional)',
+                    labelText: l10n.shopBookingEmailOptionalLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -501,7 +503,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                         Text(
                           _selectedDate != null
                               ? DateFormat('MMM dd, yyyy').format(_selectedDate!)
-                              : 'Select Date *',
+                              : l10n.shopBookingSelectDateRequired,
                           style: context.bodyMedium.copyWith(
                             color: _selectedDate != null
                                 ? context.primaryTextColor
@@ -538,7 +540,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                         Text(
                           _selectedTime != null
                               ? _selectedTime!.format(context)
-                              : 'Select Time *',
+                              : l10n.shopBookingSelectTimeRequired,
                           style: context.bodyMedium.copyWith(
                             color: _selectedTime != null
                                 ? context.primaryTextColor
@@ -553,7 +555,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                 TextField(
                   controller: _specialRequestsController,
                   decoration: InputDecoration(
-                    labelText: 'Special Requests (Optional)',
+                    labelText: l10n.shopBookingSpecialRequestsLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -566,7 +568,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
+                        child: Text(l10n.commonCancel),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -585,7 +587,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
                                 width: 20,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Text('Book Now'),
+                            : Text(l10n.commonBookNow),
                       ),
                     ),
                   ],
@@ -599,10 +601,11 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
   }
 
   Future<void> _bookService(Service service) async {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedDate == null || _selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please select date and time'),
+          content: Text(l10n.commonPleaseSelectDateTime),
           backgroundColor: context.errorColor,
         ),
       );
@@ -612,7 +615,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     if (_customerNameController.text.isEmpty || _customerPhoneController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please fill in all required fields'),
+          content: Text(l10n.commonPleaseFillRequiredFields),
           backgroundColor: context.errorColor,
         ),
       );
@@ -642,7 +645,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
         Navigator.pop(context); // Close booking dialog
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Service booked successfully!'),
+            content: Text(l10n.commonServiceBookedSuccess),
             backgroundColor: context.primaryColorTheme,
           ),
         );
@@ -658,7 +661,9 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to book service: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(l10n.commonFailedBookService(
+              e.toString().replaceFirst('Exception: ', ''),
+            )),
             backgroundColor: context.errorColor,
           ),
         );

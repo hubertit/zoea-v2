@@ -6,6 +6,7 @@ import '../../../core/providers/listings_provider.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
+import '../../../l10n/app_localizations.dart';
 
 class NearMeListScreen extends ConsumerWidget {
   const NearMeListScreen({super.key});
@@ -26,7 +27,7 @@ class NearMeListScreen extends ConsumerWidget {
           color: context.primaryTextColor,
         ),
         title: Text(
-          'Near Me',
+          AppLocalizations.of(context)!.exploreNearMe,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -81,7 +82,7 @@ class NearMeListScreen extends ConsumerWidget {
                   onPressed: () {
                     ref.invalidate(randomListingsProvider(kRandomNearMeFullListLimit));
                   },
-                  child: const Text('Retry'),
+                  child: Text(AppLocalizations.of(context)!.commonRetry),
                 ),
               ],
             ),

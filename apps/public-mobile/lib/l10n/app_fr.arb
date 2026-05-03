@@ -1,7 +1,6 @@
 {
   "@@locale": "fr",
   "appTitle": "Zoea",
-
   "shellTabExplore": "Explorer",
   "shellTabEvents": "Événements",
   "shellTabAskZoea": "Demander à Zoea",
@@ -16,12 +15,10 @@
   "shellSnackInternetRestored": "Connexion Internet rétablie !",
   "shellSnackServiceUnavailable": "Service temporairement indisponible. Nouvelle tentative…",
   "shellSnackBackOnline": "De nouveau en ligne ! Connexion rétablie.",
-
   "authPromptBookingsTitle": "Connexion requise",
   "authPromptBookingsMessage": "Connectez-vous pour voir vos réservations.",
   "authCancel": "Annuler",
   "signIn": "Se connecter",
-
   "loginWelcomeBack": "Bon retour",
   "loginSignInToContinue": "Connectez-vous pour continuer",
   "loginTabPhone": "Téléphone",
@@ -45,7 +42,6 @@
   "loginValidationEmailInvalid": "Adresse e-mail invalide",
   "loginValidationPasswordRequired": "Saisissez votre mot de passe",
   "loginValidationPasswordShort": "Le mot de passe doit contenir au moins 6 caractères",
-
   "profileTitle": "Profil",
   "profileAppInformation": "Informations sur l’app",
   "profileSectionAccount": "Compte",
@@ -90,13 +86,11 @@
   "profileStatVisited": "Visités",
   "profileStatWritten": "Rédigés",
   "profileVerifiedTraveler": "Voyageur vérifié",
-
   "profileSelectLanguage": "Choisir la langue",
   "languageOptionEnglish": "Anglais",
   "languageOptionFrench": "Français",
   "languageNativeNameEnglish": "Anglais",
   "languageNativeNameFrench": "Français",
-
   "profileLanguageChanged": "Langue changée : {languageName}",
   "profileLanguageUpdateFailed": "Échec de la mise à jour de la langue : {error}",
   "profileCurrencyChanged": "Devise changée : {code}",
@@ -106,8 +100,1407 @@
   "profileLocationChanged": "Localisation changée : {name}",
   "profileLocationSaveFailed": "Impossible d’enregistrer la localisation : {error}",
   "profileSelectCity": "Choisir une ville",
-
   "signOutDialogTitle": "Se déconnecter",
   "signOutDialogMessage": "Voulez-vous vraiment vous déconnecter ?",
-  "signOutDialogConfirm": "Se déconnecter"
+  "signOutDialogConfirm": "Se déconnecter",
+  "commonViewMore": "Voir plus",
+  "commonViewAll": "Voir tout",
+  "commonRetry": "Réessayer",
+  "exploreLoading": "Chargement…",
+  "exploreDefaultCity": "Kigali",
+  "exploreCurrencyPair": "USD / RWF",
+  "exploreQuickActions": "Actions rapides",
+  "exploreUnablePhoneCall": "Impossible de passer l’appel",
+  "exploreEmergencyTollFreeTitle": "Numéros verts d’urgence",
+  "exploreEmergencyEmergency": "Urgences",
+  "exploreEmergencyTrafficAccidents": "Accidents de la route",
+  "exploreEmergencyAbusePolice": "Violences par un policier",
+  "exploreEmergencyAntiCorruption": "Anti-corruption",
+  "exploreEmergencyMaritime": "Urgences maritimes",
+  "exploreEmergencyDrivingLicense": "Permis de conduire",
+  "exploreEmergencyFireRescue": "Incendie et secours",
+  "exploreCallNumber": "Appeler : {number}",
+  "exploreActionEmergencySos": "SOS urgence",
+  "exploreActionCallTaxi": "Appeler un taxi",
+  "exploreActionBookTour": "Réserver une excursion",
+  "exploreActionEsim": "eSim",
+  "exploreActionPharmacy": "Pharmacie",
+  "exploreActionRoadsideAssistance": "Assistance routière",
+  "exploreActionFlightInfo": "Infos vols",
+  "exploreActionIrembo": "Irembo",
+  "exploreActionVisitRwanda": "Visit Rwanda",
+  "exploreWebviewTitleEsim": "eSim",
+  "exploreWebviewTitleRwandAir": "RwandAir",
+  "exploreWebviewTitleIrembo": "Irembo",
+  "exploreWebviewTitleVisitRwanda": "Visit Rwanda",
+  "exploreCategories": "Catégories",
+  "exploreHappening": "À l’affiche",
+  "exploreFailedLoadEvents": "Impossible de charger les événements",
+  "exploreNoEventsToday": "Aucun événement aujourd’hui",
+  "exploreAllCategories": "Toutes les catégories",
+  "exploreNoCategoriesAvailable": "Aucune catégorie disponible",
+  "exploreFailedLoadCategories": "Impossible de charger les catégories",
+  "exploreRecommended": "Recommandé",
+  "exploreNoFeaturedListings": "Aucune recommandation disponible",
+  "exploreFailedRecommendations": "Impossible de charger les recommandations",
+  "exploreNearMe": "Près de moi",
+  "exploreNoListings": "Aucun établissement disponible",
+  "exploreFailedListings": "Impossible de charger les établissements",
+  "exploreTourPackages": "Forfaits d’excursion",
+  "exploreFailedTours": "Impossible de charger les excursions",
+  "exploreNoTours": "Aucun forfait disponible",
+  "exploreUntitledTour": "Excursion sans titre",
+  "exploreTourBadgeTour": "EXCURSION",
+  "exploreTourBadgeFeatured": "À LA UNE",
+  "exploreTourPriceFrom": "À partir de {price}",
+  "exploreTourPriceUnavailable": "À partir de RWF ---",
+  "exploreTourDurationDays": "{count, plural, =1{1 jour} other{{count} jours}}",
+  "exploreTourDurationHours": "{count, plural, =1{1 heure} other{{count} heures}}",
+  "exploreFavoriteSignInTitle": "Connexion pour les favoris",
+  "exploreFavoriteSignInMessage": "Créez un compte ou connectez-vous pour enregistrer vos lieux favoris.",
+  "exploreFavoriteSessionTitle": "Connexion pour les favoris",
+  "exploreFavoriteSessionMessage": "Votre session a expiré. Reconnectez-vous pour enregistrer vos favoris.",
+  "exploreFavoriteUpdateFailed": "Impossible de mettre à jour le favori : {error}",
+  "exploreGiftReferTitle": "Parrainer et gagner",
+  "exploreGiftReferSubtitle": "Invitez des amis et gagnez des récompenses",
+  "exploreGiftItineraryTitle": "Itinéraire",
+  "exploreGiftItinerarySubtitle": "Planifiez et partagez votre voyage",
+  "exploreEventTimeToday": "Aujourd’hui, {time}",
+  "exploreCategoryFallback": "Catégorie",
+  "exploreListingUnknown": "Inconnu",
+  "exploreListingPlace": "Lieu",
+  "commonCancel": "Annuler",
+  "commonSearch": "Rechercher",
+  "commonClose": "Fermer",
+  "commonContinue": "Continuer",
+  "commonApply": "Appliquer",
+  "commonClearAll": "Tout effacer",
+  "commonFavoriteAdded": "Ajouté aux favoris !",
+  "commonFavoriteRemoved": "Retiré des favoris !",
+  "eventsTitle": "Événements",
+  "eventsTabTrending": "Tendances",
+  "eventsTabNearMe": "Près de moi",
+  "eventsTabThisWeek": "Cette semaine",
+  "eventsTabMice": "MICE",
+  "eventsErrorLoading": "Erreur lors du chargement des événements",
+  "eventsEmptyTitle": "Aucun événement",
+  "eventsEmptySubtitle": "Revenez plus tard pour de nouveaux événements",
+  "eventsSearchTitle": "Rechercher des événements",
+  "eventsSearchHint": "Rechercher des événements…",
+  "eventsTicketPriceFrom": "À partir de {amount} {currency}",
+  "@eventsTicketPriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsFilterTitle": "Filtrer les événements",
+  "eventsFilterSearchSection": "Recherche",
+  "eventsFilterSearchHint": "Rechercher des événements…",
+  "eventsFilterCategory": "Catégorie",
+  "eventsFilterDateRange": "Période",
+  "eventsFilterStartDate": "Date de début",
+  "eventsFilterEndDate": "Date de fin",
+  "eventsFilterPriceRange": "Fourchette de prix",
+  "eventsFilterLocation": "Lieu",
+  "eventsFilterLocationHint": "Saisir un lieu…",
+  "eventsFilterOptions": "Options",
+  "eventsFilterFreeEvents": "Événements gratuits",
+  "eventsFilterVerifiedOnly": "Vérifiés uniquement",
+  "eventsCategoryMusic": "Musique",
+  "eventsCategorySports": "Sport et bien-être",
+  "eventsCategoryFood": "Gastronomie",
+  "eventsCategoryArts": "Arts et culture",
+  "eventsCategoryConferences": "Conférences",
+  "eventsCategoryPerformance": "Spectacles",
+  "eventsPriceFree": "Gratuit",
+  "eventsPriceUnder5k": "Moins de 5K RWF",
+  "eventsPrice5kTo15k": "5K - 15K RWF",
+  "eventsPrice15kTo50k": "15K - 50K RWF",
+  "eventsPrice50kTo100k": "50K - 100K RWF",
+  "eventsPrice100kPlus": "Plus de 100K RWF",
+  "eventsCalendarTitle": "Calendrier des événements",
+  "eventsCalendarOnDate": "Événements du {date}",
+  "@eventsCalendarOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsFavoriteSignInTitle": "Connexion pour les favoris",
+  "eventsFavoriteSignInMessage": "Créez un compte ou connectez-vous pour enregistrer vos événements favoris.",
+  "eventsFavoriteSessionMessage": "Votre session a expiré. Reconnectez-vous pour enregistrer vos favoris.",
+  "eventsOrganizedBy": "Organisé par",
+  "eventsAboutTitle": "À propos de cet événement",
+  "eventsSectionCategory": "Catégorie",
+  "eventsLabelAttending": "Participants",
+  "eventsLabelCapacity": "Capacité",
+  "eventsLabelStatus": "Statut",
+  "eventsStatusOngoing": "En cours",
+  "eventsStatusUpcoming": "À venir",
+  "eventsTicketsSection": "Billets",
+  "eventsTicketSoldOut": "Complet",
+  "eventsTicketBuy": "Acheter un billet",
+  "eventsBottomPerPerson": "par personne",
+  "eventsBottomSelectTickets": "Choisir des billets",
+  "eventsBottomJoinEvent": "Rejoindre l’événement",
+  "eventsBottomPriceFrom": "À partir de {amount} {currency}",
+  "@eventsBottomPriceFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsSincRedirectTitle": "Redirection vers Sinc",
+  "eventsSincRedirectMessage": "Vous allez être redirigé vers notre partenaire « Sinc » pour acheter des billets pour cet événement. Sinc est notre plateforme de billetterie de confiance pour des réservations et paiements sécurisés.",
+  "eventsSincDontShowAgain": "Ne plus afficher",
+  "eventsShareWithLocation": "Découvrez « {name} » à {location} le {date} !",
+  "@eventsShareWithLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eventsShareNoLocation": "Découvrez « {name} » le {date} !",
+  "@eventsShareNoLocation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantSubtitle": "Votre guide au Rwanda",
+  "assistantTooltipNewChat": "Nouvelle conversation",
+  "assistantTooltipHistory": "Historique",
+  "assistantInputHint": "Posez une question sur le Rwanda…",
+  "assistantEmptyGreeting": "Bonjour ! Je suis Zoea 👋",
+  "assistantEmptyBody": "Votre guide au Rwanda. Lieux à visiter, restaurants, excursions ou tout autre sujet : demandez-moi !",
+  "assistantEmptyTryAsking": "Essayez par exemple :",
+  "assistantErrorSend": "Impossible d’envoyer le message : {error}",
+  "@assistantErrorSend": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHistorySignInTitle": "Connexion pour l’historique",
+  "assistantHistorySignInMessage": "Créez un compte ou connectez-vous pour voir l’historique de vos conversations avec Zoea.",
+  "assistantHistoryTitle": "Conversations récentes",
+  "assistantHistoryEmpty": "Aucune conversation",
+  "assistantHistoryLoadFailed": "Impossible de charger les conversations",
+  "assistantErrorLoadConversation": "Impossible de charger la conversation : {error}",
+  "@assistantErrorLoadConversation": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantRelativeToday": "Aujourd’hui",
+  "assistantRelativeYesterday": "Hier",
+  "assistantRelativeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
+  "@assistantRelativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantSuggestion1": "Dîner italien à Kigali",
+  "assistantSuggestion2": "Excursions gorilles ou safari",
+  "assistantSuggestion3": "Pharmacie ou distributeur à proximité",
+  "assistantSuggestion4": "Lieux populaires à voir",
+  "assistantSuggestion5": "Restaurants à Kigali",
+  "assistantSuggestion6": "Quelles excursions sont disponibles ?",
+  "commonDone": "Terminé",
+  "commonClear": "Effacer",
+  "commonNotApplicable": "N/D",
+  "bookingsTabAll": "Tout",
+  "bookingsTabUpcoming": "À venir",
+  "bookingsTabPast": "Passés",
+  "bookingsTabCancelled": "Annulés",
+  "bookingsErrorOrders": "Impossible de charger les commandes",
+  "bookingsErrorBookings": "Impossible de charger les réservations",
+  "bookingsEmptyUpcomingTitle": "Aucune réservation ou commande à venir",
+  "bookingsEmptyUpcomingSubtitle": "Vous n’avez aucune réservation ou commande à venir",
+  "bookingsEmptyPastTitle": "Aucune réservation ou commande passée",
+  "bookingsEmptyPastSubtitle": "L’historique de vos réservations et commandes apparaîtra ici",
+  "bookingsEmptyCancelledTitle": "Aucune réservation ou commande annulée",
+  "bookingsEmptyCancelledSubtitle": "Les réservations et commandes annulées apparaîtront ici",
+  "bookingsEmptyDefaultTitle": "Aucune réservation ou commande",
+  "bookingsEmptyDefaultSubtitle": "Explorez l’app et effectuez votre première réservation ou commande !",
+  "bookingsExploreNow": "Explorer",
+  "bookingsSearchTitle": "Rechercher des réservations",
+  "bookingsSearchHint": "Rechercher par nom, lieu, n° de réservation ou de commande…",
+  "bookingsLocationNotSpecified": "Lieu non précisé",
+  "bookingsTourLocation": "Lieu de l’excursion",
+  "stayTitle": "Où loger",
+  "staySubtitle": "Trouvez l’hébergement idéal",
+  "stayTabAll": "Tout",
+  "stayTabHotels": "Hôtels",
+  "stayTabBnbs": "Chambres d’hôtes",
+  "stayTabApartments": "Appartements",
+  "stayTabVillas": "Villas",
+  "stayAnyDates": "Toutes les dates",
+  "staySelectCheckout": "Choisir le départ",
+  "stayGuestCount": "{count, plural, =1{1 invité} other{{count} invités}}",
+  "stayFailedLoad": "Impossible de charger les hébergements",
+  "stayEmptyNoMatchesForCategory": "Aucun résultat : {category}",
+  "stayEmptyAdjust": "Modifiez votre recherche ou vos filtres",
+  "stayFiltersTitle": "Filtres",
+  "stayPriceRangeRwf": "Fourchette de prix (RWF)",
+  "stayPriceMinSample": "Min. : 10 000",
+  "stayPriceMaxSample": "Max. : 200 000",
+  "stayMinimumRating": "Note minimale",
+  "stayRatingAtLeastPlus": "{min}+",
+  "@stayRatingAtLeastPlus": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "stayAmenities": "Équipements",
+  "stayAmenityWifi": "Wi‑Fi",
+  "stayAmenityPool": "Piscine",
+  "stayAmenitySpa": "Spa",
+  "stayAmenityGym": "Salle de sport",
+  "stayAmenityRestaurant": "Restaurant",
+  "stayAmenityParking": "Parking",
+  "stayAmenityAirConditioning": "Climatisation",
+  "stayAmenityBusinessCenter": "Centre d’affaires",
+  "stayAmenityKitchen": "Cuisine",
+  "stayAmenityGarden": "Jardin",
+  "stayAmenityRoomService": "Service en chambre",
+  "stayPropertyType": "Type de bien",
+  "stayDistanceFromCenter": "Distance du centre-ville",
+  "stayDistanceAny": "Tout",
+  "stayDistanceUnder5km": "Moins de 5 km",
+  "stayDistance5to10km": "5–10 km",
+  "stayDistance10to20km": "10–20 km",
+  "stayDistanceOver20km": "Plus de 20 km",
+  "stayApplyFilters": "Appliquer les filtres",
+  "stayMapComingSoon": "Vue carte bientôt disponible !",
+  "staySearchOptionsTitle": "Options de recherche",
+  "stayWhereLabel": "Où",
+  "stayCheckInOutLabel": "Arrivée et départ",
+  "stayGuestsLabel": "Invités",
+  "staySearchAccommodations": "Rechercher un hébergement",
+  "staySelectLocationTitle": "Choisir un lieu",
+  "staySelectDatesTimesTitle": "Choisir dates et heures",
+  "stayCheckIn": "Arrivée",
+  "stayCheckOut": "Départ",
+  "staySelectDate": "Choisir la date",
+  "staySelectTime": "Choisir l’heure",
+  "stayNumberOfGuests": "Nombre d’invités",
+  "stayGuestsSheetGuests": "Invités",
+  "staySortBy": "Trier par",
+  "staySortRecommended": "Recommandé",
+  "staySortPriceLowHigh": "Prix : croissant",
+  "staySortPriceHighLow": "Prix : décroissant",
+  "staySortRatingHighLow": "Note : décroissante",
+  "staySortDistance": "Distance",
+  "staySortPopularity": "Popularité",
+  "stayListingFallback": "Hébergement",
+  "stayLocationUnavailable": "Lieu non disponible",
+  "stayBreakfast": "Petit-déjeuner",
+  "stayRoomTypesCount": "{count, plural, =1{1 type de chambre} other{{count} types de chambres}}",
+  "bookingsBookAgain": "Réserver à nouveau",
+  "bookingsViewDetails": "Voir le détail",
+  "bookingsBookedOn": "Réservé le {date}",
+  "bookingsOrderedOn": "Commandé le {date}",
+  "bookingsOrderLabel": "COMMANDE",
+  "bookingsDateNotSpecified": "Date non précisée",
+  "bookingsOrderPreviewMessage": "Détails de la commande {number}",
+  "bookingsCancelOrderSoon": "Annulation de commande bientôt disponible",
+  "bookingsLineItemCount": "{count, plural, =1{1 article} other{{count} articles}}",
+  "@bookingsLineItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonNotSpecified": "Non précisé",
+  "maintenanceTitle": "Nous revenons tout de suite !",
+  "maintenanceMessage": "Nos systèmes sont en maintenance pour mieux vous servir. Nous serons de retour en ligne sous peu.",
+  "maintenanceTryAgain": "Réessayer",
+  "maintenanceSupport": "Besoin d’aide ? Écrivez-nous à {email}",
+  "@maintenanceSupport": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "maintenanceStillUnavailable": "Le service est toujours indisponible. Réessayez dans un instant.",
+  "helpSearchHint": "Rechercher dans l’aide…",
+  "helpQuickHelp": "Aide rapide",
+  "helpPopularTopics": "Sujets populaires",
+  "helpContactSupport": "Contacter le support",
+  "helpFaqCategoriesTitle": "Questions fréquentes",
+  "helpLinkOpenFailed": "Impossible d’ouvrir le lien. Réessayez plus tard.",
+  "helpContactButton": "Contacter",
+  "helpFeatureComingSoon": "{feature} : bientôt disponible !",
+  "@helpFeatureComingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "helpLiveChatBody": "Démarrez une session de chat en direct avec notre équipe support.",
+  "helpQuickAccountTitle": "Problèmes de compte",
+  "helpQuickAccountSubtitle": "Connexion, inscription et profil",
+  "helpQuickPaymentTitle": "Paiement et facturation",
+  "helpQuickPaymentSubtitle": "Paiements de réservation et remboursements",
+  "helpQuickEventsTitle": "Événements et réservations",
+  "helpQuickEventsSubtitle": "Billets et gestion des réservations",
+  "helpQuickPlacesTitle": "Lieux et destinations",
+  "helpQuickPlacesSubtitle": "Trouver et visiter des lieux",
+  "helpTopicBookEvents": "Réserver un événement",
+  "helpTopicPaymentMethods": "Moyens de paiement",
+  "helpTopicCancelBooking": "Annuler une réservation",
+  "helpTopicUpdateProfile": "Mettre à jour le profil",
+  "helpTopicContactSupport": "Contacter le support",
+  "helpTopicAppFeatures": "Fonctionnalités de l’app",
+  "helpLiveChatTitle": "Chat en direct",
+  "helpLiveChatSubtitle": "Obtenez de l’aide instantanément",
+  "helpEmailSupportTitle": "Assistance par e-mail",
+  "helpPhoneSupportTitle": "Assistance téléphonique",
+  "helpPhoneSupportSubtitle": "+250 796 889 900",
+  "helpFaqGettingStarted": "Pour bien commencer",
+  "helpFaqAccountProfile": "Compte et profil",
+  "helpFaqBookingsEvents": "Réservations et événements",
+  "helpFaqPaymentRefunds": "Paiements et remboursements",
+  "helpFaqTechnicalIssues": "Problèmes techniques",
+  "helpAppVersionLabel": "Version de l’app",
+  "helpBuildNumberLabel": "Numéro de build",
+  "helpLastUpdatedLabel": "Dernière mise à jour",
+  "helpPlatformLabel": "Plateforme",
+  "helpPackageInfoError": "Impossible de charger les infos de l’application.",
+  "helpArticleAccount": "Problèmes de compte courants et solutions :\n\n• Mot de passe oublié : utilisez le lien « Mot de passe oublié » sur l’écran de connexion\n• Vérification du compte : consultez vos e-mails pour les liens de vérification\n• Mises à jour du profil : Profil > Modifier le profil\n• Sécurité du compte : activez l’authentification à deux facteurs dans Confidentialité et sécurité\n• Données personnelles : consultez vos paramètres de confidentialité dans l’app",
+  "helpArticlePayment": "Aide paiement et facturation :\n\n• Moyens de paiement : cartes bancaires, mobile money ou virements\n• Remboursements : contactez le support pour les annulations et remboursements\n• Historique des paiements : consultez vos transactions dans le profil\n• Paiements refusés : vérifiez votre moyen de paiement et réessayez\n• Devise : les paiements sont traités en francs rwandais (RWF)",
+  "helpArticleBooking": "Réservation et gestion d’événements :\n\n• Réserver : parcourez les événements et appuyez sur « Réserver »\n• Confirmation : vous recevrez des notifications par e-mail et dans l’app\n• Annulation : Mes réservations > annuler les événements à venir\n• Actualités : consultez l’onglet Événements\n• Groupes : contactez le support pour les réservations de groupe",
+  "helpArticlePlaces": "Lieux et localisation :\n\n• Recherche : barre de recherche ou catégories\n• Détails : appuyez sur un lieu pour photos, avis et infos\n• Itinéraires : ouvrez votre application de cartes préférée\n• Avis : partagez votre expérience\n• Favoris : enregistrez les lieux à visiter plus tard",
+  "helpFaqGs1Q": "Comment créer un compte ?",
+  "helpFaqGs1A": "Téléchargez l’app et appuyez sur « Inscription » pour créer un compte avec e-mail ou téléphone.",
+  "helpFaqGs2Q": "Comment réserver mon premier événement ?",
+  "helpFaqGs2A": "Parcourez l’onglet Événements, choisissez un événement et appuyez sur « Réserver ».",
+  "helpFaqGs3Q": "Comment mettre à jour mon profil ?",
+  "helpFaqGs3A": "Allez dans Profil > Modifier le profil.",
+  "helpFaqGs4Q": "Comment trouver des lieux à visiter ?",
+  "helpFaqGs4A": "Utilisez l’onglet Explorer ou recherchez un lieu précis.",
+  "helpFaqGs5Q": "Comment obtenir de l’aide ?",
+  "helpFaqGs5A": "Utilisez ce centre d’aide, contactez le support ou consultez la FAQ.",
+  "helpFaqAc1Q": "Comment changer mon mot de passe ?",
+  "helpFaqAc1A": "Profil > Confidentialité et sécurité > Changer le mot de passe.",
+  "helpFaqAc2Q": "Comment mettre à jour mon e-mail ?",
+  "helpFaqAc2A": "Profil > Modifier le profil.",
+  "helpFaqAc3Q": "Comment supprimer mon compte ?",
+  "helpFaqAc3A": "Contactez le support pour demander la suppression. Action irréversible.",
+  "helpFaqAc4Q": "Comment activer l’authentification à deux facteurs ?",
+  "helpFaqAc4A": "Profil > Confidentialité et sécurité pour activer le 2FA.",
+  "helpFaqAc5Q": "Comment changer ma photo de profil ?",
+  "helpFaqAc5A": "Profil > Modifier le profil > appuyez sur la photo.",
+  "helpFaqAc6Q": "Comment changer mon numéro de téléphone ?",
+  "helpFaqAc6A": "Profil > Modifier le profil.",
+  "helpFaqAc7Q": "Comment vérifier mon compte ?",
+  "helpFaqAc7A": "Consultez vos e-mails pour les liens de vérification.",
+  "helpFaqAc8Q": "Comment télécharger mes données ?",
+  "helpFaqAc8A": "Profil > Confidentialité et sécurité > Télécharger mes données.",
+  "helpFaqBk1Q": "Comment réserver un événement ?",
+  "helpFaqBk1A": "Parcourez les événements, choisissez-en un et appuyez sur « Réserver ».",
+  "helpFaqBk2Q": "Comment annuler une réservation ?",
+  "helpFaqBk2A": "Mes réservations > trouvez la réservation > « Annuler la réservation ».",
+  "helpFaqBk3Q": "Comment recevoir mes billets ?",
+  "helpFaqBk3A": "Par e-mail et dans l’application.",
+  "helpFaqBk4Q": "Puis-je réserver pour plusieurs personnes ?",
+  "helpFaqBk4A": "Oui, indiquez le nombre de personnes lors de la réservation.",
+  "helpFaqBk5Q": "Comment obtenir un remboursement ?",
+  "helpFaqBk5A": "Contactez le support ; les conditions varient selon l’événement.",
+  "helpFaqBk6Q": "Comment décaler une réservation ?",
+  "helpFaqBk6A": "Annulez la réservation actuelle puis réservez un nouveau créneau.",
+  "helpFaqBk7Q": "Comment voir le statut de ma réservation ?",
+  "helpFaqBk7A": "Consultez Mes réservations.",
+  "helpFaqBk8Q": "Et si un événement est annulé ?",
+  "helpFaqBk8A": "Vous serez informé ; remboursement intégral ou report possible.",
+  "helpFaqBk9Q": "Comment réserver un hôtel ?",
+  "helpFaqBk9A": "Parcourez les hôtels dans Explorer et suivez le flux de réservation.",
+  "helpFaqBk10Q": "Comment réserver une excursion ?",
+  "helpFaqBk10A": "Trouvez les excursions dans Explorer comme pour les événements.",
+  "helpFaqBk11Q": "Comment obtenir l’itinéraire vers un événement ?",
+  "helpFaqBk11A": "Appuyez sur le lieu de l’événement pour l’ouvrir dans votre appli cartes.",
+  "helpFaqBk12Q": "Comment partager un événement ?",
+  "helpFaqBk12A": "Utilisez le bouton Partager sur la fiche événement.",
+  "helpFaqPy1Q": "Quels moyens de paiement sont acceptés ?",
+  "helpFaqPy1A": "Cartes bancaires, mobile money et virements.",
+  "helpFaqPy2Q": "Comment ajouter un moyen de paiement ?",
+  "helpFaqPy2A": "Profil > Moyens de paiement.",
+  "helpFaqPy3Q": "Comment obtenir un remboursement ?",
+  "helpFaqPy3A": "Contactez le support avec les détails de la réservation.",
+  "helpFaqPy4Q": "Combien de temps pour un remboursement ?",
+  "helpFaqPy4A": "En général 3 à 5 jours ouvrables.",
+  "helpFaqPy5Q": "Mes données de paiement sont-elles sécurisées ?",
+  "helpFaqPy5A": "Oui, nous utilisons un chiffrement conforme aux standards du secteur.",
+  "helpFaqPy6Q": "Comment mettre à jour mon moyen de paiement ?",
+  "helpFaqPy6A": "Profil > Moyens de paiement.",
+  "helpFaqTx1Q": "L’application ne charge pas correctement",
+  "helpFaqTx1A": "Fermez puis rouvrez l’app, ou redémarrez l’appareil.",
+  "helpFaqTx2Q": "Je ne peux pas me connecter",
+  "helpFaqTx2A": "Vérifiez la connexion Internet et vos identifiants.",
+  "helpFaqTx3Q": "L’application plante souvent",
+  "helpFaqTx3A": "Mettez à jour vers la dernière version depuis le store.",
+  "helpFaqTx4Q": "Je ne reçois pas les notifications",
+  "helpFaqTx4A": "Vérifiez les réglages de notifications du téléphone et de l’app.",
+  "registerTitle": "Créer un compte",
+  "registerSubtitle": "Rejoignez la communauté Zoea Africa",
+  "registerInviteBanner": "Vous avez ouvert un lien d’invitation — le code a été ajouté ci-dessous. Vous pouvez le modifier ou en coller un autre depuis un message.",
+  "registerFullName": "Nom complet",
+  "registerFullNameHint": "Saisissez votre nom complet",
+  "registerFieldRequired": "Obligatoire",
+  "registerEmailLabel": "E-mail",
+  "registerEmailHint": "Saisissez votre adresse e-mail",
+  "registerInviteCodeLabel": "Code d’invitation",
+  "registerInviteCodeHint": "Collez-le si vous en avez un",
+  "registerCodeTooLong": "Code trop long",
+  "registerPasswordLabel": "Mot de passe",
+  "registerPasswordHint": "Créez un mot de passe robuste",
+  "registerConfirmPasswordLabel": "Confirmer le mot de passe",
+  "registerConfirmPasswordHint": "Confirmez votre mot de passe",
+  "registerConfirmPasswordRequired": "Veuillez confirmer votre mot de passe",
+  "registerPasswordsMismatch": "Les mots de passe ne correspondent pas",
+  "registerAgreePrefix": "J’accepte les ",
+  "registerTerms": "Conditions générales",
+  "registerAndConjunction": " et la ",
+  "registerPrivacy": "Politique de confidentialité",
+  "registerAlreadyHaveAccount": "Vous avez déjà un compte ? ",
+  "registerAgreeTermsMessage": "Veuillez accepter les conditions générales",
+  "registerFailed": "Inscription impossible. Réessayez.",
+  "settingsTitle": "Réglages",
+  "settingsAppearanceSection": "Apparence",
+  "settingsCurrentTheme": "Thème actuel",
+  "commonViewDetails": "Voir le détail",
+  "commonRemove": "Retirer",
+  "commonLoadMore": "Charger plus",
+  "mapScreenTitle": "Carte",
+  "transactionHistoryTitle": "Historique des transactions",
+  "itineraryAddFromFavoritesTitle": "Ajouter depuis les favoris",
+  "shopSearchProductsTitle": "Rechercher des produits",
+  "shopClearFilters": "Effacer les filtres",
+  "webviewOpenInBrowser": "Ouvrir dans le navigateur",
+  "commonViewEvent": "Voir l’événement",
+  "commonViewPlace": "Voir le lieu",
+  "mapScreenHeadline": "Vue carte",
+  "mapScreenPlaceholder": "La carte interactive avec les fiches sera disponible ici",
+  "transactionHistorySubtitle": "Consultez vos paiements et l’historique des transactions",
+  "itineraryAddWithCount": "Ajouter ({count})",
+  "@itineraryAddWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "favoritesEmptyTitle": "Aucun favori",
+  "favoritesEmptySubtitle": "Vous n’avez pas encore de favoris",
+  "favoritesLoadError": "Impossible de charger les favoris",
+  "splashHeadline1": "Découvrez le Rwanda",
+  "splashHeadline2": "Comme jamais auparavant",
+  "splashTagline": "Explorez des destinations exceptionnelles, des expériences authentiques et des trésors cachés au pays des mille collines.",
+  "onboardingPage1Title": "Découvrez le Rwanda",
+  "onboardingPage1Subtitle": "Explorez le pays des mille collines avec des expériences vérifiées",
+  "onboardingPage2Title": "Réservez en toute simplicité",
+  "onboardingPage2Subtitle": "Réservez hôtels, restaurants et excursions avec votre carte Zoea",
+  "onboardingPage3Title": "Échangez et partagez",
+  "onboardingPage3Subtitle": "Rejoignez la communauté et partagez vos aventures au Rwanda",
+  "onboardingNext": "Suivant",
+  "onboardingGetStarted": "Commencer",
+  "onboardingSkipGuest": "Passer — parcourir en invité",
+  "onboardingSignInPrompt": "Vous avez déjà un compte ? Connectez-vous",
+  "countryPickerSearchHint": "Tapez pour rechercher",
+  "authResetPasswordAppBar": "Réinitialiser le mot de passe",
+  "authChooseResetMethod": "Choisissez comment réinitialiser votre mot de passe",
+  "authResetCodeSentDefault": "Code de réinitialisation envoyé",
+  "authSendResetCode": "Envoyer le code",
+  "authBackToLogin": "Retour à la connexion",
+  "authVerifyCodeTitle": "Vérifier le code",
+  "authEnterResetCode": "Saisissez le code",
+  "authResetCodeSentTo": "Nous avons envoyé un code à {digits} chiffres à {identifier}",
+  "@authResetCodeSentTo": {
+    "placeholders": {
+      "digits": {
+        "type": "int"
+      },
+      "identifier": {
+        "type": "String"
+      }
+    }
+  },
+  "authVerifyCodeButton": "Vérifier le code",
+  "authResendCode": "Renvoyer le code",
+  "authResendSending": "Envoi…",
+  "authResendCodeIn": "Renvoyer le code dans {time}",
+  "@authResendCodeIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "authNewPasswordAppBar": "Nouveau mot de passe",
+  "authCreateNewPasswordTitle": "Créer un nouveau mot de passe",
+  "authCreateNewPasswordBody": "Saisissez votre nouveau mot de passe. Choisissez-en un solide et sécurisé.",
+  "authNewPasswordFieldLabel": "Nouveau mot de passe",
+  "authNewPasswordFieldHint": "Saisissez votre nouveau mot de passe",
+  "authConfirmNewPasswordHint": "Confirmez votre nouveau mot de passe",
+  "authEnterNewPasswordError": "Veuillez saisir un nouveau mot de passe",
+  "authPasswordResetSuccess": "Mot de passe réinitialisé !",
+  "authSaveNewPassword": "Enregistrer le mot de passe",
+  "authNewCodeRequested": "Un nouveau code a été demandé.",
+  "authPhoneNumberExample": "780 123 456",
+  "shopScreenTitleShop": "Boutique",
+  "shopScreenTitleProducts": "Produits",
+  "shopProductCount": "{count, plural, =1{1 produit} other{{count} produits}}",
+  "shopSortLine": "Trier : {label}",
+  "shopEmptyNoProducts": "Aucun produit",
+  "shopEmptyAdjustFilters": "Essayez d’ajuster vos filtres ou votre recherche",
+  "shopErrorLoadProducts": "Impossible de charger les produits",
+  "shopOutOfStock": "Rupture de stock",
+  "shopFilterTitle": "Filtrer les produits",
+  "shopStatusSection": "Statut",
+  "shopFeaturedSection": "À la une",
+  "shopFilterActive": "Actif",
+  "shopFilterInactive": "Inactif",
+  "shopFeaturedOnly": "À la une uniquement",
+  "shopFilterReset": "Réinitialiser",
+  "shopSearchProductNameHint": "Nom du produit…",
+  "shopSortPopular": "Populaire",
+  "shopSortNameAz": "Nom (A–Z)",
+  "shopSortNameZa": "Nom (Z–A)",
+  "shopSortPriceLowHigh": "Prix (croissant)",
+  "shopSortPriceHighLow": "Prix (décroissant)",
+  "shopSortNewest": "Les plus récents",
+  "favoritesEmptyAllTitle": "Pas encore de favoris",
+  "favoritesEmptyAllSubtitle": "Explorez et enregistrez vos événements et lieux préférés",
+  "favoritesEmptyExploreCta": "Explorer",
+  "favoritesEmptyEventsTitle": "Aucun événement favori",
+  "favoritesEmptyEventsSubtitle": "Enregistrez les événements qui vous intéressent pour les voir ici",
+  "favoritesEmptyEventsCta": "Parcourir les événements",
+  "favoritesEmptyPlacesTitle": "Aucun lieu favori",
+  "favoritesEmptyPlacesSubtitle": "Enregistrez les lieux que vous souhaitez visiter pour les voir ici",
+  "favoritesEmptyPlacesCta": "Explorer les lieux",
+  "favoritesRemoveTitle": "Retirer des favoris",
+  "favoritesRemoveMessage": "Retirer « {name} » de vos favoris ?",
+  "favoritesRemoveFailed": "Impossible de retirer le favori : {error}",
+  "favoritesTypeEvent": "Événement",
+  "favoritesTypePlace": "Lieu",
+  "favoritesDateTba": "Date à confirmer",
+  "categoryTitleDining": "Restauration",
+  "categoryTitleNightlife": "Vie nocturne",
+  "categoryTitleExperiences": "Expériences",
+  "categoryTitlePlaces": "Lieux",
+  "categorySearchAppBar": "Rechercher · {categoryName}",
+  "categorySearchHintDining": "Restaurants, cafés…",
+  "categorySearchHintNightlife": "Bars, clubs, salons…",
+  "categorySearchHintExperiences": "Circuits, aventures, expériences…",
+  "categorySearchHintDefault": "Lieux…",
+  "categoryNotFound": "Catégorie introuvable",
+  "categoryErrorListings": "Impossible de charger les annonces",
+  "categoryErrorCategory": "Impossible de charger la catégorie",
+  "categoryEmptyPrompt": "Rechercher · {categoryName}",
+  "categoryEmptyNoResults": "Aucun résultat",
+  "categoryEmptyTryDifferentKeywords": "Essayez d’autres mots-clés ou catégories",
+  "categorySearchSuggestionsDining": "Essayez « pizza », « café » ou « sushi »",
+  "categorySearchSuggestionsNightlife": "Essayez « bar », « club » ou « salon »",
+  "categorySearchSuggestionsExperiences": "Essayez « gorille », « randonnée » ou « culturel »",
+  "categorySearchSuggestionsDefault": "Recherchez des lieux ou des destinations précises",
+  "categoryFilterSheetTitle": "Filtrer · {categoryName}",
+  "categorySortSheetTitle": "Trier · {categoryName}",
+  "categorySectionPriceRange": "Fourchette de prix",
+  "categorySectionFeatures": "Équipements",
+  "categoryRatingStars40": "4,0+ étoiles",
+  "categoryRatingStars45": "4,5+ étoiles",
+  "categoryRatingStars50": "5,0 étoiles",
+  "catTourOperatorBadge": "Tour opérateur",
+  "listingReviewsCountParen": "({count, plural, =1{1 avis} other{{count} avis}})",
+  "catSubDiningRestaurants": "Restaurants",
+  "catSubDiningCafes": "Cafés",
+  "catSubDiningFastFood": "Restauration rapide",
+  "catSubNightBars": "Bars",
+  "catSubNightClubs": "Clubs",
+  "catSubNightLounges": "Salons",
+  "catSubExpTours": "Circuits",
+  "catSubExpAdventures": "Aventures",
+  "catSubExpCultural": "Culturel",
+  "catSubExpOperators": "Opérateurs",
+  "catPriceDiningU5k": "Moins de 5 000 RWF",
+  "catPriceDining5to15k": "5 000 – 15 000 RWF",
+  "catPriceDining15to30k": "15 000 – 30 000 RWF",
+  "catPriceDiningOver30k": "Plus de 30 000 RWF",
+  "catPriceNightU10k": "Moins de 10 000 RWF",
+  "catPriceNight10to20k": "10 000 – 20 000 RWF",
+  "catPriceNight20to30k": "20 000 – 30 000 RWF",
+  "catPriceNightOver30k": "Plus de 30 000 RWF",
+  "catPriceExpU50k": "Moins de 50 000 RWF",
+  "catPriceExp50to100k": "50 000 – 100 000 RWF",
+  "catPriceExp100to200k": "100 000 – 200 000 RWF",
+  "catPriceExpOver200k": "Plus de 200 000 RWF",
+  "catPriceDefU10k": "Moins de 10 000 RWF",
+  "catPriceDef10to30k": "10 000 – 30 000 RWF",
+  "catPriceDefOver30k": "Plus de 30 000 RWF",
+  "catFeatDiningWifi": "Wi‑Fi",
+  "catFeatDiningParking": "Parking",
+  "catFeatDiningOutdoorSeating": "Terrasse",
+  "catFeatDiningDelivery": "Livraison",
+  "catFeatDiningTakeaway": "À emporter",
+  "catFeatDiningVegetarian": "Options végétariennes",
+  "catFeatNightLiveMusic": "Musique live",
+  "catFeatNightDanceFloor": "Piste de danse",
+  "catFeatNightOutdoorSeating": "Terrasse",
+  "catFeatNightVip": "Section VIP",
+  "catFeatNightParking": "Parking",
+  "catFeatNightWifi": "Wi‑Fi",
+  "catFeatExpGuidedTours": "Visites guidées",
+  "catFeatExpTransport": "Transport inclus",
+  "catFeatExpMeals": "Repas inclus",
+  "catFeatExpEquipment": "Matériel fourni",
+  "catFeatExpGroup": "Groupes",
+  "catFeatExpPrivate": "Visites privées",
+  "catFeatDefWifi": "Wi‑Fi",
+  "catFeatDefParking": "Parking",
+  "catFeatDefAccessible": "Accessible",
+  "@shopProductCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@shopSortLine": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@categorySearchAppBar": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryEmptyPrompt": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryFilterSheetTitle": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@categorySortSheetTitle": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "@listingReviewsCountParen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreApplySort": "Appliquer le tri",
+  "exploreCategoryNotFoundShort": "Catégorie introuvable",
+  "commonSignIn": "Se connecter",
+  "commonBack": "Retour",
+  "commonDelete": "Supprimer",
+  "commonAdd": "Ajouter",
+  "commonMaybeLater": "Peut-être plus tard",
+  "commonGoBack": "Retour",
+  "commonStartShopping": "Commencer les achats",
+  "commonContinueShopping": "Continuer les achats",
+  "commonFavoriteVerb": "Favori",
+  "commonBookNow": "Réserver",
+  "commonOrderNow": "Commander",
+  "commonContact": "Contacter",
+  "commonReserveTable": "Réserver une table",
+  "commonWriteReview": "Rédiger un avis",
+  "commonViewAllProducts": "Voir tous les produits",
+  "commonViewAllServices": "Voir tous les services",
+  "commonViewMenu": "Voir le menu",
+  "commonViewMenus": "Voir les menus",
+  "commonSelectVariant": "Choisir une variante",
+  "commonShareReferralCode": "Partager le code de parrainage",
+  "commonCompleteProfile": "Compléter le profil",
+  "commonLinkOpenFailed": "Impossible d’ouvrir le lien. Réessayez plus tard.",
+  "commonCouponApplied": "Code promo appliqué !",
+  "commonCouponInvalid": "Code promo invalide",
+  "commonBookingNotAvailable": "La réservation n’est pas disponible pour ce type d’annonce",
+  "commonFailedLoadListing": "Impossible de charger l’annonce : {error}",
+  "commonFailedCreateBooking": "Impossible de créer la réservation : {error}",
+  "commonFailedBookTour": "Impossible de réserver le circuit : {error}",
+  "commonFailedBookService": "Impossible de réserver le service : {error}",
+  "commonFailedAddToCart": "Impossible d’ajouter au panier : {error}",
+  "commonFailedUpdate": "Impossible de mettre à jour : {error}",
+  "commonFailedRemove": "Impossible de retirer : {error}",
+  "commonFailedClearCart": "Impossible de vider le panier : {error}",
+  "commonFailedPlaceOrder": "Impossible de passer la commande : {error}",
+  "commonFailedShare": "Impossible de partager : {error}",
+  "commonProductAddedToCart": "Produit ajouté au panier",
+  "commonItemAddedToCart": "Article ajouté au panier",
+  "commonPleaseSelectTourSchedule": "Sélectionnez un circuit et un créneau",
+  "commonPleaseFillRequiredFields": "Remplissez tous les champs obligatoires",
+  "commonBookingMissingConfirmation": "Réservation créée, mais l’identifiant de confirmation est manquant.",
+  "commonPleaseSelectDateTime": "Sélectionnez une date et une heure",
+  "commonServiceBookedSuccess": "Service réservé avec succès !",
+  "commonPleaseWriteReview": "Écrivez un avis avant d’envoyer",
+  "commonPleaseWriteReviewUpdate": "Écrivez un avis avant de mettre à jour",
+  "commonReviewSubmitMissingContext": "Impossible d’envoyer l’avis. Informations manquantes (annonce, événement ou circuit).",
+  "commonThankYouReview": "Merci pour votre avis !",
+  "commonReviewUpdatedSuccess": "Avis mis à jour avec succès !",
+  "commonCheckInOutRequired": "Sélectionnez les dates d’arrivée et de départ",
+  "commonCheckOutAfterCheckIn": "La date de départ doit être après la date d’arrivée",
+  "commonSelectRoomType": "Sélectionnez un type de chambre pour continuer",
+  "cartTitle": "Vider le panier",
+  "cartClearConfirm": "Retirer tous les articles de votre panier ?",
+  "cartEmptyMessage": "Votre panier est vide",
+  "checkoutFulfillmentPickup": "Retrait",
+  "checkoutFulfillmentPickupSubtitle": "Retrait en magasin",
+  "checkoutFulfillmentDelivery": "Livraison",
+  "checkoutFulfillmentDeliverySubtitle": "Livraison à votre adresse",
+  "checkoutFulfillmentDineIn": "Sur place",
+  "checkoutFulfillmentDineInSubtitle": "Au restaurant",
+  "checkoutUnableListing": "Impossible de déterminer l’annonce",
+  "shopSearchServicesTitle": "Rechercher des services",
+  "shopServicesTitle": "Services",
+  "referralScreenShareCta": "Partager le code de parrainage",
+  "zoeaCardScreenTitle": "Carte Zoea",
+  "itinerariesScreenTitle": "Itinéraires",
+  "itineraryCreateFab": "Créer un itinéraire",
+  "itineraryDetailTitle": "Itinéraire",
+  "itineraryViewCta": "Voir",
+  "itineraryMakePublicTitle": "Rendre public",
+  "itineraryMakePublicSubtitle": "Permettre aux autres de voir cet itinéraire",
+  "itineraryAddItem": "Ajouter un élément",
+  "itineraryFromFavoritesTitle": "Depuis les favoris",
+  "itineraryFromFavoritesSubtitle": "Ajouter depuis vos favoris",
+  "itineraryFromRecommendationsTitle": "Depuis les recommandations",
+  "itineraryFromRecommendationsSubtitle": "Ajouter depuis les lieux recommandés",
+  "itineraryCustomItemTitle": "Élément personnalisé",
+  "itineraryCustomItemSubtitle": "Ajouter un lieu ou une activité personnalisée",
+  "itineraryDeleteTitle": "Supprimer l’itinéraire",
+  "itineraryDeleteMessage": "Supprimer cet itinéraire ? Cette action est irréversible.",
+  "itineraryDeletedSuccess": "Itinéraire supprimé",
+  "itineraryAddCustomTitle": "Ajouter un élément personnalisé",
+  "itineraryCustomNameRequired": "Veuillez saisir un nom",
+  "itineraryAddFromRecommendationsTitle": "Ajouter depuis les recommandations",
+  "reviewsEventComingSoon": "Page événement bientôt disponible",
+  "reviewsTourComingSoon": "Page circuit bientôt disponible",
+  "tourDetailGoBack": "Retour",
+  "eventsAttendedViewDetails": "Voir les détails",
+  "visitedPlacesViewDetails": "Voir les détails",
+  "appUpdateRequiredTitle": "Mise à jour obligatoire",
+  "appUpdateRequiredMessage": "Veuillez mettre à jour l’application pour continuer à utiliser Zoea.",
+  "appUpdateAvailableTitle": "Mise à jour disponible",
+  "appUpdateAvailableMessage": "Une nouvelle version de Zoea est prête, avec des améliorations et des corrections.",
+  "appUpdateNow": "Mettre à jour",
+  "appUpdateLater": "Plus tard",
+  "appUpdateStoreOpenFailed": "Impossible d’ouvrir le lien du store",
+  "privacySectionPrivacySettings": "Confidentialité",
+  "privacyLocationServicesTitle": "Services de localisation",
+  "privacyLocationServicesSubtitle": "Autoriser l’app à utiliser votre position pour de meilleures recommandations",
+  "privacyPushNotificationsTitle": "Notifications push",
+  "privacyPushNotificationsSubtitle": "Recevoir des notifications sur les événements et les mises à jour",
+  "privacyDataSharingTitle": "Partage de données",
+  "privacyDataSharingSubtitle": "Partager des données anonymes pour améliorer l’expérience",
+  "privacyAnalyticsTitle": "Analytique",
+  "privacyAnalyticsSubtitle": "Nous aider à améliorer l’app grâce à l’usage",
+  "privacyAnalyticsEnabled": "Analytique activée",
+  "privacyAnalyticsDisabled": "Analytique désactivée",
+  "privacyAnalyticsUpdateFailed": "Impossible de mettre à jour les paramètres d’analytique",
+  "privacyAnalyticsLoadingSubtitle": "Chargement…",
+  "privacySectionDataPrivacy": "Données et confidentialité",
+  "privacyWhatDataTitle": "Données collectées",
+  "privacyWhatDataSubtitle": "Voir quelles informations sont collectées et pourquoi",
+  "privacyClearAnalyticsTitle": "Effacer les données d’analytique",
+  "privacyClearAnalyticsSubtitle": "Supprimer toutes les données d’analytique stockées",
+  "privacySectionSecurity": "Sécurité",
+  "privacyBiometricTitle": "Authentification biométrique",
+  "privacyBiometricSubtitle": "Empreinte ou reconnaissance faciale pour déverrouiller",
+  "privacyTwoFactorTitle": "Authentification à deux facteurs",
+  "privacyTwoFactorSubtitle": "Renforcer la sécurité de votre compte",
+  "privacyChangePasswordTileTitle": "Changer le mot de passe",
+  "privacyChangePasswordTileSubtitle": "Mettre à jour le mot de passe du compte",
+  "privacyEmailVerificationTileTitle": "Vérification de l’e-mail",
+  "privacyEmailVerificationTileSubtitle": "Vérifier votre adresse e-mail",
+  "privacyPhoneVerified": "Téléphone vérifié",
+  "privacyPhoneAddVerify": "Ajouter et vérifier votre numéro",
+  "privacyPhoneVerificationTileTitle": "Vérification du téléphone",
+  "privacySectionAccountManagement": "Gestion du compte",
+  "privacyDownloadDataTitle": "Télécharger mes données",
+  "privacyDownloadDataSubtitle": "Obtenir une copie de vos données personnelles",
+  "privacyDeleteAccountTitle": "Supprimer le compte",
+  "privacyDeleteAccountSubtitle": "Supprimer définitivement votre compte et toutes les données",
+  "privacySectionLegal": "Mentions légales",
+  "privacyPolicyTileTitle": "Politique de confidentialité",
+  "privacyPolicyTileSubtitle": "Lire notre politique de confidentialité",
+  "privacyTermsTileTitle": "Conditions d’utilisation",
+  "privacyTermsTileSubtitle": "Lire nos conditions d’utilisation",
+  "privacyChangePasswordDialogTitle": "Changer le mot de passe",
+  "privacyCurrentPasswordLabel": "Mot de passe actuel",
+  "privacyCurrentPasswordHint": "Saisissez votre mot de passe actuel",
+  "privacyCurrentPasswordRequired": "Veuillez saisir votre mot de passe actuel",
+  "privacyNewPasswordLabel": "Nouveau mot de passe",
+  "privacyNewPasswordHint": "Saisissez votre nouveau mot de passe",
+  "privacyNewPasswordRequired": "Veuillez saisir un nouveau mot de passe",
+  "privacyPasswordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+  "privacyConfirmPasswordLabel": "Confirmer le nouveau mot de passe",
+  "privacyConfirmPasswordHint": "Confirmez votre nouveau mot de passe",
+  "privacyConfirmPasswordRequired": "Veuillez confirmer votre nouveau mot de passe",
+  "privacyPasswordsMismatch": "Les mots de passe ne correspondent pas",
+  "privacyPasswordChangedSuccess": "Mot de passe modifié !",
+  "privacyPasswordChangeFailed": "Impossible de modifier le mot de passe. Réessayez.",
+  "privacyEmailVerificationDialogTitle": "Vérification de l’e-mail",
+  "privacyEmailVerificationDialogBody": "Un e-mail de vérification sera envoyé à votre adresse enregistrée.",
+  "privacyVerificationEmailSent": "E-mail de vérification envoyé !",
+  "privacySendEmail": "Envoyer l’e-mail",
+  "privacyPhoneInvalid": "Saisissez un numéro valide",
+  "privacyPhoneCodeSent": "Nous avons envoyé un code à 6 chiffres par SMS.",
+  "privacyPhoneEnterCode": "Saisissez le code à 6 chiffres",
+  "privacyPhoneVerifiedSuccess": "Numéro de téléphone vérifié",
+  "privacyPhoneVerificationIntro": "Nous enverrons un code pour confirmer ce numéro.",
+  "myBookingsKeepBooking": "Conserver la réservation",
+  "myBookingsCancelBooking": "Annuler la réservation",
+  "editProfileConfirm": "Confirmer",
+  "@commonFailedLoadListing": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedCreateBooking": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedBookTour": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedBookService": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedAddToCart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedUpdate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedRemove": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedClearCart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedPlaceOrder": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@commonFailedShare": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyPhoneMobileLabel": "Numéro de mobile",
+  "privacySendCode": "Envoyer le code",
+  "privacyVerify": "Vérifier",
+  "privacyDownloadDataDialogTitle": "Télécharger mes données",
+  "privacyDownloadDataDialogBody": "Nous préparerons vos données et les enverrons à votre adresse e-mail sous 24 heures.",
+  "privacyDownloadDataSubmitted": "Demande de téléchargement envoyée !",
+  "privacyRequestData": "Demander les données",
+  "privacyDeleteAccountDialogTitle": "Supprimer le compte",
+  "privacyDeleteAccountDialogBody": "Cette action est irréversible. Toutes vos données seront supprimées définitivement.",
+  "privacyDeleteForever": "Supprimer définitivement",
+  "privacyAccountDeletionComingSoon": "La suppression de compte arrive bientôt !",
+  "privacyFinalConfirmationTitle": "Confirmation finale",
+  "privacyFinalConfirmationBody": "Voulez-vous vraiment continuer ? Votre compte et toutes les données associées seront supprimés définitivement.",
+  "privacyWhatDataCollectSheetTitle": "Données collectées",
+  "privacyDataProfileTitle": "Informations de profil",
+  "privacyDataProfileDescription": "Pays, langue, tranche d’âge, genre, centres d’intérêt, préférences de voyage",
+  "privacyDataProfilePurpose": "Personnaliser votre expérience et vos recommandations",
+  "privacyDataSearchTitle": "Recherches",
+  "privacyDataSearchDescription": "Ce que vous recherchez dans l’application",
+  "privacyDataSearchPurpose": "Améliorer les résultats et suggérer du contenu pertinent",
+  "privacyDataViewsTitle": "Consultations de contenu",
+  "privacyDataViewsDescription": "Lieux et événements consultés",
+  "privacyDataViewsPurpose": "Mieux comprendre vos intérêts et améliorer les recommandations",
+  "privacyDataUsageTitle": "Utilisation de l’app",
+  "privacyDataUsageDescription": "Fonctionnalités utilisées, durée des sessions",
+  "privacyDataUsagePurpose": "Améliorer les performances et l’expérience utilisateur",
+  "privacyDataAnonymizedFootnote": "Les données sont anonymisées et servent uniquement à améliorer votre expérience. Vous pouvez désactiver l’analytique ou effacer vos données à tout moment.",
+  "privacyGotIt": "Compris",
+  "privacyPurposeLine": "Objectif : {purpose}",
+  "privacyClearAnalyticsDialogTitle": "Effacer les données d’analytique",
+  "privacyClearAnalyticsDialogBody": "Cela supprimera toutes les données d’analytique stockées sur cet appareil. Action irréversible.",
+  "privacyClearData": "Effacer les données",
+  "privacyClearAnalyticsSuccess": "Données d’analytique effacées",
+  "privacyClearAnalyticsFailed": "Impossible d’effacer les données d’analytique",
+  "@privacyPurposeLine": {
+    "placeholders": {
+      "purpose": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyPhoneSixDigitCodeLabel": "Code à 6 chiffres",
+  "zoeaCardSubtitle": "Votre portefeuille numérique pour des paiements fluides",
+  "shopCartScreenTitle": "Panier",
+  "shopCartEmptySubtitle": "Ajoutez des articles à votre panier pour commencer",
+  "shopCartLoadFailed": "Impossible de charger le panier",
+  "shopCheckoutSignInTitle": "Connectez-vous pour payer",
+  "shopCheckoutSignInMessage": "Créez un compte ou connectez-vous pour finaliser votre achat. Votre panier sera enregistré.",
+  "shopCartItemTypeProduct": "Produit",
+  "shopCartItemTypeService": "Service",
+  "shopCartItemTypeMenuItem": "Article du menu",
+  "shopCartClearTooltip": "Vider le panier",
+  "shopCartTotalLabel": "Total",
+  "shopProceedToCheckout": "Passer à la caisse",
+  "checkoutScreenTitle": "Paiement",
+  "checkoutOrderSummary": "Récapitulatif de commande",
+  "checkoutDeliveryMethod": "Mode de livraison",
+  "checkoutDeliveryAddress": "Adresse de livraison",
+  "checkoutStreetAddressLabel": "Adresse",
+  "checkoutStreetAddressHint": "Saisissez votre adresse",
+  "checkoutStreetAddressRequired": "Veuillez saisir votre adresse de livraison",
+  "checkoutCityLabel": "Ville",
+  "checkoutCityHint": "Saisissez votre ville",
+  "checkoutCityRequired": "Veuillez saisir votre ville",
+  "checkoutContactInformation": "Coordonnées",
+  "checkoutFullNameLabel": "Nom complet",
+  "checkoutFullNameHint": "Saisissez votre nom complet",
+  "checkoutFullNameRequired": "Veuillez saisir votre nom",
+  "checkoutEmailOptionalLabel": "E-mail (facultatif)",
+  "checkoutEmailHint": "Saisissez votre e-mail",
+  "checkoutPhoneLabel": "Téléphone",
+  "checkoutPhoneHint": "Saisissez votre numéro de téléphone",
+  "checkoutPhoneRequired": "Veuillez saisir votre numéro de téléphone",
+  "checkoutSpecialInstructionsTitle": "Instructions particulières (facultatif)",
+  "checkoutSpecialInstructionsHint": "Ajoutez des instructions pour votre commande…",
+  "checkoutPlaceOrder": "Passer la commande",
+  "checkoutStorePickup": "Retrait en magasin",
+  "checkoutSubtotalLabel": "Sous-total",
+  "checkoutTaxVatLabel": "TVA (18 %)",
+  "checkoutShippingLabel": "Livraison",
+  "@checkoutQtyLine": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "checkoutQtyLine": "Qté : {quantity}",
+  "@shopServiceCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceCount": "{count, plural, =1{1 service} other{{count} services}}",
+  "shopEmptyNoServices": "Aucun service trouvé",
+  "shopErrorLoadServices": "Impossible de charger les services",
+  "shopFilterServicesSheetTitle": "Filtrer les services",
+  "shopServiceSearchHint": "Nom du service…",
+  "shopPricePerHour": "heure",
+  "shopPricePerSession": "séance",
+  "shopPricePerPerson": "personne",
+  "shopServiceUnavailable": "Indisponible",
+  "@shopServiceDurationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceDurationMinutes": "{minutes} min",
+  "shopErrorLoadMenu": "Impossible de charger le menu",
+  "shopErrorLoadProduct": "Impossible de charger le produit",
+  "shopMenuCategoryEmpty": "Aucun article dans cette catégorie",
+  "shopErrorLoadService": "Impossible de charger le service",
+  "shopViewCart": "Voir le panier",
+  "shopAddToCart": "Ajouter au panier",
+  "shopBookService": "Réserver le service",
+  "shopProductDescription": "Description",
+  "shopProductTags": "Étiquettes",
+  "shopProductVariantHeading": "Choisir une variante",
+  "shopMenuChefSpecial": "Spécialité du chef",
+  "shopMenuDietaryInformation": "Informations diététiques",
+  "shopMenuAllergensTitle": "Allergènes",
+  "shopServiceUnavailableBanner": "Ce service est momentanément indisponible",
+  "@listingShareOnZoea": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "listingShareOnZoea": "Découvrez {name} sur Zoea !",
+  "@shopServiceDurationLine": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shopServiceDurationLine": "Durée : {minutes} minutes",
+  "shopBookingFullNameRequiredLabel": "Nom complet *",
+  "shopBookingPhoneRequiredLabel": "Téléphone *",
+  "shopBookingEmailOptionalLabel": "E-mail (facultatif)",
+  "shopBookingSelectDateRequired": "Choisir une date *",
+  "shopBookingSelectTimeRequired": "Choisir une heure *",
+  "shopBookingSpecialRequestsLabel": "Demandes particulières (facultatif)",
+  "shopMenuScreenTitle": "Menu",
+  "shopMenusEmptyTitle": "Aucun menu disponible",
+  "shopMenusEmptySubtitle": "Ce restaurant n’a pas encore ajouté de menu",
+  "shopOrderPlacedSuccessTitle": "Commande passée avec succès !",
+  "shopOrderPlacedSuccessSubtitle": "Votre commande a bien été reçue et est en cours de traitement",
+  "shopOrderDetailsSection": "Détails de la commande",
+  "shopOrderNumberLabel": "Numéro de commande",
+  "shopOrderMerchantLabel": "Commerçant",
+  "shopOrderStatusLabel": "Statut",
+  "shopOrderTotalAmountLabel": "Montant total",
+  "shopOrderDateLabel": "Date de commande",
+  "shopOrderViewMyOrders": "Voir mes commandes",
+  "shopOrderDetailsLoadFailed": "Impossible de charger les détails de la commande",
+  "referralInviteHeroTitle": "Invitez des amis et gagnez des récompenses",
+  "referralInviteHeroSubtitle": "Partagez votre code de parrainage et gagnez des points quand vos amis rejoignent Zoea",
+  "referralYourCodeSectionTitle": "Votre code de parrainage",
+  "referralSignInForCodeBody": "Connectez-vous pour voir votre code personnel et suivre vos points.",
+  "referralErrorLoadCode": "Impossible de charger votre code de parrainage. Tirez pour réessayer ou reconnectez-vous.",
+  "referralShareCodeHint": "Partagez ce code avec vos amis",
+  "referralCodeCopied": "Code de parrainage copié",
+  "referralShareInviteMessage": "Rejoignez-moi sur Zoea Africa et découvrez des lieux incroyables au Rwanda !",
+  "referralHowItWorksTitle": "Comment ça marche",
+  "referralStepShareTitle": "Partagez votre code",
+  "referralStepShareBody": "Envoyez votre code à vos amis via les réseaux sociaux, l’e-mail ou SMS",
+  "referralStepFriendTitle": "Votre ami s’inscrit",
+  "referralStepFriendBody": "Votre ami crée son compte Zoea avec votre code",
+  "referralStepEarnTitle": "Gagnez des points",
+  "referralStepEarnBody": "Vous gagnez tous les deux des points à l’inscription (affichés en attente jusqu’à validation)",
+  "referralRewardsTitle": "Récompenses",
+  "referralRewardForYouTitle": "Pour vous",
+  "referralRewardForYouSubtitle": "Quand un ami rejoint",
+  "referralRewardForFriendTitle": "Pour votre ami",
+  "referralRewardForFriendSubtitle": "Bonus de bienvenue",
+  "referralRewardsLoadError": "Impossible de charger les montants des récompenses.",
+  "referralStatsTitle": "Vos parrainages",
+  "referralStatTotalReferrals": "Total parrainages",
+  "referralStatPointsEarned": "Points gagnés",
+  "referralStatPending": "En attente",
+  "@referralPointsValue": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "referralPointsValue": "{points} pts",
+  "onboardingGenderMale": "Homme",
+  "onboardingGenderFemale": "Femme",
+  "onboardingGenderOther": "Autre",
+  "onboardingGenderPreferNot": "Je préfère ne pas répondre",
+  "onboardingVisitLeisureTitle": "Loisirs",
+  "onboardingVisitLeisureSubtitle": "Explorer et profiter du Rwanda",
+  "onboardingVisitBusinessTitle": "Affaires",
+  "onboardingVisitBusinessSubtitle": "Voyages professionnels",
+  "onboardingVisitMiceTitle": "MICE",
+  "onboardingVisitMiceSubtitle": "Réunions, incentives, conférences, expositions",
+  "diningBookingLabelDate": "Date",
+  "diningBookingLabelTime": "Heure",
+  "diningBookingLabelGuests": "Convives",
+  "diningBookingLabelRestaurant": "Restaurant",
+  "diningBookingLabelLocation": "Lieu",
+  "diningBookingLabelName": "Nom",
+  "diningBookingLabelPhone": "Téléphone",
+  "diningBookingLabelEmail": "E-mail",
+  "@diningBookingDetailLine": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "diningBookingDetailLine": "{label} : ",
+  "exploreFilterBudgetHintNoLimit": "Sans limite",
+  "stayBookingSpecialRequestsHint": "Demandes ou préférences particulières…",
+  "stayCouponCodeHint": "Saisir un code promo",
+  "stayBookingScreenTitle": "Réserver votre séjour",
+  "stayBookingSelectDatesHeading": "Choisir les dates",
+  "stayBookingRoomsHeading": "Chambres",
+  "stayBookingRoomCount": "{count, plural, =1{1 chambre} other{{count} chambres}}",
+  "@stayBookingRoomCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingNightlyLine": "{price} × {roomCount, plural, =1{1 chambre} other{{roomCount} chambres}}",
+  "@stayBookingNightlyLine": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "roomCount": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingContinueToPayment": "Continuer vers le paiement",
+  "stayBookingSelectedRoomsTitle": "Chambres sélectionnées",
+  "stayBookingQtyShort": "Qté : {quantity}",
+  "@stayBookingQtyShort": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "stayBookingDemoHotelName": "Kigali Marriott Hotel",
+  "stayBookingDemoHotelAddress": "Kacyiru, Kigali",
+  "stayBookingDemoRatingReviews": "{rating} ({reviewCount, plural, =1{1 avis} other{{reviewCount} avis}})",
+  "@stayBookingDemoRatingReviews": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsMarkAllRead": "Tout marquer lu",
+  "notificationsEmptyTitle": "Aucune notification",
+  "notificationsEmptyBody": "Vous n’avez pas encore de notifications",
+  "notificationsLoadFailed": "Impossible de charger les notifications",
+  "notificationsAllMarkedRead": "Toutes les notifications sont marquées comme lues",
+  "notificationsDefaultTitle": "Notification",
+  "notificationsActionViewBooking": "Voir la réservation",
+  "notificationsActionViewEvent": "Voir l’événement",
+  "notificationsActionViewListing": "Voir l’annonce",
+  "@notificationsMarkReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsMarkReadFailed": "Impossible de marquer la notification comme lue : {error}",
+  "@notificationsMarkAllReadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsMarkAllReadFailed": "Impossible de tout marquer comme lu : {error}",
+  "notificationsTimeJustNow": "À l’instant",
+  "@notificationsTimeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeMinutesAgo": "{count, plural, =1{Il y a 1 minute} other{Il y a {count} minutes}}",
+  "@notificationsTimeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeHoursAgo": "{count, plural, =1{Il y a 1 heure} other{Il y a {count} heures}}",
+  "@notificationsTimeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
+  "notificationsTimeRecently": "Récemment",
+  "@notificationsOpeningUrl": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsOpeningUrl": "Ouverture : {url}",
+  "diningBookingConfirmationTitle": "Confirmation de réservation",
+  "diningBookingReservationConfirmedTitle": "Réservation confirmée !",
+  "diningBookingReservationConfirmedSubtitle": "Votre table a bien été réservée",
+  "@diningBookingNumberLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "diningBookingNumberLine": "Réservation n°{number}",
+  "diningBookingReservationDetailsSection": "Détails de la réservation",
+  "diningBookingNotSpecified": "Non précisé",
+  "diningBookingRestaurantInfoSection": "Informations sur le restaurant",
+  "diningBookingGuestInfoSection": "Informations sur l’invité",
+  "diningBookingSpecialRequestsSection": "Demandes particulières",
+  "diningBookingImportantInfoTitle": "Informations importantes",
+  "diningBookingImportantInfoBody": "• Merci d’arriver 5 à 10 minutes avant l’heure de réservation\n• Pour annuler ou modifier, contactez directement le restaurant\n• Un retard important peut entraîner la perte de la table\n• Un code vestimentaire peut s’appliquer—renseignez-vous auprès du restaurant",
+  "diningBookingBrowseMore": "Continuer à explorer",
+  "diningBookingViewMyBookings": "Voir mes réservations",
+  "listingScreenDefaultTitle": "Annonces",
+  "tourDetailLoadError": "Impossible de charger les détails du circuit",
+  "listingDetailLoadFailed": "Impossible de charger l’annonce",
+  "bookingConfirmationHeaderTitle": "Réservation confirmée !",
+  "bookingConfirmationHeaderSubtitle": "Votre réservation a bien été confirmée",
+  "bookingConfirmationSectionBookingInfo": "Informations sur la réservation",
+  "bookingConfirmationLabelBookingNumber": "Numéro de réservation",
+  "bookingConfirmationLabelType": "Type",
+  "bookingConfirmationSectionDetails": "Détails de la réservation",
+  "bookingConfirmationLabelPartySize": "Nombre de convives",
+  "bookingConfirmationLabelSpecialRequests": "Demandes particulières",
+  "bookingConfirmationTourDetailsPlaceholder": "Les détails de confirmation du circuit apparaîtront ici dès qu’ils seront disponibles.",
+  "bookingConfirmationSectionPriceSummary": "Récapitulatif des prix",
+  "bookingConfirmationLabelTaxesFees": "Taxes et frais",
+  "bookingConfirmationLabelDiscount": "Réduction",
+  "bookingConfirmationLoadFailed": "Impossible de charger la réservation",
+  "webviewPageLoadFailed": "Impossible de charger la page",
+  "@webviewInvalidUrlLine": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "webviewInvalidUrlLine": "URL invalide : {url}",
+  "webviewLoadTimeoutBody": "Le chargement prend trop de temps. Vérifiez votre connexion Internet.",
+  "webviewTooltipReload": "Actualiser",
+  "webviewTooltipForward": "Avancer",
+  "listingDetailReviewSignInTitle": "Connectez-vous pour rédiger un avis",
+  "listingDetailReviewSignInMessage": "Créez un compte ou connectez-vous pour partager votre expérience et aider d’autres voyageurs.",
+  "itineraryDetailLoadFailed": "Impossible de charger l’itinéraire",
+  "@myBookingsCancelConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "myBookingsCancelConfirmBody": "Voulez-vous vraiment annuler votre réservation pour « {name} » ? Cette action est irréversible.",
+  "@myBookingsBookAgainPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "myBookingsBookAgainPrompt": "Souhaitez-vous réserver à nouveau « {name} » ?",
+  "diningFlowBookTableTitle": "Réserver une table",
+  "diningFlowReservationDetailsSection": "Détails de la réservation",
+  "diningFlowSelectDatePlaceholder": "Choisir une date",
+  "diningFlowAvailableTimes": "Créneaux disponibles",
+  "diningFlowNumberOfGuests": "Nombre de convives",
+  "diningFlowGuestInformation": "Informations sur l’invité",
+  "diningFlowFullNameHint": "Jean Dupont",
+  "diningFlowPhoneHint": "+250 796 889 900",
+  "diningFlowSpecialRequestsTitle": "Demandes particulières",
+  "diningFlowSpecialRequestsHint": "Régimes alimentaires, préférences de table, etc.",
+  "diningFlowCouponCodeTitle": "Code promo",
+  "diningFlowCouponAppliedTitle": "Code appliqué !",
+  "@diningFlowCouponSavedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "diningFlowCouponSavedBody": "Vous économisez {amount}",
+  "diningBookingTimeNotSelected": "Non sélectionné",
+  "diningFlowConfirmSheetTitle": "Confirmer la réservation",
+  "diningFlowConfirmBookingCta": "Confirmer la réservation"
 }

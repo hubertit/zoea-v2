@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:country_picker/country_picker.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -44,7 +45,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
     super.dispose();
   }
 
-  void _showCountryPicker() {
+  void _showCountryPicker(AppLocalizations l10n) {
     showCountryPicker(
       context: context,
       showPhoneCode: true,
@@ -63,8 +64,8 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
           topRight: Radius.circular(20.0),
         ),
         inputDecoration: InputDecoration(
-          labelText: 'Search',
-          hintText: 'Start typing to search',
+          labelText: l10n.commonSearch,
+          hintText: l10n.countryPickerSearchHint,
           prefixIcon: Icon(Icons.search, color: context.secondaryTextColor),
           filled: true,
           fillColor: context.backgroundColor,
@@ -98,6 +99,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
   }
 
   Future<void> _handleRequestReset() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -124,7 +126,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['message'] ?? 'Reset code sent successfully'),
+            content: Text(result['message'] ?? l10n.authResetCodeSentDefault),
             backgroundColor: AppTheme.successColor,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -157,6 +159,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -171,7 +174,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Reset Password',
+          l10n.authResetPasswordAppBar,
           style: context.titleLarge,
         ),
       ),
@@ -196,7 +199,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                 
                 // Title
                 Text(
-                  'Forgot Password?',
+                  l10n.loginForgotPassword,
                   style: context.displaySmall,
                   textAlign: TextAlign.center,
                 ),
@@ -205,7 +208,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                 
                 // Description
                 Text(
-                  'Choose how you want to reset your password',
+                  l10n.authChooseResetMethod,
                   style: context.bodyLarge.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -257,7 +260,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                                 ),
                                 const SizedBox(width: AppTheme.spacing8),
                                 Text(
-                                  'Phone',
+                                  l10n.loginTabPhone,
                                   style: context.bodyMedium.copyWith(
                                     color: _isPhoneReset 
                                         ? context.primaryTextColor 
@@ -302,7 +305,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                                 ),
                                 const SizedBox(width: AppTheme.spacing8),
                                 Text(
-                                  'Email',
+                                  l10n.loginTabEmail,
                                   style: context.bodyMedium.copyWith(
                                     color: !_isPhoneReset 
                                         ? context.primaryTextColor 
@@ -331,7 +334,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                       children: [
                         // Country Code Picker
                         InkWell(
-                          onTap: _showCountryPicker,
+                          onTap: () => _showCountryPicker(l10n),
                           borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
                           child: Container(
                             height: 56, // Match TextFormField height
@@ -382,9 +385,9 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                             ],
                             onFieldSubmitted: (_) => _handleRequestReset(),
                             decoration: InputDecoration(
-                              labelText: 'Phone Number',
+                              labelText: l10n.loginPhoneNumber,
                               prefixIcon: const Icon(Icons.phone_outlined),
-                              hintText: '780 123 456',
+                              hintText: l10n.authPhoneNumberExample,
                               hintStyle: context.bodySmall.copyWith(color: context.secondaryTextColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -412,8 +415,8 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _handleRequestReset(),
                     decoration: InputDecoration(
-                      labelText: 'Email Address',
-                      hintText: 'your.email@example.com',
+                      labelText: l10n.loginEmailAddress,
+                      hintText: l10n.loginEmailHint,
                       prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppTheme.borderRadius8),
@@ -429,10 +432,10 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email address';
+                        return l10n.loginValidationEmailRequired;
                       }
                       if (!value.contains('@')) {
-                        return 'Please enter a valid email address';
+                        return l10n.loginValidationEmailInvalid;
                       }
                       return null;
                     },
@@ -467,7 +470,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                           ),
                         )
                       : Text(
-                          'Send Reset Code',
+                          l10n.authSendResetCode,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onPrimary,
@@ -483,7 +486,7 @@ class _RequestPasswordResetScreenState extends ConsumerState<RequestPasswordRese
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text('Back to Login'),
+                  child: Text(l10n.authBackToLogin),
                 ),
               ],
             ),

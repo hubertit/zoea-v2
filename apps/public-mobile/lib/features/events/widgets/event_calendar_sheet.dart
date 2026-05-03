@@ -7,6 +7,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/models/event.dart';
 import 'package:intl/intl.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EventCalendarSheet extends StatefulWidget {
   final List<Event> events;
@@ -61,8 +62,9 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
 
   @override
   Widget build(BuildContext context) {
-    // Debug: Events count available for debugging if needed
-    
+    final l10n = AppLocalizations.of(context)!;
+    final lc = Localizations.localeOf(context).toString();
+
     // Calculate content height dynamically
     final hasEvents = _selectedDay != null && _getEventsForDay(_selectedDay!).isNotEmpty;
     final contentHeight = (20.0 + // Handle (4 + 8*2 margins)
@@ -94,7 +96,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
             child: Text(
-              'Event Calendar',
+              l10n.eventsCalendarTitle,
               style: context.titleLarge.copyWith(
                 color: context.primaryTextColor,
               ),
@@ -258,7 +260,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                   // Show events for selected day
                   final dayEvents = _getEventsForDay(selectedDay);
                   if (dayEvents.isNotEmpty) {
-                    _showDayEvents(selectedDay, dayEvents);
+                    _showDayEvents(context, selectedDay, dayEvents);
                   }
                 }
               },
@@ -283,7 +285,9 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Events on ${DateFormat('MMM dd, yyyy').format(_selectedDay!)}',
+                    l10n.eventsCalendarOnDate(
+                      DateFormat('MMM dd, yyyy', lc).format(_selectedDay!),
+                    ),
                     style: context.titleSmall.copyWith(
                       color: context.primaryTextColor,
                     ),
@@ -299,7 +303,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                         return Container(
                           width: 200,
                           margin: const EdgeInsets.only(right: 6),
-                          child: _buildEventPreview(event),
+                          child: _buildEventPreview(event, lc),
                         );
                       },
                     ),
@@ -312,7 +316,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
       );
   }
 
-  Widget _buildEventPreview(Event event) {
+  Widget _buildEventPreview(Event event, String locale) {
     return InkWell(
       onTap: () {
         Navigator.pop(context); // Close the calendar sheet
@@ -405,7 +409,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                         ),
                         const SizedBox(width: 2),
                         Text(
-                          DateFormat('HH:mm').format(event.event.startDate),
+                          DateFormat('HH:mm', locale).format(event.event.startDate),
                           style: context.bodySmall.copyWith(
                             color: context.secondaryTextColor,
                             fontSize: 7,
@@ -423,15 +427,18 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
     );
   }
 
-  void _showDayEvents(DateTime day, List<Event> events) {
+  void _showDayEvents(BuildContext sheetContext, DateTime day, List<Event> events) {
+    final l10n = AppLocalizations.of(sheetContext)!;
+    final lc = Localizations.localeOf(sheetContext).toString();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
+      builder: (modalContext) => Container(
+        height: MediaQuery.of(modalContext).size.height * 0.6,
         decoration: BoxDecoration(
-          color: context.backgroundColor,
+          color: modalContext.backgroundColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -441,7 +448,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: context.dividerColor,
+                color: modalContext.dividerColor,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -451,14 +458,16 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Events on ${DateFormat('MMM dd, yyyy').format(day)}',
-                    style: context.titleLarge.copyWith(
-                      color: context.primaryTextColor,
+                    l10n.eventsCalendarOnDate(
+                      DateFormat('MMM dd, yyyy', lc).format(day),
+                    ),
+                    style: modalContext.titleLarge.copyWith(
+                      color: modalContext.primaryTextColor,
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Close'),
+                    onPressed: () => Navigator.pop(modalContext),
+                    child: Text(l10n.commonClose),
                   ),
                 ],
               ),
@@ -469,7 +478,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   final event = events[index];
-                  return _buildEventCard(event);
+                  return _buildEventCard(event, l10n, lc);
                 },
               ),
             ),
@@ -479,7 +488,7 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
     );
   }
 
-  Widget _buildEventCard(Event event) {
+  Widget _buildEventCard(Event event, AppLocalizations l10n, String locale) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
@@ -507,14 +516,14 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                 child: Column(
                   children: [
                     Text(
-                      DateFormat('HH:mm').format(event.event.startDate),
+                      DateFormat('HH:mm', locale).format(event.event.startDate),
                       style: context.bodySmall.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.primaryColorTheme,
                       ),
                     ),
                     Text(
-                      DateFormat('HH:mm').format(event.event.endDate),
+                      DateFormat('HH:mm', locale).format(event.event.endDate),
                       style: context.bodySmall.copyWith(
                         color: context.primaryColorTheme,
                       ),
@@ -560,7 +569,10 @@ class _EventCalendarSheetState extends State<EventCalendarSheet> {
                     if (event.event.tickets.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'From ${_formatPrice(event.event.tickets.first.price)} ${event.event.tickets.first.currency}',
+                        l10n.eventsTicketPriceFrom(
+                          _formatPrice(event.event.tickets.first.price),
+                          event.event.tickets.first.currency,
+                        ),
                         style: context.bodySmall.copyWith(
                           color: context.primaryColorTheme,
                           fontWeight: FontWeight.w600,

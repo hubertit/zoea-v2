@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 
@@ -43,6 +43,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -57,7 +58,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
         ),
         title: Text(
-          'Booking Confirmation',
+          l10n.diningBookingConfirmationTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -70,38 +71,38 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Success Header
-            _buildSuccessHeader(),
+            _buildSuccessHeader(l10n),
             const SizedBox(height: 24),
             
             // Booking Details
-            _buildBookingDetails(),
+            _buildBookingDetails(l10n),
             const SizedBox(height: 24),
             
             // Restaurant Info
-            _buildRestaurantInfo(),
+            _buildRestaurantInfo(l10n),
             const SizedBox(height: 24),
             
             // Guest Information
-            _buildGuestInfo(),
+            _buildGuestInfo(l10n),
             const SizedBox(height: 24),
             
             // Special Requests
             if (widget.specialRequests.isNotEmpty) ...[
-              _buildSpecialRequests(),
+              _buildSpecialRequests(l10n),
               const SizedBox(height: 24),
             ],
             
             // Important Notes
-            _buildImportantNotes(),
+            _buildImportantNotes(l10n),
             const SizedBox(height: 40),
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(),
+      bottomNavigationBar: _buildBottomBar(l10n),
     );
   }
 
-  Widget _buildSuccessHeader() {
+  Widget _buildSuccessHeader(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -125,7 +126,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
           const SizedBox(height: 16),
           Text(
-            'Reservation Confirmed!',
+            l10n.diningBookingReservationConfirmedTitle,
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.successColor,
@@ -133,13 +134,13 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
           const SizedBox(height: 8),
           Text(
-            'Your table has been reserved successfully',
+            l10n.diningBookingReservationConfirmedSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
             textAlign: TextAlign.center,
           ),
-          if (widget.bookingNumber != null) ...[
+          if (widget.bookingNumber case final n?) ...[
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -149,7 +150,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
                 border: Border.all(color: context.successColor.withOpacity(0.3)),
               ),
               child: Text(
-                'Booking #${widget.bookingNumber}',
+                l10n.diningBookingNumberLine(n),
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.successColor,
@@ -162,13 +163,13 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
     );
   }
 
-  Widget _buildBookingDetails() {
+  Widget _buildBookingDetails(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.grey200!),
+        border: Border.all(color: context.grey200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -181,7 +182,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Reservation Details',
+            l10n.diningBookingReservationDetailsSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -189,36 +190,39 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
           const SizedBox(height: 16),
           _buildDetailRow(
+            l10n,
             icon: Icons.calendar_today,
-            label: 'Date',
+            label: l10n.diningBookingLabelDate,
             value: widget.date != null 
                 ? '${widget.date!.day}/${widget.date!.month}/${widget.date!.year}'
-                : 'Not specified',
+                : l10n.diningBookingNotSpecified,
           ),
           const SizedBox(height: 12),
           _buildDetailRow(
+            l10n,
             icon: Icons.access_time,
-            label: 'Time',
+            label: l10n.diningBookingLabelTime,
             value: widget.time,
           ),
           const SizedBox(height: 12),
           _buildDetailRow(
+            l10n,
             icon: Icons.people,
-            label: 'Guests',
-            value: '${widget.guests} ${widget.guests == 1 ? 'person' : 'people'}',
+            label: l10n.diningBookingLabelGuests,
+            value: l10n.stayGuestCount(widget.guests),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRestaurantInfo() {
+  Widget _buildRestaurantInfo(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.grey200!),
+        border: Border.all(color: context.grey200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -231,7 +235,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Restaurant Information',
+            l10n.diningBookingRestaurantInfoSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -239,14 +243,16 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
           const SizedBox(height: 16),
           _buildDetailRow(
+            l10n,
             icon: Icons.restaurant,
-            label: 'Restaurant',
+            label: l10n.diningBookingLabelRestaurant,
             value: widget.placeName,
           ),
           const SizedBox(height: 12),
           _buildDetailRow(
+            l10n,
             icon: Icons.location_on,
-            label: 'Location',
+            label: l10n.diningBookingLabelLocation,
             value: widget.placeLocation,
           ),
         ],
@@ -254,13 +260,13 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
     );
   }
 
-  Widget _buildGuestInfo() {
+  Widget _buildGuestInfo(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.grey200!),
+        border: Border.all(color: context.grey200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -273,7 +279,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Guest Information',
+            l10n.diningBookingGuestInfoSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -281,20 +287,23 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
           const SizedBox(height: 16),
           _buildDetailRow(
+            l10n,
             icon: Icons.person,
-            label: 'Name',
+            label: l10n.diningBookingLabelName,
             value: widget.fullName,
           ),
           const SizedBox(height: 12),
           _buildDetailRow(
+            l10n,
             icon: Icons.phone,
-            label: 'Phone',
+            label: l10n.diningBookingLabelPhone,
             value: widget.phone,
           ),
           const SizedBox(height: 12),
           _buildDetailRow(
+            l10n,
             icon: Icons.email,
-            label: 'Email',
+            label: l10n.diningBookingLabelEmail,
             value: widget.email,
           ),
         ],
@@ -302,13 +311,13 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
     );
   }
 
-  Widget _buildSpecialRequests() {
+  Widget _buildSpecialRequests(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.grey200!),
+        border: Border.all(color: context.grey200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -321,7 +330,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Special Requests',
+            l10n.diningBookingSpecialRequestsSection,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -339,7 +348,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
     );
   }
 
-  Widget _buildImportantNotes() {
+  Widget _buildImportantNotes(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -359,7 +368,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
               ),
               const SizedBox(width: 8),
               Text(
-                'Important Information',
+                l10n.diningBookingImportantInfoTitle,
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Colors.blue[700],
@@ -369,10 +378,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
           ),
           const SizedBox(height: 12),
           Text(
-            '• Please arrive 5-10 minutes before your reservation time\n'
-            '• If you need to cancel or modify your reservation, please call the restaurant directly\n'
-            '• Late arrivals may result in table forfeiture\n'
-            '• Dress code may apply - please check with the restaurant',
+            l10n.diningBookingImportantInfoBody,
             style: context.bodySmall.copyWith(
               color: Colors.blue[700],
             ),
@@ -382,7 +388,8 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
     );
   }
 
-  Widget _buildDetailRow({
+  Widget _buildDetailRow(
+    AppLocalizations l10n, {
     required IconData icon,
     required String label,
     required String value,
@@ -396,7 +403,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
         ),
         const SizedBox(width: 12),
         Text(
-          '$label: ',
+          l10n.diningBookingDetailLine(label),
           style: context.bodyMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.secondaryTextColor,
@@ -415,13 +422,13 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.backgroundColor,
         border: Border(
-          top: BorderSide(color: context.grey200!),
+          top: BorderSide(color: context.grey200),
         ),
         boxShadow: [
           BoxShadow(
@@ -443,7 +450,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Browse More',
+                  l10n.diningBookingBrowseMore,
                   style: context.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -469,7 +476,7 @@ class _DiningBookingConfirmationScreenState extends ConsumerState<DiningBookingC
                         ),
                       )
                     : Text(
-                        'View My Bookings',
+                        l10n.diningBookingViewMyBookings,
                         style: context.bodyMedium.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,

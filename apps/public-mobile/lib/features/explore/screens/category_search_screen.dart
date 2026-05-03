@@ -7,6 +7,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/providers/listings_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class CategorySearchScreen extends ConsumerStatefulWidget {
   final String category;
@@ -46,6 +47,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -60,7 +62,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
           ),
         ),
         title: Text(
-          'Search ${_getCategoryTitle()}',
+          l10n.categorySearchAppBar(_localizedCategoryName(l10n)),
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -87,7 +89,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
               controller: _searchController,
               autofocus: true,
               decoration: InputDecoration(
-                hintText: _getSearchHint(),
+                hintText: _searchHint(l10n),
                 hintStyle: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -141,29 +143,29 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     );
   }
 
-  String _getCategoryTitle() {
+  String _localizedCategoryName(AppLocalizations l10n) {
     switch (widget.category) {
       case 'dining':
-        return 'Dining';
+        return l10n.categoryTitleDining;
       case 'nightlife':
-        return 'Nightlife';
+        return l10n.categoryTitleNightlife;
       case 'experiences':
-        return 'Experiences';
+        return l10n.categoryTitleExperiences;
       default:
-        return 'Places';
+        return l10n.categoryTitlePlaces;
     }
   }
 
-  String _getSearchHint() {
+  String _searchHint(AppLocalizations l10n) {
     switch (widget.category) {
       case 'dining':
-        return 'Search restaurants, cafes...';
+        return l10n.categorySearchHintDining;
       case 'nightlife':
-        return 'Search bars, clubs, lounges...';
+        return l10n.categorySearchHintNightlife;
       case 'experiences':
-        return 'Search tours, adventures, experiences...';
+        return l10n.categorySearchHintExperiences;
       default:
-        return 'Search places...';
+        return l10n.categorySearchHintDefault;
     }
   }
 
@@ -173,9 +175,10 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     
     return categoryAsync.when(
       data: (categoryData) {
+        final l10n = AppLocalizations.of(context)!;
         final children = categoryData['children'] as List?;
         List<Map<String, String?>> subCategories = [
-          {'label': 'All', 'value': 'All', 'id': null}
+          {'label': l10n.stayTabAll, 'value': 'All', 'id': null}
         ];
         
         // Add subcategories from API if available
@@ -197,24 +200,24 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
           switch (widget.category) {
             case 'dining':
               subCategories.addAll([
-                {'label': 'Restaurants', 'value': 'Restaurants', 'id': null},
-                {'label': 'Cafes', 'value': 'Cafes', 'id': null},
-                {'label': 'Fast Food', 'value': 'Fast Food', 'id': null},
+                {'label': l10n.catSubDiningRestaurants, 'value': 'Restaurants', 'id': null},
+                {'label': l10n.catSubDiningCafes, 'value': 'Cafes', 'id': null},
+                {'label': l10n.catSubDiningFastFood, 'value': 'Fast Food', 'id': null},
               ]);
               break;
             case 'nightlife':
               subCategories.addAll([
-                {'label': 'Bars', 'value': 'Bar', 'id': null},
-                {'label': 'Clubs', 'value': 'Club', 'id': null},
-                {'label': 'Lounges', 'value': 'Lounge', 'id': null},
+                {'label': l10n.catSubNightBars, 'value': 'Bar', 'id': null},
+                {'label': l10n.catSubNightClubs, 'value': 'Club', 'id': null},
+                {'label': l10n.catSubNightLounges, 'value': 'Lounge', 'id': null},
               ]);
               break;
             case 'experiences':
               subCategories.addAll([
-                {'label': 'Tours', 'value': 'Tours', 'id': null},
-                {'label': 'Adventures', 'value': 'Adventures', 'id': null},
-                {'label': 'Cultural', 'value': 'Cultural', 'id': null},
-                {'label': 'Operators', 'value': 'Operators', 'id': null},
+                {'label': l10n.catSubExpTours, 'value': 'Tours', 'id': null},
+                {'label': l10n.catSubExpAdventures, 'value': 'Adventures', 'id': null},
+                {'label': l10n.catSubExpCultural, 'value': 'Cultural', 'id': null},
+                {'label': l10n.catSubExpOperators, 'value': 'Operators', 'id': null},
               ]);
               break;
           }
@@ -267,12 +270,13 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     
     return categoryAsync.when(
       data: (categoryData) {
+        final l10n = AppLocalizations.of(context)!;
         final categoryId = categoryData['id'] as String?;
         
         if (categoryId == null) {
           return Center(
             child: Text(
-              'Category not found',
+              l10n.categoryNotFound,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -310,7 +314,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
             }
             
             if (listings.isEmpty) {
-              return _buildEmptyState();
+              return _buildEmptyState(l10n);
             }
             
             return RefreshIndicator(
@@ -337,7 +341,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                   
                   // Special handling for tour operators
                   if (widget.category == 'experiences' && _selectedSubCategory == 'Operators') {
-                    return _buildTourOperatorCard(listing);
+                    return _buildTourOperatorCard(context, listing);
                   }
                   
                   return _buildListingCard(listing);
@@ -348,88 +352,104 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
           loading: () => Center(
             child: CircularProgressIndicator(color: context.primaryColorTheme),
           ),
-          error: (error, stack) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: context.secondaryTextColor,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Failed to load listings',
-                  style: context.headlineSmall.copyWith(
+          error: (error, stack) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
                     color: context.secondaryTextColor,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  error.toString(),
-                  style: context.bodyMedium.copyWith(
-                    color: context.secondaryTextColor,
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.categoryErrorListings,
+                    style: context.headlineSmall.copyWith(
+                      color: context.secondaryTextColor,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.invalidate(categoryBySlugProvider(widget.category));
-                  },
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
+                  const SizedBox(height: 8),
+                  Text(
+                    error.toString(),
+                    style: context.bodyMedium.copyWith(
+                      color: context.secondaryTextColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.invalidate(
+                        listingsProvider(
+                          ListingsParams(
+                            page: 1,
+                            limit: 100,
+                            category: categoryIdForListings,
+                            search: _searchQuery.isEmpty ? null : _searchQuery,
+                            status: 'active',
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(l10n.commonRetry),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
       loading: () => Center(
         child: CircularProgressIndicator(color: context.primaryColorTheme),
       ),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: context.secondaryTextColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Failed to load category',
-              style: context.headlineSmall.copyWith(
+      error: (error, stack) {
+        final l10n = AppLocalizations.of(context)!;
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
                 color: context.secondaryTextColor,
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: context.bodyMedium.copyWith(
-                color: context.secondaryTextColor,
+              const SizedBox(height: 16),
+              Text(
+                l10n.categoryErrorCategory,
+                style: context.headlineSmall.copyWith(
+                  color: context.secondaryTextColor,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(categoryBySlugProvider(widget.category));
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString(),
+                style: context.bodyMedium.copyWith(
+                  color: context.secondaryTextColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(categoryBySlugProvider(widget.category));
+                },
+                child: Text(l10n.commonRetry),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
   
   Widget _buildListingCard(Map<String, dynamic> listing) {
+    final l10n = AppLocalizations.of(context)!;
     // Extract listing data
-    final name = listing['name'] as String? ?? 'Unknown';
+    final name = listing['name'] as String? ?? l10n.exploreListingUnknown;
     final location = listing['location'] as Map<String, dynamic>?;
     final city = location?['city'] as Map<String, dynamic>?;
-    final locationName = city?['name'] as String? ?? 'Unknown Location';
+    final locationName = city?['name'] as String? ?? l10n.exploreListingUnknown;
     final images = listing['images'] as List?;
     final imageUrl = images != null && images.isNotEmpty 
         ? images[0] as String? 
@@ -460,12 +480,13 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     );
   }
 
-  Widget _buildTourOperatorCard(Map<String, dynamic> operator) {
+  Widget _buildTourOperatorCard(BuildContext context, Map<String, dynamic> operator) {
+    final l10n = AppLocalizations.of(context)!;
     // Extract operator data
-    final name = operator['name'] as String? ?? 'Unknown';
+    final name = operator['name'] as String? ?? l10n.exploreListingUnknown;
     final location = operator['location'] as Map<String, dynamic>?;
     final city = location?['city'] as Map<String, dynamic>?;
-    final locationName = city?['name'] as String? ?? 'Unknown Location';
+    final locationName = city?['name'] as String? ?? l10n.exploreListingUnknown;
     final images = operator['images'] as List?;
     final imageUrl = images != null && images.isNotEmpty 
         ? images[0] as String? 
@@ -536,7 +557,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Tour Operator',
+                          l10n.catTourOperatorBadge,
                           style: context.bodySmall.copyWith(
                             color: context.primaryColorTheme,
                             fontWeight: FontWeight.w500,
@@ -581,7 +602,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '($reviews reviews)',
+                        l10n.listingReviewsCountParen(reviews),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -608,7 +629,8 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    final catName = _localizedCategoryName(l10n);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -621,8 +643,8 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
           const SizedBox(height: 16),
           Text(
             _searchQuery.isEmpty 
-                ? 'Search for ${_getCategoryTitle().toLowerCase()}'
-                : 'No results found',
+                ? l10n.categoryEmptyPrompt(catName)
+                : l10n.categoryEmptyNoResults,
             style: context.headlineSmall.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -630,8 +652,8 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
           const SizedBox(height: 8),
           Text(
             _searchQuery.isEmpty
-                ? _getSearchSuggestions()
-                : 'Try different keywords or categories',
+                ? _searchSuggestions(l10n)
+                : l10n.categoryEmptyTryDifferentKeywords,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -642,20 +664,22 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     );
   }
 
-  String _getSearchSuggestions() {
+  String _searchSuggestions(AppLocalizations l10n) {
     switch (widget.category) {
       case 'dining':
-        return 'Try searching for "pizza", "coffee", or "sushi"';
+        return l10n.categorySearchSuggestionsDining;
       case 'nightlife':
-        return 'Try searching for "bar", "club", or "lounge"';
+        return l10n.categorySearchSuggestionsNightlife;
       case 'experiences':
-        return 'Try searching for "gorilla", "hiking", or "cultural"';
+        return l10n.categorySearchSuggestionsExperiences;
       default:
-        return 'Try searching for specific places or locations';
+        return l10n.categorySearchSuggestionsDefault;
     }
   }
 
   void _showFilterBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
+    final catName = _localizedCategoryName(l10n);
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -673,7 +697,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Filter ${_getCategoryTitle()}',
+                l10n.categoryFilterSheetTitle(catName),
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -683,7 +707,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
               
               // Price Range Filter
               Text(
-                'Price Range',
+                l10n.categorySectionPriceRange,
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -693,14 +717,14 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: _buildPriceRangeFilters(),
+                children: _buildPriceRangeFilters(l10n),
               ),
               
               const SizedBox(height: 20),
               
               // Rating Filter
               Text(
-                'Minimum Rating',
+                l10n.stayMinimumRating,
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -711,9 +735,9 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _buildFilterChip('4.0+ Stars', false),
-                  _buildFilterChip('4.5+ Stars', false),
-                  _buildFilterChip('5.0 Stars', false),
+                  _buildFilterChip(l10n.categoryRatingStars40, false),
+                  _buildFilterChip(l10n.categoryRatingStars45, false),
+                  _buildFilterChip(l10n.categoryRatingStars50, false),
                 ],
               ),
               
@@ -721,7 +745,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
               
               // Features Filter
               Text(
-                'Features',
+                l10n.categorySectionFeatures,
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -731,7 +755,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: _buildFeatureFilters(),
+                children: _buildFeatureFilters(l10n),
               ),
               
               const SizedBox(height: 30),
@@ -747,7 +771,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                         side: BorderSide(color: context.primaryColorTheme),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Clear All'),
+                      child: Text(l10n.commonClearAll),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -759,7 +783,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Apply Filters'),
+                      child: Text(l10n.stayApplyFilters),
                     ),
                   ),
                 ],
@@ -771,77 +795,79 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
     );
   }
 
-  List<Widget> _buildPriceRangeFilters() {
+  List<Widget> _buildPriceRangeFilters(AppLocalizations l10n) {
     switch (widget.category) {
       case 'dining':
         return [
-          _buildFilterChip('Under RWF 5,000', false),
-          _buildFilterChip('RWF 5,000 - 15,000', false),
-          _buildFilterChip('RWF 15,000 - 30,000', false),
-          _buildFilterChip('Above RWF 30,000', false),
+          _buildFilterChip(l10n.catPriceDiningU5k, false),
+          _buildFilterChip(l10n.catPriceDining5to15k, false),
+          _buildFilterChip(l10n.catPriceDining15to30k, false),
+          _buildFilterChip(l10n.catPriceDiningOver30k, false),
         ];
       case 'nightlife':
         return [
-          _buildFilterChip('Under RWF 10,000', false),
-          _buildFilterChip('RWF 10,000 - 20,000', false),
-          _buildFilterChip('RWF 20,000 - 30,000', false),
-          _buildFilterChip('Above RWF 30,000', false),
+          _buildFilterChip(l10n.catPriceNightU10k, false),
+          _buildFilterChip(l10n.catPriceNight10to20k, false),
+          _buildFilterChip(l10n.catPriceNight20to30k, false),
+          _buildFilterChip(l10n.catPriceNightOver30k, false),
         ];
       case 'experiences':
         return [
-          _buildFilterChip('Under RWF 50,000', false),
-          _buildFilterChip('RWF 50,000 - 100,000', false),
-          _buildFilterChip('RWF 100,000 - 200,000', false),
-          _buildFilterChip('Above RWF 200,000', false),
+          _buildFilterChip(l10n.catPriceExpU50k, false),
+          _buildFilterChip(l10n.catPriceExp50to100k, false),
+          _buildFilterChip(l10n.catPriceExp100to200k, false),
+          _buildFilterChip(l10n.catPriceExpOver200k, false),
         ];
       default:
         return [
-          _buildFilterChip('Under RWF 10,000', false),
-          _buildFilterChip('RWF 10,000 - 30,000', false),
-          _buildFilterChip('Above RWF 30,000', false),
+          _buildFilterChip(l10n.catPriceDefU10k, false),
+          _buildFilterChip(l10n.catPriceDef10to30k, false),
+          _buildFilterChip(l10n.catPriceDefOver30k, false),
         ];
     }
   }
 
-  List<Widget> _buildFeatureFilters() {
+  List<Widget> _buildFeatureFilters(AppLocalizations l10n) {
     switch (widget.category) {
       case 'dining':
         return [
-          _buildFilterChip('WiFi', false),
-          _buildFilterChip('Parking', false),
-          _buildFilterChip('Outdoor Seating', false),
-          _buildFilterChip('Delivery', false),
-          _buildFilterChip('Takeaway', false),
-          _buildFilterChip('Vegetarian Options', false),
+          _buildFilterChip(l10n.catFeatDiningWifi, false),
+          _buildFilterChip(l10n.catFeatDiningParking, false),
+          _buildFilterChip(l10n.catFeatDiningOutdoorSeating, false),
+          _buildFilterChip(l10n.catFeatDiningDelivery, false),
+          _buildFilterChip(l10n.catFeatDiningTakeaway, false),
+          _buildFilterChip(l10n.catFeatDiningVegetarian, false),
         ];
       case 'nightlife':
         return [
-          _buildFilterChip('Live Music', false),
-          _buildFilterChip('Dance Floor', false),
-          _buildFilterChip('Outdoor Seating', false),
-          _buildFilterChip('VIP Section', false),
-          _buildFilterChip('Parking', false),
-          _buildFilterChip('WiFi', false),
+          _buildFilterChip(l10n.catFeatNightLiveMusic, false),
+          _buildFilterChip(l10n.catFeatNightDanceFloor, false),
+          _buildFilterChip(l10n.catFeatNightOutdoorSeating, false),
+          _buildFilterChip(l10n.catFeatNightVip, false),
+          _buildFilterChip(l10n.catFeatNightParking, false),
+          _buildFilterChip(l10n.catFeatNightWifi, false),
         ];
       case 'experiences':
         return [
-          _buildFilterChip('Guided Tours', false),
-          _buildFilterChip('Transport Included', false),
-          _buildFilterChip('Meals Included', false),
-          _buildFilterChip('Equipment Provided', false),
-          _buildFilterChip('Group Tours', false),
-          _buildFilterChip('Private Tours', false),
+          _buildFilterChip(l10n.catFeatExpGuidedTours, false),
+          _buildFilterChip(l10n.catFeatExpTransport, false),
+          _buildFilterChip(l10n.catFeatExpMeals, false),
+          _buildFilterChip(l10n.catFeatExpEquipment, false),
+          _buildFilterChip(l10n.catFeatExpGroup, false),
+          _buildFilterChip(l10n.catFeatExpPrivate, false),
         ];
       default:
         return [
-          _buildFilterChip('WiFi', false),
-          _buildFilterChip('Parking', false),
-          _buildFilterChip('Accessible', false),
+          _buildFilterChip(l10n.catFeatDefWifi, false),
+          _buildFilterChip(l10n.catFeatDefParking, false),
+          _buildFilterChip(l10n.catFeatDefAccessible, false),
         ];
     }
   }
 
   void _showSortBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
+    final catName = _localizedCategoryName(l10n);
     showModalBottomSheet(
       context: context,
       backgroundColor: context.backgroundColor,
@@ -859,7 +885,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sort ${_getCategoryTitle()}',
+                l10n.categorySortSheetTitle(catName),
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -867,13 +893,13 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
               const SizedBox(height: 20),
               
               // Sort Options
-              _buildSortOption('Distance', Icons.location_on, true),
-              _buildSortOption('Rating', Icons.star, false),
-              _buildSortOption('Price: Low to High', Icons.arrow_upward, false),
-              _buildSortOption('Price: High to Low', Icons.arrow_downward, false),
-              _buildSortOption('Most Popular', Icons.trending_up, false),
-              _buildSortOption('Newest', Icons.schedule, false),
-              _buildSortOption('Name A-Z', Icons.sort_by_alpha, false),
+              _buildSortOption(l10n.staySortDistance, Icons.location_on, true),
+              _buildSortOption(l10n.staySortRatingHighLow, Icons.star, false),
+              _buildSortOption(l10n.staySortPriceLowHigh, Icons.arrow_upward, false),
+              _buildSortOption(l10n.staySortPriceHighLow, Icons.arrow_downward, false),
+              _buildSortOption(l10n.staySortPopularity, Icons.trending_up, false),
+              _buildSortOption(l10n.shopSortNewest, Icons.schedule, false),
+              _buildSortOption(l10n.shopSortNameAz, Icons.sort_by_alpha, false),
               
               const SizedBox(height: 20),
               
@@ -888,7 +914,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                         side: BorderSide(color: context.primaryColorTheme),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text(l10n.commonCancel),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -900,7 +926,7 @@ class _CategorySearchScreenState extends ConsumerState<CategorySearchScreen> {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Apply'),
+                      child: Text(l10n.commonApply),
                     ),
                   ),
                 ],

@@ -10,6 +10,7 @@ import '../../../core/providers/assistant_provider.dart';
 import '../../../core/providers/country_provider.dart';
 import '../../../core/providers/auth_provider.dart' show isLoggedInProvider;
 import '../../../core/widgets/auth_prompt_dialog.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AskZoeaScreen extends ConsumerStatefulWidget {
   const AskZoeaScreen({super.key});
@@ -24,11 +25,29 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
   final List<Map<String, dynamic>> _messages = [];
   String? _currentConversationId;
   bool _isLoading = false;
-  List<String> _suggestions = [
-    'Italian dinner in Kigali',
-    'Gorilla or safari tours',
-    'Pharmacy or ATM nearby',
-  ];
+  List<String>? _serverSuggestions;
+  bool _useNewChatDefaultChips = false;
+
+  List<String> _defaultSuggestions(AppLocalizations l10n) => [
+        l10n.assistantSuggestion1,
+        l10n.assistantSuggestion2,
+        l10n.assistantSuggestion3,
+      ];
+
+  List<String> _newChatSuggestions(AppLocalizations l10n) => [
+        l10n.assistantSuggestion4,
+        l10n.assistantSuggestion5,
+        l10n.assistantSuggestion6,
+      ];
+
+  List<String> _chipsToShow(AppLocalizations l10n) {
+    if (_serverSuggestions != null && _serverSuggestions!.isNotEmpty) {
+      return _serverSuggestions!;
+    }
+    return _useNewChatDefaultChips
+        ? _newChatSuggestions(l10n)
+        : _defaultSuggestions(l10n);
+  }
 
   @override
   void dispose() {
@@ -108,7 +127,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
           });
           
           if (suggestions != null && suggestions.isNotEmpty) {
-            _suggestions = suggestions.cast<String>();
+            _serverSuggestions = suggestions.cast<String>();
           }
         });
 
@@ -117,9 +136,10 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
     } catch (e) {
       // Show error
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to send message: ${e.toString()}'),
+            content: Text(l10n.assistantErrorSend(e.toString())),
             backgroundColor: context.errorColor,
           ),
         );
@@ -135,16 +155,16 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
     setState(() {
       _currentConversationId = null;
       _messages.clear();
-      _suggestions = [
-        'Show me popular places',
-        'Find restaurants in Kigali',
-        'What tours are available?',
-      ];
+      _serverSuggestions = null;
+      _useNewChatDefaultChips = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final chips = _chipsToShow(l10n);
+
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -173,14 +193,14 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ask Zoea',
+                  l10n.shellTabAskZoea,
                   style: context.titleMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
                   ),
                 ),
                 Text(
-                  'Your Rwanda guide',
+                  l10n.assistantSubtitle,
                   style: context.bodySmall.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -194,14 +214,14 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _startNewConversation,
-              tooltip: 'New conversation',
+              tooltip: l10n.assistantTooltipNewChat,
             ),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
               _handleHistoryTap();
             },
-            tooltip: 'History',
+            tooltip: l10n.assistantTooltipHistory,
           ),
         ],
       ),
@@ -210,7 +230,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
           // Messages List
           Expanded(
             child: _messages.isEmpty
-                ? _buildEmptyState()
+                ? _buildEmptyState(l10n)
                 : ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.all(12),
@@ -225,13 +245,13 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
           ),
 
           // Suggestions
-          if (_suggestions.isNotEmpty && !_isLoading)
+          if (chips.isNotEmpty && !_isLoading)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: _suggestions.map((suggestion) {
+                  children: chips.map((suggestion) {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ActionChip(
@@ -269,7 +289,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                     child: TextField(
                       controller: _messageController,
                       decoration: InputDecoration(
-                        hintText: 'Ask me anything about Rwanda...',
+                        hintText: l10n.assistantInputHint,
                         hintStyle: context.bodyMedium.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -309,7 +329,8 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    final chips = _chipsToShow(l10n);
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -337,7 +358,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Hi! I\'m Zoea 👋',
+                  l10n.assistantEmptyGreeting,
                   style: context.headlineSmall.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.primaryTextColor,
@@ -345,7 +366,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Your friendly guide to Rwanda. Ask me about places to visit, restaurants, tours, or anything else!',
+                  l10n.assistantEmptyBody,
                   textAlign: TextAlign.center,
                   style: context.bodyLarge.copyWith(
                     color: context.secondaryTextColor,
@@ -354,14 +375,14 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Try asking:',
+                  l10n.assistantEmptyTryAsking,
                   style: context.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 12),
-                ..._suggestions.map((suggestion) => Padding(
+                ...chips.map((suggestion) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: OutlinedButton(
                     onPressed: () => _sendMessage(suggestion),
@@ -760,10 +781,11 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
     final isLoggedIn = ref.read(isLoggedInProvider);
     
     if (!isLoggedIn) {
+      final l10n = AppLocalizations.of(context)!;
       AuthPromptDialog.show(
         context: context,
-        title: 'Sign In to View History',
-        message: 'Create an account or sign in to view your conversation history with Zoea.',
+        title: l10n.assistantHistorySignInTitle,
+        message: l10n.assistantHistorySignInMessage,
         icon: Icons.history,
       );
       return;
@@ -783,7 +805,8 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
         return Consumer(
           builder: (context, ref, child) {
             final conversationsAsync = ref.watch(conversationsProvider);
@@ -798,7 +821,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Recent Conversations',
+                    l10n.assistantHistoryTitle,
                     style: context.titleLarge.copyWith(
                       fontWeight: FontWeight.bold,
                       color: context.primaryTextColor,
@@ -813,7 +836,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                             padding: const EdgeInsets.all(32),
                             child: Center(
                               child: Text(
-                                'No conversations yet',
+                                l10n.assistantHistoryEmpty,
                                 style: context.bodyMedium.copyWith(
                                   color: context.secondaryTextColor,
                                 ),
@@ -842,7 +865,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                                 ),
                               ),
                               subtitle: Text(
-                                _formatDate(conv['lastMessageAt'] as String),
+                                _formatDate(conv['lastMessageAt'] as String, l10n),
                                 style: context.bodySmall.copyWith(
                                   color: context.secondaryTextColor,
                                 ),
@@ -878,7 +901,7 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'Failed to load conversations',
+                                l10n.assistantHistoryLoadFailed,
                                 style: context.bodyMedium.copyWith(
                                   color: context.errorColor,
                                 ),
@@ -931,9 +954,10 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
       _scrollToBottom();
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load conversation: ${e.toString()}'),
+            content: Text(l10n.assistantErrorLoadConversation(e.toString())),
             backgroundColor: context.errorColor,
           ),
         );
@@ -945,17 +969,17 @@ class _AskZoeaScreenState extends ConsumerState<AskZoeaScreen> {
     }
   }
 
-  String _formatDate(String dateStr) {
+  String _formatDate(String dateStr, AppLocalizations l10n) {
     final date = DateTime.parse(dateStr);
     final now = DateTime.now();
     final diff = now.difference(date);
 
     if (diff.inDays == 0) {
-      return 'Today';
+      return l10n.assistantRelativeToday;
     } else if (diff.inDays == 1) {
-      return 'Yesterday';
+      return l10n.assistantRelativeYesterday;
     } else if (diff.inDays < 7) {
-      return '${diff.inDays} days ago';
+      return l10n.assistantRelativeDaysAgo(diff.inDays);
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

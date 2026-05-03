@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/notifications_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
@@ -19,6 +19,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final notificationsAsync = ref.watch(
       notificationsProvider(
         const NotificationsParams(
@@ -42,7 +43,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Notifications',
+          l10n.profileNotificationsTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -60,7 +61,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                     ),
                   )
                 : Text(
-                    'Mark all read',
+                    l10n.notificationsMarkAllRead,
                     style: context.bodySmall.copyWith(
                       color: context.primaryColorTheme,
                       fontWeight: FontWeight.w500,
@@ -108,14 +109,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             color: context.primaryColorTheme,
           ),
         ),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(context, error),
       ),
     );
   }
 
   Widget _buildNotificationCard(BuildContext context, Map<String, dynamic> notification) {
+    final l10n = AppLocalizations.of(context)!;
     final isRead = notification['isRead'] as bool? ?? false;
-    final title = notification['title'] as String? ?? 'Notification';
+    final title = notification['title'] as String? ?? l10n.notificationsDefaultTitle;
     final body = notification['body'] as String? ?? '';
     final createdAt = notification['createdAt'] as String?;
     final type = notification['type'] as String?;
@@ -128,29 +130,29 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final icon = _getIconForType(type);
     
     // Format time
-    final timeText = _formatTime(createdAt);
+    final timeText = _formatTime(l10n, createdAt);
 
     // Determine action text and navigation
     String? actionText;
     VoidCallback? onActionTap;
 
     if (bookingId != null) {
-      actionText = 'View Booking';
+      actionText = l10n.notificationsActionViewBooking;
       onActionTap = () {
         context.push('/booking-confirmation/$bookingId');
       };
     } else if (eventId != null) {
-      actionText = 'View Event';
+      actionText = l10n.notificationsActionViewEvent;
       onActionTap = () {
         context.push('/events/$eventId');
       };
     } else if (listingId != null) {
-      actionText = 'View Listing';
+      actionText = l10n.notificationsActionViewListing;
       onActionTap = () {
         context.push('/listings/$listingId');
       };
     } else if (actionUrl != null && actionUrl.isNotEmpty) {
-      actionText = 'View Details';
+      actionText = l10n.commonViewDetails;
       onActionTap = () {
         // Handle custom action URL
         _handleActionUrl(context, actionUrl);
@@ -274,6 +276,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -292,14 +295,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'No Notifications',
+            l10n.notificationsEmptyTitle,
             style: context.titleLarge.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'You don\'t have any notifications yet',
+            l10n.notificationsEmptyBody,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -310,7 +313,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(BuildContext context, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -324,7 +328,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load notifications',
+              l10n.notificationsLoadFailed,
               style: context.titleLarge.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -353,7 +357,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 backgroundColor: context.primaryColorTheme,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -382,7 +386,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Failed to mark notification as read: ${e.toString().replaceAll('Exception: ', '')}',
+            AppLocalizations.of(context)!.notificationsMarkReadFailed(
+              e.toString().replaceAll('Exception: ', ''),
+            ),
           ),
           backgroundColor: context.errorColor,
         ),
@@ -414,7 +420,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-          content: Text('All notifications marked as read'),
+          content: Text(AppLocalizations.of(context)!.notificationsAllMarkedRead),
           backgroundColor: context.successColor,
         ),
       );
@@ -423,7 +429,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Failed to mark all as read: ${e.toString().replaceAll('Exception: ', '')}',
+            AppLocalizations.of(context)!.notificationsMarkAllReadFailed(
+              e.toString().replaceAll('Exception: ', ''),
+            ),
           ),
           backgroundColor: context.errorColor,
         ),
@@ -468,8 +476,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     }
   }
 
-  String _formatTime(String? dateString) {
-    if (dateString == null) return 'Just now';
+  String _formatTime(AppLocalizations l10n, String? dateString) {
+    if (dateString == null) return l10n.notificationsTimeJustNow;
     
     try {
       final date = DateTime.parse(dateString);
@@ -477,18 +485,18 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       final difference = now.difference(date);
 
       if (difference.inMinutes < 1) {
-        return 'Just now';
+        return l10n.notificationsTimeJustNow;
       } else if (difference.inMinutes < 60) {
-        return '${difference.inMinutes} min ago';
+        return l10n.notificationsTimeMinutesAgo(difference.inMinutes);
       } else if (difference.inHours < 24) {
-        return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+        return l10n.notificationsTimeHoursAgo(difference.inHours);
       } else if (difference.inDays < 7) {
-        return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+        return l10n.notificationsTimeDaysAgo(difference.inDays);
       } else {
         return DateFormat('MMM dd, yyyy').format(date);
       }
     } catch (e) {
-      return 'Recently';
+      return l10n.notificationsTimeRecently;
     }
   }
 
@@ -502,7 +510,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       // For now, just show a message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Opening: $actionUrl'),
+          content: Text(AppLocalizations.of(context)!.notificationsOpeningUrl(actionUrl)),
           backgroundColor: context.primaryColorTheme,
         ),
       );

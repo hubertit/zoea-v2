@@ -10,6 +10,7 @@ import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/bookings_provider.dart';
 import '../../../core/providers/orders_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class MyBookingsScreen extends ConsumerStatefulWidget {
   const MyBookingsScreen({super.key});
@@ -66,11 +67,12 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'My Bookings',
+          l10n.profileMyBookingsTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -122,11 +124,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ),
           tabAlignment: TabAlignment.start,
           isScrollable: true,
-          tabs: const [
-            Tab(text: 'All'),
-            Tab(text: 'Upcoming'),
-            Tab(text: 'Past'),
-            Tab(text: 'Cancelled'),
+          tabs: [
+            Tab(text: l10n.bookingsTabAll),
+            Tab(text: l10n.bookingsTabUpcoming),
+            Tab(text: l10n.bookingsTabPast),
+            Tab(text: l10n.bookingsTabCancelled),
           ],
         ),
       ),
@@ -144,6 +146,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   Widget _buildBookingsList(String filter) {
+    final l10n = AppLocalizations.of(context)!;
     // Determine status filter for API
     String? statusFilter;
     if (filter == 'cancelled') {
@@ -209,7 +212,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             }
 
             if (filteredItems.isEmpty) {
-              return _buildEmptyState(filter);
+              return _buildEmptyState(filter, l10n);
             }
 
             return RefreshIndicator(
@@ -268,7 +271,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Failed to load orders',
+                  l10n.bookingsErrorOrders,
                   style: context.bodyMedium.copyWith(
                     color: context.errorColor,
                   ),
@@ -289,7 +292,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text('Retry'),
+                  child: Text(l10n.commonRetry),
                 ),
               ],
             ),
@@ -314,7 +317,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load bookings',
+              l10n.bookingsErrorBookings,
               style: context.titleMedium.copyWith(
                 color: context.primaryTextColor,
               ),
@@ -344,7 +347,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,
             ),
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -352,30 +355,30 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     );
   }
 
-  Widget _buildEmptyState(String filter) {
+  Widget _buildEmptyState(String filter, AppLocalizations l10n) {
     String title;
     String subtitle;
     IconData icon;
 
     switch (filter) {
       case 'upcoming':
-        title = 'No Upcoming Bookings or Orders';
-        subtitle = 'You don\'t have any upcoming reservations or orders';
+        title = l10n.bookingsEmptyUpcomingTitle;
+        subtitle = l10n.bookingsEmptyUpcomingSubtitle;
         icon = Icons.event_available;
         break;
       case 'past':
-        title = 'No Past Bookings or Orders';
-        subtitle = 'Your booking and order history will appear here';
+        title = l10n.bookingsEmptyPastTitle;
+        subtitle = l10n.bookingsEmptyPastSubtitle;
         icon = Icons.history;
         break;
       case 'cancelled':
-        title = 'No Cancelled Bookings or Orders';
-        subtitle = 'Cancelled bookings and orders will appear here';
+        title = l10n.bookingsEmptyCancelledTitle;
+        subtitle = l10n.bookingsEmptyCancelledSubtitle;
         icon = Icons.cancel;
         break;
       default:
-        title = 'No Bookings or Orders Yet';
-        subtitle = 'Start exploring and make your first booking or order!';
+        title = l10n.bookingsEmptyDefaultTitle;
+        subtitle = l10n.bookingsEmptyDefaultSubtitle;
         icon = Icons.explore;
     }
 
@@ -424,7 +427,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                 ),
               ),
               child: Text(
-                'Explore Now',
+                l10n.bookingsExploreNow,
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.onPrimary,
@@ -438,6 +441,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   Widget _buildBookingCard(Map<String, dynamic> booking) {
+    final l10n = AppLocalizations.of(context)!;
+    final lc = Localizations.localeOf(context).toString();
     // Parse booking data from API response
     final bookingId = booking['id'] as String? ?? '';
     final bookingNumber = booking['bookingNumber'] as String?;
@@ -484,14 +489,14 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     }
 
     // Get name and location based on booking type
-    String name = 'Unknown';
-    String location = 'Location not specified';
+    String name = l10n.exploreListingUnknown;
+    String location = l10n.bookingsLocationNotSpecified;
     String? imageUrl;
 
     if (bookingType == 'hotel' || bookingType == 'restaurant') {
       final listing = booking['listing'] as Map<String, dynamic>?;
       if (listing != null) {
-        name = listing['name'] as String? ?? 'Unknown';
+        name = listing['name'] as String? ?? l10n.exploreListingUnknown;
         // Get location from listing address or city
         final address = listing['address'] as String?;
         final city = listing['city'] as Map<String, dynamic>?;
@@ -512,11 +517,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     } else if (bookingType == 'event') {
       final event = booking['event'] as Map<String, dynamic>?;
       if (event != null) {
-        name = event['name'] as String? ?? 'Unknown';
+        name = event['name'] as String? ?? l10n.exploreListingUnknown;
         location = event['locationName'] as String? ??
             event['venueName'] as String? ??
             event['address'] as String? ??
-            'Location not specified';
+            l10n.bookingsLocationNotSpecified;
         
         // Get main flyer image
         final attachments = event['attachments'] as List<dynamic>?;
@@ -529,8 +534,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     } else if (bookingType == 'tour') {
       final tour = booking['tour'] as Map<String, dynamic>?;
       if (tour != null) {
-        name = tour['name'] as String? ?? 'Unknown';
-        location = 'Tour Location'; // Tours might not have location in response
+        name = tour['name'] as String? ?? l10n.exploreListingUnknown;
+        location = l10n.bookingsTourLocation;
         
         // Get primary image
         final images = tour['images'] as List<dynamic>?;
@@ -557,7 +562,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             : 1;
     final currency = booking['currency'] as String? ?? 'RWF';
 
-    final dateFormat = DateFormat('MMM dd, yyyy');
+    final dateFormat = DateFormat('MMM dd, yyyy', lc);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -741,7 +746,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Booked on ${dateFormat.format(bookingDate)}',
+                        l10n.bookingsBookedOn(dateFormat.format(bookingDate)),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -761,7 +766,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                       ),
                     ),
                     Text(
-                      '$guestCount guest${guestCount > 1 ? 's' : ''}',
+                      l10n.stayGuestCount(guestCount),
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -795,6 +800,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   Widget _buildActionButtons(Map<String, dynamic> booking, String bookingId, String status) {
+    final l10n = AppLocalizations.of(context)!;
     if (status.toLowerCase() == 'cancelled') {
       return Row(
         children: [
@@ -805,7 +811,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.repeat, size: 14),
               label: Text(
-                'Book Again',
+                l10n.bookingsBookAgain,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.primaryColorTheme,
@@ -837,7 +843,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.visibility, size: 14),
               label: Text(
-                'View Details',
+                l10n.bookingsViewDetails,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.primaryColorTheme,
@@ -863,7 +869,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.cancel, size: 14),
               label: Text(
-                'Cancel',
+                l10n.commonCancel,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.errorColor,
@@ -893,7 +899,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.visibility, size: 14),
               label: Text(
-                'View Details',
+                l10n.bookingsViewDetails,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.primaryColorTheme,
@@ -1364,6 +1370,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
 
   /// Build order card similar to booking card
   Widget _buildOrderCard(Map<String, dynamic> order) {
+    final l10n = AppLocalizations.of(context)!;
+    final lc = Localizations.localeOf(context).toString();
     final orderId = order['id'] as String? ?? '';
     final orderNumber = order['orderNumber'] as String?;
     final status = order['status'] as String? ?? 'pending';
@@ -1383,13 +1391,13 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     }
 
     // Get listing info
-    String name = 'Unknown';
-    String location = 'Location not specified';
+    String name = l10n.exploreListingUnknown;
+    String location = l10n.bookingsLocationNotSpecified;
     String? imageUrl;
     
     final listing = order['listing'] as Map<String, dynamic>?;
     if (listing != null) {
-      name = listing['name'] as String? ?? 'Unknown';
+      name = listing['name'] as String? ?? l10n.exploreListingUnknown;
       final address = listing['address'] as String?;
       final city = listing['city'] as Map<String, dynamic>?;
       if (address != null && address.isNotEmpty) {
@@ -1420,7 +1428,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     final items = order['items'] as List<dynamic>? ?? [];
     final itemCount = items.length;
 
-    final dateFormat = DateFormat('MMM dd, yyyy');
+    final dateFormat = DateFormat('MMM dd, yyyy', lc);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -1533,7 +1541,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                         Icon(Icons.shopping_bag, size: 12, color: Colors.white),
                         const SizedBox(width: 4),
                         Text(
-                          'ORDER',
+                          l10n.bookingsOrderLabel,
                           style: context.labelSmall.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -1567,7 +1575,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                     Text(
                       eventDate != null
                           ? dateFormat.format(eventDate)
-                          : 'Date not specified',
+                          : l10n.bookingsDateNotSpecified,
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -1597,7 +1605,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                     Icon(Icons.shopping_cart, size: 16, color: context.secondaryTextColor),
                     const SizedBox(width: 4),
                     Text(
-                      'Ordered on ${orderDate != null ? dateFormat.format(orderDate) : "N/A"}',
+                      l10n.bookingsOrderedOn(
+                        orderDate != null
+                            ? dateFormat.format(orderDate)
+                            : l10n.commonNotApplicable,
+                      ),
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -1619,7 +1631,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                           ),
                         ),
                         Text(
-                          '$itemCount item${itemCount != 1 ? 's' : ''}',
+                          l10n.bookingsLineItemCount(itemCount),
                           style: context.bodySmall.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -1634,14 +1646,19 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           // Action Buttons
           Padding(
             padding: const EdgeInsets.all(16),
-            child: _buildOrderActions(order, orderId, status),
+            child: _buildOrderActions(order, orderId, status, l10n),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildOrderActions(Map<String, dynamic> order, String orderId, String status) {
+  Widget _buildOrderActions(
+    Map<String, dynamic> order,
+    String orderId,
+    String status,
+    AppLocalizations l10n,
+  ) {
     final isCancelled = status.toLowerCase() == 'cancelled';
     
     if (isCancelled) {
@@ -1654,7 +1671,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.visibility, size: 14),
               label: Text(
-                'View Details',
+                l10n.bookingsViewDetails,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.primaryColorTheme,
@@ -1684,7 +1701,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.visibility, size: 14),
               label: Text(
-                'View Details',
+                l10n.bookingsViewDetails,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.primaryColorTheme,
@@ -1710,7 +1727,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               },
               icon: const Icon(Icons.cancel, size: 14),
               label: Text(
-                'Cancel',
+                l10n.commonCancel,
                 style: context.bodySmall.copyWith(
                   fontWeight: FontWeight.w500,
                   color: context.errorColor,
@@ -1734,26 +1751,28 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   void _showOrderDetails(Map<String, dynamic> order) {
-    // TODO: Navigate to order detail screen
+    final l10n = AppLocalizations.of(context)!;
+    final numStr = order['orderNumber']?.toString() ?? '—';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Order details for ${order['orderNumber'] ?? 'order'}'),
+        content: Text(l10n.bookingsOrderPreviewMessage(numStr)),
         backgroundColor: context.primaryColorTheme,
       ),
     );
   }
 
   void _showCancelOrderDialog(Map<String, dynamic> order, String orderId) {
-    // TODO: Implement order cancellation
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Cancel order functionality coming soon'),
+        content: Text(l10n.bookingsCancelOrderSoon),
         backgroundColor: context.primaryColorTheme,
       ),
     );
   }
 
   void _showBookingDetails(Map<String, dynamic> booking) {
+    final l10n = AppLocalizations.of(context)!;
     final bookingId = booking['id'] as String? ?? 'N/A';
     final bookingNumber = booking['bookingNumber'] as String?;
     final status = booking['status'] as String? ?? 'pending';
@@ -1842,8 +1861,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             style: TextButton.styleFrom(
               foregroundColor: context.primaryColorTheme,
             ),
-            child: const Text(
-              'Close',
+            child: Text(
+              l10n.commonClose,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
               ),
@@ -1855,6 +1874,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   void _showCancelBookingDialog(Map<String, dynamic> booking, String bookingId) {
+    final l10n = AppLocalizations.of(context)!;
     // Get name for display
     String name = 'Unknown';
     final bookingType = booking['bookingType'] as String? ?? 'hotel';
@@ -1874,13 +1894,13 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
       builder: (context) => AlertDialog(
         backgroundColor: context.cardColor,
         title: Text(
-          'Cancel Booking',
+          l10n.myBookingsCancelBooking,
           style: context.titleMedium.copyWith(
             color: context.errorColor,
           ),
         ),
         content: Text(
-          'Are you sure you want to cancel your booking for "$name"? This action cannot be undone.',
+          l10n.myBookingsCancelConfirmBody(name),
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -1891,7 +1911,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             style: TextButton.styleFrom(
               foregroundColor: context.secondaryTextColor,
             ),
-            child: const Text('Keep Booking'),
+            child: Text(l10n.myBookingsKeepBooking),
           ),
           TextButton(
             onPressed: () async {
@@ -1901,7 +1921,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             style: TextButton.styleFrom(
               foregroundColor: context.errorColor,
             ),
-            child: const Text('Cancel Booking'),
+            child: Text(l10n.myBookingsCancelBooking),
           ),
         ],
       ),
@@ -1978,6 +1998,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   void _showBookAgainDialog(Map<String, dynamic> booking) {
+    final l10n = AppLocalizations.of(context)!;
     // Get name for display
     String name = 'Unknown';
     final bookingType = booking['bookingType'] as String? ?? 'hotel';
@@ -1991,13 +2012,13 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
         builder: (context) => AlertDialog(
           backgroundColor: context.cardColor,
           title: Text(
-            'Book Again',
+            l10n.bookingsBookAgain,
             style: context.titleMedium.copyWith(
               color: context.primaryTextColor,
             ),
           ),
           content: Text(
-            'Would you like to book "$name" again?',
+            l10n.myBookingsBookAgainPrompt(name),
             style: context.bodyMedium.copyWith(
               color: context.primaryTextColor,
             ),
@@ -2006,7 +2027,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                'Cancel',
+                l10n.commonCancel,
                 style: context.bodyMedium.copyWith(
                   color: context.secondaryTextColor,
                 ),
@@ -2027,8 +2048,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               style: TextButton.styleFrom(
                 foregroundColor: context.primaryColorTheme,
               ),
-              child: const Text(
-                'Book Now',
+              child: Text(
+                l10n.commonBookNow,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
@@ -2046,11 +2067,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
         context: context,
         builder: (context) => AlertDialog(
           title: Text(
-            'Book Again',
+            l10n.bookingsBookAgain,
             style: context.titleMedium,
           ),
           content: Text(
-            'Would you like to book "$name" again?',
+            l10n.myBookingsBookAgainPrompt(name),
             style: context.bodyMedium,
           ),
           actions: [
@@ -2059,7 +2080,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
               style: TextButton.styleFrom(
                 foregroundColor: context.secondaryTextColor,
               ),
-              child: const Text('Cancel'),
+              child: Text(l10n.commonCancel),
             ),
             TextButton(
               onPressed: () {
@@ -2070,7 +2091,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                 }
               },
               child: Text(
-                'Book Now',
+                l10n.commonBookNow,
                 style: context.bodyMedium.copyWith(
                   color: context.primaryColorTheme,
                   fontWeight: FontWeight.w500,
@@ -2084,6 +2105,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
   }
 
   void _showSearchBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -2114,7 +2136,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Search Bookings',
+                    l10n.bookingsSearchTitle,
                     style: context.titleMedium.copyWith(
                       fontWeight: FontWeight.w600,
                       color: context.primaryTextColor,
@@ -2128,7 +2150,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                       color: context.primaryTextColor,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Search by name, location, booking or order number...',
+                      hintText: l10n.bookingsSearchHint,
                       hintStyle: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -2185,7 +2207,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text('Clear'),
+                          child: Text(l10n.commonClear),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -2202,7 +2224,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text('Search'),
+                          child: Text(l10n.commonSearch),
                         ),
                       ),
                     ],

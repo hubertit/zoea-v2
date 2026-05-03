@@ -6,6 +6,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/widgets/place_card.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NightlifeScreen extends ConsumerStatefulWidget {
   const NightlifeScreen({super.key});
@@ -256,7 +257,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
                       side: BorderSide(color: context.primaryColorTheme),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Clear All'),
+                    child: Text(AppLocalizations.of(context)!.commonClearAll),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -268,7 +269,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Apply Filters'),
+                    child: Text(AppLocalizations.of(context)!.stayApplyFilters),
                   ),
                 ),
               ],
@@ -327,7 +328,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
                       side: BorderSide(color: context.primaryColorTheme),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Cancel'),
+                    child: Text(AppLocalizations.of(context)!.commonCancel),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -339,7 +340,7 @@ class _NightlifeScreenState extends ConsumerState<NightlifeScreen>
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Apply'),
+                    child: Text(AppLocalizations.of(context)!.commonApply),
                   ),
                 ),
               ],

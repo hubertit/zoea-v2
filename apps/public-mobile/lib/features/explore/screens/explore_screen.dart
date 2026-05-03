@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -281,8 +282,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
 
     return weatherAsync.when(
       data: (weather) {
+        final l10n = AppLocalizations.of(context)!;
         final temp = weather['temperature'] as double? ?? 0.0;
-        final cityName = weather['cityName'] as String? ?? 'Kigali';
+        final cityName = weather['cityName'] as String? ?? l10n.exploreDefaultCity;
         final rainProb = weather['rainProbability'] as int? ?? 0;
         final iconCode = weather['weatherIcon'] as String? ?? '01d';
 
@@ -411,7 +413,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Loading...',
+              AppLocalizations.of(context)!.exploreLoading,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -451,7 +453,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Kigali',
+              AppLocalizations.of(context)!.exploreDefaultCity,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -513,7 +515,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               // Currency pair
               Flexible(
                 child: Text(
-                  'USD / RWF',
+                  AppLocalizations.of(context)!.exploreCurrencyPair,
                   style: context.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -599,7 +601,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
           children: [
             // Title
               Text(
-              'Quick Actions',
+              AppLocalizations.of(context)!.exploreQuickActions,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -639,7 +641,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: context.grey50,
-      builder: (context) => Container(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Container(
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -660,7 +664,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             
             // Title
             Text(
-              'Quick Actions',
+              l10n.exploreQuickActions,
                 style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -679,7 +683,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               children: [
                 _buildQuickActionItem(
                   icon: Icons.emergency,
-                  label: 'Emergency SOS',
+                  label: l10n.exploreActionEmergencySos,
                   onTap: () {
                     Navigator.pop(context);
                     _showEmergencyNumbersBottomSheet();
@@ -687,7 +691,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 ),
                 _buildQuickActionItem(
                   icon: Icons.local_taxi,
-                  label: 'Call Taxi',
+                  label: l10n.exploreActionCallTaxi,
                   onTap: () async {
                     Navigator.pop(context);
                     final Uri phoneUri = Uri(scheme: 'tel', path: '1010');
@@ -697,7 +701,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           AppTheme.errorSnackBar(
-                            message: 'Unable to make phone call',
+                            message: l10n.exploreUnablePhoneCall,
                           ),
                         );
                       }
@@ -706,7 +710,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 ),
                 _buildQuickActionItem(
                   icon: Icons.tour,
-                  label: 'Book Tour',
+                  label: l10n.exploreActionBookTour,
                   onTap: () {
                     Navigator.pop(context);
                     context.push('/tour-packages');
@@ -714,18 +718,17 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 ),
                 _buildQuickActionItem(
                   icon: Icons.sim_card,
-                  label: 'eSim',
+                  label: l10n.exploreActionEsim,
                   onTap: () {
                     Navigator.pop(context);
-                    // Open eSim deeplink in webview
                     context.push(
-                      '/webview?url=${Uri.encodeComponent('https://amadeus-api.optionizr.com/api/esim/deeplink?site=P02XP02X')}&title=${Uri.encodeComponent('eSim')}',
+                      '/webview?url=${Uri.encodeComponent('https://amadeus-api.optionizr.com/api/esim/deeplink?site=P02XP02X')}&title=${Uri.encodeComponent(l10n.exploreWebviewTitleEsim)}',
                     );
                   },
                 ),
                       _buildQuickActionItem(
                         icon: Icons.local_pharmacy,
-                        label: 'Pharmacy',
+                        label: l10n.exploreActionPharmacy,
                         onTap: () {
                           Navigator.pop(context);
                           context.push('/category/pharmacy');
@@ -733,7 +736,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       ),
                       _buildQuickActionItem(
                         icon: Icons.car_repair,
-                        label: 'Roadside Assistance',
+                        label: l10n.exploreActionRoadsideAssistance,
                         onTap: () {
                           Navigator.pop(context);
                           context.push('/category/road-side');
@@ -741,36 +744,35 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       ),
                       _buildQuickActionItem(
                         icon: Icons.airplane_ticket,
-                        label: 'Flight Info',
+                        label: l10n.exploreActionFlightInfo,
                         onTap: () {
                           Navigator.pop(context);
-                          // Open RwandAir website in webview
                           context.push(
-                            '/webview?url=${Uri.encodeComponent('https://www.rwandair.com/')}&title=${Uri.encodeComponent('RwandAir')}',
+                            '/webview?url=${Uri.encodeComponent('https://www.rwandair.com/')}&title=${Uri.encodeComponent(l10n.exploreWebviewTitleRwandAir)}',
                           );
                         },
                       ),
                       _buildQuickActionItem(
-                        icon: Icons.admin_panel_settings, // Placeholder icon - will be replaced with Irembo logo
-                        label: 'Irembo',
-                        isCustomIcon: true, // Flag to indicate custom icon/logo
+                        icon: Icons.admin_panel_settings,
+                        label: l10n.exploreActionIrembo,
+                        isCustomIcon: true,
+                        actionId: 'irembo',
                         onTap: () {
                           Navigator.pop(context);
-                          // Open Irembo website in webview
                           context.push(
-                            '/webview?url=${Uri.encodeComponent('https://irembo.gov.rw/')}&title=${Uri.encodeComponent('Irembo')}',
+                            '/webview?url=${Uri.encodeComponent('https://irembo.gov.rw/')}&title=${Uri.encodeComponent(l10n.exploreWebviewTitleIrembo)}',
                           );
                         },
                       ),
                       _buildQuickActionItem(
-                        icon: Icons.tour, // Placeholder icon - will be replaced with Visit Rwanda logo
-                        label: 'Visit Rwanda',
-                        isCustomIcon: true, // Flag to indicate custom icon/logo
+                        icon: Icons.tour,
+                        label: l10n.exploreActionVisitRwanda,
+                        isCustomIcon: true,
+                        actionId: 'visit_rwanda',
                         onTap: () {
                           Navigator.pop(context);
-                          // Open Visit Rwanda website in webview
                           context.push(
-                            '/webview?url=${Uri.encodeComponent('https://visitrwanda.com/')}&title=${Uri.encodeComponent('Visit Rwanda')}',
+                            '/webview?url=${Uri.encodeComponent('https://visitrwanda.com/')}&title=${Uri.encodeComponent(l10n.exploreWebviewTitleVisitRwanda)}',
                           );
                         },
                       ),
@@ -781,7 +783,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
@@ -790,7 +793,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: context.grey50,
-      builder: (context) => Container(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -811,7 +816,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             
             // Title
             Text(
-              'Emergency Toll Free Numbers',
+              l10n.exploreEmergencyTollFreeTitle,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -830,37 +835,37 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               children: [
                 _buildEmergencyNumberItem(
                   icon: Icons.emergency,
-                  label: 'Emergency',
+                  label: l10n.exploreEmergencyEmergency,
                   number: '112',
                 ),
                 _buildEmergencyNumberItem(
                   icon: Icons.traffic,
-                  label: 'Traffic Accidents',
+                  label: l10n.exploreEmergencyTrafficAccidents,
                   number: '113',
                 ),
                 _buildEmergencyNumberItem(
                   icon: Icons.local_police,
-                  label: 'Abuse by Police Officer',
+                  label: l10n.exploreEmergencyAbusePolice,
                   number: '3511',
                 ),
                 _buildEmergencyNumberItem(
                   icon: Icons.gavel,
-                  label: 'Anti Corruption',
+                  label: l10n.exploreEmergencyAntiCorruption,
                   number: '997',
                 ),
                 _buildEmergencyNumberItem(
                   icon: Icons.directions_boat,
-                  label: 'Maritime Problems',
+                  label: l10n.exploreEmergencyMaritime,
                   number: '110',
                 ),
                 _buildEmergencyNumberItem(
                   icon: Icons.badge,
-                  label: 'Driving License Queries',
+                  label: l10n.exploreEmergencyDrivingLicense,
                   number: '118',
                 ),
                 _buildEmergencyNumberItem(
                   icon: Icons.whatshot,
-                  label: 'Fire and Rescue',
+                  label: l10n.exploreEmergencyFireRescue,
                   number: '111',
                 ),
               ],
@@ -870,7 +875,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
@@ -888,7 +894,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               AppTheme.errorSnackBar(
-                message: 'Unable to make phone call',
+                message: AppLocalizations.of(context)!.exploreUnablePhoneCall,
               ),
             );
           }
@@ -925,7 +931,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             ),
             const SizedBox(height: 4),
             Text(
-              'Call: $number',
+              AppLocalizations.of(context)!.exploreCallNumber(number),
               style: context.bodySmall.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w600,
@@ -944,6 +950,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     required String label,
     required VoidCallback onTap,
     bool isCustomIcon = false,
+    String? actionId,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -960,7 +967,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Use custom logo for Irembo
-            if (isCustomIcon && label == 'Irembo')
+            if (isCustomIcon && actionId == 'irembo')
               SvgPicture.asset(
                 'assets/images/irembo_logo.svg',
                 width: 16,
@@ -976,7 +983,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 ),
               )
             // Use custom logo for Visit Rwanda
-            else if (isCustomIcon && label == 'Visit Rwanda')
+            else if (isCustomIcon && actionId == 'visit_rwanda')
               ColorFiltered(
                 colorFilter: ColorFilter.mode(
                   context.primaryColorTheme,
@@ -1000,9 +1007,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 size: 22, // Match category card icon size
               ),
             // No spacing for Visit Rwanda and Irembo (they don't have text labels)
-            if (label != 'Visit Rwanda' && label != 'Irembo') const SizedBox(height: 6),
+            if (actionId != 'visit_rwanda' && actionId != 'irembo') const SizedBox(height: 6),
             // Hide text label for Visit Rwanda and Irembo (logos already contain names)
-            if (label != 'Visit Rwanda' && label != 'Irembo')
+            if (actionId != 'visit_rwanda' && actionId != 'irembo')
               Text(
                 label,
                 style: context.bodySmall.copyWith(
@@ -1022,6 +1029,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
 
 
   Widget _buildCategoriesSection() {
+    final l10n = AppLocalizations.of(context)!;
     final categoriesAsync = ref.watch(categoriesProvider);
 
     // If we have previous data, show it while silently refreshing
@@ -1036,7 +1044,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Categories',
+                l10n.exploreCategories,
                 style: context.headlineMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -1047,7 +1055,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                   _showCategoriesBottomSheet(context);
                 },
                 child: Text(
-                  'View More',
+                  l10n.commonViewMore,
                   style: context.bodySmall.copyWith(
                     color: context.primaryColorTheme,
                     fontWeight: FontWeight.w500,
@@ -1088,7 +1096,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Categories',
+                  l10n.exploreCategories,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -1101,9 +1109,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text(
-                    'View More',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.commonViewMore,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1133,7 +1141,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Categories',
+            l10n.exploreCategories,
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -1213,7 +1221,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   }
 
   Widget _buildCategoryCardFromApi(Map<String, dynamic> category) {
-    final name = category['name'] as String? ?? 'Category';
+    final name = category['name'] as String? ??
+        AppLocalizations.of(context)!.exploreCategoryFallback;
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 
@@ -1352,6 +1361,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   Widget _buildEventsSection() {
     return Consumer(
       builder: (context, ref, child) {
+        final l10n = AppLocalizations.of(context)!;
         final eventsState = ref.watch(eventsProvider);
         
         return Column(
@@ -1361,7 +1371,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Happening',
+                  l10n.exploreHappening,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -1374,9 +1384,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text(
-                    'View More',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.commonViewMore,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1410,7 +1420,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Failed to load events',
+                        l10n.exploreFailedLoadEvents,
                         style: context.bodySmall.copyWith(
                           color: context.errorColor,
                         ),
@@ -1427,7 +1437,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                           color: context.primaryColorTheme,
                         ),
                         label: Text(
-                          'Refresh',
+                          l10n.commonRetry,
                           style: TextStyle(
                             color: context.primaryColorTheme,
                             fontWeight: FontWeight.w600,
@@ -1452,7 +1462,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       ),
                       const SizedBox(height: 8),
             Text(
-                        'No events today',
+                        l10n.exploreNoEventsToday,
                         style: context.bodySmall.copyWith(
                 color: context.secondaryTextColor,
                         ),
@@ -1562,10 +1572,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   }
 
   Widget _buildEventCardFromData(Event event) {
+    final l10n = AppLocalizations.of(context)!;
     final eventDetails = event.event;
     final startDate = eventDetails.startDate;
-    final timeFormat = DateFormat('HH:mm');
-    final dateFormat = DateFormat('MMM dd');
+    final lc = Localizations.localeOf(context).toLanguageTag();
+    final timeFormat = DateFormat('HH:mm', lc);
+    final dateFormat = DateFormat('MMM dd', lc);
     
     // Check if event is today
     final now = DateTime.now();
@@ -1575,7 +1587,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     
     String timeText;
     if (isToday) {
-      timeText = 'Today, ${timeFormat.format(startDate)}';
+      timeText = l10n.exploreEventTimeToday(timeFormat.format(startDate));
     } else {
       timeText = '${dateFormat.format(startDate)}, ${timeFormat.format(startDate)}';
     }
@@ -1779,7 +1791,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: context.grey50, // Match quick actions background
-      builder: (context) => Container(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Container(
         padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1800,7 +1814,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             
             // Title
             Text(
-              'All Categories',
+              l10n.exploreAllCategories,
               style: context.headlineSmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -1828,7 +1842,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-                          'No categories available',
+                          l10n.exploreNoCategoriesAvailable,
                           style: context.bodyMedium.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -1866,7 +1880,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-                            'No categories available',
+                            l10n.exploreNoCategoriesAvailable,
                             style: context.bodyMedium.copyWith(
                               color: context.secondaryTextColor,
                             ),
@@ -1895,7 +1909,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Failed to load categories',
+                            l10n.exploreFailedLoadCategories,
                             style: context.bodyMedium.copyWith(
                               color: context.errorColor,
                             ),
@@ -1908,7 +1922,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                             style: TextButton.styleFrom(
                               foregroundColor: context.primaryColorTheme,
                             ),
-                            child: const Text('Retry'),
+                            child: Text(l10n.commonRetry),
                           ),
                         ],
                       ),
@@ -1922,12 +1936,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
   Widget _buildBottomSheetCategoryCardFromApi(Map<String, dynamic> category) {
-    final name = category['name'] as String? ?? 'Category';
+    final name = category['name'] as String? ?? AppLocalizations.of(context)!.exploreCategoryFallback;
     final iconName = category['icon'] as String?;
     final icon = _getIconForCategory(iconName);
 
@@ -2018,6 +2033,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   Widget _buildRecommendSection() {
     return Consumer(
       builder: (context, ref, child) {
+        final l10n = AppLocalizations.of(context)!;
         final selectedCountry = ref.watch(selectedCountryProvider).value;
         final featuredAsync = ref.watch(featuredListingsWithHomeFallbackProvider);
 
@@ -2028,7 +2044,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Recommended',
+                  l10n.exploreRecommended,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -2041,9 +2057,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text(
-                    'View More',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.commonViewMore,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -2058,7 +2074,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                   if (listings.isEmpty) {
                     return Center(
                       child: Text(
-                        'No featured listings available',
+                        l10n.exploreNoFeaturedListings,
                         style: context.bodyMedium.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -2091,7 +2107,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Failed to load recommendations',
+                        l10n.exploreFailedRecommendations,
                         style: context.bodyMedium.copyWith(
                           color: context.errorColor,
                           fontWeight: FontWeight.w500,
@@ -2118,7 +2134,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                           ref.invalidate(featuredListingsProvider(null));
                         },
                         icon: const Icon(Icons.refresh),
-                        label: const Text('Retry'),
+                        label: Text(l10n.commonRetry),
                         style: TextButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                         ),
@@ -2145,14 +2161,15 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     }
 
     // Extract data
-    final name = listing['name'] ?? 'Unknown';
+    final l10n = AppLocalizations.of(context)!;
+    final name = listing['name'] ?? l10n.exploreListingUnknown;
     final address = listing['address'] ?? listing['city']?['name'] ?? '';
     final rating = listing['rating'] != null 
         ? (listing['rating'] is String 
             ? double.tryParse(listing['rating']) 
             : listing['rating']?.toDouble())
         : 0.0;
-    final category = listing['category']?['name'] ?? listing['type'] ?? 'Place';
+    final category = listing['category']?['name'] ?? listing['type'] ?? l10n.exploreListingPlace;
     final id = listing['id'] ?? '';
 
     return GestureDetector(
@@ -2313,11 +2330,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                             onTap: () async {
                               final isLoggedIn = ref.read(isLoggedInProvider);
                               if (!isLoggedIn) {
+                                final l10n = AppLocalizations.of(context)!;
                                 AuthPromptDialog.show(
                                   context: context,
-                                  title: 'Sign In to Save Favorites',
-                                  message:
-                                      'Create an account or sign in to save your favorite places and access them anytime.',
+                                  title: l10n.exploreFavoriteSignInTitle,
+                                  message: l10n.exploreFavoriteSignInMessage,
                                   icon: Icons.favorite,
                                 );
                                 return;
@@ -2350,21 +2367,23 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                                 final errorText = e.toString();
                                 if (context.mounted &&
                                     errorText.contains('Unauthorized')) {
+                                  final l10n = AppLocalizations.of(context)!;
                                   AuthPromptDialog.show(
                                     context: context,
-                                    title: 'Sign In to Save Favorites',
-                                    message:
-                                        'Your session has expired. Please sign in again to save favorites.',
+                                    title: l10n.exploreFavoriteSessionTitle,
+                                    message: l10n.exploreFavoriteSessionMessage,
                                     icon: Icons.favorite,
                                   );
                                   return;
                                 }
 
                                 if (context.mounted) {
+                                  final l10n = AppLocalizations.of(context)!;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     AppTheme.errorSnackBar(
-                                      message:
-                                          'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+                                      message: l10n.exploreFavoriteUpdateFailed(
+                                        errorText.replaceFirst('Exception: ', ''),
+                                      ),
                                     ),
                                   );
                                 }
@@ -2452,6 +2471,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   Widget _buildNearMeSection() {
     return Consumer(
       builder: (context, ref, child) {
+        final l10n = AppLocalizations.of(context)!;
         // Use random listings for now until geolocation is implemented
         final nearbyAsync = ref.watch(randomListingsProvider(kRandomNearMePreviewLimit));
 
@@ -2462,7 +2482,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Near Me',
+                  l10n.exploreNearMe,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -2475,9 +2495,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
-                  child: const Text(
-                    'View More',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.commonViewMore,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -2492,7 +2512,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        'No listings available',
+                        l10n.exploreNoListings,
                         style: context.bodyMedium.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -2521,7 +2541,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Text(
-                    'Failed to load listings',
+                    l10n.exploreFailedListings,
                     style: context.bodySmall.copyWith(
                       color: context.errorColor,
                     ),
@@ -2546,9 +2566,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     }
 
     // Extract data
-    final name = listing['name'] ?? 'Unknown';
+    final l10n = AppLocalizations.of(context)!;
+    final name = listing['name'] ?? l10n.exploreListingUnknown;
     final address = listing['address'] ?? listing['city']?['name'] ?? '';
-    final category = listing['category']?['name'] ?? listing['type'] ?? 'Place';
+    final category = listing['category']?['name'] ?? listing['type'] ?? l10n.exploreListingPlace;
     final id = listing['id'] ?? '';
 
     return GestureDetector(
@@ -2711,6 +2732,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   Widget _buildTourPackagesSection() {
     return Consumer(
       builder: (context, ref, child) {
+        final l10n = AppLocalizations.of(context)!;
         final toursAsync = ref.watch(toursProvider(const ToursParams(
           page: 1,
           limit: 5, // Show only 5 tours on explore screen
@@ -2724,7 +2746,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Tour Packages',
+                  l10n.exploreTourPackages,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -2735,7 +2757,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                     context.push('/tour-packages');
                   },
                   child: Text(
-                    'View All',
+                    l10n.commonViewAll,
                     style: context.bodySmall.copyWith(
                       color: context.primaryColorTheme,
                       fontWeight: FontWeight.w500,
@@ -2766,7 +2788,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Failed to load tours',
+                        l10n.exploreFailedTours,
                         style: context.bodyMedium.copyWith(
                           color: context.errorColor,
                         ),
@@ -2791,7 +2813,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'No tour packages available',
+                            l10n.exploreNoTours,
                             style: context.bodyMedium.copyWith(
                               color: context.secondaryTextColor,
                             ),
@@ -2820,7 +2842,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   }
 
   Widget _buildTourCard(Map<String, dynamic> tour) {
-    final String title = tour['name'] ?? 'Untitled Tour';
+    final l10n = AppLocalizations.of(context)!;
+    final String title = tour['name'] ?? l10n.exploreUntitledTour;
     final String description = tour['description'] ?? '';
     
     // Parse price safely
@@ -2864,22 +2887,30 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
     final bool isFeatured = tour['isFeatured'] ?? false;
 
     // Determine badge
-    String badge = 'TOUR';
+    String badge;
     if (isFeatured) {
-      badge = 'FEATURED';
+      badge = l10n.exploreTourBadgeFeatured;
     } else if (difficulty != null) {
       badge = difficulty.toUpperCase();
+    } else {
+      badge = l10n.exploreTourBadgeTour;
     }
 
     // Format price
-    String priceText = priceFrom != null 
-        ? 'From ${PriceFormatter.formatAbbreviated(priceFrom, currency: 'RWF')}'
-        : 'From RWF ---';
+    final String priceText = priceFrom != null
+        ? l10n.exploreTourPriceFrom(
+            PriceFormatter.formatAbbreviated(priceFrom, currency: 'RWF'),
+          )
+        : l10n.exploreTourPriceUnavailable;
 
     // Format duration
     String durationText = '';
     if (duration != null && durationType != null) {
-      durationText = '$duration ${durationType}${duration > 1 ? 's' : ''}';
+      if (durationType == 'day') {
+        durationText = l10n.exploreTourDurationDays(duration);
+      } else {
+        durationText = l10n.exploreTourDurationHours(duration);
+      }
     }
 
     return GestureDetector(
@@ -3511,7 +3542,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => Container(
+      builder: (sheetContext) {
+        final l10n = AppLocalizations.of(sheetContext)!;
+        return Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -3522,36 +3555,37 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
               height: 4,
               margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                color: context.secondaryTextColor.withOpacity(0.3),
+                color: sheetContext.secondaryTextColor.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             // Menu items
             _buildGiftBoxMenuItem(
-              context: context,
+              context: sheetContext,
               icon: Icons.card_giftcard,
-              title: 'Refer & Earn',
-              subtitle: 'Invite friends and earn rewards',
+              title: l10n.exploreGiftReferTitle,
+              subtitle: l10n.exploreGiftReferSubtitle,
               onTap: () {
-                Navigator.pop(context);
-                context.push('/referrals');
+                Navigator.pop(sheetContext);
+                sheetContext.push('/referrals');
               },
             ),
             const Divider(height: 1),
             _buildGiftBoxMenuItem(
-              context: context,
+              context: sheetContext,
               icon: Icons.route,
-              title: 'Itinerary Planning',
-              subtitle: 'Plan and share your trip',
+              title: l10n.exploreGiftItineraryTitle,
+              subtitle: l10n.exploreGiftItinerarySubtitle,
               onTap: () {
-                Navigator.pop(context);
-                context.push('/itineraries');
+                Navigator.pop(sheetContext);
+                sheetContext.push('/itineraries');
               },
             ),
             const SizedBox(height: 10),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 

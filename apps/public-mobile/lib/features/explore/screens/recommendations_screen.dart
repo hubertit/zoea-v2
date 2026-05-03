@@ -7,6 +7,7 @@ import '../../../core/widgets/place_card.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/categories_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// One top-level category tab: label + every category id in that subtree (root and descendants).
 class _RecommendationRootTab {
@@ -266,7 +267,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.primaryColorTheme,
               ),
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -476,7 +477,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
                         side: BorderSide(color: context.primaryColorTheme),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Clear All'),
+                      child: Text(AppLocalizations.of(context)!.commonClearAll),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -488,7 +489,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen> {
                         foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Apply Filters'),
+                      child: Text(AppLocalizations.of(context)!.stayApplyFilters),
                     ),
                   ),
                 ],

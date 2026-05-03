@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/content_views_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class VisitedPlacesScreen extends ConsumerStatefulWidget {
   const VisitedPlacesScreen({super.key});
@@ -199,7 +200,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
                 backgroundColor: context.primaryColorTheme,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -491,7 +492,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
                               }
                             : null,
                         icon: const Icon(Icons.visibility, size: 16),
-                        label: const Text('View Details'),
+                        label: Text(AppLocalizations.of(context)!.visitedPlacesViewDetails),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -510,7 +511,7 @@ class _VisitedPlacesScreenState extends ConsumerState<VisitedPlacesScreen>
                           // TODO: Add to favorites
                         },
                         icon: const Icon(Icons.favorite_border, size: 16),
-                        label: const Text('Favorite'),
+                        label: Text(AppLocalizations.of(context)!.commonFavoriteVerb),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Theme.of(context).colorScheme.onPrimary,
                           backgroundColor: context.primaryColorTheme,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -73,12 +74,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final themeMode = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settingsTitle),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.chevron_left, size: 32),
@@ -104,7 +106,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                       const SizedBox(width: AppTheme.spacing12),
                       Text(
-                        'Appearance',
+                        l10n.settingsAppearanceSection,
                         style: context.titleLarge.copyWith(
                           color: context.primaryTextColor,
                         ),
@@ -130,7 +132,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           themeMode: ThemeMode.light,
                           currentMode: themeMode,
                           icon: Icons.light_mode,
-                          label: 'Light',
+                          label: l10n.appearanceLight,
                           onTap: () => themeNotifier.setTheme(ThemeMode.light),
                         ),
                         _buildThemeOption(
@@ -138,7 +140,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           themeMode: ThemeMode.dark,
                           currentMode: themeMode,
                           icon: Icons.dark_mode,
-                          label: 'Dark',
+                          label: l10n.appearanceDark,
                           onTap: () => themeNotifier.setTheme(ThemeMode.dark),
                         ),
                         _buildThemeOption(
@@ -146,7 +148,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           themeMode: ThemeMode.system,
                           currentMode: themeMode,
                           icon: Icons.brightness_auto,
-                          label: 'System',
+                          label: l10n.appearanceSystem,
                           onTap: () => themeNotifier.setTheme(ThemeMode.system),
                         ),
                       ],
@@ -179,7 +181,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Current Theme',
+                                l10n.settingsCurrentTheme,
                                 style: context.bodySmall.copyWith(
                                   color: context.secondaryTextColor,
                                 ),
@@ -187,10 +189,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 themeMode == ThemeMode.dark 
-                                    ? 'Dark Mode' 
+                                    ? l10n.profileThemeDark 
                                     : themeMode == ThemeMode.light 
-                                        ? 'Light Mode' 
-                                        : 'System Default',
+                                        ? l10n.profileThemeLight 
+                                        : l10n.profileThemeSystem,
                                 style: context.bodyMedium.copyWith(
                                   color: context.primaryTextColor,
                                   fontWeight: FontWeight.w600,

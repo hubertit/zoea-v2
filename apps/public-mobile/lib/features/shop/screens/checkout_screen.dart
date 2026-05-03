@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -66,6 +67,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cartAsync = ref.watch(cartProvider);
 
     return Scaffold(
@@ -83,7 +85,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           ),
         ),
         title: Text(
-          'Checkout',
+          l10n.checkoutScreenTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -104,7 +106,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Your cart is empty',
+                    l10n.cartEmptyMessage,
                     style: context.titleMedium.copyWith(
                       color: context.primaryTextColor,
                     ),
@@ -112,7 +114,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => context.pop(),
-                    child: const Text('Continue Shopping'),
+                    child: Text(l10n.commonContinueShopping),
                   ),
                 ],
               ),
@@ -132,7 +134,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           if (listingId == null) {
             return Center(
               child: Text(
-                'Unable to determine listing',
+                l10n.checkoutUnableListing,
                 style: context.bodyMedium.copyWith(
                   color: context.errorColor,
                 ),
@@ -148,25 +150,25 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Order Summary
-                  _buildOrderSummary(cart),
+                  _buildOrderSummary(l10n, cart),
                   const SizedBox(height: 24),
                   
                   // Fulfillment Type
-                  _buildFulfillmentTypeSection(),
+                  _buildFulfillmentTypeSection(l10n),
                   const SizedBox(height: 24),
                   
                   // Delivery Address (if delivery selected)
                   if (_fulfillmentType == FulfillmentType.delivery) ...[
-                    _buildDeliveryAddressSection(),
+                    _buildDeliveryAddressSection(l10n),
                     const SizedBox(height: 24),
                   ],
                   
                   // Customer Information
-                  _buildCustomerInfoSection(),
+                  _buildCustomerInfoSection(l10n),
                   const SizedBox(height: 24),
                   
                   // Special Notes
-                  _buildNotesSection(),
+                  _buildNotesSection(l10n),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -185,7 +187,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load cart',
+                l10n.shopCartLoadFailed,
                 style: context.titleMedium.copyWith(
                   color: context.errorColor,
                 ),
@@ -195,17 +197,17 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 onPressed: () {
                   ref.invalidate(cartProvider);
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(cartAsync.valueOrNull),
+      bottomNavigationBar: _buildBottomBar(l10n, cartAsync.valueOrNull),
     );
   }
 
-  Widget _buildOrderSummary(Cart cart) {
+  Widget _buildOrderSummary(AppLocalizations l10n, Cart cart) {
     final subtotal = cart.totalAmount;
     final shipping = _fulfillmentType == FulfillmentType.delivery ? 2000.0 : 0.0;
     final tax = subtotal * 0.18; // 18% VAT
@@ -230,7 +232,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Order Summary',
+            l10n.checkoutOrderSummary,
             style: context.titleLarge.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -254,7 +256,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                       ),
                       Text(
-                        'Qty: ${item.quantity}',
+                        l10n.checkoutQtyLine(item.quantity),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
@@ -274,16 +276,16 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           )),
           const Divider(height: 24),
           // Price Breakdown
-          _buildPriceRow('Subtotal', subtotal, cart.items.first.currency),
+          _buildPriceRow(l10n.checkoutSubtotalLabel, subtotal, cart.items.first.currency),
           const SizedBox(height: 8),
-          _buildPriceRow('Tax (18%)', tax, cart.items.first.currency),
+          _buildPriceRow(l10n.checkoutTaxVatLabel, tax, cart.items.first.currency),
           if (shipping > 0) ...[
             const SizedBox(height: 8),
-            _buildPriceRow('Shipping', shipping, cart.items.first.currency),
+            _buildPriceRow(l10n.checkoutShippingLabel, shipping, cart.items.first.currency),
           ],
           const Divider(height: 24),
           _buildPriceRow(
-            'Total',
+            l10n.shopCartTotalLabel,
             total,
             cart.items.first.currency,
             isTotal: true,
@@ -323,7 +325,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildFulfillmentTypeSection() {
+  Widget _buildFulfillmentTypeSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -334,7 +336,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Delivery Method',
+            l10n.checkoutDeliveryMethod,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -342,8 +344,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           ),
           const SizedBox(height: 16),
           RadioListTile<FulfillmentType>(
-            title: const Text('Pickup'),
-            subtitle: const Text('Collect from store'),
+            title: Text(l10n.checkoutFulfillmentPickup),
+            subtitle: Text(l10n.checkoutFulfillmentPickupSubtitle),
             value: FulfillmentType.pickup,
             groupValue: _fulfillmentType,
             onChanged: (value) {
@@ -356,8 +358,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             activeColor: context.primaryColorTheme,
           ),
           RadioListTile<FulfillmentType>(
-            title: const Text('Delivery'),
-            subtitle: const Text('Delivered to your address'),
+            title: Text(l10n.checkoutFulfillmentDelivery),
+            subtitle: Text(l10n.checkoutFulfillmentDeliverySubtitle),
             value: FulfillmentType.delivery,
             groupValue: _fulfillmentType,
             onChanged: (value) {
@@ -368,8 +370,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             activeColor: context.primaryColorTheme,
           ),
           RadioListTile<FulfillmentType>(
-            title: const Text('Dine In'),
-            subtitle: const Text('Eat at the restaurant'),
+            title: Text(l10n.checkoutFulfillmentDineIn),
+            subtitle: Text(l10n.checkoutFulfillmentDineInSubtitle),
             value: FulfillmentType.dineIn,
             groupValue: _fulfillmentType,
             onChanged: (value) {
@@ -386,7 +388,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildDeliveryAddressSection() {
+  Widget _buildDeliveryAddressSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -397,7 +399,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Delivery Address',
+            l10n.checkoutDeliveryAddress,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -407,8 +409,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           TextFormField(
             controller: _addressController,
             decoration: InputDecoration(
-              labelText: 'Street Address',
-              hintText: 'Enter your street address',
+              labelText: l10n.checkoutStreetAddressLabel,
+              hintText: l10n.checkoutStreetAddressHint,
               prefixIcon: const Icon(Icons.location_on),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -417,7 +419,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             validator: (value) {
               if (_fulfillmentType == FulfillmentType.delivery && 
                   (value == null || value.trim().isEmpty)) {
-                return 'Please enter your delivery address';
+                return l10n.checkoutStreetAddressRequired;
               }
               return null;
             },
@@ -426,8 +428,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           TextFormField(
             controller: _cityController,
             decoration: InputDecoration(
-              labelText: 'City',
-              hintText: 'Enter your city',
+              labelText: l10n.checkoutCityLabel,
+              hintText: l10n.checkoutCityHint,
               prefixIcon: const Icon(Icons.location_city),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -436,7 +438,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             validator: (value) {
               if (_fulfillmentType == FulfillmentType.delivery && 
                   (value == null || value.trim().isEmpty)) {
-                return 'Please enter your city';
+                return l10n.checkoutCityRequired;
               }
               return null;
             },
@@ -446,7 +448,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildCustomerInfoSection() {
+  Widget _buildCustomerInfoSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -457,7 +459,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Contact Information',
+            l10n.checkoutContactInformation,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -467,8 +469,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           TextFormField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: 'Full Name',
-              hintText: 'Enter your full name',
+              labelText: l10n.checkoutFullNameLabel,
+              hintText: l10n.checkoutFullNameHint,
               prefixIcon: const Icon(Icons.person),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -476,7 +478,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your name';
+                return l10n.checkoutFullNameRequired;
               }
               return null;
             },
@@ -485,8 +487,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           TextFormField(
             controller: _emailController,
             decoration: InputDecoration(
-              labelText: 'Email (Optional)',
-              hintText: 'Enter your email',
+              labelText: l10n.checkoutEmailOptionalLabel,
+              hintText: l10n.checkoutEmailHint,
               prefixIcon: const Icon(Icons.email),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -498,8 +500,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           TextFormField(
             controller: _phoneController,
             decoration: InputDecoration(
-              labelText: 'Phone Number',
-              hintText: 'Enter your phone number',
+              labelText: l10n.checkoutPhoneLabel,
+              hintText: l10n.checkoutPhoneHint,
               prefixIcon: const Icon(Icons.phone),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -508,7 +510,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             keyboardType: TextInputType.phone,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter your phone number';
+                return l10n.checkoutPhoneRequired;
               }
               return null;
             },
@@ -518,7 +520,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildNotesSection() {
+  Widget _buildNotesSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -529,7 +531,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Special Instructions (Optional)',
+            l10n.checkoutSpecialInstructionsTitle,
             style: context.titleMedium.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -539,7 +541,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           TextFormField(
             controller: _notesController,
             decoration: InputDecoration(
-              hintText: 'Add any special instructions for your order...',
+              hintText: l10n.checkoutSpecialInstructionsHint,
               prefixIcon: const Icon(Icons.note),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -552,7 +554,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildBottomBar(Cart? cart) {
+  Widget _buildBottomBar(AppLocalizations l10n, Cart? cart) {
     if (cart == null || cart.items.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -584,7 +586,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total',
+                  l10n.shopCartTotalLabel,
                   style: context.titleLarge.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -623,7 +625,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                       )
                     : Text(
-                        'Place Order',
+                        l10n.checkoutPlaceOrder,
                         style: context.titleMedium.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -642,11 +644,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
     final cart = ref.read(cartProvider).valueOrNull;
     if (cart == null || cart.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Your cart is empty'),
+          content: Text(l10n.cartEmptyMessage),
           backgroundColor: context.errorColor,
         ),
       );
@@ -665,7 +668,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (listingId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Unable to determine listing'),
+          content: Text(l10n.checkoutUnableListing),
           backgroundColor: context.errorColor,
         ),
       );
@@ -698,7 +701,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         fulfillmentType: _fulfillmentType,
         deliveryAddress: deliveryAddress,
         pickupLocation: _fulfillmentType == FulfillmentType.pickup 
-            ? 'Store pickup' 
+            ? l10n.checkoutStorePickup 
             : null,
         deliveryDate: _deliveryDate,
         deliveryTimeSlot: _deliveryTimeSlot,
@@ -725,7 +728,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to place order: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(l10n.commonFailedPlaceOrder(
+              e.toString().replaceFirst('Exception: ', ''),
+            )),
             backgroundColor: context.errorColor,
           ),
         );

@@ -12,6 +12,7 @@ import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/country_provider.dart';
 import '../../../core/models/itinerary.dart';
 import '../../../core/services/itinerary_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ItineraryCreateScreen extends ConsumerStatefulWidget {
   final Itinerary? itinerary; // If provided, we're editing
@@ -187,8 +188,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             
             // Public toggle
             SwitchListTile(
-              title: const Text('Make Public'),
-              subtitle: const Text('Allow others to view this itinerary'),
+              title: Text(AppLocalizations.of(context)!.itineraryMakePublicTitle),
+              subtitle: Text(AppLocalizations.of(context)!.itineraryMakePublicSubtitle),
               value: _isPublic,
               onChanged: (value) {
                 setState(() {
@@ -211,7 +212,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
                 TextButton.icon(
                   onPressed: _showAddItemMenu,
                   icon: const Icon(Icons.add),
-                  label: const Text('Add Item'),
+                  label: Text(AppLocalizations.of(context)!.itineraryAddItem),
                   style: TextButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                   ),
@@ -421,8 +422,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.favorite),
-              title: const Text('From Favorites'),
-              subtitle: const Text('Add from your saved favorites'),
+              title: Text(AppLocalizations.of(context)!.itineraryFromFavoritesTitle),
+              subtitle: Text(AppLocalizations.of(context)!.itineraryFromFavoritesSubtitle),
               onTap: () {
                 Navigator.pop(context);
                 _addFromFavorites();
@@ -430,8 +431,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.recommend),
-              title: const Text('From Recommendations'),
-              subtitle: const Text('Add from recommended places'),
+              title: Text(AppLocalizations.of(context)!.itineraryFromRecommendationsTitle),
+              subtitle: Text(AppLocalizations.of(context)!.itineraryFromRecommendationsSubtitle),
               onTap: () {
                 Navigator.pop(context);
                 _addFromRecommendations();
@@ -439,8 +440,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.add_location_alt),
-              title: const Text('Custom Item'),
-              subtitle: const Text('Add a custom location or activity'),
+              title: Text(AppLocalizations.of(context)!.itineraryCustomItemTitle),
+              subtitle: Text(AppLocalizations.of(context)!.itineraryCustomItemSubtitle),
               onTap: () {
                 Navigator.pop(context);
                 _addCustomItem();
@@ -598,7 +599,9 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text(
+              AppLocalizations.of(context)!.commonFailedUpdate(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -616,12 +619,12 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Itinerary'),
-        content: const Text('Are you sure you want to delete this itinerary? This action cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.itineraryDeleteTitle),
+        content: Text(AppLocalizations.of(context)!.itineraryDeleteMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.commonCancel),
           ),
           TextButton(
             onPressed: () async {
@@ -631,7 +634,7 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.commonDelete),
           ),
         ],
       ),
@@ -645,8 +648,8 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Itinerary deleted successfully'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.itineraryDeletedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -656,7 +659,9 @@ class _ItineraryCreateScreenState extends ConsumerState<ItineraryCreateScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text(
+              AppLocalizations.of(context)!.commonFailedUpdate(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -692,7 +697,7 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add Custom Item'),
+      title: Text(AppLocalizations.of(context)!.itineraryAddCustomTitle),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -763,13 +768,13 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.commonCancel),
         ),
         ElevatedButton(
           onPressed: () {
             if (_nameController.text.trim().isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please enter a name')),
+                SnackBar(content: Text(AppLocalizations.of(context)!.itineraryCustomNameRequired)),
               );
               return;
             }
@@ -792,7 +797,7 @@ class _CustomItemDialogState extends State<_CustomItemDialog> {
             widget.onSave(item);
             Navigator.pop(context);
           },
-          child: const Text('Add'),
+          child: Text(AppLocalizations.of(context)!.commonAdd),
         ),
       ],
     );

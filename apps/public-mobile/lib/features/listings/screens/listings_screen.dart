@@ -8,7 +8,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/utils/price_formatter.dart';
-import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ListingsScreen extends ConsumerStatefulWidget {
   final String? type;
@@ -30,6 +30,7 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final listingsAsync = ref.watch(
       listingsProvider(
         ListingsParams(
@@ -45,7 +46,9 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
       backgroundColor: context.grey50,
       appBar: AppBar(
         title: Text(
-          widget.type != null ? widget.type!.toUpperCase() : 'Listings',
+          widget.type != null
+              ? widget.type!.toUpperCase()
+              : l10n.listingScreenDefaultTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -85,14 +88,14 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No listings found',
+                    l10n.exploreNoListings,
                     style: context.headlineSmall.copyWith(
                       color: context.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Try adjusting your filters',
+                    l10n.shopEmptyAdjustFilters,
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -135,7 +138,7 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
                             _currentPage++;
                           });
                         },
-                        child: const Text('Load More'),
+                        child: Text(l10n.commonLoadMore),
                       ),
                     ),
                   );
@@ -161,7 +164,7 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load listings',
+                l10n.exploreFailedListings,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -186,7 +189,7 @@ class _ListingsScreenState extends ConsumerState<ListingsScreen> {
                     ),
                   ));
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/services_provider.dart';
@@ -36,6 +37,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final params = ServicesParams(
       page: _currentPage,
       limit: _pageSize,
@@ -66,7 +68,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
           ),
         ),
         title: Text(
-          widget.listingId != null ? 'Services' : 'Services',
+          l10n.shopServicesTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -93,7 +95,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
           final totalPages = meta['totalPages'] as int? ?? 1;
 
           if (services.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(l10n);
           }
 
           return RefreshIndicator(
@@ -111,7 +113,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                     child: Row(
                       children: [
                         Text(
-                          '$total ${total == 1 ? 'service' : 'services'}',
+                          l10n.shopServiceCount(total),
                           style: context.bodyMedium.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -123,7 +125,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Sort: ${_getSortLabel(_selectedSort!)}',
+                                  l10n.shopSortLine(_getSortLabel(l10n, _selectedSort!)),
                                   style: context.bodySmall.copyWith(
                                     color: context.primaryColorTheme,
                                   ),
@@ -146,9 +148,9 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                     itemCount: services.length + (_currentPage < totalPages ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == services.length) {
-                        return _buildLoadMoreButton(totalPages);
+                        return _buildLoadMoreButton(l10n, totalPages);
                       }
-                      return _buildServiceCard(services[index]);
+                      return _buildServiceCard(l10n, services[index]);
                     },
                   ),
                 ),
@@ -157,13 +159,13 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
           );
         },
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
 
-  Widget _buildServiceCard(Map<String, dynamic> service) {
-    final name = service['name'] as String? ?? 'Unknown';
+  Widget _buildServiceCard(AppLocalizations l10n, Map<String, dynamic> service) {
+    final name = service['name'] as String? ?? l10n.exploreListingUnknown;
     final basePrice = (service['basePrice'] ?? service['base_price'] ?? 0).toDouble();
     final priceUnit = service['priceUnit'] as String? ?? service['price_unit'] as String? ?? 'fixed';
     final images = service['images'] as List? ?? [];
@@ -252,7 +254,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              'Featured',
+                              l10n.shopFeaturedSection,
                               style: context.bodySmall.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -286,7 +288,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                         if (priceUnit != 'fixed') ...[
                           const SizedBox(width: 4),
                           Text(
-                            '/${_getPriceUnitLabel(priceUnit)}',
+                            '/${_getPriceUnitLabel(l10n, priceUnit)}',
                             style: context.bodySmall.copyWith(
                               color: context.secondaryTextColor,
                             ),
@@ -305,7 +307,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${durationMinutes} min',
+                            l10n.shopServiceDurationMinutes(durationMinutes),
                             style: context.bodySmall.copyWith(
                               color: context.secondaryTextColor,
                             ),
@@ -322,7 +324,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          !isAvailable ? 'Unavailable' : 'Inactive',
+                          !isAvailable ? l10n.shopServiceUnavailable : l10n.shopFilterInactive,
                           style: context.bodySmall.copyWith(
                             color: context.errorColor,
                             fontWeight: FontWeight.w600,
@@ -340,7 +342,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -354,14 +356,14 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No services found',
+              l10n.shopEmptyNoServices,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Try adjusting your filters or search',
+              l10n.shopEmptyAdjustFilters,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -378,7 +380,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                   _isFeatured = null;
                 });
               },
-              child: const Text('Clear Filters'),
+              child: Text(l10n.shopClearFilters),
             ),
           ],
         ),
@@ -386,7 +388,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -400,7 +402,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load services',
+              l10n.shopErrorLoadServices,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -430,7 +432,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                 );
                 ref.invalidate(servicesProvider(params));
               },
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -438,7 +440,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     );
   }
 
-  Widget _buildLoadMoreButton(int totalPages) {
+  Widget _buildLoadMoreButton(AppLocalizations l10n, int totalPages) {
     if (_currentPage >= totalPages) return const SizedBox.shrink();
 
     return Center(
@@ -450,22 +452,23 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               _currentPage++;
             });
           },
-          child: const Text('Load More'),
+          child: Text(l10n.commonLoadMore),
         ),
       ),
     );
   }
 
   void _showSearchDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Search Services'),
+        title: Text(l10n.shopSearchServicesTitle),
         content: TextField(
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Enter service name...',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: l10n.shopServiceSearchHint,
+            border: const OutlineInputBorder(),
           ),
           onSubmitted: (value) {
             Navigator.pop(context);
@@ -475,7 +478,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
         ],
       ),
@@ -483,6 +486,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   }
 
   void _showFilterBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: context.cardColor,
@@ -497,7 +501,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Filter Services',
+                l10n.shopFilterServicesSheetTitle,
                 style: context.headlineSmall.copyWith(
                   color: context.primaryTextColor,
                   fontWeight: FontWeight.bold,
@@ -505,23 +509,30 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               ),
               const SizedBox(height: 24),
               _buildFilterSection(
-                'Status',
-                ['All', 'Active', 'Inactive'],
-                _selectedStatus == null ? 'All' : _selectedStatus!.toUpperCase(),
+                l10n.shopStatusSection,
+                [
+                  (l10n.bookingsTabAll, 'all'),
+                  (l10n.shopFilterActive, 'active'),
+                  (l10n.shopFilterInactive, 'inactive'),
+                ],
+                _selectedStatus == null ? 'all' : _selectedStatus!,
                 (value) {
                   setModalState(() {
-                    _selectedStatus = value == 'All' ? null : value.toLowerCase();
+                    _selectedStatus = value == 'all' ? null : value;
                   });
                 },
               ),
               const SizedBox(height: 16),
               _buildFilterSection(
-                'Featured',
-                ['All', 'Featured Only'],
-                _isFeatured == null ? 'All' : 'Featured Only',
+                l10n.shopFeaturedSection,
+                [
+                  (l10n.bookingsTabAll, 'all'),
+                  (l10n.shopFeaturedOnly, 'featured'),
+                ],
+                _isFeatured == null ? 'all' : 'featured',
                 (value) {
                   setModalState(() {
-                    _isFeatured = value == 'All' ? null : true;
+                    _isFeatured = value == 'all' ? null : true;
                   });
                 },
               ),
@@ -538,7 +549,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                           _maxPrice = null;
                         });
                       },
-                      child: const Text('Reset'),
+                      child: Text(l10n.shopFilterReset),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -550,7 +561,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                           _currentPage = 1;
                         });
                       },
-                      child: const Text('Apply'),
+                      child: Text(l10n.commonApply),
                     ),
                   ),
                 ],
@@ -562,7 +573,12 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     );
   }
 
-  Widget _buildFilterSection(String title, List<String> options, String selected, Function(String) onSelect) {
+  Widget _buildFilterSection(
+    String title,
+    List<(String label, String value)> options,
+    String selectedValue,
+    void Function(String value) onSelect,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -576,13 +592,14 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: options.map((option) {
-            final isSelected = option == selected;
+          children: options.map((pair) {
+            final (label, value) = pair;
+            final isSelected = value == selectedValue;
             return FilterChip(
-              label: Text(option),
+              label: Text(label),
               selected: isSelected,
               onSelected: (selected) {
-                if (selected) onSelect(option);
+                if (selected) onSelect(value);
               },
               selectedColor: context.primaryColorTheme.withOpacity(0.2),
               checkmarkColor: context.primaryColorTheme,
@@ -594,6 +611,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   }
 
   void _showSortBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: context.cardColor,
@@ -607,7 +625,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Sort By',
+              l10n.staySortBy,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
                 fontWeight: FontWeight.bold,
@@ -622,7 +640,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               'price_desc',
               'createdAt_desc'
             ].map((sort) => RadioListTile<String>(
-                  title: Text(_getSortLabel(sort)),
+                  title: Text(_getSortLabel(l10n, sort)),
                   value: sort,
                   groupValue: _selectedSort,
                   onChanged: (value) {
@@ -639,33 +657,33 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     );
   }
 
-  String _getSortLabel(String sort) {
+  String _getSortLabel(AppLocalizations l10n, String sort) {
     switch (sort) {
       case 'popular':
-        return 'Popular';
+        return l10n.shopSortPopular;
       case 'name_asc':
-        return 'Name (A-Z)';
+        return l10n.shopSortNameAz;
       case 'name_desc':
-        return 'Name (Z-A)';
+        return l10n.shopSortNameZa;
       case 'price_asc':
-        return 'Price (Low to High)';
+        return l10n.shopSortPriceLowHigh;
       case 'price_desc':
-        return 'Price (High to Low)';
+        return l10n.shopSortPriceHighLow;
       case 'createdAt_desc':
-        return 'Newest First';
+        return l10n.shopSortNewest;
       default:
         return sort;
     }
   }
 
-  String _getPriceUnitLabel(String unit) {
+  String _getPriceUnitLabel(AppLocalizations l10n, String unit) {
     switch (unit) {
       case 'per_hour':
-        return 'hour';
+        return l10n.shopPricePerHour;
       case 'per_session':
-        return 'session';
+        return l10n.shopPricePerSession;
       case 'per_person':
-        return 'person';
+        return l10n.shopPricePerPerson;
       default:
         return '';
     }

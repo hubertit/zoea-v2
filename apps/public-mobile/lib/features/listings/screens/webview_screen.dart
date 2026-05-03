@@ -3,6 +3,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// A polished in-app webview screen similar to Instagram's browser experience
 class WebViewScreen extends StatefulWidget {
@@ -28,6 +29,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
   bool _canGoBack = false;
   bool _canGoForward = false;
   int _loadingProgress = 0;
+  bool _invalidUrl = false;
+  bool _loadTimeout = false;
 
   @override
   void initState() {
@@ -62,7 +65,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = 'Invalid URL: ${widget.url}';
+          _invalidUrl = true;
+          _loadTimeout = false;
+          _errorMessage = null;
         });
       }
       return;
@@ -89,6 +94,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 _isLoading = true;
                 _hasError = false;
                 _errorMessage = null;
+                _invalidUrl = false;
+                _loadTimeout = false;
                 _loadingProgress = 0;
               });
             }
@@ -103,7 +110,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               _controller.getTitle().then((title) {
                 if (mounted) {
                   setState(() {
-                    _currentTitle = title ?? widget.title ?? 'Loading...';
+                    _currentTitle = title ?? widget.title;
                   });
                 }
               });
@@ -129,11 +136,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
               setState(() {
                 _isLoading = false;
                 _hasError = true;
-                // error.description is non-nullable, use it directly
-                final baseMessage = error.description.isEmpty 
-                    ? 'Failed to load page'
-                    : error.description;
-                _errorMessage = 'Error ${error.errorCode}: $baseMessage';
+                _invalidUrl = false;
+                _loadTimeout = false;
+                final baseMessage =
+                    error.description.isEmpty ? '' : error.description;
+                _errorMessage = baseMessage.isEmpty
+                    ? 'Error ${error.errorCode}'
+                    : 'Error ${error.errorCode}: $baseMessage';
               });
             }
           },
@@ -142,7 +151,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
               setState(() {
                 _isLoading = false;
                 _hasError = true;
-                _errorMessage = 'HTTP Error: ${error.response?.statusCode ?? 'Unknown'}';
+                _invalidUrl = false;
+                _loadTimeout = false;
+                _errorMessage =
+                    'HTTP ${error.response?.statusCode ?? '?'}';
               });
             }
           },
@@ -160,7 +172,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = 'Page is taking too long to load. Please check your internet connection.';
+          _invalidUrl = false;
+          _loadTimeout = true;
+          _errorMessage = null;
         });
       }
     });
@@ -170,6 +184,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
     setState(() {
       _hasError = false;
       _errorMessage = null;
+      _invalidUrl = false;
+      _loadTimeout = false;
       _isLoading = true;
     });
     _controller.reload();
@@ -189,6 +205,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -202,7 +219,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              _currentTitle ?? widget.title ?? 'Loading...',
+              _currentTitle ?? widget.title ?? l10n.exploreLoading,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -230,18 +247,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
             IconButton(
               icon: Icon(Icons.arrow_back, color: context.primaryTextColor),
               onPressed: _goBack,
-              tooltip: 'Go back',
+              tooltip: l10n.commonGoBack,
             ),
           if (_canGoForward)
             IconButton(
               icon: Icon(Icons.arrow_forward, color: context.primaryTextColor),
               onPressed: _goForward,
-              tooltip: 'Go forward',
+              tooltip: l10n.webviewTooltipForward,
             ),
           IconButton(
             icon: Icon(Icons.refresh, color: context.primaryTextColor),
             onPressed: _reload,
-            tooltip: 'Reload',
+            tooltip: l10n.webviewTooltipReload,
           ),
           // Open in external browser option
           PopupMenuButton<String>(
@@ -260,7 +277,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       AppTheme.errorSnackBar(
-                        message: 'Could not open URL in external browser',
+                        message: l10n.commonLinkOpenFailed,
                       ),
                     );
                   }
@@ -268,20 +285,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     AppTheme.errorSnackBar(
-                      message: 'Error opening browser: ${e.toString()}',
+                      message: l10n.commonLinkOpenFailed,
                     ),
                   );
                 }
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'open_external',
                 child: Row(
                   children: [
-                    Icon(Icons.open_in_browser, size: 20),
-                    SizedBox(width: 12),
-                    Text('Open in Browser'),
+                    const Icon(Icons.open_in_browser, size: 20),
+                    const SizedBox(width: 12),
+                    Text(l10n.webviewOpenInBrowser),
                   ],
                 ),
               ),
@@ -307,7 +324,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Loading...',
+                      l10n.exploreLoading,
                       style: TextStyle(
                         color: context.secondaryTextColor,
                         fontSize: 14,
@@ -334,7 +351,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Failed to load page',
+                      l10n.webviewPageLoadFailed,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -342,7 +359,31 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    if (_errorMessage != null)
+                    if (_invalidUrl)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          l10n.webviewInvalidUrlLine(widget.url),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: context.secondaryTextColor,
+                          ),
+                        ),
+                      )
+                    else if (_loadTimeout)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          l10n.webviewLoadTimeoutBody,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: context.secondaryTextColor,
+                          ),
+                        ),
+                      )
+                    else if (_errorMessage != null)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32),
                         child: Text(
@@ -358,7 +399,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     ElevatedButton.icon(
                       onPressed: _reload,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
+                      label: Text(l10n.commonRetry),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryColor,
                       foregroundColor: Colors.white,

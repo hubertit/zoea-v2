@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:intl/intl.dart';
+
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/models/event_filter.dart';
-import 'package:intl/intl.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EventFilterSheet extends StatefulWidget {
   final EventFilter currentFilter;
@@ -43,6 +44,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: BoxDecoration(
@@ -68,7 +70,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Filter Events',
+                  l10n.eventsFilterTitle,
                   style: context.titleLarge.copyWith(
                     color: context.primaryTextColor,
                   ),
@@ -85,14 +87,14 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
                           });
                           widget.onClearFilters();
                         },
-                        child: const Text('Clear All'),
+                        child: Text(l10n.commonClearAll),
                       ),
                     TextButton(
                       onPressed: () {
                         widget.onFilterChanged(_filter);
                         Navigator.pop(context);
                       },
-                      child: const Text('Apply'),
+                      child: Text(l10n.commonApply),
                     ),
                   ],
                 ),
@@ -106,17 +108,17 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSearchSection(),
+                  _buildSearchSection(l10n),
                   const SizedBox(height: 24),
-                  _buildCategorySection(),
+                  _buildCategorySection(l10n),
                   const SizedBox(height: 24),
-                  _buildDateSection(),
+                  _buildDateSection(l10n),
                   const SizedBox(height: 24),
-                  _buildPriceSection(),
+                  _buildPriceSection(l10n),
                   const SizedBox(height: 24),
-                  _buildLocationSection(),
+                  _buildLocationSection(l10n),
                   const SizedBox(height: 24),
-                  _buildOptionsSection(),
+                  _buildOptionsSection(l10n),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -127,12 +129,12 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
     );
   }
 
-  Widget _buildSearchSection() {
+  Widget _buildSearchSection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Search',
+          l10n.eventsFilterSearchSection,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -141,7 +143,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
         TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText: 'Search events...',
+            hintText: l10n.eventsFilterSearchHint,
             prefixIcon: const Icon(Icons.search),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -158,12 +160,12 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
     );
   }
 
-  Widget _buildCategorySection() {
+  Widget _buildCategorySection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Category',
+          l10n.eventsFilterCategory,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -180,7 +182,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
                 children: [
                   Text(category.icon),
                   const SizedBox(width: 8),
-                  Text(category.name),
+                  Text(_categoryLabel(l10n, category)),
                 ],
               ),
               selected: isSelected,
@@ -201,12 +203,12 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
     );
   }
 
-  Widget _buildDateSection() {
+  Widget _buildDateSection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Date Range',
+          l10n.eventsFilterDateRange,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -216,7 +218,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
           children: [
             Expanded(
               child: _buildDateField(
-                label: 'Start Date',
+                label: l10n.eventsFilterStartDate,
                 date: _filter.startDate,
                 onDateSelected: (date) {
                   setState(() {
@@ -228,7 +230,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
             const SizedBox(width: 16),
             Expanded(
               child: _buildDateField(
-                label: 'End Date',
+                label: l10n.eventsFilterEndDate,
                 date: _filter.endDate,
                 onDateSelected: (date) {
                   setState(() {
@@ -273,7 +275,10 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
             Expanded(
               child: Text(
                 date != null
-                    ? DateFormat('MMM dd, yyyy').format(date)
+                    ? DateFormat(
+                        'MMM dd, yyyy',
+                        Localizations.localeOf(context).toString(),
+                      ).format(date)
                     : label,
                 style: TextStyle(
                   color: date != null ? context.primaryTextColor : context.secondaryTextColor,
@@ -291,12 +296,12 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
     );
   }
 
-  Widget _buildPriceSection() {
+  Widget _buildPriceSection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Price Range',
+          l10n.eventsFilterPriceRange,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -308,7 +313,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
           children: PriceRange.ranges.map((range) {
             final isSelected = _filter.minPrice == range.min && _filter.maxPrice == range.max;
             return FilterChip(
-              label: Text(range.label),
+              label: Text(_priceRangeLabel(l10n, range)),
               selected: isSelected,
               onSelected: (selected) {
                 setState(() {
@@ -325,12 +330,12 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
     );
   }
 
-  Widget _buildLocationSection() {
+  Widget _buildLocationSection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Location',
+          l10n.eventsFilterLocation,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -339,7 +344,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
         TextField(
           controller: _locationController,
           decoration: InputDecoration(
-            hintText: 'Enter location...',
+            hintText: l10n.eventsFilterLocationHint,
             prefixIcon: const Icon(Icons.location_on),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -356,12 +361,12 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
     );
   }
 
-  Widget _buildOptionsSection() {
+  Widget _buildOptionsSection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Options',
+          l10n.eventsFilterOptions,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -371,7 +376,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
           children: [
             Expanded(
               child: _buildOptionChip(
-                label: 'Free Events',
+                label: l10n.eventsFilterFreeEvents,
                 icon: Icons.money_off,
                 isSelected: _filter.isFree == true,
                 onChanged: (selected) {
@@ -384,7 +389,7 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
             const SizedBox(width: 12),
             Expanded(
               child: _buildOptionChip(
-                label: 'Verified Only',
+                label: l10n.eventsFilterVerifiedOnly,
                 icon: Icons.verified,
                 isSelected: _filter.isVerified == true,
                 onChanged: (selected) {
@@ -437,5 +442,34 @@ class _EventFilterSheetState extends State<EventFilterSheet> {
         ),
       ),
     );
+  }
+
+  String _categoryLabel(AppLocalizations l10n, EventCategory c) {
+    switch (c.id) {
+      case 'music':
+        return l10n.eventsCategoryMusic;
+      case 'sports':
+        return l10n.eventsCategorySports;
+      case 'food':
+        return l10n.eventsCategoryFood;
+      case 'arts':
+        return l10n.eventsCategoryArts;
+      case 'conferences':
+        return l10n.eventsCategoryConferences;
+      case 'performance':
+        return l10n.eventsCategoryPerformance;
+      default:
+        return c.name;
+    }
+  }
+
+  String _priceRangeLabel(AppLocalizations l10n, PriceRange r) {
+    if (r.min == 0 && r.max == 0) return l10n.eventsPriceFree;
+    if (r.min == 0 && r.max == 5000) return l10n.eventsPriceUnder5k;
+    if (r.min == 5000 && r.max == 15000) return l10n.eventsPrice5kTo15k;
+    if (r.min == 15000 && r.max == 50000) return l10n.eventsPrice15kTo50k;
+    if (r.min == 50000 && r.max == 100000) return l10n.eventsPrice50kTo100k;
+    if (r.min == 100000 && r.max == 999999) return l10n.eventsPrice100kPlus;
+    return r.label;
   }
 }

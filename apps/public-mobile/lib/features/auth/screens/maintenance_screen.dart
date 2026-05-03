@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -89,9 +90,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
         context.go('/splash');
       } else {
         // Still down, show a brief message
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Service is still unavailable. Please try again in a moment.'),
+            content: Text(l10n.maintenanceStillUnavailable),
             backgroundColor: AppTheme.errorColor,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -105,6 +107,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       body: SafeArea(
@@ -143,7 +146,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
                   
                   // Title
                   Text(
-                    'We\'ll Be Right Back!',
+                    l10n.maintenanceTitle,
                     style: context.headlineMedium.copyWith(
                       fontWeight: FontWeight.bold,
                       color: context.primaryTextColor,
@@ -155,7 +158,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
                   
                       // Message
                       Text(
-                        'Our systems are currently undergoing maintenance to serve you better. We\'ll be back online shortly.',
+                        l10n.maintenanceMessage,
                         style: context.bodyLarge.copyWith(
                           color: context.secondaryTextColor,
                           height: 1.5,
@@ -223,7 +226,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
                           ),
                           const SizedBox(width: AppTheme.spacing8),
                           Text(
-                            'Try Again',
+                            l10n.maintenanceTryAgain,
                             style: context.bodyLarge.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.onPrimary,
@@ -238,7 +241,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
                   
                   // Support info
                   Text(
-                    'Need help? Contact us at support@zoea.africa',
+                    l10n.maintenanceSupport('support@zoea.africa'),
                     style: context.bodySmall.copyWith(
                       color: context.secondaryTextColor,
                     ),

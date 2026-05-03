@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -18,6 +19,7 @@ class GenderSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -27,7 +29,7 @@ class GenderSelector extends StatelessWidget {
                 context: context,
                 gender: Gender.male,
                 icon: Icons.person,
-                label: 'Male',
+                label: l10n.onboardingGenderMale,
               ),
             ),
             const SizedBox(width: AppTheme.spacing12),
@@ -36,7 +38,7 @@ class GenderSelector extends StatelessWidget {
                 context: context,
                 gender: Gender.female,
                 icon: Icons.person_outline,
-                label: 'Female',
+                label: l10n.onboardingGenderFemale,
               ),
             ),
           ],
@@ -49,7 +51,7 @@ class GenderSelector extends StatelessWidget {
                 context: context,
                 gender: Gender.other,
                 icon: Icons.person_outline_rounded,
-                label: 'Other',
+                label: l10n.onboardingGenderOther,
               ),
             ),
             const SizedBox(width: AppTheme.spacing12),
@@ -58,7 +60,7 @@ class GenderSelector extends StatelessWidget {
                 context: context,
                 gender: Gender.preferNotToSay,
                 icon: Icons.block,
-                label: 'Prefer not to say',
+                label: l10n.onboardingGenderPreferNot,
               ),
             ),
           ],

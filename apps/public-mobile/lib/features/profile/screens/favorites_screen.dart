@@ -6,8 +6,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/providers/favorites_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
   const FavoritesScreen({super.key});
@@ -34,11 +34,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Favorites',
+          l10n.profileFavoritesTitle,
           style: context.titleLarge,
         ),
         backgroundColor: context.backgroundColor,
@@ -61,10 +62,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
             color: context.primaryTextColor,
           ),
           unselectedLabelStyle: context.bodyMedium,
-          tabs: const [
-            Tab(text: 'All'),
-            Tab(text: 'Events'),
-            Tab(text: 'Places'),
+          tabs: [
+            Tab(text: l10n.stayTabAll),
+            Tab(text: l10n.shellTabEvents),
+            Tab(text: l10n.profileStatPlaces),
           ],
         ),
       ),
@@ -87,11 +88,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
         final favorites = response['data'] as List? ?? [];
         
         if (favorites.isEmpty) {
+          final l10n = AppLocalizations.of(context)!;
           return _buildEmptyState(
             icon: Icons.favorite_border,
-            title: 'No Favorites Yet',
-            subtitle: 'Start exploring and save your favorite events and places',
-            actionText: 'Explore Now',
+            title: l10n.favoritesEmptyAllTitle,
+            subtitle: l10n.favoritesEmptyAllSubtitle,
+            actionText: l10n.favoritesEmptyExploreCta,
             onAction: () => context.go('/explore'),
           );
         }
@@ -113,32 +115,35 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
         );
       },
       loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: context.errorColor),
-            const SizedBox(height: 16),
-            Text(
-              'Failed to load favorites',
-              style: context.headlineSmall.copyWith(color: context.errorColor),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString().replaceFirst('Exception: ', ''),
-              style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+      error: (error, stack) {
+        final l10n = AppLocalizations.of(context)!;
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: context.errorColor),
+              const SizedBox(height: 16),
+              Text(
+                l10n.favoritesLoadError,
+                style: context.headlineSmall.copyWith(color: context.errorColor),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString().replaceFirst('Exception: ', ''),
+                style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
+                },
+                child: Text(l10n.commonRetry),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -151,11 +156,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
         final eventFavorites = favorites.where((f) => f['eventId'] != null && f['event'] != null).toList();
 
         if (eventFavorites.isEmpty) {
+          final l10n = AppLocalizations.of(context)!;
           return _buildEmptyState(
             icon: Icons.event,
-            title: 'No Favorite Events',
-            subtitle: 'Save events you\'re interested in to see them here',
-            actionText: 'Browse Events',
+            title: l10n.favoritesEmptyEventsTitle,
+            subtitle: l10n.favoritesEmptyEventsSubtitle,
+            actionText: l10n.favoritesEmptyEventsCta,
             onAction: () => context.go('/events'),
           );
         }
@@ -177,32 +183,35 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
         );
       },
       loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: context.errorColor),
-            const SizedBox(height: 16),
-            Text(
-              'Failed to load favorites',
-              style: context.headlineSmall.copyWith(color: context.errorColor),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString().replaceFirst('Exception: ', ''),
-              style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+      error: (error, stack) {
+        final l10n = AppLocalizations.of(context)!;
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: context.errorColor),
+              const SizedBox(height: 16),
+              Text(
+                l10n.favoritesLoadError,
+                style: context.headlineSmall.copyWith(color: context.errorColor),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString().replaceFirst('Exception: ', ''),
+                style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
+                },
+                child: Text(l10n.commonRetry),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -215,11 +224,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
         final placeFavorites = favorites.where((f) => f['listingId'] != null && f['listing'] != null).toList();
 
         if (placeFavorites.isEmpty) {
+          final l10n = AppLocalizations.of(context)!;
           return _buildEmptyState(
             icon: Icons.place,
-            title: 'No Favorite Places',
-            subtitle: 'Save places you want to visit to see them here',
-            actionText: 'Explore Places',
+            title: l10n.favoritesEmptyPlacesTitle,
+            subtitle: l10n.favoritesEmptyPlacesSubtitle,
+            actionText: l10n.favoritesEmptyPlacesCta,
             onAction: () => context.go('/explore'),
           );
         }
@@ -241,36 +251,40 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
         );
       },
       loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: context.errorColor),
-            const SizedBox(height: 16),
-            Text(
-              'Failed to load favorites',
-              style: context.headlineSmall.copyWith(color: context.errorColor),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString().replaceFirst('Exception: ', ''),
-              style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+      error: (error, stack) {
+        final l10n = AppLocalizations.of(context)!;
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: context.errorColor),
+              const SizedBox(height: 16),
+              Text(
+                l10n.favoritesLoadError,
+                style: context.headlineSmall.copyWith(color: context.errorColor),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString().replaceFirst('Exception: ', ''),
+                style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
+                },
+                child: Text(l10n.commonRetry),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildFavoriteCard(Map<String, dynamic> item) {
+    final l10n = AppLocalizations.of(context)!;
     final isEvent = item['type'] == 'event';
     
     return Container(
@@ -386,7 +400,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           // TODO: View details
                         },
                         icon: const Icon(Icons.visibility_outlined, size: 18),
-                        label: const Text('View Details'),
+                        label: Text(l10n.commonViewDetails),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -405,7 +419,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           _showRemoveFavoriteDialog(item);
                         },
                         icon: const Icon(Icons.favorite, size: 18),
-                        label: const Text('Remove'),
+                        label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryTextColor,
                           backgroundColor: context.errorColor,
@@ -428,6 +442,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
   }
 
   Widget _buildEventFavoriteCard(Map<String, dynamic> event) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -522,7 +537,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           // TODO: View event details
                         },
                         icon: const Icon(Icons.visibility_outlined, size: 18),
-                        label: const Text('View Event'),
+                        label: Text(l10n.commonViewEvent),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -541,7 +556,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           _showRemoveFavoriteDialog(event);
                         },
                         icon: const Icon(Icons.favorite, size: 18),
-                        label: const Text('Remove'),
+                        label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryTextColor,
                           backgroundColor: context.errorColor,
@@ -564,6 +579,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
   }
 
   Widget _buildPlaceFavoriteCard(Map<String, dynamic> place) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -658,7 +674,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           // TODO: View place details
                         },
                         icon: const Icon(Icons.visibility_outlined, size: 18),
-                        label: const Text('View Place'),
+                        label: Text(l10n.commonViewPlace),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -677,7 +693,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           _showRemoveFavoriteDialog(place);
                         },
                         icon: const Icon(Icons.favorite, size: 18),
-                        label: const Text('Remove'),
+                        label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryTextColor,
                           backgroundColor: context.errorColor,
@@ -714,17 +730,20 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
   }
 
   Widget _buildEventFavoriteCardFromApi(Map<String, dynamic> favorite) {
+    final l10n = AppLocalizations.of(context)!;
     final event = favorite['event'] as Map<String, dynamic>?;
     if (event == null) return const SizedBox.shrink();
     
-    final eventName = event['name'] ?? 'Unknown Event';
-    final location = event['locationName'] ?? event['address'] ?? 'Unknown Location';
+    final eventName = event['name'] as String? ?? l10n.exploreListingUnknown;
+    final location = event['locationName'] as String? ??
+        event['address'] as String? ??
+        l10n.exploreListingUnknown;
     final flyer = event['flyer'] ?? '';
     final startDate = event['startDate'] != null 
         ? DateTime.tryParse(event['startDate']) 
         : null;
     
-    String dateText = 'Date TBA';
+    String dateText = l10n.favoritesDateTba;
     if (startDate != null) {
       dateText = '${startDate.day}/${startDate.month}/${startDate.year}';
     }
@@ -776,7 +795,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'Event',
+                    l10n.favoritesTypeEvent,
                     style: context.labelSmall.copyWith(
                       color: context.primaryColorTheme,
                       fontWeight: FontWeight.w500,
@@ -821,7 +840,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           }
                         },
                         icon: const Icon(Icons.visibility_outlined, size: 18),
-                        label: const Text('View Event'),
+                        label: Text(l10n.commonViewEvent),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -840,7 +859,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           _showRemoveFavoriteDialogFromApi(favorite);
                         },
                         icon: const Icon(Icons.favorite, size: 18),
-                        label: const Text('Remove'),
+                        label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryTextColor,
                           backgroundColor: context.errorColor,
@@ -863,11 +882,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
   }
 
   Widget _buildPlaceFavoriteCardFromApi(Map<String, dynamic> favorite) {
+    final l10n = AppLocalizations.of(context)!;
     final listing = favorite['listing'] as Map<String, dynamic>?;
     if (listing == null) return const SizedBox.shrink();
     
-    final listingName = listing['name'] ?? 'Unknown Place';
-    final address = listing['address'] ?? listing['city']?['name'] ?? 'Unknown Location';
+    final listingName = listing['name'] as String? ?? l10n.exploreListingUnknown;
+    final address = listing['address'] as String? ??
+        (listing['city'] is Map ? (listing['city'] as Map)['name'] as String? : null) ??
+        l10n.exploreListingUnknown;
     final category = listing['type'] ?? 'Place';
     
     // Extract image URL
@@ -933,7 +955,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'Place',
+                    l10n.favoritesTypePlace,
                     style: context.labelSmall.copyWith(
                       color: context.successColor,
                       fontWeight: FontWeight.w500,
@@ -978,7 +1000,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           }
                         },
                         icon: const Icon(Icons.visibility_outlined, size: 18),
-                        label: const Text('View Place'),
+                        label: Text(l10n.commonViewPlace),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryColorTheme,
                           backgroundColor: context.backgroundColor,
@@ -997,7 +1019,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
                           _showRemoveFavoriteDialogFromApi(favorite);
                         },
                         icon: const Icon(Icons.favorite, size: 18),
-                        label: const Text('Remove'),
+                        label: Text(l10n.commonRemove),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.primaryTextColor,
                           backgroundColor: context.errorColor,
@@ -1023,75 +1045,82 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
     final listing = favorite['listing'] as Map<String, dynamic>?;
     final event = favorite['event'] as Map<String, dynamic>?;
     final tour = favorite['tour'] as Map<String, dynamic>?;
-    final itemName = listing?['name'] ?? event?['name'] ?? tour?['name'] ?? 'this item';
-    
+    final rawName = listing?['name'] ?? event?['name'] ?? tour?['name'];
+    final nameStr = rawName is String && rawName.isNotEmpty ? rawName : null;
+
     // Extract the actual item ID (listingId, eventId, or tourId)
     final listingId = listing?['id']?.toString();
     final eventId = event?['id']?.toString();
     final tourId = tour?['id']?.toString();
-    
+
     if (listingId == null && eventId == null && tourId == null) return;
-    
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Remove from Favorites',
-          style: context.titleMedium,
-        ),
-        content: Text(
-          'Are you sure you want to remove "$itemName" from your favorites?',
-          style: context.bodyMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
-            ),
+      builder: (dialogContext) {
+        final l10n = AppLocalizations.of(dialogContext)!;
+        final itemName = nameStr ?? l10n.exploreListingUnknown;
+        return AlertDialog(
+          title: Text(
+            l10n.favoritesRemoveTitle,
+            style: dialogContext.titleMedium,
           ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                final favoritesService = ref.read(favoritesServiceProvider);
-                await favoritesService.removeFromFavorites(
-                  listingId: listingId,
-                  eventId: eventId,
-                  tourId: tourId,
-                );
-                
-                // Invalidate to refresh
-                ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
-                
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    AppTheme.successSnackBar(
-                      message: AppConfig.favoriteRemovedMessage,
-                    ),
-                  );
-                }
-              } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    AppTheme.errorSnackBar(
-                      message: 'Failed to remove favorite: ${e.toString().replaceFirst('Exception: ', '')}',
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text(
-              'Remove',
-              style: context.bodyMedium.copyWith(
-                color: context.errorColor,
-                fontWeight: FontWeight.w500,
+          content: Text(
+            l10n.favoritesRemoveMessage(itemName),
+            style: dialogContext.bodyMedium,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(
+                l10n.commonCancel,
+                style: dialogContext.bodyMedium.copyWith(color: dialogContext.secondaryTextColor),
               ),
             ),
-          ),
-        ],
-      ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext);
+                try {
+                  final favoritesService = ref.read(favoritesServiceProvider);
+                  await favoritesService.removeFromFavorites(
+                    listingId: listingId,
+                    eventId: eventId,
+                    tourId: tourId,
+                  );
+
+                  ref.invalidate(favoritesProvider(const FavoritesParams(page: 1, limit: 100)));
+
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      AppTheme.successSnackBar(
+                        message: AppLocalizations.of(context)!.commonFavoriteRemoved,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    final err = AppLocalizations.of(context)!;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      AppTheme.errorSnackBar(
+                        message: err.favoritesRemoveFailed(
+                          e.toString().replaceFirst('Exception: ', ''),
+                        ),
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text(
+                l10n.commonRemove,
+                style: dialogContext.bodyMedium.copyWith(
+                  color: dialogContext.errorColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -1160,46 +1189,50 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
   void _showRemoveFavoriteDialog(Map<String, dynamic> item) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) {
+        final l10n = AppLocalizations.of(dialogContext)!;
+        final name = item['name'] as String? ?? l10n.exploreListingUnknown;
+        return AlertDialog(
         title: Text(
-          'Remove from Favorites',
-          style: context.titleMedium,
+          l10n.favoritesRemoveTitle,
+          style: dialogContext.titleMedium,
         ),
         content: Text(
-          'Are you sure you want to remove "${item['name']}" from your favorites?',
-          style: context.bodyMedium,
+          l10n.favoritesRemoveMessage(name),
+          style: dialogContext.bodyMedium,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(
-              'Cancel',
-              style: context.bodyMedium.copyWith(
-                color: context.secondaryTextColor,
+              l10n.commonCancel,
+              style: dialogContext.bodyMedium.copyWith(
+                color: dialogContext.secondaryTextColor,
               ),
             ),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               // TODO: Remove from favorites
-              ScaffoldMessenger.of(context).showSnackBar(
+              ScaffoldMessenger.of(dialogContext).showSnackBar(
                 SnackBar(
-                  content: Text('Removed from favorites'),
-                  backgroundColor: context.successColor,
+                  content: Text(l10n.commonFavoriteRemoved),
+                  backgroundColor: dialogContext.successColor,
                 ),
               );
             },
             child: Text(
-              'Remove',
-              style: context.bodyMedium.copyWith(
-                color: context.errorColor,
+              l10n.commonRemove,
+              style: dialogContext.bodyMedium.copyWith(
+                color: dialogContext.errorColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
         ],
-      ),
+      );
+      },
     );
   }
 

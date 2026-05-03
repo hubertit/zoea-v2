@@ -8,6 +8,7 @@ import '../../../core/providers/referral_provider.dart';
 import '../../../core/services/referral_service.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ReferralScreen extends ConsumerWidget {
   const ReferralScreen({super.key});
@@ -16,6 +17,7 @@ class ReferralScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final programAsync = ref.watch(referralProgramRuleProvider);
     final summaryAsync = ref.watch(referralSummaryProvider);
 
@@ -26,7 +28,7 @@ class ReferralScreen extends ConsumerWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Refer & Earn',
+          l10n.exploreGiftReferTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -45,14 +47,14 @@ class ReferralScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeroSection(context),
+            _buildHeroSection(context, l10n),
             const SizedBox(height: 32),
-            ..._referralCodeBlocks(context, summaryAsync),
-            _buildHowItWorksSection(context),
+            ..._referralCodeBlocks(context, l10n, summaryAsync),
+            _buildHowItWorksSection(context, l10n),
             const SizedBox(height: 32),
-            _buildRewardsSection(context, programAsync),
+            _buildRewardsSection(context, l10n, programAsync),
             const SizedBox(height: 32),
-            _buildReferralStats(context, summaryAsync),
+            _buildReferralStats(context, l10n, summaryAsync),
           ],
         ),
       ),
@@ -61,18 +63,19 @@ class ReferralScreen extends ConsumerWidget {
 
   List<Widget> _referralCodeBlocks(
     BuildContext context,
+    AppLocalizations l10n,
     AsyncValue<ReferralSummary?> async,
   ) {
     return async.when(
       data: (summary) {
         if (summary == null) {
           return [
-            _buildSignInForCodeCard(context),
+            _buildSignInForCodeCard(context, l10n),
             const SizedBox(height: 32),
           ];
         }
         return [
-          _buildReferralCodeSection(context, summary),
+          _buildReferralCodeSection(context, l10n, summary),
           const SizedBox(height: 32),
         ];
       },
@@ -87,7 +90,7 @@ class ReferralScreen extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 24),
           child: Text(
-            'Could not load your referral code. Pull to retry or sign in again.',
+            l10n.referralErrorLoadCode,
             style: context.bodyMedium.copyWith(color: context.errorColor),
           ),
         ),
@@ -95,12 +98,12 @@ class ReferralScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSignInForCodeCard(BuildContext context) {
+  Widget _buildSignInForCodeCard(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your Referral Code',
+          l10n.referralYourCodeSectionTitle,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -119,13 +122,13 @@ class ReferralScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Sign in to see your personal code and track points.',
+                l10n.referralSignInForCodeBody,
                 style: context.bodyMedium.copyWith(color: context.secondaryTextColor),
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => context.push('/login'),
-                child: const Text('Sign in'),
+                child: Text(l10n.commonSignIn),
               ),
             ],
           ),
@@ -134,7 +137,7 @@ class ReferralScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeroSection(BuildContext context) {
+  Widget _buildHeroSection(BuildContext context, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -160,7 +163,7 @@ class ReferralScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Invite Friends & Earn Rewards',
+            l10n.referralInviteHeroTitle,
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: context.primaryTextColor,
@@ -169,7 +172,7 @@ class ReferralScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Share your referral code and earn points when friends join Zoea',
+            l10n.referralInviteHeroSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -180,12 +183,16 @@ class ReferralScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildReferralCodeSection(BuildContext context, ReferralSummary summary) {
+  Widget _buildReferralCodeSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    ReferralSummary summary,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your Referral Code',
+          l10n.referralYourCodeSectionTitle,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -215,7 +222,7 @@ class ReferralScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Share this code with your friends',
+                      l10n.referralShareCodeHint,
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -230,7 +237,7 @@ class ReferralScreen extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Referral code copied',
+                        l10n.referralCodeCopied,
                         style: context.bodyMedium.copyWith(
                           color: context.primaryTextColor,
                         ),
@@ -254,14 +261,13 @@ class ReferralScreen extends ConsumerWidget {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () async {
-              const message =
-                  'Join me on Zoea Africa and discover amazing places in Rwanda!';
+              final message = l10n.referralShareInviteMessage;
               await SharePlus.instance.share(
                 ShareParams(text: '$message\n${summary.shareUrl}'),
               );
             },
             icon: const Icon(Icons.share),
-            label: const Text('Share Referral Code'),
+            label: Text(l10n.commonShareReferralCode),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
@@ -271,12 +277,12 @@ class ReferralScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHowItWorksSection(BuildContext context) {
+  Widget _buildHowItWorksSection(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'How it Works',
+          l10n.referralHowItWorksTitle,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -285,24 +291,22 @@ class ReferralScreen extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildStepCard(
           context,
-          title: 'Share Your Code',
-          description:
-              'Send your referral code to friends via social media, email, or text',
+          title: l10n.referralStepShareTitle,
+          description: l10n.referralStepShareBody,
           icon: Icons.share,
         ),
         const SizedBox(height: 12),
         _buildStepCard(
           context,
-          title: 'Friend Signs Up',
-          description: 'Your friend creates their Zoea account using your code',
+          title: l10n.referralStepFriendTitle,
+          description: l10n.referralStepFriendBody,
           icon: Icons.person_add,
         ),
         const SizedBox(height: 12),
         _buildStepCard(
           context,
-          title: 'Earn Points',
-          description:
-              'You both get points when they sign up (shown as pending until credited)',
+          title: l10n.referralStepEarnTitle,
+          description: l10n.referralStepEarnBody,
           icon: Icons.card_giftcard,
         ),
       ],
@@ -366,13 +370,14 @@ class ReferralScreen extends ConsumerWidget {
 
   Widget _buildRewardsSection(
     BuildContext context,
+    AppLocalizations l10n,
     AsyncValue<ReferralProgramRule?> programAsync,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Rewards',
+          l10n.referralRewardsTitle,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -388,9 +393,10 @@ class ReferralScreen extends ConsumerWidget {
                 Expanded(
                   child: _buildRewardCard(
                     context,
-                    title: 'For You',
+                    l10n,
+                    title: l10n.referralRewardForYouTitle,
                     points: you,
-                    description: 'When friend joins',
+                    description: l10n.referralRewardForYouSubtitle,
                     color: context.primaryColorTheme,
                   ),
                 ),
@@ -398,9 +404,10 @@ class ReferralScreen extends ConsumerWidget {
                 Expanded(
                   child: _buildRewardCard(
                     context,
-                    title: 'For Friend',
+                    l10n,
+                    title: l10n.referralRewardForFriendTitle,
                     points: friend,
-                    description: 'Welcome bonus',
+                    description: l10n.referralRewardForFriendSubtitle,
                     color: context.successColor,
                   ),
                 ),
@@ -414,7 +421,7 @@ class ReferralScreen extends ConsumerWidget {
             ),
           ),
           error: (_, __) => Text(
-            'Could not load reward amounts.',
+            l10n.referralRewardsLoadError,
             style: context.bodySmall.copyWith(color: context.secondaryTextColor),
           ),
         ),
@@ -423,7 +430,8 @@ class ReferralScreen extends ConsumerWidget {
   }
 
   Widget _buildRewardCard(
-    BuildContext context, {
+    BuildContext context,
+    AppLocalizations l10n, {
     required String title,
     required int points,
     required String description,
@@ -450,7 +458,9 @@ class ReferralScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            points > 0 ? '${_pointsFmt.format(points)} pts' : '—',
+            points > 0
+                ? l10n.referralPointsValue(_pointsFmt.format(points))
+                : '—',
             style: context.headlineMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: color,
@@ -470,13 +480,14 @@ class ReferralScreen extends ConsumerWidget {
 
   Widget _buildReferralStats(
     BuildContext context,
+    AppLocalizations l10n,
     AsyncValue<ReferralSummary?> summaryAsync,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your Referrals',
+          l10n.referralStatsTitle,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -501,7 +512,7 @@ class ReferralScreen extends ConsumerWidget {
                 children: [
                   _buildStatItem(
                     context,
-                    label: 'Total Referrals',
+                    label: l10n.referralStatTotalReferrals,
                     value: '${s.totalReferrals}',
                     icon: Icons.people,
                   ),
@@ -512,8 +523,8 @@ class ReferralScreen extends ConsumerWidget {
                   ),
                   _buildStatItem(
                     context,
-                    label: 'Points earned',
-                    value: '${_pointsFmt.format(s.totalPointsEarned)} pts',
+                    label: l10n.referralStatPointsEarned,
+                    value: l10n.referralPointsValue(_pointsFmt.format(s.totalPointsEarned)),
                     icon: Icons.workspace_premium,
                   ),
                   Container(
@@ -523,8 +534,8 @@ class ReferralScreen extends ConsumerWidget {
                   ),
                   _buildStatItem(
                     context,
-                    label: 'Pending',
-                    value: '${_pointsFmt.format(s.pendingPoints)} pts',
+                    label: l10n.referralStatPending,
+                    value: l10n.referralPointsValue(_pointsFmt.format(s.pendingPoints)),
                     icon: Icons.schedule,
                   ),
                 ],

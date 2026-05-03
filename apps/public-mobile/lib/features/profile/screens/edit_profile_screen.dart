@@ -13,6 +13,7 @@ import '../../user_data_collection/widgets/gender_selector.dart';
 import '../../user_data_collection/widgets/length_of_stay_selector.dart';
 import '../../user_data_collection/widgets/interests_chips.dart';
 import '../../user_data_collection/widgets/travel_party_selector.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   final int? initialTab; // 0 = Basic Info, 1 = Preferences
@@ -914,7 +915,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : const Text('Confirm'),
+                  : Text(AppLocalizations.of(context)!.editProfileConfirm),
             ),
           ],
         ),

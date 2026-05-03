@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/reviews_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ReviewsWrittenScreen extends ConsumerStatefulWidget {
   const ReviewsWrittenScreen({
@@ -280,7 +281,7 @@ class _ReviewsWrittenScreenState extends ConsumerState<ReviewsWrittenScreen>
                 backgroundColor: context.primaryColorTheme,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.commonRetry),
             ),
           ],
         ),
@@ -568,7 +569,7 @@ class _ReviewsWrittenScreenState extends ConsumerState<ReviewsWrittenScreen>
                                   // TODO: Navigate to event detail when route is available
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: const Text('Event detail page coming soon'),
+                                      content: Text(AppLocalizations.of(context)!.reviewsEventComingSoon),
                                       backgroundColor: context.primaryColorTheme,
                                     ),
                                   );
@@ -576,7 +577,7 @@ class _ReviewsWrittenScreenState extends ConsumerState<ReviewsWrittenScreen>
                                   // TODO: Navigate to tour detail when route is available
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: const Text('Tour detail page coming soon'),
+                                      content: Text(AppLocalizations.of(context)!.reviewsTourComingSoon),
                                       backgroundColor: context.primaryColorTheme,
                                     ),
                                   );
@@ -905,7 +906,7 @@ class _EditReviewBottomSheetState extends ConsumerState<_EditReviewBottomSheet> 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Please write a review before updating'),
+            content: Text(AppLocalizations.of(context)!.commonPleaseWriteReviewUpdate),
             backgroundColor: context.errorColor,
           ),
         );
@@ -939,7 +940,7 @@ class _EditReviewBottomSheetState extends ConsumerState<_EditReviewBottomSheet> 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Review updated successfully!'),
+          content: Text(AppLocalizations.of(context)!.commonReviewUpdatedSuccess),
           backgroundColor: context.successColor,
         ),
       );

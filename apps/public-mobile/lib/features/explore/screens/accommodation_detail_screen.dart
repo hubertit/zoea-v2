@@ -14,6 +14,7 @@ import '../../../core/providers/reviews_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class AccommodationDetailScreen extends ConsumerStatefulWidget {
@@ -226,7 +227,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                 onPressed: () {
                   ref.invalidate(listingByIdProvider(widget.accommodationId));
                 },
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -1127,7 +1128,7 @@ class _AccommodationDetailScreenState extends ConsumerState<AccommodationDetailS
                             _showReviewBottomSheet(listingId);
                           },
                           icon: const Icon(Icons.edit),
-                          label: const Text('Write Review'),
+                          label: Text(AppLocalizations.of(context)!.commonWriteReview),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryColor,
                             foregroundColor: Colors.white,
@@ -1932,7 +1933,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please write a review before submitting'),
+            content: Text(AppLocalizations.of(context)!.commonPleaseWriteReview),
             backgroundColor: context.errorColor,
           ),
         );
@@ -1945,7 +1946,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Unable to submit review. Missing listing, event, or tour information.'),
+            content: Text(AppLocalizations.of(context)!.commonReviewSubmitMissingContext),
             backgroundColor: context.errorColor,
           ),
         );
@@ -1992,7 +1993,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Thank you for your review!'),
+          content: Text(AppLocalizations.of(context)!.commonThankYouReview),
           backgroundColor: context.successColor,
         ),
       );

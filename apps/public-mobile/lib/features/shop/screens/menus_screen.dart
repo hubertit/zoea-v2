@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/menus_provider.dart';
@@ -24,6 +25,7 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final menusAsync = ref.watch(menusByListingProvider(widget.listingId));
 
     return Scaffold(
@@ -41,7 +43,7 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
           ),
         ),
         title: Text(
-          'Menu',
+          l10n.shopMenuScreenTitle,
           style: context.headlineMedium.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -51,7 +53,7 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
       body: menusAsync.when(
         data: (menus) {
           if (menus.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(l10n);
           }
 
           // If only one menu, show it directly
@@ -106,12 +108,12 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
           );
         },
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -125,14 +127,14 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No menu available',
+              l10n.shopMenusEmptyTitle,
               style: context.headlineSmall.copyWith(
                 color: context.primaryTextColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'This restaurant hasn\'t added a menu yet',
+              l10n.shopMenusEmptySubtitle,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -144,7 +146,7 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -158,7 +160,7 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load menu',
+              l10n.shopErrorLoadMenu,
               style: context.headlineSmall.copyWith(
                 color: context.errorColor,
               ),
@@ -176,7 +178,7 @@ class _MenusScreenState extends ConsumerState<MenusScreen> {
               onPressed: () {
                 ref.invalidate(menusByListingProvider(widget.listingId));
               },
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),

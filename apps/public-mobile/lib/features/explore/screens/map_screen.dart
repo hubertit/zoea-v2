@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 
@@ -14,10 +15,11 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text('Map'),
+        title: Text(l10n.mapScreenTitle),
         backgroundColor: context.backgroundColor,
         elevation: 0,
         actions: [
@@ -42,7 +44,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ),
             const SizedBox(height: AppTheme.spacing16),
             Text(
-              'Map View',
+              l10n.mapScreenHeadline,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -51,7 +53,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ),
             const SizedBox(height: AppTheme.spacing8),
             Text(
-              'Interactive map with listings will be implemented here',
+              l10n.mapScreenPlaceholder,
               style: TextStyle(
                 color: context.secondaryTextColor,
               ),

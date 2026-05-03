@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/bookings_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class BookingConfirmationScreen extends ConsumerWidget {
   final String bookingId;
@@ -19,13 +20,14 @@ class BookingConfirmationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final bookingAsync = ref.watch(bookingByIdProvider(bookingId));
 
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
         title: Text(
-          'Booking Confirmation',
+          l10n.diningBookingConfirmationTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -41,18 +43,18 @@ class BookingConfirmationScreen extends ConsumerWidget {
         ),
       ),
       body: bookingAsync.when(
-        data: (booking) => _buildBookingDetails(context, booking),
+        data: (booking) => _buildBookingDetails(context, l10n, booking),
         loading: () => Center(
           child: CircularProgressIndicator(
             color: context.primaryColorTheme,
           ),
         ),
-        error: (error, stack) => _buildErrorState(context, ref, error),
+        error: (error, stack) => _buildErrorState(context, ref, l10n, error),
       ),
     );
   }
 
-  Widget _buildBookingDetails(BuildContext context, Map<String, dynamic> booking) {
+  Widget _buildBookingDetails(BuildContext context, AppLocalizations l10n, Map<String, dynamic> booking) {
     final bookingType = booking['bookingType'] as String? ?? 'hotel';
     final bookingNumber = booking['bookingNumber'] as String? ?? booking['id'] as String? ?? '';
     final status = booking['status'] as String? ?? 'confirmed';
@@ -66,7 +68,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
     final listingName = (listing?['name'] as String?) ??
         (tour?['name'] as String?) ??
         (event?['name'] as String?) ??
-        'Booking Item';
+        l10n.commonNotSpecified;
 
     final listingAddress = listing?['address'] as String?;
     final city = listing?['city'] as Map<String, dynamic>?;
@@ -75,7 +77,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
     final tourLocation = tour?['startLocationName'] as String?;
     final location = listingAddress != null && cityName != null
         ? '$listingAddress, $cityName'
-        : listingAddress ?? cityName ?? tourLocation ?? eventLocation ?? 'Location not specified';
+        : listingAddress ?? cityName ?? tourLocation ?? eventLocation ?? l10n.bookingsLocationNotSpecified;
 
     final images = (listing?['images'] as List?) ??
         (tour?['images'] as List?) ??
@@ -93,12 +95,13 @@ class BookingConfirmationScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Success Header
-          _buildSuccessHeader(context),
+          _buildSuccessHeader(context, l10n),
           const SizedBox(height: 32),
           
           // Booking Info Card
           _buildBookingInfoCard(
             context: context,
+            l10n: l10n,
             bookingNumber: bookingNumber,
             status: status,
             bookingType: bookingType,
@@ -115,12 +118,13 @@ class BookingConfirmationScreen extends ConsumerWidget {
           const SizedBox(height: 20),
           
           // Booking Details Card
-          _buildBookingDetailsCard(context, booking, bookingType),
+          _buildBookingDetailsCard(context, l10n, booking, bookingType),
           const SizedBox(height: 20),
           
           // Price Summary Card
           _buildPriceSummaryCard(
             context: context,
+            l10n: l10n,
             booking: booking,
             totalAmount: totalAmount,
             currency: currency,
@@ -128,14 +132,14 @@ class BookingConfirmationScreen extends ConsumerWidget {
           const SizedBox(height: 20),
           
           // Action Buttons
-          _buildActionButtons(context),
+          _buildActionButtons(context, l10n),
           const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _buildSuccessHeader(BuildContext context) {
+  Widget _buildSuccessHeader(BuildContext context, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -162,7 +166,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
             ),
           const SizedBox(height: 16),
           Text(
-            'Booking Confirmed!',
+            l10n.bookingConfirmationHeaderTitle,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: AppTheme.successColor, // Success color is intentional
@@ -170,7 +174,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Your booking has been confirmed successfully',
+            l10n.bookingConfirmationHeaderSubtitle,
             style: context.bodyMedium.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -183,6 +187,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
 
   Widget _buildBookingInfoCard({
     required BuildContext context,
+    required AppLocalizations l10n,
     required String bookingNumber,
     required String status,
     required String bookingType,
@@ -198,20 +203,20 @@ class BookingConfirmationScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Booking Information',
+            l10n.bookingConfirmationSectionBookingInfo,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
             ),
           ),
           const SizedBox(height: 16),
-          _buildInfoRow(context, 'Booking Number', bookingNumber),
+          _buildInfoRow(context, l10n.bookingConfirmationLabelBookingNumber, bookingNumber),
           const SizedBox(height: 12),
-          _buildInfoRow(context, 'Type', bookingType.toUpperCase()),
+          _buildInfoRow(context, l10n.bookingConfirmationLabelType, bookingType.toUpperCase()),
           const SizedBox(height: 12),
           _buildInfoRow(
             context,
-            'Status',
+            l10n.eventsLabelStatus,
             status.toUpperCase(),
             valueColor: _getStatusColor(context, status),
           ),
@@ -304,7 +309,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBookingDetailsCard(BuildContext context, Map<String, dynamic> booking, String bookingType) {
+  Widget _buildBookingDetailsCard(BuildContext context, AppLocalizations l10n, Map<String, dynamic> booking, String bookingType) {
     final hasTourDate = booking['tourSchedule']?['date'] != null;
     final hasTourTime = booking['tourSchedule']?['startTime'] != null;
     final hasGuestCount = booking['guestCount'] != null;
@@ -322,7 +327,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Booking Details',
+            l10n.bookingConfirmationSectionDetails,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -333,49 +338,49 @@ class BookingConfirmationScreen extends ConsumerWidget {
             if (booking['checkInDate'] != null)
               _buildInfoRow(
                 context,
-                'Check-in',
+                l10n.stayCheckIn,
                 _formatDate(booking['checkInDate'] as String),
               ),
             if (booking['checkInDate'] != null) const SizedBox(height: 12),
             if (booking['checkOutDate'] != null)
               _buildInfoRow(
                 context,
-                'Check-out',
+                l10n.stayCheckOut,
                 _formatDate(booking['checkOutDate'] as String),
               ),
             if (booking['checkOutDate'] != null) const SizedBox(height: 12),
             if (booking['guestCount'] != null)
               _buildInfoRow(
                 context,
-                'Guests',
+                l10n.diningBookingLabelGuests,
                 '${booking['guestCount']}',
               ),
           ] else if (bookingType == 'restaurant') ...[
             if (booking['bookingDate'] != null)
               _buildInfoRow(
                 context,
-                'Date',
+                l10n.diningBookingLabelDate,
                 _formatDate(booking['bookingDate'] as String),
               ),
             if (booking['bookingDate'] != null) const SizedBox(height: 12),
             if (booking['bookingTime'] != null)
               _buildInfoRow(
                 context,
-                'Time',
+                l10n.diningBookingLabelTime,
                 _formatTime(booking['bookingTime'] as String),
               ),
             if (booking['bookingTime'] != null) const SizedBox(height: 12),
             if (booking['partySize'] != null)
               _buildInfoRow(
                 context,
-                'Party Size',
+                l10n.bookingConfirmationLabelPartySize,
                 '${booking['partySize']}',
               ),
           ] else if (bookingType == 'tour') ...[
             if (hasTourDate)
               _buildInfoRow(
                 context,
-                'Date',
+                l10n.diningBookingLabelDate,
                 _formatDate(booking['tourSchedule']['date'] as String),
               ),
             if (hasTourDate && (hasTourTime || hasGuestCount || hasSpecialRequests))
@@ -383,7 +388,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
             if (hasTourTime)
               _buildInfoRow(
                 context,
-                'Time',
+                l10n.diningBookingLabelTime,
                 _formatTime(booking['tourSchedule']['startTime'] as String),
               ),
             if (hasTourTime && (hasGuestCount || hasSpecialRequests))
@@ -391,7 +396,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
             if (hasGuestCount)
               _buildInfoRow(
                 context,
-                'Guests',
+                l10n.diningBookingLabelGuests,
                 '${booking['guestCount']}',
               ),
           ],
@@ -399,12 +404,12 @@ class BookingConfirmationScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildInfoRow(
               context,
-              'Special Requests',
+              l10n.bookingConfirmationLabelSpecialRequests,
               booking['specialRequests'] as String,
             ),
           ] else if (bookingType == 'tour' && !hasTourDate && !hasTourTime && !hasGuestCount) ...[
             Text(
-              'Tour confirmation details will appear here once available.',
+              l10n.bookingConfirmationTourDetailsPlaceholder,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -417,6 +422,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
 
   Widget _buildPriceSummaryCard({
     required BuildContext context,
+    required AppLocalizations l10n,
     required Map<String, dynamic> booking,
     required double totalAmount,
     required String currency,
@@ -436,7 +442,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Price Summary',
+            l10n.bookingConfirmationSectionPriceSummary,
             style: context.headlineSmall.copyWith(
               fontWeight: FontWeight.w600,
               color: context.primaryTextColor,
@@ -444,21 +450,21 @@ class BookingConfirmationScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           if (subtotal != null) ...[
-            _buildPriceRow(context, 'Subtotal', subtotal, currency),
+            _buildPriceRow(context, l10n.checkoutSubtotalLabel, subtotal, currency),
             const SizedBox(height: 8),
           ],
           if (taxAmount != null) ...[
-            _buildPriceRow(context, 'Taxes & Fees', taxAmount, currency),
+            _buildPriceRow(context, l10n.bookingConfirmationLabelTaxesFees, taxAmount, currency),
             const SizedBox(height: 8),
           ],
           if (discountAmount != null && discountAmount > 0) ...[
-            _buildPriceRow(context, 'Discount', -discountAmount, currency, isDiscount: true),
+            _buildPriceRow(context, l10n.bookingConfirmationLabelDiscount, -discountAmount, currency, isDiscount: true),
             const SizedBox(height: 8),
           ],
           const Divider(height: 24),
           _buildPriceRow(
             context,
-            'Total',
+            l10n.shopCartTotalLabel,
             totalAmount,
             currency,
             isTotal: true,
@@ -468,7 +474,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, AppLocalizations l10n) {
     return Column(
       children: [
         SizedBox(
@@ -484,7 +490,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
               ),
             ),
             child: Text(
-              'View My Bookings',
+              l10n.diningBookingViewMyBookings,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -505,7 +511,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
               ),
             ),
             child: Text(
-              'Continue Exploring',
+              l10n.commonContinueShopping,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryColorTheme,
@@ -517,7 +523,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, WidgetRef ref, Object error) {
+  Widget _buildErrorState(BuildContext context, WidgetRef ref, AppLocalizations l10n, Object error) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -531,7 +537,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load booking',
+              l10n.bookingConfirmationLoadFailed,
               style: context.titleLarge.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -554,7 +560,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,
             ),
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),

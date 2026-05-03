@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/models/event.dart';
 import '../../../core/providers/favorites_provider.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -17,6 +16,7 @@ import '../../user_data_collection/utils/prompt_helper.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/utils/price_formatter.dart';
 import '../../../core/widgets/event_flyer_image.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
   final Event event;
@@ -61,12 +61,14 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final event = widget.event;
     final eventDetails = event.event;
     final startDate = eventDetails.startDate;
     final endDate = eventDetails.endDate;
-    final dateFormat = DateFormat('EEEE, MMMM dd, yyyy');
-    final timeFormat = DateFormat('HH:mm');
+    final lc = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('EEEE, MMMM dd, yyyy', lc);
+    final timeFormat = DateFormat('HH:mm', lc);
 
     // Track event view for analytics (after first frame)
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -162,8 +164,8 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                                     // Show login prompt for guests
                                     AuthPromptDialog.show(
                                       context: context,
-                                      title: 'Sign In to Save Favorites',
-                                      message: 'Create an account or sign in to save your favorite events and access them anytime.',
+                                      title: l10n.eventsFavoriteSignInTitle,
+                                      message: l10n.eventsFavoriteSignInMessage,
                                       returnPath: '/events/${widget.event.id}',
                                       icon: Icons.favorite,
                                     );
@@ -182,9 +184,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                                     if (mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         AppTheme.successSnackBar(
-                                          message: isFavorited 
-                                              ? AppConfig.favoriteRemovedMessage 
-                                              : AppConfig.favoriteAddedMessage,
+                                          message: isFavorited
+                                              ? l10n.commonFavoriteRemoved
+                                              : l10n.commonFavoriteAdded,
                                         ),
                                       );
                                     }
@@ -194,9 +196,8 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                                       if (errorText.contains('Unauthorized')) {
                                         AuthPromptDialog.show(
                                           context: context,
-                                          title: 'Sign In to Save Favorites',
-                                          message:
-                                              'Your session has expired. Please sign in again to save favorites.',
+                                          title: l10n.exploreFavoriteSessionTitle,
+                                          message: l10n.eventsFavoriteSessionMessage,
                                           returnPath:
                                               '/events/${widget.event.id}',
                                           icon: Icons.favorite,
@@ -206,8 +207,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         AppTheme.errorSnackBar(
-                                          message:
-                                              'Failed to update favorite: ${errorText.replaceFirst('Exception: ', '')}',
+                                          message: l10n.exploreFavoriteUpdateFailed(
+                                            errorText.replaceFirst('Exception: ', ''),
+                                          ),
                                         ),
                                       );
                                     }
@@ -234,17 +236,19 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                             padding: EdgeInsets.zero,
                             onPressed: () async {
                               final eventName = eventDetails.name;
-                              final location = eventDetails.locationName.isNotEmpty 
-                                  ? eventDetails.locationName 
+                              final location = eventDetails.locationName.isNotEmpty
+                                  ? eventDetails.locationName
                                   : '';
                               final dateText = dateFormat.format(startDate);
 
-                              final shareText =
-                                  'Check out "$eventName"${location.isNotEmpty ? ' in $location' : ''} on $dateText!';
-                              final footer =
-                                  event.slug.startsWith('lacreola-')
-                                      ? 'Reservations: +250793084995 / reservation@lacreola.com'
-                                      : 'https://www.sinc.events/${event.slug}';
+                              final shareText = location.isNotEmpty
+                                  ? l10n.eventsShareWithLocation(
+                                      eventName,
+                                      location,
+                                      dateText,
+                                    )
+                                  : l10n.eventsShareNoLocation(eventName, dateText);
+                              final footer = 'https://www.sinc.events/${event.slug}';
 
                               await SharePlus.instance.share(
                                   ShareParams(text: '$shareText\n$footer'));
@@ -362,7 +366,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Organized by',
+                              l10n.eventsOrganizedBy,
                               style: context.bodySmall.copyWith(
                                 color: context.secondaryTextColor,
                               ),
@@ -394,7 +398,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   
                   // Description
                   Text(
-                    'About this event',
+                    l10n.eventsAboutTitle,
                     style: context.titleLarge.copyWith(
                       color: context.primaryTextColor,
                     ),
@@ -411,7 +415,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   // Event context/category
                   if (eventDetails.eventContext?.name.isNotEmpty == true) ...[
                     Text(
-                      'Category',
+                      l10n.eventsSectionCategory,
                       style: context.titleLarge.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -448,20 +452,22 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                       children: [
                         _buildInfoItem(
                           icon: Icons.people,
-                          label: 'Attending',
+                          label: l10n.eventsLabelAttending,
                           value: '${eventDetails.attending}',
                           context: context,
                         ),
                         _buildInfoItem(
                           icon: Icons.group,
-                          label: 'Capacity',
+                          label: l10n.eventsLabelCapacity,
                           value: '${eventDetails.maxAttendance}',
                           context: context,
                         ),
                         _buildInfoItem(
                           icon: Icons.event_available,
-                          label: 'Status',
-                          value: eventDetails.ongoing ? 'Ongoing' : 'Upcoming',
+                          label: l10n.eventsLabelStatus,
+                          value: eventDetails.ongoing
+                              ? l10n.eventsStatusOngoing
+                              : l10n.eventsStatusUpcoming,
                           context: context,
                         ),
                       ],
@@ -472,13 +478,13 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   // Tickets section
                   if (eventDetails.tickets.isNotEmpty) ...[
                     Text(
-                      'Tickets',
+                      l10n.eventsTicketsSection,
                       style: context.titleLarge.copyWith(
                         color: context.primaryTextColor,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ...eventDetails.tickets.map((ticket) => _buildTicketCard(context, ticket, eventDetails.name)),
+                    ...eventDetails.tickets.map((ticket) => _buildTicketCard(context, l10n, ticket, eventDetails.name)),
                     const SizedBox(height: 24),
                   ],
                 ],
@@ -487,7 +493,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomBar(context),
+      bottomNavigationBar: _buildBottomBar(context, l10n),
     );
   }
 
@@ -518,7 +524,12 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
-  Widget _buildTicketCard(BuildContext context, EventTicket ticket, String eventName) {
+  Widget _buildTicketCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    EventTicket ticket,
+    String eventName,
+  ) {
     final event = widget.event;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -568,7 +579,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            'Sold Out',
+                            l10n.eventsTicketSoldOut,
                             style: context.bodySmall.copyWith(
                               color: context.errorColor,
                               fontWeight: FontWeight.w500,
@@ -595,7 +606,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
               child: Text(
-                ticket.disabled ? 'Sold Out' : 'Buy Ticket',
+                ticket.disabled ? l10n.eventsTicketSoldOut : l10n.eventsTicketBuy,
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
@@ -605,7 +616,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context) {
+  Widget _buildBottomBar(BuildContext context, AppLocalizations l10n) {
     final event = widget.event;
     final eventDetails = event.event;
     final hasTickets = eventDetails.tickets.isNotEmpty;
@@ -632,14 +643,17 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'From ${_formatPrice(cheapestTicket.price, abbreviated: true)} ${cheapestTicket.currency}',
+                      l10n.eventsBottomPriceFrom(
+                        _formatPrice(cheapestTicket.price, abbreviated: true),
+                        cheapestTicket.currency,
+                      ),
                       style: context.titleMedium.copyWith(
                         color: context.primaryColorTheme,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      'per person',
+                      l10n.eventsBottomPerPerson,
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -664,7 +678,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  hasTickets ? 'Select Tickets' : 'Join Event',
+                  hasTickets ? l10n.eventsBottomSelectTickets : l10n.eventsBottomJoinEvent,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -682,7 +696,10 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     if (abbreviated) {
       return PriceFormatter.formatAbbreviated(price.toDouble(), currency: '');
     }
-    final formatter = NumberFormat('#,##0', 'en_US');
+    final formatter = NumberFormat(
+      '#,##0',
+      Localizations.localeOf(context).toString(),
+    );
     return formatter.format(price);
   }
 
@@ -718,13 +735,14 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 
   Future<bool?> _showSincRedirectDialog(BuildContext context) async {
     bool dontShowAgain = false;
+    final l10n = AppLocalizations.of(context)!;
 
     return showDialog<bool>(
       context: context,
       barrierDismissible: true,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: context.backgroundColor,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          backgroundColor: ctx.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -740,22 +758,22 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: context.primaryColorTheme.withOpacity(0.1),
+                      color: ctx.primaryColorTheme.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.info_outline,
-                      color: context.primaryColorTheme,
+                      color: ctx.primaryColorTheme,
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Redirecting to Sinc',
-                      style: context.titleSmall.copyWith(
+                      l10n.eventsSincRedirectTitle,
+                      style: ctx.titleSmall.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: context.primaryTextColor,
+                        color: ctx.primaryTextColor,
                       ),
                     ),
                   ),
@@ -764,9 +782,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
               const SizedBox(height: 12),
               // Message
               Text(
-                'You are about to be redirected to our partner platform "Sinc" to purchase tickets for this event. Sinc is our trusted ticketing partner that handles secure event bookings and payments.',
-                style: context.bodySmall.copyWith(
-                  color: context.secondaryTextColor,
+                l10n.eventsSincRedirectMessage,
+                style: ctx.bodySmall.copyWith(
+                  color: ctx.secondaryTextColor,
                   height: 1.3,
                 ),
               ),
@@ -793,7 +811,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                               dontShowAgain = value ?? false;
                             });
                           },
-                          activeColor: context.primaryColorTheme,
+                          activeColor: ctx.primaryColorTheme,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           visualDensity: VisualDensity.compact,
                         ),
@@ -801,9 +819,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          "Don't show again",
-                          style: context.bodySmall.copyWith(
-                            color: context.secondaryTextColor,
+                          l10n.eventsSincDontShowAgain,
+                          style: ctx.bodySmall.copyWith(
+                            color: ctx.secondaryTextColor,
                             fontSize: 12,
                           ),
                         ),
@@ -816,14 +834,14 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => Navigator.of(ctx).pop(false),
               style: TextButton.styleFrom(
-                foregroundColor: context.secondaryTextColor,
+                foregroundColor: ctx.secondaryTextColor,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text('Cancel'),
+              child: Text(l10n.commonCancel),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -832,7 +850,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setBool('sinc_ticket_dialog_dont_show', true);
                 }
-                Navigator.of(context).pop(true);
+                Navigator.of(ctx).pop(true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryColor,
@@ -845,8 +863,8 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                'Continue',
-                style: context.bodySmall.copyWith(
+                l10n.commonContinue,
+                style: ctx.bodySmall.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -30,12 +31,13 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final analyticsConsentAsync = ref.watch(analyticsConsentProvider);
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Privacy & Security',
+          l10n.profilePrivacyTitle,
           style: context.titleLarge.copyWith(
             color: context.primaryTextColor,
           ),
@@ -56,12 +58,12 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
         padding: const EdgeInsets.all(12),
         children: [
           // Privacy Settings Section
-          _buildSectionHeader('Privacy Settings'),
+          _buildSectionHeader(l10n.privacySectionPrivacySettings),
           const SizedBox(height: 16),
           _buildSwitchTile(
             icon: Icons.location_on,
-            title: 'Location Services',
-            subtitle: 'Allow app to access your location for better recommendations',
+            title: l10n.privacyLocationServicesTitle,
+            subtitle: l10n.privacyLocationServicesSubtitle,
             value: _locationEnabled,
             onChanged: (value) {
               setState(() {
@@ -71,8 +73,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           ),
           _buildSwitchTile(
             icon: Icons.notifications,
-            title: 'Push Notifications',
-            subtitle: 'Receive notifications about events and updates',
+            title: l10n.privacyPushNotificationsTitle,
+            subtitle: l10n.privacyPushNotificationsSubtitle,
             value: _notificationsEnabled,
             onChanged: (value) {
               setState(() {
@@ -82,8 +84,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           ),
           _buildSwitchTile(
             icon: Icons.share,
-            title: 'Data Sharing',
-            subtitle: 'Share anonymous data to improve app experience',
+            title: l10n.privacyDataSharingTitle,
+            subtitle: l10n.privacyDataSharingSubtitle,
             value: _dataSharingEnabled,
             onChanged: (value) {
               setState(() {
@@ -95,8 +97,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           analyticsConsentAsync.when(
             data: (hasConsent) => _buildSwitchTile(
               icon: Icons.analytics,
-              title: 'Analytics',
-              subtitle: 'Help us improve the app with usage analytics',
+              title: l10n.privacyAnalyticsTitle,
+              subtitle: l10n.privacyAnalyticsSubtitle,
               value: hasConsent,
               onChanged: (value) async {
                 try {
@@ -108,8 +110,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                       SnackBar(
                         content: Text(
                           value 
-                              ? 'Analytics enabled' 
-                              : 'Analytics disabled',
+                              ? l10n.privacyAnalyticsEnabled 
+                              : l10n.privacyAnalyticsDisabled,
                           style: context.bodyMedium.copyWith(
                             color: context.primaryTextColor,
                           ),
@@ -126,7 +128,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       AppTheme.errorSnackBar(
-                        message: 'Failed to update analytics settings',
+                        message: l10n.privacyAnalyticsUpdateFailed,
                       ),
                     );
                   }
@@ -135,15 +137,15 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
             ),
             loading: () => _buildSwitchTile(
               icon: Icons.analytics,
-              title: 'Analytics',
-              subtitle: 'Loading...',
+              title: l10n.privacyAnalyticsTitle,
+              subtitle: l10n.privacyAnalyticsLoadingSubtitle,
               value: false,
               onChanged: (_) {},
             ),
             error: (_, __) => _buildSwitchTile(
               icon: Icons.analytics,
-              title: 'Analytics',
-              subtitle: 'Help us improve the app with usage analytics',
+              title: l10n.privacyAnalyticsTitle,
+              subtitle: l10n.privacyAnalyticsSubtitle,
               value: true,
               onChanged: (value) async {
                 try {
@@ -161,20 +163,20 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           const SizedBox(height: 32),
 
           // Data & Privacy Section
-          _buildSectionHeader('Data & Privacy'),
+          _buildSectionHeader(l10n.privacySectionDataPrivacy),
           const SizedBox(height: 16),
           _buildActionTile(
             icon: Icons.info_outline,
-            title: 'What Data We Collect',
-            subtitle: 'View what information is collected and why',
+            title: l10n.privacyWhatDataTitle,
+            subtitle: l10n.privacyWhatDataSubtitle,
             onTap: () {
               _showDataCollectionInfo();
             },
           ),
           _buildActionTile(
             icon: Icons.delete_sweep,
-            title: 'Clear Analytics Data',
-            subtitle: 'Delete all stored analytics data',
+            title: l10n.privacyClearAnalyticsTitle,
+            subtitle: l10n.privacyClearAnalyticsSubtitle,
             onTap: () {
               _showClearAnalyticsDialog();
             },
@@ -182,12 +184,12 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           const SizedBox(height: 32),
 
           // Security Settings Section
-          _buildSectionHeader('Security Settings'),
+          _buildSectionHeader(l10n.privacySectionSecurity),
           const SizedBox(height: 16),
           _buildSwitchTile(
             icon: Icons.fingerprint,
-            title: 'Biometric Authentication',
-            subtitle: 'Use fingerprint or face recognition to unlock',
+            title: l10n.privacyBiometricTitle,
+            subtitle: l10n.privacyBiometricSubtitle,
             value: _biometricEnabled,
             onChanged: (value) {
               setState(() {
@@ -197,8 +199,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           ),
           _buildSwitchTile(
             icon: Icons.security,
-            title: 'Two-Factor Authentication',
-            subtitle: 'Add an extra layer of security to your account',
+            title: l10n.privacyTwoFactorTitle,
+            subtitle: l10n.privacyTwoFactorSubtitle,
             value: _twoFactorEnabled,
             onChanged: (value) {
               setState(() {
@@ -209,33 +211,34 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           const SizedBox(height: 16),
           _buildActionTile(
             icon: Icons.lock,
-            title: 'Change Password',
-            subtitle: 'Update your account password',
+            title: l10n.privacyChangePasswordTileTitle,
+            subtitle: l10n.privacyChangePasswordTileSubtitle,
             onTap: () {
               _showChangePasswordDialog();
             },
           ),
           _buildActionTile(
             icon: Icons.email,
-            title: 'Email Verification',
-            subtitle: 'Verify your email address',
+            title: l10n.privacyEmailVerificationTileTitle,
+            subtitle: l10n.privacyEmailVerificationTileSubtitle,
             onTap: () {
               _showEmailVerificationDialog();
             },
           ),
           Consumer(
             builder: (context, ref, _) {
+              final loc = AppLocalizations.of(context)!;
               final profile = ref.watch(currentUserProfileProvider);
               final subtitle = profile.when(
                 data: (u) => u.phoneVerifiedAt != null
-                    ? 'Phone verified'
-                    : 'Add and verify your phone number',
-                loading: () => 'Add and verify your phone number',
-                error: (_, __) => 'Add and verify your phone number',
+                    ? loc.privacyPhoneVerified
+                    : loc.privacyPhoneAddVerify,
+                loading: () => loc.privacyPhoneAddVerify,
+                error: (_, __) => loc.privacyPhoneAddVerify,
               );
               return _buildActionTile(
                 icon: Icons.phone,
-                title: 'Phone Verification',
+                title: loc.privacyPhoneVerificationTileTitle,
                 subtitle: subtitle,
                 onTap: () => _showPhoneVerificationDialog(ref),
               );
@@ -244,20 +247,20 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           const SizedBox(height: 32),
 
           // Account Management Section
-          _buildSectionHeader('Account Management'),
+          _buildSectionHeader(l10n.privacySectionAccountManagement),
           const SizedBox(height: 16),
           _buildActionTile(
             icon: Icons.download,
-            title: 'Download My Data',
-            subtitle: 'Get a copy of your personal data',
+            title: l10n.privacyDownloadDataTitle,
+            subtitle: l10n.privacyDownloadDataSubtitle,
             onTap: () {
               _showDownloadDataDialog();
             },
           ),
           _buildActionTile(
             icon: Icons.delete_forever,
-            title: 'Delete Account',
-            subtitle: 'Permanently delete your account and all data',
+            title: l10n.privacyDeleteAccountTitle,
+            subtitle: l10n.privacyDeleteAccountSubtitle,
             onTap: () {
               _showDeleteAccountDialog();
             },
@@ -266,20 +269,20 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           const SizedBox(height: 32),
 
           // Legal Section
-          _buildSectionHeader('Legal'),
+          _buildSectionHeader(l10n.privacySectionLegal),
           const SizedBox(height: 16),
           _buildActionTile(
             icon: Icons.description,
-            title: 'Privacy Policy',
-            subtitle: 'Read our privacy policy',
+            title: l10n.privacyPolicyTileTitle,
+            subtitle: l10n.privacyPolicyTileSubtitle,
             onTap: () {
               // TODO: Navigate to privacy policy
             },
           ),
           _buildActionTile(
             icon: Icons.gavel,
-            title: 'Terms of Service',
-            subtitle: 'Read our terms of service',
+            title: l10n.privacyTermsTileTitle,
+            subtitle: l10n.privacyTermsTileSubtitle,
             onTap: () {
               // TODO: Navigate to terms of service
             },
@@ -415,6 +418,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showChangePasswordDialog() {
+    final l10n = AppLocalizations.of(context)!;
     final formKey = GlobalKey<FormState>();
     final currentPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
@@ -461,7 +465,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 
                 // Title
                 Text(
-                  'Change Password',
+                  l10n.privacyChangePasswordDialogTitle,
                   style: context.titleMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -474,8 +478,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   controller: currentPasswordController,
                   obscureText: obscureCurrentPassword,
                   decoration: InputDecoration(
-                    labelText: 'Current Password',
-                    hintText: 'Enter your current password',
+                    labelText: l10n.privacyCurrentPasswordLabel,
+                    hintText: l10n.privacyCurrentPasswordHint,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -496,7 +500,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your current password';
+                      return l10n.privacyCurrentPasswordRequired;
                     }
                     return null;
                   },
@@ -508,8 +512,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   controller: newPasswordController,
                   obscureText: obscureNewPassword,
                   decoration: InputDecoration(
-                    labelText: 'New Password',
-                    hintText: 'Enter your new password',
+                    labelText: l10n.privacyNewPasswordLabel,
+                    hintText: l10n.privacyNewPasswordHint,
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -530,10 +534,10 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a new password';
+                      return l10n.privacyNewPasswordRequired;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return l10n.privacyPasswordMinLength;
                     }
                     return null;
                   },
@@ -545,8 +549,8 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   controller: confirmPasswordController,
                   obscureText: obscureConfirmPassword,
                   decoration: InputDecoration(
-                    labelText: 'Confirm New Password',
-                    hintText: 'Confirm your new password',
+                    labelText: l10n.privacyConfirmPasswordLabel,
+                    hintText: l10n.privacyConfirmPasswordHint,
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -567,10 +571,10 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your new password';
+                      return l10n.privacyConfirmPasswordRequired;
                     }
                     if (value != newPasswordController.text) {
-                      return 'Passwords do not match';
+                      return l10n.privacyPasswordsMismatch;
                     }
                     return null;
                   },
@@ -593,7 +597,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                           side: BorderSide(color: context.secondaryTextColor),
                         ),
                         child: Text(
-                          'Cancel',
+                          l10n.commonCancel,
                           style: context.bodyMedium.copyWith(
                             color: context.secondaryTextColor,
                             fontWeight: FontWeight.w500,
@@ -622,7 +626,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Password changed successfully!',
+                                      l10n.privacyPasswordChangedSuccess,
                                       style: context.bodyMedium.copyWith(
                                         color: context.primaryTextColor,
                                       ),
@@ -640,7 +644,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                                     content: Text(
                                       errorMessage.isNotEmpty 
                                           ? errorMessage 
-                                          : 'Failed to change password. Please try again.',
+                                          : l10n.privacyPasswordChangeFailed,
                                       style: context.bodyMedium.copyWith(
                                         color: context.primaryTextColor,
                                       ),
@@ -676,7 +680,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                                 ),
                               )
                             : Text(
-                                'Change Password',
+                                l10n.privacyChangePasswordDialogTitle,
                                 style: context.bodyMedium.copyWith(
                                   color: context.primaryTextColor,
                                   fontWeight: FontWeight.w500,
@@ -695,6 +699,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showEmailVerificationDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -724,7 +729,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
             
             // Title
             Text(
-              'Email Verification',
+              l10n.privacyEmailVerificationDialogTitle,
               style: context.titleMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -750,7 +755,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'A verification email will be sent to your registered email address.',
+                      l10n.privacyEmailVerificationDialogBody,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -772,7 +777,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                       side: BorderSide(color: context.secondaryTextColor),
                     ),
                     child: Text(
-                      'Cancel',
+                      l10n.commonCancel,
                       style: context.bodyMedium.copyWith(
                         color: context.secondaryTextColor,
                         fontWeight: FontWeight.w500,
@@ -789,7 +794,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Verification email sent!',
+                            l10n.privacyVerificationEmailSent,
                             style: context.bodyMedium.copyWith(
                               color: context.primaryTextColor,
                             ),
@@ -804,7 +809,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
-                      'Send Email',
+                      l10n.privacySendEmail,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                         fontWeight: FontWeight.w500,
@@ -854,6 +859,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showPhoneVerificationDialog(WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final phoneController = TextEditingController();
     final codeController = TextEditingController();
     final profile = ref.read(currentUserProfileProvider).valueOrNull;
@@ -881,7 +887,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 dialogMessenger.showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Enter a valid phone number',
+                      l10n.privacyPhoneInvalid,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -902,7 +908,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 dialogMessenger.showSnackBar(
                   SnackBar(
                     content: Text(
-                      'We sent a 6-digit code by SMS.',
+                      l10n.privacyPhoneCodeSent,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -935,7 +941,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 dialogMessenger.showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Enter the 6-digit code',
+                      l10n.privacyPhoneEnterCode,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -956,7 +962,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 screenMessenger.showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Phone number verified',
+                      l10n.privacyPhoneVerifiedSuccess,
                       style: this.context.bodyMedium.copyWith(
                         color: this.context.primaryTextColor,
                       ),
@@ -991,7 +997,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
             return AlertDialog(
               backgroundColor: context.cardColor,
               title: Text(
-                'Phone Verification',
+                l10n.privacyPhoneVerificationTileTitle,
                 style: context.titleMedium.copyWith(
                   color: context.primaryTextColor,
                 ),
@@ -1002,7 +1008,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'We will send a code to confirm this number.',
+                      l10n.privacyPhoneVerificationIntro,
                       style: context.bodyMedium.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -1042,7 +1048,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                               color: context.primaryTextColor,
                             ),
                             decoration: InputDecoration(
-                              labelText: 'Mobile number',
+                              labelText: l10n.privacyPhoneMobileLabel,
                               labelStyle: context.bodySmall.copyWith(
                                 color: context.secondaryTextColor,
                               ),
@@ -1067,7 +1073,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                           color: context.primaryTextColor,
                         ),
                         decoration: InputDecoration(
-                          labelText: '6-digit code',
+                          labelText: l10n.privacyPhoneSixDigitCodeLabel,
                           counterText: '',
                           labelStyle: context.bodySmall.copyWith(
                             color: context.secondaryTextColor,
@@ -1087,7 +1093,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                       ? null
                       : () => Navigator.of(dialogContext).pop(),
                   child: Text(
-                    'Cancel',
+                    l10n.commonCancel,
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -1106,7 +1112,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                             ),
                           )
                         : Text(
-                            'Send code',
+                            l10n.privacySendCode,
                             style: context.bodyMedium.copyWith(
                               color: context.primaryColorTheme,
                               fontWeight: FontWeight.w500,
@@ -1126,7 +1132,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                             ),
                           )
                         : Text(
-                            'Verify',
+                            l10n.privacyVerify,
                             style: context.bodyMedium.copyWith(
                               color: context.primaryColorTheme,
                               fontWeight: FontWeight.w500,
@@ -1145,18 +1151,19 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showDownloadDataDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: context.cardColor,
         title: Text(
-          'Download My Data',
+          l10n.privacyDownloadDataDialogTitle,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
         ),
         content: Text(
-          'We will prepare your data and send it to your email address within 24 hours.',
+          l10n.privacyDownloadDataDialogBody,
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -1165,7 +1172,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              l10n.commonCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -1178,7 +1185,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Data download request submitted!',
+                    l10n.privacyDownloadDataSubmitted,
                     style: context.bodyMedium.copyWith(
                       color: context.primaryTextColor,
                     ),
@@ -1189,7 +1196,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
               );
             },
             child: Text(
-              'Request Data',
+              l10n.privacyRequestData,
               style: context.bodyMedium.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w500,
@@ -1202,18 +1209,19 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showDeleteAccountDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: context.cardColor,
         title: Text(
-          'Delete Account',
+          l10n.privacyDeleteAccountDialogTitle,
           style: context.titleMedium.copyWith(
             color: context.errorColor,
           ),
         ),
         content: Text(
-          'This action cannot be undone. All your data will be permanently deleted.',
+          l10n.privacyDeleteAccountDialogBody,
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -1222,7 +1230,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              l10n.commonCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -1234,7 +1242,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
               _showFinalDeleteConfirmation();
             },
             child: Text(
-              'Delete',
+              l10n.commonDelete,
               style: context.bodyMedium.copyWith(
                 color: context.errorColor,
                 fontWeight: FontWeight.w500,
@@ -1247,6 +1255,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showDataCollectionInfo() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1276,7 +1285,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
             
             // Title
             Text(
-              'What Data We Collect',
+              l10n.privacyWhatDataCollectSheetTitle,
               style: context.titleMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: context.primaryTextColor,
@@ -1286,31 +1295,35 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
             
             // Data collection info
             _buildDataInfoItem(
+              l10n: l10n,
               icon: Icons.person_outline,
-              title: 'Profile Information',
-              description: 'Country, language, age range, gender, interests, travel preferences',
-              purpose: 'Personalize your experience and recommendations',
+              title: l10n.privacyDataProfileTitle,
+              description: l10n.privacyDataProfileDescription,
+              purpose: l10n.privacyDataProfilePurpose,
             ),
             const SizedBox(height: 16),
             _buildDataInfoItem(
+              l10n: l10n,
               icon: Icons.search,
-              title: 'Search Queries',
-              description: 'What you search for in the app',
-              purpose: 'Improve search results and suggest relevant content',
+              title: l10n.privacyDataSearchTitle,
+              description: l10n.privacyDataSearchDescription,
+              purpose: l10n.privacyDataSearchPurpose,
             ),
             const SizedBox(height: 16),
             _buildDataInfoItem(
+              l10n: l10n,
               icon: Icons.visibility,
-              title: 'Content Views',
-              description: 'Places and events you view',
-              purpose: 'Understand your interests and improve recommendations',
+              title: l10n.privacyDataViewsTitle,
+              description: l10n.privacyDataViewsDescription,
+              purpose: l10n.privacyDataViewsPurpose,
             ),
             const SizedBox(height: 16),
             _buildDataInfoItem(
+              l10n: l10n,
               icon: Icons.event,
-              title: 'App Usage',
-              description: 'How you use the app, session duration, features used',
-              purpose: 'Improve app performance and user experience',
+              title: l10n.privacyDataUsageTitle,
+              description: l10n.privacyDataUsageDescription,
+              purpose: l10n.privacyDataUsagePurpose,
             ),
             const SizedBox(height: 24),
             
@@ -1332,7 +1345,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'All data is anonymized and used only to improve your experience. You can disable analytics or clear your data anytime.',
+                      l10n.privacyDataAnonymizedFootnote,
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -1353,7 +1366,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Got it',
+                  l10n.privacyGotIt,
                   style: context.bodyMedium.copyWith(
                     color: context.primaryTextColor,
                     fontWeight: FontWeight.w500,
@@ -1369,6 +1382,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   Widget _buildDataInfoItem({
+    required AppLocalizations l10n,
     required IconData icon,
     required String title,
     required String description,
@@ -1409,7 +1423,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Purpose: $purpose',
+                  l10n.privacyPurposeLine(purpose),
                   style: context.bodySmall.copyWith(
                     color: context.primaryColorTheme,
                     fontStyle: FontStyle.italic,
@@ -1424,18 +1438,19 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showClearAnalyticsDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: context.cardColor,
         title: Text(
-          'Clear Analytics Data',
+          l10n.privacyClearAnalyticsDialogTitle,
           style: context.titleMedium.copyWith(
             color: context.primaryTextColor,
           ),
         ),
         content: Text(
-          'This will delete all stored analytics data from your device. This action cannot be undone.',
+          l10n.privacyClearAnalyticsDialogBody,
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -1444,7 +1459,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              l10n.commonCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -1461,7 +1476,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Analytics data cleared successfully',
+                        l10n.privacyClearAnalyticsSuccess,
                         style: context.bodyMedium.copyWith(
                           color: context.primaryTextColor,
                         ),
@@ -1475,14 +1490,14 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     AppTheme.errorSnackBar(
-                      message: 'Failed to clear analytics data',
+                      message: l10n.privacyClearAnalyticsFailed,
                     ),
                   );
                 }
               }
             },
             child: Text(
-              'Clear Data',
+              l10n.privacyClearData,
               style: context.bodyMedium.copyWith(
                 color: context.primaryColorTheme,
                 fontWeight: FontWeight.w500,
@@ -1495,18 +1510,19 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
   }
 
   void _showFinalDeleteConfirmation() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: context.cardColor,
         title: Text(
-          'Final Confirmation',
+          l10n.privacyFinalConfirmationTitle,
           style: context.titleMedium.copyWith(
             color: context.errorColor,
           ),
         ),
         content: Text(
-          'Are you absolutely sure? This will permanently delete your account and all associated data.',
+          l10n.privacyFinalConfirmationBody,
           style: context.bodyMedium.copyWith(
             color: context.primaryTextColor,
           ),
@@ -1515,7 +1531,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              l10n.commonCancel,
               style: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -1528,7 +1544,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Account deletion feature coming soon!',
+                    l10n.privacyAccountDeletionComingSoon,
                     style: context.bodyMedium.copyWith(
                       color: context.primaryTextColor,
                     ),
@@ -1539,7 +1555,7 @@ class _PrivacySecurityScreenState extends ConsumerState<PrivacySecurityScreen> {
               );
             },
             child: Text(
-              'Delete Forever',
+              l10n.privacyDeleteForever,
               style: context.bodyMedium.copyWith(
                 color: context.errorColor,
                 fontWeight: FontWeight.w500,

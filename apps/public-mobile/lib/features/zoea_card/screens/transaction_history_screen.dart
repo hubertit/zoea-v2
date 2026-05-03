@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 
@@ -14,10 +15,11 @@ class TransactionHistoryScreen extends ConsumerStatefulWidget {
 class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text('Transaction History'),
+        title: Text(l10n.transactionHistoryTitle),
         backgroundColor: context.backgroundColor,
         elevation: 0,
       ),
@@ -32,12 +34,12 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
             ),
             const SizedBox(height: AppTheme.spacing16),
             Text(
-              'Transaction History',
+              l10n.transactionHistoryTitle,
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: AppTheme.spacing8),
             Text(
-              'View your payment and transaction history',
+              l10n.transactionHistorySubtitle,
               style: TextStyle(
                 color: context.secondaryTextColor,
               ),

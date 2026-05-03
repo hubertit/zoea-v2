@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/products_provider.dart';
@@ -60,19 +61,20 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final productAsync = ref.watch(productByIdProvider(widget.productId));
 
     return Scaffold(
       backgroundColor: context.grey50,
       body: productAsync.when(
-        data: (product) => _buildContent(product),
+        data: (product) => _buildContent(l10n, product),
         loading: () => Center(child: CircularProgressIndicator(color: context.primaryColorTheme)),
-        error: (error, stack) => _buildErrorState(error),
+        error: (error, stack) => _buildErrorState(l10n, error),
       ),
     );
   }
 
-  Widget _buildErrorState(Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, Object error) {
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -96,7 +98,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load product',
+                l10n.shopErrorLoadProduct,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),
@@ -114,7 +116,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                 onPressed: () {
                   ref.invalidate(productByIdProvider(widget.productId));
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),
@@ -123,7 +125,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
     );
   }
 
-  Widget _buildContent(Product product) {
+  Widget _buildContent(AppLocalizations l10n, Product product) {
     final images = product.images;
     final primaryImage = images.isNotEmpty
         ? '${AppConfig.apiBaseUrl.replaceAll('/api', '')}/media/${images[0]}'
@@ -162,7 +164,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                   color: _isScrolled ? context.primaryTextColor : Colors.white,
                 ),
                 onPressed: () {
-                  Share.share('Check out ${product.name} on Zoea!');
+                  Share.share(l10n.listingShareOnZoea(product.name));
                 },
               ),
             ],
@@ -222,7 +224,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                'Featured',
+                                l10n.shopFeaturedSection,
                                 style: context.bodySmall.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -298,7 +300,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '(${product.reviewCount} ${product.reviewCount == 1 ? 'review' : 'reviews'})',
+                              l10n.listingReviewsCountParen(product.reviewCount),
                               style: context.bodySmall.copyWith(
                                 color: context.secondaryTextColor,
                               ),
@@ -318,7 +320,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Select Variant',
+                          l10n.shopProductVariantHeading,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryTextColor,
@@ -358,7 +360,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Description',
+                          l10n.shopProductDescription,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryTextColor,
@@ -385,7 +387,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Tags',
+                          l10n.shopProductTags,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.primaryTextColor,
@@ -437,7 +439,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: null,
-                      child: const Text('Select a variant'),
+                      child: Text(l10n.commonSelectVariant),
                     ),
                   )
                 else
@@ -460,7 +462,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                                   child: CircularProgressIndicator(strokeWidth: 2),
                                 )
                               : Text(
-                                  isAvailable ? 'Add to Cart' : 'Out of Stock',
+                                  isAvailable ? l10n.shopAddToCart : l10n.shopOutOfStock,
                                   style: const TextStyle(fontSize: 16),
                                 ),
                         ),
@@ -487,7 +489,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
                             : Text(
-                                isAvailable ? 'Add to Cart' : 'Out of Stock',
+                                isAvailable ? l10n.shopAddToCart : l10n.shopOutOfStock,
                                 style: const TextStyle(fontSize: 16),
                               ),
                       ),
@@ -548,6 +550,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
   }
 
   Future<void> _addToCart(Product product) async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isAddingToCart = true;
     });
@@ -564,10 +567,10 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Product added to cart'),
+            content: Text(l10n.commonProductAddedToCart),
             backgroundColor: context.primaryColorTheme,
             action: SnackBarAction(
-              label: 'View Cart',
+              label: l10n.shopViewCart,
               textColor: Colors.white,
               onPressed: () {
                 context.push('/cart');
@@ -580,7 +583,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add to cart: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(l10n.commonFailedAddToCart(
+              e.toString().replaceFirst('Exception: ', ''),
+            )),
             backgroundColor: context.errorColor,
           ),
         );

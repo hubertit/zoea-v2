@@ -9,6 +9,7 @@ import '../../../core/services/token_storage_service.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AccommodationBookingScreen extends ConsumerStatefulWidget {
   final String accommodationId;
@@ -72,6 +73,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.grey50,
       appBar: AppBar(
@@ -86,7 +88,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
           ),
         ),
         title: Text(
-          'Book Your Stay',
+          l10n.stayBookingScreenTitle,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -98,32 +100,32 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildAccommodationCard(),
+            _buildAccommodationCard(l10n),
             const SizedBox(height: 24),
             if (widget.selectedRooms != null && widget.selectedRooms!.isNotEmpty) ...[
-              _buildSelectedRoomsSection(),
+              _buildSelectedRoomsSection(l10n),
               const SizedBox(height: 24),
             ],
-            _buildDateSelection(),
+            _buildDateSelection(l10n),
             const SizedBox(height: 24),
-            _buildGuestSelection(),
+            _buildGuestSelection(l10n),
             const SizedBox(height: 24),
-            _buildRoomSelection(),
+            _buildRoomSelection(l10n),
             const SizedBox(height: 24),
-            _buildPriceBreakdown(),
+            _buildPriceBreakdown(l10n),
             const SizedBox(height: 24),
-            _buildSpecialRequests(),
+            _buildSpecialRequests(l10n),
             const SizedBox(height: 24),
-            _buildCouponSection(),
+            _buildCouponSection(l10n),
             const SizedBox(height: 40),
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(),
+      bottomNavigationBar: _buildBottomBar(l10n),
     );
   }
 
-  Widget _buildAccommodationCard() {
+  Widget _buildAccommodationCard(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -165,7 +167,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Kigali Marriott Hotel',
+                  l10n.stayBookingDemoHotelName,
                   style: context.bodyLarge.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -173,7 +175,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Kacyiru, Kigali',
+                  l10n.stayBookingDemoHotelAddress,
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -188,7 +190,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '4.8 (1,247 reviews)',
+                      l10n.stayBookingDemoRatingReviews('4.8', 1247),
                       style: context.bodySmall.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -203,12 +205,12 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildDateSelection() {
+  Widget _buildDateSelection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Select Dates',
+          l10n.stayBookingSelectDatesHeading,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -219,7 +221,8 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
           children: [
             Expanded(
               child: _buildDateField(
-                label: 'Check-in',
+                l10n: l10n,
+                label: l10n.stayCheckIn,
                 date: _checkInDate,
                 onTap: () => _selectDate(true),
               ),
@@ -227,7 +230,8 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
             const SizedBox(width: 16),
             Expanded(
               child: _buildDateField(
-                label: 'Check-out',
+                l10n: l10n,
+                label: l10n.stayCheckOut,
                 date: _checkOutDate,
                 onTap: () => _selectDate(false),
               ),
@@ -239,6 +243,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
   }
 
   Widget _buildDateField({
+    required AppLocalizations l10n,
     required String label,
     required DateTime? date,
     required VoidCallback onTap,
@@ -264,7 +269,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
             Text(
               date != null
                   ? '${date.day}/${date.month}/${date.year}'
-                  : 'Select date',
+                  : l10n.staySelectDate,
               style: context.bodyMedium.copyWith(
                 fontWeight: FontWeight.w500,
                 color: context.primaryTextColor,
@@ -276,12 +281,12 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildGuestSelection() {
+  Widget _buildGuestSelection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Guests',
+          l10n.stayGuestsLabel,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -298,7 +303,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$_guestCount guest${_guestCount > 1 ? 's' : ''}',
+                l10n.stayGuestCount(_guestCount),
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -340,12 +345,12 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildRoomSelection() {
+  Widget _buildRoomSelection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Rooms',
+          l10n.stayBookingRoomsHeading,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -362,7 +367,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$_roomCount room${_roomCount > 1 ? 's' : ''}',
+                l10n.stayBookingRoomCount(_roomCount),
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -404,17 +409,21 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildPriceBreakdown() {
+  Widget _buildPriceBreakdown(AppLocalizations l10n) {
     const basePrice = 120000;
     final totalPrice = basePrice * _roomCount;
     final tax = (totalPrice * 0.18).round();
     final total = totalPrice + tax;
+    final nightlyLabel = l10n.stayBookingNightlyLine(
+      PriceFormatter.formatFull(basePrice.toDouble()),
+      _roomCount,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Price Breakdown',
+          l10n.bookingConfirmationSectionPriceSummary,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -426,7 +435,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
           decoration: BoxDecoration(
             color: context.backgroundColor,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: context.grey200!),
+            border: Border.all(color: context.grey200),
           ),
           child: Column(
             children: [
@@ -434,11 +443,11 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'RWF ${basePrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} × $_roomCount room${_roomCount > 1 ? 's' : ''}',
+                    nightlyLabel,
                     style: context.bodyMedium,
                   ),
                   Text(
-                    'RWF ${totalPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                    PriceFormatter.formatFull(totalPrice.toDouble()),
                     style: context.bodyMedium.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -450,11 +459,11 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Taxes & Fees',
+                    l10n.bookingConfirmationLabelTaxesFees,
                     style: context.bodyMedium,
                   ),
                   Text(
-                    'RWF ${tax.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                    PriceFormatter.formatFull(tax.toDouble()),
                     style: context.bodyMedium.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -466,13 +475,13 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total',
+                    l10n.shopCartTotalLabel,
                     style: context.bodyLarge.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    'RWF ${total.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                    PriceFormatter.formatFull(total.toDouble()),
                     style: context.bodyLarge.copyWith(
                       fontWeight: FontWeight.w600,
                       color: context.primaryColorTheme,
@@ -487,12 +496,12 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildSpecialRequests() {
+  Widget _buildSpecialRequests(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Special Requests (Optional)',
+          l10n.shopBookingSpecialRequestsLabel,
           style: context.headlineSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: context.primaryTextColor,
@@ -509,7 +518,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
             onChanged: (value) => setState(() => _specialRequests = value),
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'Any special requests or preferences...',
+              hintText: l10n.stayBookingSpecialRequestsHint,
               hintStyle: context.bodyMedium.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -522,7 +531,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -562,7 +571,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                   ),
                 )
               : Text(
-                  'Continue to Payment',
+                  l10n.stayBookingContinueToPayment,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -597,7 +606,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     }
   }
 
-  Widget _buildSelectedRoomsSection() {
+  Widget _buildSelectedRoomsSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -624,7 +633,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
               ),
               const SizedBox(width: 8),
               Text(
-                'Selected Rooms',
+                l10n.stayBookingSelectedRoomsTitle,
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryColorTheme,
@@ -637,6 +646,8 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
             final roomType = entry.value['roomType'] as Map<String, dynamic>;
             final quantity = entry.value['quantity'] as int;
             final totalPrice = int.parse(roomType['price'].toString().replaceAll(',', '')) * quantity;
+            final maxGuests = roomType['maxGuests'] as int? ?? 0;
+            final amenities = roomType['amenities']?.toString() ?? '';
             
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
@@ -644,7 +655,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
               decoration: BoxDecoration(
                 color: context.grey50,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: context.grey200!),
+                border: Border.all(color: context.grey200),
               ),
               child: Row(
                 children: [
@@ -660,7 +671,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${roomType['maxGuests']} guests • ${roomType['amenities']}',
+                          '${l10n.stayGuestCount(maxGuests)} · $amenities',
                           style: context.bodySmall.copyWith(
                             color: context.secondaryTextColor,
                           ),
@@ -672,14 +683,14 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'Qty: $quantity',
+                        l10n.stayBookingQtyShort(quantity),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'RWF ${totalPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                        PriceFormatter.formatFull(totalPrice.toDouble()),
                         style: context.bodyMedium.copyWith(
                           fontWeight: FontWeight.w600,
                           color: context.primaryColorTheme,
@@ -696,13 +707,13 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     );
   }
 
-  Widget _buildCouponSection() {
+  Widget _buildCouponSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.grey200!),
+        border: Border.all(color: context.grey200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -723,7 +734,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
               ),
               const SizedBox(width: 8),
               Text(
-                'Coupon Code',
+                l10n.diningFlowCouponCodeTitle,
                 style: context.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -741,17 +752,17 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                     });
                   },
                   decoration: InputDecoration(
-                    hintText: 'Enter coupon code',
+                    hintText: l10n.stayCouponCodeHint,
                     hintStyle: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: context.grey300!),
+                      borderSide: BorderSide(color: context.grey300),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: context.grey300!),
+                      borderSide: BorderSide(color: context.grey300),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -780,7 +791,7 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                   ),
                 ),
                 child: Text(
-                  'Apply',
+                  l10n.commonApply,
                   style: context.bodyMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -811,14 +822,16 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Coupon Applied!',
+                          l10n.diningFlowCouponAppliedTitle,
                           style: context.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppTheme.successColor,
                           ),
                         ),
                         Text(
-                          'You saved ${PriceFormatter.formatFull(_discountAmount, currency: 'RWF')}',
+                          l10n.diningFlowCouponSavedBody(
+                            PriceFormatter.formatFull(_discountAmount, currency: 'RWF'),
+                          ),
                           style: context.bodySmall.copyWith(
                             color: AppTheme.successColor,
                           ),
@@ -857,15 +870,15 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
         _discountAmount = _calculateTotalPrice() * validCoupons[_couponCode.toUpperCase()]!;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Coupon applied successfully!'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.commonCouponApplied),
           backgroundColor: AppTheme.successColor,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid coupon code'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.commonCouponInvalid),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -888,8 +901,8 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
   Future<void> _submitBooking() async {
     if (_checkInDate == null || _checkOutDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select check-in and check-out dates'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.commonCheckInOutRequired),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -900,8 +913,8 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
     if (_checkOutDate!.isBefore(_checkInDate!) || 
         _checkOutDate!.isAtSameMomentAs(_checkInDate!)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Check-out date must be after check-in date'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.commonCheckOutAfterCheckIn),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -946,8 +959,8 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
       if (roomTypeId == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please select a room type to continue'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.commonSelectRoomType),
               backgroundColor: AppTheme.errorColor,
             ),
           );
@@ -1000,7 +1013,11 @@ class _AccommodationBookingScreenState extends ConsumerState<AccommodationBookin
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create booking: ${e.toString().replaceAll('Exception: ', '')}'),
+            content: Text(
+              AppLocalizations.of(context)!.commonFailedCreateBooking(
+                e.toString().replaceAll('Exception: ', ''),
+              ),
+            ),
             backgroundColor: AppTheme.errorColor,
             duration: const Duration(seconds: 4),
           ),

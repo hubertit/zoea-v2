@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -253,6 +254,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.sizeOf(context);
     final dpr = MediaQuery.devicePixelRatioOf(context);
     final cacheW = (mq.width * dpr).round().clamp(1, 4096);
@@ -328,9 +330,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   ),
                   const SizedBox(height: 24),
                   // Bold headline - line 1
-                  const Text(
-                    'Discover Rwanda',
-                    style: TextStyle(
+                  Text(
+                    l10n.splashHeadline1,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -338,9 +340,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     ),
                   ),
                   // Bold headline - line 2
-                  const Text(
-                    'Like Never Before',
-                    style: TextStyle(
+                  Text(
+                    l10n.splashHeadline2,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -350,7 +352,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   const SizedBox(height: 20),
                   // Description text
                   Text(
-                    'Explore stunning destinations, authentic experiences, and hidden gems across the Land of a Thousand Hills.',
+                    l10n.splashTagline,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.95),
                       fontSize: 16,

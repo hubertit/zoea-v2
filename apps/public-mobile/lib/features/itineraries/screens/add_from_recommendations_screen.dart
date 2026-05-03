@@ -6,6 +6,7 @@ import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import '../../../core/providers/listings_provider.dart';
 import '../../../core/widgets/fade_in_image.dart' show FadeInNetworkImage;
+import '../../../l10n/app_localizations.dart';
 
 class AddFromRecommendationsScreen extends ConsumerStatefulWidget {
   const AddFromRecommendationsScreen({super.key});
@@ -19,12 +20,13 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final featuredAsync = ref.watch(featuredListingsWithHomeFallbackProvider);
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text('Add from Recommendations'),
+        title: Text(l10n.itineraryAddFromRecommendationsTitle),
         backgroundColor: context.backgroundColor,
         elevation: 0,
         centerTitle: false,
@@ -42,7 +44,7 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
                 _addSelectedItems();
               },
               child: Text(
-                'Add (${_selectedItems.length})',
+                l10n.itineraryAddWithCount(_selectedItems.length),
                 style: TextStyle(
                   color: context.primaryColorTheme,
                   fontWeight: FontWeight.w600,
@@ -65,14 +67,14 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No Recommendations',
+                    l10n.exploreNoFeaturedListings,
                     style: context.headlineSmall.copyWith(
                       color: context.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'No recommended listings available',
+                    l10n.shopEmptyAdjustFilters,
                     style: context.bodyMedium.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -114,7 +116,7 @@ class _AddFromRecommendationsScreenState extends ConsumerState<AddFromRecommenda
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load recommendations',
+                l10n.exploreFailedRecommendations,
                 style: context.headlineSmall.copyWith(
                   color: context.errorColor,
                 ),

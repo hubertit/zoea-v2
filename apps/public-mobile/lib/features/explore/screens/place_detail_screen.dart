@@ -12,6 +12,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../../core/widgets/auth_prompt_dialog.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class PlaceDetailScreen extends ConsumerStatefulWidget {
   final String placeId;
@@ -461,7 +462,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                     });
                   },
                   icon: const Icon(Icons.calendar_today, size: 18),
-                  label: const Text('Reserve Table'),
+                  label: Text(AppLocalizations.of(context)!.commonReserveTable),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.primaryColorTheme,
                     backgroundColor: context.backgroundColor,
@@ -481,7 +482,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                   // TODO: Navigate to contact
                 },
                 icon: const Icon(Icons.phone, size: 18),
-                label: const Text('Contact'),
+                label: Text(AppLocalizations.of(context)!.commonContact),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   backgroundColor: context.primaryColorTheme,
@@ -633,7 +634,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
                     color: context.cardColor,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: context.grey200!,
+                      color: context.grey200,
                       width: 1,
                     ),
                   ),
@@ -766,7 +767,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen>
             color: context.backgroundColor,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: context.grey200!,
+              color: context.grey200,
               width: 1,
             ),
           ),
@@ -1900,8 +1901,8 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
     if (_reviewController.text.trim().isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please write a review before submitting'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.commonPleaseWriteReview),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -1913,8 +1914,8 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
     if (widget.listingId == null && widget.eventId == null && widget.tourId == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to submit review. Missing listing, event, or tour information.'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.commonReviewSubmitMissingContext),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -1961,7 +1962,7 @@ class _ReviewBottomSheetState extends ConsumerState<_ReviewBottomSheet> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Thank you for your review!'),
+          content: Text(AppLocalizations.of(context)!.commonThankYouReview),
           backgroundColor: AppTheme.successColor,
           action: SnackBarAction(
             label: 'View',

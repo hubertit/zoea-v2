@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../services/app_update_service.dart';
 import '../theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 
 const _kSnoozeUntilMs = 'zoea_app_update_snooze_until_ms';
 const _kSnoozeFingerprint = 'zoea_app_update_snooze_fingerprint';
@@ -133,8 +134,9 @@ class _AppUpdateLayerState extends State<AppUpdateLayer> with WidgetsBindingObse
     if (uri == null || !(uri.isScheme('http') || uri.isScheme('https'))) return;
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          const SnackBar(content: Text('Could not open the store link')),
+          SnackBar(content: Text(l10n.appUpdateStoreOpenFailed)),
         );
       }
     }
@@ -142,6 +144,7 @@ class _AppUpdateLayerState extends State<AppUpdateLayer> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -153,12 +156,12 @@ class _AppUpdateLayerState extends State<AppUpdateLayer> with WidgetsBindingObse
               child: _UpdateScrim(
                 child: _UpdatePromptCard(
                   title: _mandatoryResult!.title.isEmpty
-                      ? 'Update required'
+                      ? l10n.appUpdateRequiredTitle
                       : _mandatoryResult!.title,
                   message: _mandatoryResult!.message.isEmpty
-                      ? 'Please update the app to continue using Zoea.'
+                      ? l10n.appUpdateRequiredMessage
                       : _mandatoryResult!.message,
-                  primaryLabel: 'Update now',
+                  primaryLabel: l10n.appUpdateNow,
                   onPrimary: () => _openStore(_mandatoryResult!.storeUrl),
                 ),
               ),
@@ -224,6 +227,7 @@ class _OptionalUpdateDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox.expand(
       child: Stack(
         fit: StackFit.expand,
@@ -248,13 +252,13 @@ class _OptionalUpdateDialog extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: _UpdatePromptCard(
-                  title: result.title.isEmpty ? 'Update available' : result.title,
+                  title: result.title.isEmpty ? l10n.appUpdateAvailableTitle : result.title,
                   message: result.message.isEmpty
-                      ? 'A new version of Zoea is ready with improvements and fixes.'
+                      ? l10n.appUpdateAvailableMessage
                       : result.message,
-                  primaryLabel: 'Update now',
+                  primaryLabel: l10n.appUpdateNow,
                   onPrimary: onUpdate,
-                  secondaryLabel: 'Later',
+                  secondaryLabel: l10n.appUpdateLater,
                   onSecondary: onLater,
                 ),
               ),

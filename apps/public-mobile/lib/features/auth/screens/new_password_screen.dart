@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -36,6 +37,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
   }
 
   Future<void> _handleResetPassword() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -54,7 +56,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Password reset successfully!'),
+            content: Text(l10n.authPasswordResetSuccess),
             backgroundColor: AppTheme.successColor,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -85,6 +87,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
@@ -99,7 +102,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'New Password',
+          l10n.authNewPasswordAppBar,
           style: context.titleLarge,
         ),
       ),
@@ -124,7 +127,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                 
                 // Title
                 Text(
-                  'Create New Password',
+                  l10n.authCreateNewPasswordTitle,
                   style: context.displaySmall,
                   textAlign: TextAlign.center,
                 ),
@@ -133,7 +136,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                 
                 // Description
                 Text(
-                  'Enter your new password. Make sure it\'s strong and secure.',
+                  l10n.authCreateNewPasswordBody,
                   style: context.bodyLarge.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -149,8 +152,8 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
-                    labelText: 'New Password',
-                    hintText: 'Enter your new password',
+                    labelText: l10n.authNewPasswordFieldLabel,
+                    hintText: l10n.authNewPasswordFieldHint,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -176,10 +179,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a new password';
+                      return l10n.authEnterNewPasswordError;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return l10n.loginValidationPasswordShort;
                     }
                     return null;
                   },
@@ -195,8 +198,8 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                   keyboardType: TextInputType.visiblePassword,
                   onFieldSubmitted: (_) => _handleResetPassword(),
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Confirm your new password',
+                    labelText: l10n.registerConfirmPasswordLabel,
+                    hintText: l10n.authConfirmNewPasswordHint,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -222,10 +225,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
+                      return l10n.registerConfirmPasswordRequired;
                     }
                     if (value != _passwordController.text) {
-                      return 'Passwords do not match';
+                      return l10n.registerPasswordsMismatch;
                     }
                     return null;
                   },
@@ -259,7 +262,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen> {
                           ),
                         )
                       : Text(
-                          'Reset Password',
+                          l10n.authSaveNewPassword,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onPrimary,

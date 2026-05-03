@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -19,6 +20,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final orderAsync = ref.watch(orderByIdProvider(orderId));
 
     return Scaffold(
@@ -39,13 +41,13 @@ class OrderConfirmationScreen extends ConsumerWidget {
       ),
       body: orderAsync.when(
         data: (orderData) {
-          final order = orderData as Map<String, dynamic>;
+          final order = orderData;
           final orderNumber = order['orderNumber'] as String? ?? order['order_number'] as String?;
           final status = order['status'] as String? ?? 'pending';
           final totalAmount = (order['totalAmount'] ?? order['total_amount'] ?? 0).toDouble();
           final currency = order['currency'] as String? ?? 'RWF';
           final listing = order['listing'] as Map<String, dynamic>?;
-          final listingName = listing?['name'] as String? ?? 'Unknown';
+          final listingName = listing?['name'] as String? ?? l10n.exploreListingUnknown;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(12),
@@ -69,7 +71,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                 
                 // Success Message
                 Text(
-                  'Order Placed Successfully!',
+                  l10n.shopOrderPlacedSuccessTitle,
                   style: context.headlineMedium.copyWith(
                     fontWeight: FontWeight.w700,
                     color: context.primaryTextColor,
@@ -78,7 +80,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Your order has been received and is being processed',
+                  l10n.shopOrderPlacedSuccessSubtitle,
                   style: context.bodyMedium.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -106,7 +108,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Order Details',
+                        l10n.shopOrderDetailsSection,
                         style: context.titleLarge.copyWith(
                           fontWeight: FontWeight.w600,
                           color: context.primaryTextColor,
@@ -115,28 +117,28 @@ class OrderConfirmationScreen extends ConsumerWidget {
                       const SizedBox(height: 16),
                       _buildDetailRow(
                         context,
-                        'Order Number',
-                        orderNumber ?? 'N/A',
+                        l10n.shopOrderNumberLabel,
+                        orderNumber ?? l10n.commonNotApplicable,
                         Icons.receipt,
                       ),
                       const SizedBox(height: 12),
                       _buildDetailRow(
                         context,
-                        'Merchant',
+                        l10n.shopOrderMerchantLabel,
                         listingName,
                         Icons.store,
                       ),
                       const SizedBox(height: 12),
                       _buildDetailRow(
                         context,
-                        'Status',
+                        l10n.shopOrderStatusLabel,
                         status.toUpperCase(),
                         Icons.info,
                       ),
                       const SizedBox(height: 12),
                       _buildDetailRow(
                         context,
-                        'Total Amount',
+                        l10n.shopOrderTotalAmountLabel,
                         PriceFormatter.formatFull(totalAmount, currency: currency),
                         Icons.payments,
                         isAmount: true,
@@ -145,7 +147,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                         const SizedBox(height: 12),
                         _buildDetailRow(
                           context,
-                          'Order Date',
+                          l10n.shopOrderDateLabel,
                           DateFormat('MMM dd, yyyy HH:mm').format(
                             DateTime.parse(
                               order['createdAt'] as String? ?? order['created_at'] as String,
@@ -176,7 +178,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      'View My Orders',
+                      l10n.shopOrderViewMyOrders,
                       style: context.titleMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -200,7 +202,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      'Continue Shopping',
+                      l10n.commonContinueShopping,
                       style: context.titleMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.primaryColorTheme,
@@ -224,7 +226,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load order details',
+                l10n.shopOrderDetailsLoadFailed,
                 style: context.titleMedium.copyWith(
                   color: context.errorColor,
                 ),
@@ -234,7 +236,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                 onPressed: () {
                   ref.invalidate(orderByIdProvider(orderId));
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
 import 'fade_in_image.dart' show FadeInNetworkImage;
@@ -33,6 +33,7 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -179,7 +180,7 @@ class PlaceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '($reviews reviews)',
+                        l10n.listingReviewsCountParen(reviews),
                         style: context.bodySmall.copyWith(
                           color: context.secondaryTextColor,
                         ),

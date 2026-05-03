@@ -11,6 +11,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_collection_provider.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/utils/price_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TourBookingScreen extends ConsumerStatefulWidget {
   final String listingId;
@@ -932,7 +933,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
     if (_selectedTourId == null || _selectedScheduleId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please select a tour and schedule'),
+          content: Text(AppLocalizations.of(context)!.commonPleaseSelectTourSchedule),
           backgroundColor: context.errorColor,
         ),
       );
@@ -942,7 +943,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
     if (_fullName.isEmpty || _contactNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please fill in all required fields'),
+          content: Text(AppLocalizations.of(context)!.commonPleaseFillRequiredFields),
           backgroundColor: context.errorColor,
         ),
       );
@@ -975,7 +976,7 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Booking created, but confirmation ID is missing.'),
+              content: Text(AppLocalizations.of(context)!.commonBookingMissingConfirmation),
               backgroundColor: context.errorColor,
             ),
           );
@@ -985,7 +986,11 @@ class _TourBookingScreenState extends ConsumerState<TourBookingScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to book tour: ${e.toString().replaceFirst('Exception: ', '')}'),
+            content: Text(
+              AppLocalizations.of(context)!.commonFailedBookTour(
+                e.toString().replaceFirst('Exception: ', ''),
+              ),
+            ),
             backgroundColor: context.errorColor,
           ),
         );

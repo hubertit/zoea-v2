@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/theme/text_theme_extensions.dart';
@@ -99,10 +100,11 @@ class _VerifyResetCodeScreenState extends ConsumerState<VerifyResetCodeScreen> {
       final authService = ref.read(authServiceProvider);
       await authService.requestPasswordReset(widget.identifier);
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'A new code has been requested.',
+            l10n.authNewCodeRequested,
             style: context.bodyMedium.copyWith(color: context.primaryTextColor),
           ),
           backgroundColor: context.successColor,
@@ -169,18 +171,20 @@ class _VerifyResetCodeScreenState extends ConsumerState<VerifyResetCodeScreen> {
     }
   }
 
-  String _resendLabel() {
-    if (_resendLoading) return 'Sending…';
+  String _resendLabel(AppLocalizations l10n) {
+    if (_resendLoading) return l10n.authResendSending;
     if (_secondsUntilResend > 0) {
       final m = _secondsUntilResend ~/ 60;
       final s = _secondsUntilResend % 60;
-      return 'Resend code in $m:${s.toString().padLeft(2, '0')}';
+      final time = '$m:${s.toString().padLeft(2, '0')}';
+      return l10n.authResendCodeIn(time);
     }
-    return 'Resend code';
+    return l10n.authResendCode;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     const boxWidth = 48.0;
     const boxSpacing = 6.0;
 
@@ -198,7 +202,7 @@ class _VerifyResetCodeScreenState extends ConsumerState<VerifyResetCodeScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Verify Code',
+          l10n.authVerifyCodeTitle,
           style: context.titleLarge,
         ),
       ),
@@ -218,13 +222,13 @@ class _VerifyResetCodeScreenState extends ConsumerState<VerifyResetCodeScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacing24),
                 Text(
-                  'Enter reset code',
+                  l10n.authEnterResetCode,
                   style: context.displaySmall,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppTheme.spacing8),
                 Text(
-                  'We sent a $_kResetCodeLength-digit code to ${widget.identifier}',
+                  l10n.authResetCodeSentTo(_kResetCodeLength, widget.identifier),
                   style: context.bodyLarge.copyWith(
                     color: context.secondaryTextColor,
                   ),
@@ -325,7 +329,7 @@ class _VerifyResetCodeScreenState extends ConsumerState<VerifyResetCodeScreen> {
                           ),
                         )
                       : Text(
-                          'Verify code',
+                          l10n.authVerifyCodeButton,
                           style: context.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onPrimary,
@@ -338,7 +342,7 @@ class _VerifyResetCodeScreenState extends ConsumerState<VerifyResetCodeScreen> {
                       ? null
                       : _handleResend,
                   child: Text(
-                    _resendLabel(),
+                    _resendLabel(l10n),
                     style: context.bodyMedium.copyWith(
                       color: (_secondsUntilResend > 0 || _resendLoading)
                           ? context.secondaryTextColor
